@@ -42,6 +42,16 @@
     NSString *unicodeString = [NSString stringWithFormat:@"%C",(unsigned short)i];
     self.outputTextField.text = unicodeString;
     self.outputTextView.text = unicodeString;
+    
+    
+    CATransition *animation = [CATransition animation];
+    [animation setType:kCATransitionPush];
+    [animation setSubtype:kCATransitionFromRight];
+    [animation setDuration:0.5];
+    [animation setRemovedOnCompletion:YES];
+    [animation setDelegate:self];
+    [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [self.tableView.layer addAnimation:animation forKey:@"PushLeft"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,6 +77,7 @@
     
     NSString *unicodeString = [NSString stringWithFormat:@"%C",(unsigned short)i];
     textField.text = [NSString stringWithFormat:@"%@  = %d",unicodeString,i];
+    [textField setFont:[UIFont systemFontOfSize:40.]];
     [cell.contentView addSubview:textField];
     return cell;
 }

@@ -1,0 +1,25 @@
+//
+//  MessageModel.h
+//  FuXin
+//
+//  Created by lihongliang on 14-5-15.
+//  Copyright (c) 2014年 comdosoft. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+/**
+ 一条消息 ,  聊天的最小数据单元
+ */
+@interface MessageModel : NSObject
+///发送者
+@property (nonatomic, strong) NSString *messageSenderID;
+///接收者
+@property (nonatomic, strong) NSString *messageRecieverID;
+///发送时间
+@property (nonatomic, strong) NSString *messageSendTime;
+///内容
+@property (nonatomic, strong) NSString *messageContent;
+///附件
+@property (nonatomic, strong) NSString *messageAttachment;
+@end

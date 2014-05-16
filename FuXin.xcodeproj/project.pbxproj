@@ -27,7 +27,8 @@
 		939EE73B19237685002CB26E /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE73319237685002CB26E /* FMDatabasePool.m */; };
 		939EE73C19237685002CB26E /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE73519237685002CB26E /* FMDatabaseQueue.m */; };
 		939EE73D19237685002CB26E /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE73819237685002CB26E /* FMResultSet.m */; };
-		93C2812B19244CCF00B48A85 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C2812A19244CCF00B48A85 /* libsqlite3.0.dylib */; };
+		93B71BB41925ADBD008CEC14 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C2812A19244CCF00B48A85 /* libsqlite3.0.dylib */; };
+		93C2812E1924866200B48A85 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2812D1924866200B48A85 /* MessageModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,8 @@
 		939EE73719237685002CB26E /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
 		939EE73819237685002CB26E /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
 		93C2812A19244CCF00B48A85 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		93C2812C1924866200B48A85 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		93C2812D1924866200B48A85 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93C2812B19244CCF00B48A85 /* libsqlite3.0.dylib in Frameworks */,
+				93B71BB41925ADBD008CEC14 /* libsqlite3.0.dylib in Frameworks */,
 				930538151923123C009F9013 /* CoreGraphics.framework in Frameworks */,
 				930538171923123C009F9013 /* UIKit.framework in Frameworks */,
 				930538131923123C009F9013 /* Foundation.framework in Frameworks */,
@@ -189,6 +192,8 @@
 		9305385319231B72009F9013 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				93C2812C1924866200B48A85 /* MessageModel.h */,
+				93C2812D1924866200B48A85 /* MessageModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -331,6 +336,7 @@
 				939EE73919237685002CB26E /* FMDatabase.m in Sources */,
 				939EE73B19237685002CB26E /* FMDatabasePool.m in Sources */,
 				939EE73D19237685002CB26E /* FMResultSet.m in Sources */,
+				93C2812E1924866200B48A85 /* MessageModel.m in Sources */,
 				9305386919231C3C009F9013 /* TestViewController.m in Sources */,
 				939EE73A19237685002CB26E /* FMDatabaseAdditions.m in Sources */,
 			);
