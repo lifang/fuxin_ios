@@ -26,36 +26,41 @@
 ///返回本类的单例
 + (instancetype)shareLHLDBTools;
 
-#pragma mark 用户
+#pragma mark 用户   (暂时弃用)
 ///根据ID查询用户
-+ (id)findUserWithUserID:(NSString *)userID;
+//+ (id)findUserWithUserID:(NSString *)userID;
 ///保存用户
-+ (void)saveUser:(id)user;
+//+ (void)saveUser:(id)user;
 
 #pragma mark 联系人
-///根据用户ID查找其联系人
-+ (NSArray *)getContactsWithUserID:(NSString *)userID;
+///查找所有联系人
++ (NSArray *)getAllContacts;
 ///根据联系人ID查找联系人
 + (id)findContactWithContactID:(NSString *)contactID;
-///保存联系人  with: 用户ID  联系人信息
+///保存联系人
 + (void)saveContact:(id)contact;
 
 #pragma mark 最近对话
 ///保存最近对话信息
++ (void)saveConversation:(id)conversation;
 ///查找所有最近对话信息
++ (NSMutableArray *)getConversations;
 ///删除最近对话信息
++ (void)deleteConversation;
 
 #pragma mark 聊天记录
 ///保存一条聊天记录
 + (void)saveChattingRecord:(id)chattingRecord;
 ///查询与某个联系人的最后N条聊天记录
-+ (NSArray *)getLatestChattingRecordsForUserID:(NSString *)userID withContactID:(NSString *)contactID;
++ (NSArray *)getLatestChattingRecordsWithContactID:(NSString *)contactID;
+///按index查询之前若干条聊天记录
++ (NSArray *)getChattingRecordsWithQuantity:(NSInteger)quantity beforeIndex:(NSInteger)index;
 ///查询某个时间点之前的N条聊天记录
-+ (NSArray *)getChattingRecordsBeforeTime:(NSString *)timeString forUserID:(NSString *)userID withContactID:(NSString *)contactID;
++ (NSArray *)getChattingRecordsBeforeTime:(NSString *)timeString WithContactID:(NSString *)contactID;
 ///查询某联系人未读信息的数量
-+ (NSInteger)numberOfUnreadChattingRecordsForUserID:(NSString *)userID withContactID:(NSString *)contactID;
++ (NSInteger)numberOfUnreadChattingRecordsWithContactID:(NSString *)contactID;
 ///清除某联系人的未读状态
-+ (void)clearUnreadStatusForUserID:(NSString *)userID withContactID:(NSString *)contactID;
++ (void)clearUnreadStatusWithContactID:(NSString *)contactID;
 ///删除某个联系人的聊天记录
-+ (void)deleteChattingRecordsForUserID:(NSString *)userID withContactID:(NSString *)contactID;
++ (void)deleteChattingRecordsWithContactID:(NSString *)contactID;
 @end

@@ -43,6 +43,10 @@
     self.outputTextField.text = unicodeString;
     self.outputTextView.text = unicodeString;
     
+    SharedClass *a = [SharedClass sharedObject];
+    SharedClass *b = [SharedClass sharedObject];
+    SharedClass *c = [SharedClass sharedObject];
+    SharedClass *d = [SharedClass sharedObject];
     
     CATransition *animation = [CATransition animation];
     [animation setType:kCATransitionPush];

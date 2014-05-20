@@ -5,6 +5,7 @@
 //
 
 #import <Availability.h>
+#import "SharedClass.h"
 
 #ifndef __IPHONE_3_0
 #warning "This project uses features only available in iOS SDK 3.0 and later."
@@ -14,3 +15,6 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#define kDOCUMENT_FOLDER_PATH ((NSString *)[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]) //用户文件夹
+#define kUSER_FOLDER_PATH [kDOCUMENT_FOLDER_PATH stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_documents",[SharedClass sharedObject].userID]]   //用户数据文件夹

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		93022CA5192991FB00008FF8 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93022CA4192991FB00008FF8 /* TestView.m */; };
 		930538131923123C009F9013 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538121923123C009F9013 /* Foundation.framework */; };
 		930538151923123C009F9013 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538141923123C009F9013 /* CoreGraphics.framework */; };
 		930538171923123C009F9013 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538161923123C009F9013 /* UIKit.framework */; };
@@ -22,6 +23,8 @@
 		9305386919231C3C009F9013 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9305386719231C3C009F9013 /* TestViewController.m */; };
 		9305386A19231C3C009F9013 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9305386819231C3C009F9013 /* TestViewController.xib */; };
 		9305386E19231EB2009F9013 /* LHLDBTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 9305386D19231EB2009F9013 /* LHLDBTools.m */; };
+		934A9D5B1929D11F00C5101E /* SharedClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 934A9D5A1929D11F00C5101E /* SharedClass.m */; };
+		934A9D5E192A0DA600C5101E /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 934A9D5D192A0DA600C5101E /* ContactModel.m */; };
 		939EE73919237685002CB26E /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE72F19237685002CB26E /* FMDatabase.m */; };
 		939EE73A19237685002CB26E /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE73119237685002CB26E /* FMDatabaseAdditions.m */; };
 		939EE73B19237685002CB26E /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE73319237685002CB26E /* FMDatabasePool.m */; };
@@ -42,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		93022CA3192991FB00008FF8 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
+		93022CA4192991FB00008FF8 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
 		9305380F1923123C009F9013 /* FuXin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuXin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930538121923123C009F9013 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		930538141923123C009F9013 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -63,6 +68,10 @@
 		9305386819231C3C009F9013 /* TestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
 		9305386C19231EB2009F9013 /* LHLDBTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHLDBTools.h; sourceTree = "<group>"; };
 		9305386D19231EB2009F9013 /* LHLDBTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LHLDBTools.m; sourceTree = "<group>"; };
+		934A9D591929D11F00C5101E /* SharedClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedClass.h; sourceTree = "<group>"; };
+		934A9D5A1929D11F00C5101E /* SharedClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedClass.m; sourceTree = "<group>"; };
+		934A9D5C192A0DA600C5101E /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
+		934A9D5D192A0DA600C5101E /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactModel.m; sourceTree = "<group>"; };
 		939EE72E19237685002CB26E /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
 		939EE72F19237685002CB26E /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
 		939EE73019237685002CB26E /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
@@ -194,6 +203,8 @@
 			children = (
 				93C2812C1924866200B48A85 /* MessageModel.h */,
 				93C2812D1924866200B48A85 /* MessageModel.m */,
+				934A9D5C192A0DA600C5101E /* ContactModel.h */,
+				934A9D5D192A0DA600C5101E /* ContactModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -201,6 +212,8 @@
 		9305385419231B72009F9013 /* view */ = {
 			isa = PBXGroup;
 			children = (
+				93022CA3192991FB00008FF8 /* TestView.h */,
+				93022CA4192991FB00008FF8 /* TestView.m */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -211,6 +224,8 @@
 				939EE72D19237685002CB26E /* fmdb */,
 				9305386C19231EB2009F9013 /* LHLDBTools.h */,
 				9305386D19231EB2009F9013 /* LHLDBTools.m */,
+				934A9D591929D11F00C5101E /* SharedClass.h */,
+				934A9D5A1929D11F00C5101E /* SharedClass.m */,
 			);
 			path = Utility;
 			sourceTree = "<group>";
@@ -330,13 +345,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				930538231923123C009F9013 /* AppDelegate.m in Sources */,
+				934A9D5B1929D11F00C5101E /* SharedClass.m in Sources */,
 				939EE73C19237685002CB26E /* FMDatabaseQueue.m in Sources */,
 				9305386E19231EB2009F9013 /* LHLDBTools.m in Sources */,
 				9305381F1923123C009F9013 /* main.m in Sources */,
 				939EE73919237685002CB26E /* FMDatabase.m in Sources */,
 				939EE73B19237685002CB26E /* FMDatabasePool.m in Sources */,
+				93022CA5192991FB00008FF8 /* TestView.m in Sources */,
 				939EE73D19237685002CB26E /* FMResultSet.m in Sources */,
 				93C2812E1924866200B48A85 /* MessageModel.m in Sources */,
+				934A9D5E192A0DA600C5101E /* ContactModel.m in Sources */,
 				9305386919231C3C009F9013 /* TestViewController.m in Sources */,
 				939EE73A19237685002CB26E /* FMDatabaseAdditions.m in Sources */,
 			);
