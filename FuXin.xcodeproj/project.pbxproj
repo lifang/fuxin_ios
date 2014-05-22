@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		93022CA5192991FB00008FF8 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93022CA4192991FB00008FF8 /* TestView.m */; };
 		930538131923123C009F9013 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538121923123C009F9013 /* Foundation.framework */; };
 		930538151923123C009F9013 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538141923123C009F9013 /* CoreGraphics.framework */; };
 		930538171923123C009F9013 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538161923123C009F9013 /* UIKit.framework */; };
@@ -20,9 +19,8 @@
 		9305382E1923123C009F9013 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930538161923123C009F9013 /* UIKit.framework */; };
 		930538361923123C009F9013 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 930538341923123C009F9013 /* InfoPlist.strings */; };
 		930538381923123C009F9013 /* FuXinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 930538371923123C009F9013 /* FuXinTests.m */; };
-		9305386919231C3C009F9013 /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9305386719231C3C009F9013 /* TestViewController.m */; };
-		9305386A19231C3C009F9013 /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9305386819231C3C009F9013 /* TestViewController.xib */; };
 		9305386E19231EB2009F9013 /* LHLDBTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 9305386D19231EB2009F9013 /* LHLDBTools.m */; };
+		93134207192C82DF00BF6B26 /* ConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93134206192C82DF00BF6B26 /* ConversationModel.m */; };
 		934A9D5B1929D11F00C5101E /* SharedClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 934A9D5A1929D11F00C5101E /* SharedClass.m */; };
 		934A9D5E192A0DA600C5101E /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 934A9D5D192A0DA600C5101E /* ContactModel.m */; };
 		939EE73919237685002CB26E /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 939EE72F19237685002CB26E /* FMDatabase.m */; };
@@ -45,8 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		93022CA3192991FB00008FF8 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestView.h; sourceTree = "<group>"; };
-		93022CA4192991FB00008FF8 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestView.m; sourceTree = "<group>"; };
 		9305380F1923123C009F9013 /* FuXin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuXin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		930538121923123C009F9013 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		930538141923123C009F9013 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -63,11 +59,10 @@
 		930538331923123C009F9013 /* FuXinTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuXinTests-Info.plist"; sourceTree = "<group>"; };
 		930538351923123C009F9013 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		930538371923123C009F9013 /* FuXinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuXinTests.m; sourceTree = "<group>"; };
-		9305386619231C3C009F9013 /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
-		9305386719231C3C009F9013 /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
-		9305386819231C3C009F9013 /* TestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
 		9305386C19231EB2009F9013 /* LHLDBTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHLDBTools.h; sourceTree = "<group>"; };
 		9305386D19231EB2009F9013 /* LHLDBTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LHLDBTools.m; sourceTree = "<group>"; };
+		93134205192C82DF00BF6B26 /* ConversationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationModel.h; sourceTree = "<group>"; };
+		93134206192C82DF00BF6B26 /* ConversationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationModel.m; sourceTree = "<group>"; };
 		934A9D591929D11F00C5101E /* SharedClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedClass.h; sourceTree = "<group>"; };
 		934A9D5A1929D11F00C5101E /* SharedClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedClass.m; sourceTree = "<group>"; };
 		934A9D5C192A0DA600C5101E /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
@@ -191,9 +186,6 @@
 		9305385219231B72009F9013 /* controller */ = {
 			isa = PBXGroup;
 			children = (
-				9305386619231C3C009F9013 /* TestViewController.h */,
-				9305386719231C3C009F9013 /* TestViewController.m */,
-				9305386819231C3C009F9013 /* TestViewController.xib */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -205,6 +197,8 @@
 				93C2812D1924866200B48A85 /* MessageModel.m */,
 				934A9D5C192A0DA600C5101E /* ContactModel.h */,
 				934A9D5D192A0DA600C5101E /* ContactModel.m */,
+				93134205192C82DF00BF6B26 /* ConversationModel.h */,
+				93134206192C82DF00BF6B26 /* ConversationModel.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -212,8 +206,6 @@
 		9305385419231B72009F9013 /* view */ = {
 			isa = PBXGroup;
 			children = (
-				93022CA3192991FB00008FF8 /* TestView.h */,
-				93022CA4192991FB00008FF8 /* TestView.m */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -324,7 +316,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9305381D1923123C009F9013 /* InfoPlist.strings in Resources */,
-				9305386A19231C3C009F9013 /* TestViewController.xib in Resources */,
 				930538251923123C009F9013 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,11 +342,10 @@
 				9305381F1923123C009F9013 /* main.m in Sources */,
 				939EE73919237685002CB26E /* FMDatabase.m in Sources */,
 				939EE73B19237685002CB26E /* FMDatabasePool.m in Sources */,
-				93022CA5192991FB00008FF8 /* TestView.m in Sources */,
 				939EE73D19237685002CB26E /* FMResultSet.m in Sources */,
 				93C2812E1924866200B48A85 /* MessageModel.m in Sources */,
 				934A9D5E192A0DA600C5101E /* ContactModel.m in Sources */,
-				9305386919231C3C009F9013 /* TestViewController.m in Sources */,
+				93134207192C82DF00BF6B26 /* ConversationModel.m in Sources */,
 				939EE73A19237685002CB26E /* FMDatabaseAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

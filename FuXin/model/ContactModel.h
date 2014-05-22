@@ -8,29 +8,37 @@
 
 #import <Foundation/Foundation.h>
 typedef enum{
-    ContactIdentityGuest,   //福客
-    ContactIdentityTeacher  //福师
+    ContactIdentityGuest = 0,   //福客
+    ContactIdentityTeacher = 1 //福师
 } ContactIdentity;  //身份
 
 typedef enum{
-    ContactRelationshipBuyer,  //订购者
-    ContactRelationshipFans,  //关注着
-    ContactRelationshipNone   //聊天者(无关系)
+    ContactRelationshipBuyer = 1,  //订购者
+    ContactRelationshipFans = 2,  //关注着
+    ContactRelationshipNone = 3  //聊天者(无关系)
 } ContactRelationship;  //关系
 
+typedef enum{
+    ContactSexMale = 0,
+    ContactSexFemale = 1
+} ContactSex; //性别
+
+/*
+ *联系人
+ */
 @interface ContactModel : NSObject
 ///联系人ID
 @property (strong, nonatomic) NSString *contactID;
 ///昵称
-@property (strong, nonatomic) NSString *nickname;
+@property (strong, nonatomic) NSString *contactNickname;
 ///头像
-@property (strong, nonatomic) NSString *avatar;
+@property (strong, nonatomic) NSString *contactAvatar;
 ///性别
-@property (assign, nonatomic) NSString *sex;
+@property (assign, nonatomic) ContactSex contactSex;
 ///身份 (福师, 福客)
-@property (assign, nonatomic) ContactIdentity identity;
+@property (assign, nonatomic) ContactIdentity contactIdentity;
 ///关系 (订购者/聊天者/关注者)
-@property (assign, nonatomic) ContactRelationship relationship;
+@property (assign, nonatomic) ContactRelationship contactRelationship;
 ///备注
-@property (strong, nonatomic) NSString *remark;
+@property (strong, nonatomic) NSString *contactRemark;
 @end

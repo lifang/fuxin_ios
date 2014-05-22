@@ -10,7 +10,7 @@
 
 
 typedef enum{
-    MessageStatusDidSent,  //已发送成功
+    MessageStatusDidSent = 1,  //已发送成功
     MessageStatusUnSent,   //未发送
     MessageStatusUnRead,   //未读消息
     MessageStatusDidRead   //已读
