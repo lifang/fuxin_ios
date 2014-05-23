@@ -41,12 +41,14 @@
 + (void)getAllContactsWithFinished:(void (^)(NSArray *contactsArray,NSString *errorMessage))finished;
 ///根据联系人ID查找联系人
 + (void)findContactWithContactID:(NSString *)contactID withFinished:(void (^)(ContactModel *contact,NSString *errorMessage))finished;
-///保存联系人
-+ (void)saveContact:(ContactModel *)contactObj withFinished:(void (^)(BOOL flag))finished;
+///保存联系人(自动判断插入/更新)
++ (void)saveContact:(NSArray *)contactArray withFinished:(void (^)(BOOL flag))finished;
+///删除联系人
++ (void)deleteContact:(NSArray *)contactArray withFinished:(void (^)(BOOL flag))finished;
 
 #pragma mark 最近对话
-///保存最近对话信息
-+ (void)saveConversation:(ConversationModel *)conversation withFinished:(void (^)(BOOL flag))finished;
+///保存最近对话信息 (自动判断插入/更新)
++ (void)saveConversation:(NSArray *)conversationArray withFinished:(void (^)(BOOL flag))finished;
 ///查找所有最近对话信息
 + (void)getConversationsWithFinished:(void (^)(NSMutableArray *conversationsArray,NSString *errorMessage))finished;
 ///删除最近对话信息

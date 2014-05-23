@@ -9,9 +9,11 @@
 #import "FXLoginController.h"
 #import "FXRegisterController.h"
 #import "FXAppDelegate.h"
+#import "LHLDBTools.h"
+#import "SharedClass.h"
 
 @interface FXLoginController ()<UITextFieldDelegate>
-
+//@property (assign ,nonatomic) NSTimeInterval seconds;
 @end
 
 @implementation FXLoginController
@@ -36,6 +38,8 @@
     self.title = @"福务网";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
+    
+    [self testDBMethod];
 }
 
 - (void)didReceiveMemoryWarning
@@ -151,6 +155,46 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark 测试方法 -----------------------------
+- (void)testDBMethod{
+    [SharedClass sharedObject].userID = @"813";
+    
+    
+    //测试按钮
+    UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    forgetButton.frame = CGRectMake(120, 320, 80, 20);
+    forgetButton.titleLabel.font = [UIFont systemFontOfSize:13];
+    forgetButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [forgetButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [forgetButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [forgetButton setBackgroundColor:[UIColor blueColor]];
+    [forgetButton setTitle:@"测试功能？" forState:UIControlStateNormal];
+    [forgetButton addTarget:self action:@selector(testButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:forgetButton];
+}
+
+- (void)testButton:(id)sender{
+    __block NSMutableArray *contacts = [NSMutableArray array];
+//    ContactModel *contact;
+//    for (int i = 0; i < 10000; i ++) {
+//        contact = [[ContactModel alloc] init];
+//        contact.contactID = [NSString stringWithFormat:@"%d",i];
+//        contact.contactNickname = [NSString stringWithFormat:@"doggie_%d",100000 - i];
+//        contact.contactSex = i % 2;
+//        [contacts addObject:contact];
+//    }
+    
+    NSLog(@"开始");
+    [LHLDBTools getAllContactsWithFinished:^(NSArray *contactsArray, NSString *errorMessage) {
+        contacts = [NSMutableArray arrayWithArray:contactsArray];
+    }];
+//    [LHLDBTools deleteContact:contacts withFinished:^(BOOL flag) {
+//        
+//    }];
+    NSLog(@"结束");
+    
 }
 
 @end

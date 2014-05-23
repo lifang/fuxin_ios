@@ -13,9 +13,13 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "MessageModel.h"
+    #import "ContactModel.h"
+    #import "ConversationModel.h"
 #endif
 
 #import "FXConstants.h"
+
 
 
 #define kDOCUMENT_FOLDER_PATH ((NSString *)[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject]) //用户文件夹
