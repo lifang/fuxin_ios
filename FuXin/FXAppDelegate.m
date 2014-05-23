@@ -1,21 +1,72 @@
 //
-//  AppDelegate.m
+//  FXAppDelegate.m
 //  FuXin
 //
-//  Created by lihongliang on 14-5-14.
-//  Copyright (c) 2014年 comdosoft. All rights reserved.
+//  Created by 徐宝桥 on 14-5-14.
+//  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
-#import "AppDelegate.h"
-@implementation AppDelegate
+#import "FXAppDelegate.h"
+
+static FXLoginController      *s_loginController = nil;
+static UINavigationController *s_loginNavController = nil;
+
+static FXMainController       *s_mainController = nil;
+
+@implementation FXAppDelegate
+
+@synthesize rootController = _rootController;
+
++ (FXAppDelegate *)shareFXAppDelegate {
+    return [[UIApplication sharedApplication] delegate];
+}
+
+- (FXRootViewController *)shareRootViewContorller {
+    return _rootController;
+}
+
++ (UINavigationController *)shareLoginViewController {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_loginController = [[FXLoginController alloc] init];
+        s_loginNavController = [[UINavigationController alloc] initWithRootViewController:s_loginController];
+        [[self class] setNavigationBarTinColor:s_loginNavController];
+    });
+    return s_loginNavController;
+}
+
++ (FXMainController *)shareMainViewController {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        s_mainController = [[FXMainController alloc] init];
+    });
+    return s_mainController;
+}
+
+//设置导航栏颜色
++ (void)setNavigationBarTinColor:(UINavigationController *)nav {
+    UIColor *color = kColor(209, 27, 33, 1);
+    float systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
+    if (systemVersion >= 7.0) {
+        nav.navigationBar.barTintColor = color;
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    }
+    else {
+        nav.navigationBar.tintColor = color;
+    }
+    NSMutableDictionary *barAttrs = [NSMutableDictionary dictionary];
+    [barAttrs setObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+    [[UINavigationBar appearance] setTitleTextAttributes:barAttrs];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    _rootController = [[FXRootViewController alloc] init];
+    self.window.rootViewController = _rootController;
+    
     self.window.backgroundColor = [UIColor whiteColor];
-//    TestViewController *testVC = [[TestViewController alloc] initWithNibName:@"TestViewController" bundle:nil];
-//    self.window.rootViewController = testVC;
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -46,7 +97,5 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-#pragma property
-
 
 @end

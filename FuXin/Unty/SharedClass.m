@@ -12,10 +12,9 @@ static SharedClass *singleton = nil;
 @implementation SharedClass
 + (instancetype)sharedObject{
     static SharedClass*  sharedObj = nil;
-    static dispatch_once_t predicate;
-    dispatch_once(&predicate, ^{
+    if (!sharedObj){
         sharedObj = [[self alloc] init];
-    });
+    };
     return sharedObj;
 }
 @end

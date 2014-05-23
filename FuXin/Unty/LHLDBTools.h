@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "FMDB.h"
-
+#import "ContactModel.h"
+#import "MessageModel.h"
+#import "ConversationModel.h"
 
 
 
@@ -65,4 +67,5 @@
 + (void)clearUnreadStatusWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 ///删除某个联系人的聊天记录
 + (void)deleteChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
+
 @end

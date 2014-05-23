@@ -10,6 +10,7 @@
 #define kNUMBER_OF_CHAT_PER_LOAD 20 //每次加载的聊天记录条数
 #define kDATE_FORMAT @"YYYY-MM-dd hh:mm:ss:SSS"  //时间格式 ,主要用于判断聊天记录的顺序
 #define kDB_NAME @"FuXinDB.sqlite" //数据库文件名
+#import "SharedClass.h"
 
 static LHLDBTools *staticDBTools;
 
@@ -19,17 +20,24 @@ static LHLDBTools *staticDBTools;
 
 @implementation LHLDBTools
 
-///根据单例中的userID返回单例.
+///根据公用单例中的userID返回数据库操作单例.
 + (instancetype)shareLHLDBTools{
     static LHLDBTools *dbTool = nil;
     if ([SharedClass sharedObject].userID == nil) {
         return nil;
     }
     if (!dbTool || ![dbTool.userID isEqualToString:[SharedClass sharedObject].userID]) {  //如果无对象,或者对象userID不同 ,则创建对象
+        NSFileManager *manager = [NSFileManager defaultManager];
+        BOOL isDirectory;
+        if (![manager fileExistsAtPath:kUSER_FOLDER_PATH isDirectory:&isDirectory]){
+            NSError *error;
+            [manager createDirectoryAtPath:kUSER_FOLDER_PATH withIntermediateDirectories:YES attributes:nil error:&error];
+        }
         dbTool = [[LHLDBTools alloc] init];
         NSString *dbPath = [kUSER_FOLDER_PATH stringByAppendingPathComponent:kDB_NAME];
         [dbTool setPath:dbPath];
         [dbTool setQueue:[FMDatabaseQueue databaseQueueWithPath:dbPath]];
+        dbTool.userID = [SharedClass sharedObject].userID;
         [dbTool createBaseTables];
         
         NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
@@ -139,6 +147,7 @@ static LHLDBTools *staticDBTools;
             }
         });
     }];
+    [[LHLDBTools shareLHLDBTools].databaseQueue close];
 }
 
 ///转换resultSet为联系人模型
@@ -176,7 +185,7 @@ static LHLDBTools *staticDBTools;
         return;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM Contacts WHERE contactID = ?",contactID.intValue];
+        FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactID.intValue]];
         if ([resultSet next]) {
             ContactModel *contact = [LHLDBTools convertToContactModelFromResultSet:resultSet];
             [resultSet close];
@@ -198,38 +207,37 @@ static LHLDBTools *staticDBTools;
         }
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        [LHLDBTools findContactWithContactID:contactObj.contactID withFinished:^(ContactModel *contact, NSString *errorMessage) {
-            BOOL transationSucceeded;
-            if (contact) {  //联系人已存在
-                transationSucceeded = [db executeUpdate:@"UPDATE Contacts SET ,nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
-                                       ,contactObj.contactNickname
-                                       ,contactObj.contactAvatar
-                                       ,contactObj.contactSex
-                                       ,contactObj.contactIdentity
-                                       ,contactObj.contactRelationship
-                                       ,contactObj.contactRemark
-                                       ,contactObj.contactID.intValue];
-            }else{
-                transationSucceeded = [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark) VALUES (? ,? ,? ,? ,? ,? ,?)"
-                                       ,contactObj.contactID.intValue
-                                       ,contactObj.contactNickname
-                                       ,contactObj.contactAvatar
-                                       ,contactObj.contactSex
-                                       ,contactObj.contactIdentity
-                                       ,contactObj.contactRelationship
-                                       ,contactObj.contactRemark];
+        BOOL transationSucceeded;
+        FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
+        if ([resultSet next]) { //查询到已存在联系人 ,则update
+            transationSucceeded = [db executeUpdate:@"UPDATE Contacts SET ,nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
+                                   ,contactObj.contactNickname
+                                   ,contactObj.contactAvatar
+                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
+                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
+                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
+                                   ,contactObj.contactRemark
+                                   ,contactObj.contactID];
+        }else{  //不存在联系人,则 insert
+            transationSucceeded = [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark) VALUES (? ,? ,? ,? ,? ,? ,?)"
+                                   ,contactObj.contactID
+                                   ,contactObj.contactNickname
+                                   ,contactObj.contactAvatar
+                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
+                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
+                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
+                                   ,contactObj.contactRemark];
+        }
+        if (!transationSucceeded){
+            *rollback = YES;
+            if (finished) {
+                finished(NO);
             }
-            if (!transationSucceeded){
-                *rollback = YES;
-                if (finished) {
-                    finished(NO);
-                }
-            }else{
-                if (finished) {
-                    finished(YES);
-                }
+        }else{
+            if (finished) {
+                finished(YES);
             }
-        }];
+        }
         
     }];
 }
@@ -429,7 +437,7 @@ static LHLDBTools *staticDBTools;
         return;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
-        NSInteger quantity;
+        NSInteger quantity = 0;
         //3表示status的未读状态
         FMResultSet *rst = [db executeQuery:@"SELECT COUNT(id) quantity FROM ChattingRecords WHERE contactID = ? AND status = 3",contactID.intValue ,kNUMBER_OF_CHAT_PER_LOAD ,index];
         while ([rst next]) {
