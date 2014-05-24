@@ -12,8 +12,8 @@
 
 @interface FXAdjustViewController : UIViewController
 
-- (void)setLeftNavBarItem;
-- (void)setRightNavBarItem;
+- (void)setLeftNavBarItemWithImageName:(NSString *)name;
+- (void)setRightNavBarItemWithImageName:(NSString *)name;
 
 //子类可能重写的方法
 - (IBAction)back:(id)sender;

@@ -44,7 +44,7 @@
 
 #pragma mark - 导航栏按钮
 
-- (void)setLeftNavBarItem {
+- (void)setLeftNavBarItemWithImageName:(NSString *)name {
 //    UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back.png"]
 //                                                             style:UIBarButtonItemStyleBordered
 //                                                            target:self
@@ -52,13 +52,13 @@
 //    self.navigationItem.leftBarButtonItem = left;
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     leftButton.frame = CGRectMake(0, 0, 32, 32);
-    [leftButton setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [leftButton setBackgroundImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *left = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = left;
 }
 
-- (void)setRightNavBarItem {
+- (void)setRightNavBarItemWithImageName:(NSString *)name {
 //    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"]
 //                                                              style:UIBarButtonItemStyleBordered
 //                                                             target:self
@@ -66,7 +66,7 @@
 //    self.navigationItem.rightBarButtonItem = right;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rightButton.frame = CGRectMake(0, 0, 32, 32);
-    [rightButton setBackgroundImage:[UIImage imageNamed:@"info.png"] forState:UIControlStateNormal];
+    [rightButton setBackgroundImage:[UIImage imageNamed:name] forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(rightBarTouched:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = right;

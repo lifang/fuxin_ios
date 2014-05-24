@@ -65,7 +65,6 @@ static FXMainController       *s_mainController = nil;
     // Override point for customization after application launch.
     _rootController = [[FXRootViewController alloc] init];
     self.window.rootViewController = _rootController;
-    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

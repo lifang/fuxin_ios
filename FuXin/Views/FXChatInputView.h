@@ -25,7 +25,7 @@
 
 @interface FXChatInputView : UIView<UITextViewDelegate>
 
-@property (nonatomic, weak) id<GetInputTextDelegate> inputDelegate;
+@property (nonatomic, assign) id<GetInputTextDelegate> inputDelegate;
 
 //表情按钮
 @property (nonatomic, strong) UIButton *expressButton;

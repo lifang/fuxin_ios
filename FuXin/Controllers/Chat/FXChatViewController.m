@@ -49,8 +49,8 @@ static NSString *MessageIdentifier = @"messageIdentifier";
     // Do any additional setup after loading the view.
     self.title = @"聊天";
     self.view.backgroundColor = [UIColor whiteColor];
-    [self setLeftNavBarItem];
-    [self setRightNavBarItem];
+    [self setLeftNavBarItemWithImageName:@"back.png"];
+    [self setRightNavBarItemWithImageName:@"info.png"];
     [self initUI];
 }
 
