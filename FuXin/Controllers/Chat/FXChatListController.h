@@ -6,8 +6,10 @@
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "FXSearchViewController.h"
 
-@interface FXChatListController : UITableViewController
+@interface FXChatListController : FXSearchViewController<UITableViewDataSource,UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView *chatListTable;
 
 @end

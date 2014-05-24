@@ -6,7 +6,7 @@
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
-#import "FXAdjustViewController.h"
+#import "FXSearchViewController.h"
 #import "FXTableHeaderView.h"
 
 typedef enum {
@@ -16,7 +16,7 @@ typedef enum {
     AddressListSubscribe,    //订阅
 }AddressListTypes;    //通讯录类型
 
-@interface FXAddressListController : FXAdjustViewController<UITableViewDataSource,UITableViewDelegate>
+@interface FXAddressListController : FXSearchViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *dataTableView;
 

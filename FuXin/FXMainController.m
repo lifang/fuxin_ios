@@ -47,7 +47,7 @@
 #pragma mark - Controllers
 
 - (void)initControllers {
-    FXChatListController *chatC = [[FXChatListController alloc] initWithStyle:UITableViewStylePlain];
+    FXChatListController *chatC = [[FXChatListController alloc] init];
     chatC.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"对话"
                                                     image:[UIImage imageNamed:@"chat.png"]
                                                       tag:0];

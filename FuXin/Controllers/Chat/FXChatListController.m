@@ -18,9 +18,11 @@ static NSString *cellIdentifier = @"cellIdentifier";
 
 @implementation FXChatListController
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize chatListTable = _chatListTable;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
@@ -32,21 +34,32 @@ static NSString *cellIdentifier = @"cellIdentifier";
     [super viewDidLoad];
     
     self.title = @"对话";
-    NSLog(@"%@",self.title);
-    float systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersion >= 7.0) {
-        //支持7.0以上版本的方法
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-        self.extendedLayoutIncludesOpaqueBars = NO;
-        self.modalPresentationCapturesStatusBarAppearance = NO;
-    }
-    [self.tableView registerClass:[FXChatCell class] forCellReuseIdentifier:cellIdentifier];
+    [self setRightNavBarItemWithImageName:@"info.png"];
+    [self initUI];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - UI
+
+- (void)initUI {
+    _chatListTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64 - 49)];
+    _chatListTable.delegate = self;
+    _chatListTable.dataSource = self;
+    [self.view addSubview:_chatListTable];
+    [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:cellIdentifier];
+    [self.view addSubview:self.searchBar];
+}
+
+#pragma mark - 重写
+
+- (IBAction)rightBarTouched:(id)sender {
+    self.searchBar.hidden = NO;
+    [self.searchBar becomeFirstResponder];
 }
 
 #pragma mark - Table view data source
@@ -110,22 +123,5 @@ static NSString *cellIdentifier = @"cellIdentifier";
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
 
 @end

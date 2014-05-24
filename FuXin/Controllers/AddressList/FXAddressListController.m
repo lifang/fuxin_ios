@@ -8,6 +8,7 @@
 
 #import "FXAddressListController.h"
 #import "FXCompareCN.h"
+#import "FXHttpRequest.h"
 
 #define kTopViewHeight   40
 
@@ -36,14 +37,23 @@
     // Do any additional setup after loading the view.
     self.title = @"通讯录";
     NSLog(@"%@",self.title);
+    [self setRightNavBarItemWithImageName:@"info.png"];
     [self initUI];
     _dataItems = [[NSMutableArray alloc] initWithObjects:@"王A",@"王B",@"李A",@"李B",@"赵A",@"张A",@"赵B",@"124",@"5434",nil];
+    [self.view addSubview:self.searchBar];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - 重写
+
+- (IBAction)rightBarTouched:(id)sender {
+    self.searchBar.hidden = NO;
+    [self.searchBar becomeFirstResponder];
 }
 
 #pragma mark - UI
@@ -68,7 +78,7 @@
 
 - (void)initBottomTableView {
     _dataTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kTopViewHeight, 320, kScreenHeight - 64 - kTopViewHeight - 49) style:UITableViewStylePlain];
-    _dataTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+//    _dataTableView.sectionIndexBackgroundColor = [UIColor clearColor];
     _dataTableView.dataSource = self;
     _dataTableView.delegate = self;
     [self.view addSubview:_dataTableView];
@@ -77,12 +87,9 @@
 #pragma mark - Action
 
 - (IBAction)selectedType:(id)sender {
-    NSLog(@"!!!!%ld",(long)[(UISegmentedControl *)sender selectedSegmentIndex]);
-    for (UIView *view in _dataTableView.subviews) {
-        if (view.frame.origin.x == 305) {
-            NSLog(@"%@",[view class]);
-        }
-    }
+    NSLog(@"!!!!%d",[(UISegmentedControl *)sender selectedSegmentIndex]);
+    FXHttpRequest *request = [[FXHttpRequest alloc] init];
+    [request setHttpRequestWithInfo:nil];
 }
 
 #pragma mark - UITableView
