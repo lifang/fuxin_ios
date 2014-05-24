@@ -506,7 +506,7 @@ static LHLDBTools *staticDBTools;
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSInteger quantity = 0;
         //3表示status的未读状态
-        FMResultSet *rst = [db executeQuery:@"SELECT COUNT(id) quantity FROM ChattingRecords WHERE contactID = ? AND status = 3",contactID];
+        FMResultSet *rst = [db executeQuery:@"SELECT COUNT(id) quantity FROM ChattingRecords WHERE status = 3 AND contactID = ?",contactID];
         while ([rst next]) {
             quantity = [rst intForColumn:@"quantity"];
         }
