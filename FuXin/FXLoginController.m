@@ -9,9 +9,11 @@
 #import "FXLoginController.h"
 #import "FXRegisterController.h"
 #import "FXAppDelegate.h"
+#import "LHLDBTools.h"
+#import "SharedClass.h"
 
 @interface FXLoginController ()<UITextFieldDelegate>
-
+//@property (assign ,nonatomic) NSTimeInterval seconds;
 @end
 
 @implementation FXLoginController
@@ -36,6 +38,8 @@
     self.title = @"福务网";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
+    
+    [self testDBMethod];
 }
 
 - (void)didReceiveMemoryWarning
@@ -151,6 +155,87 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark 测试方法 -----------------------------
+- (void)testDBMethod{
+    [SharedClass sharedObject].userID = @"813";
+    
+    
+    //测试按钮
+    UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    forgetButton.frame = CGRectMake(120, 320, 80, 20);
+    forgetButton.titleLabel.font = [UIFont systemFontOfSize:13];
+    forgetButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [forgetButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [forgetButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [forgetButton setBackgroundColor:[UIColor blueColor]];
+    [forgetButton setTitle:@"测试功能？" forState:UIControlStateNormal];
+    [forgetButton addTarget:self action:@selector(testButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:forgetButton];
+}
+
+- (void)testButton:(id)sender{
+    __block NSMutableArray *dataArray = [NSMutableArray array];
+    MessageModel *msg;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"HH:mm:ss .SSS"];
+    for (int i = 10000; i < 90000; i ++) {
+        msg = [[MessageModel alloc] init];
+        msg.messageRecieverID = [NSString stringWithFormat:@"%d" ,i % 7 ];
+        msg.messageSendTime = [formatter stringFromDate:[NSDate date]];
+        msg.messageContent = @"一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .";
+        if (i % 6 == 0) {
+            msg.messageContent = @"一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .";
+        }
+        msg.messageAttachment = [NSString stringWithFormat:@"img/photo_2014_200%d", i];
+        msg.messageStatus = (MessageStatus)(i % 4 + 1);
+        
+        [dataArray addObject:msg];
+    }
+    
+    __block NSMutableArray *resultArray = [NSMutableArray array];
+    [LHLDBTools shareLHLDBTools];
+    NSLog(@"开始");
+    [LHLDBTools saveChattingRecord:dataArray withFinished:^(BOOL flag) {
+        
+    }];
+    NSLog(@"11");
+    [LHLDBTools deleteChattingRecordsWithContactID:@"3" withFinished:^(BOOL flag) {   //慢 一秒
+        
+    }];
+    NSLog(@"删除成功");
+//    [LHLDBTools getLatestChattingRecordsWithContactID:@"2" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+//        [resultArray addObjectsFromArray:recordsArray];
+//    }];
+//    NSLog(@"22");
+////    [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:0 withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+////        [resultArray addObjectsFromArray:recordsArray];
+////    }];
+//    for (int i = 0; i < 3; i ++) {
+//        [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:resultArray.count withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+//            [resultArray addObjectsFromArray:recordsArray];
+//        }];
+//    }
+//    NSLog(@"33");
+    __block NSInteger number = 0;
+    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {  //略慢  0.03秒
+        number = quantity ;
+    }];
+    NSLog(@"未读聊天记录有: %ld 条 ,我们来更新一下",(long)number);
+    [LHLDBTools clearUnreadStatusWithContactID:@"1" withFinished:^(BOOL flag) {    //慢 0.9秒
+        
+    }];
+    NSLog(@"44");
+    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {
+        number = quantity ;
+    }];
+    NSLog(@"未读聊天记录有: %ld 条 ",(long)number);
+    NSLog(@"结束");
+//    for (MessageModel *obj in resultArray){
+//        NSLog(@"%@-%@-%@",obj.messageSendTime ,obj.messageAttachment ,obj.messageRecieverID);
+//    }
+    
 }
 
 @end

@@ -105,7 +105,13 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Contacts'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (id INTEGER PRIMARY KEY ,contactID INTEGER ,nickname TEXT,avatar TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT)"] : NO;
+            [db beginTransaction];
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
+            if (!everythingIsOK) {
+                [db rollback];
+            }
+            [db commit];
         }
         
         [rs close];
@@ -118,7 +124,13 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Conversations'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (id INTEGER PRIMARY KEY ,contactID INTEGER , lastCommunicateTime TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (contactID INTEGER PRIMARY KEY NOT NULL, lastCommunicateTime TEXT)"] : NO;
+            [db beginTransaction];
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX conversations_contactID_index ON Conversations(contactID)"] : NO; //索引
+            if (!everythingIsOK) {
+                [db rollback];
+            }
+            [db commit];
         }
         [rs close];
         if (!everythingIsOK) {
@@ -200,33 +212,39 @@ static LHLDBTools *staticDBTools;
     }];
 }
 ///保存联系人 (自动判断插入/更新)
-+ (void)saveContact:(ContactModel *)contactObj withFinished:(void (^)(BOOL))finished{
-    if (!contactObj) {
++ (void)saveContact:(NSArray *)contactArray withFinished:(void (^)(BOOL))finished{
+    if (!contactArray || contactArray.count < 1) {
         if (finished) {
             finished(NO);
         }
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL transationSucceeded;
-        FMResultSet *resultSet = [db executeQuery:@"SELECT * FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
-        if ([resultSet next]) { //查询到已存在联系人 ,则update
-            transationSucceeded = [db executeUpdate:@"UPDATE Contacts SET ,nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
-                                   ,contactObj.contactNickname
-                                   ,contactObj.contactAvatar
-                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
-                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
-                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
-                                   ,contactObj.contactRemark
-                                   ,contactObj.contactID];
-        }else{  //不存在联系人,则 insert
-            transationSucceeded = [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark) VALUES (? ,? ,? ,? ,? ,? ,?)"
-                                   ,contactObj.contactID
-                                   ,contactObj.contactNickname
-                                   ,contactObj.contactAvatar
-                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
-                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
-                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
-                                   ,contactObj.contactRemark];
+        BOOL transationSucceeded = YES;
+        FMResultSet *resultSet;
+        for (ContactModel *contactObj in contactArray){
+            resultSet = [db executeQuery:@"SELECT contactID FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
+            if ([resultSet next]) {
+                [resultSet close];
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
+                                                             ,contactObj.contactNickname
+                                                             ,contactObj.contactAvatar
+                                                             ,[NSNumber numberWithInt:contactObj.contactSex ]
+                                                             ,[NSNumber numberWithInt:contactObj.contactIdentity]
+                                                             ,[NSNumber numberWithInt:contactObj.contactRelationship]
+                                                             ,contactObj.contactRemark
+                                                             ,contactObj.contactID] : NO;
+            }else{
+                [resultSet close];
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark) VALUES (? ,? ,? ,? ,? ,? ,?)"
+                                                             ,contactObj.contactID
+                                                             ,contactObj.contactNickname
+                                                             ,contactObj.contactAvatar
+                                                             ,[NSNumber numberWithInt:contactObj.contactSex ]
+                                                             ,[NSNumber numberWithInt:contactObj.contactIdentity]
+                                                             ,[NSNumber numberWithInt:contactObj.contactRelationship]
+                                                             ,contactObj.contactRemark] : NO;
+                
+            }
         }
         if (!transationSucceeded){
             *rollback = YES;
@@ -238,57 +256,104 @@ static LHLDBTools *staticDBTools;
                 finished(YES);
             }
         }
-        
     }];
 }
 
+///删除联系人
++ (void)deleteContact:(NSArray *)contactArray withFinished:(void (^)(BOOL flag))finished{
+    if (!contactArray || contactArray.count < 1) {
+        if (finished) {
+            finished(NO);
+        }
+    }
+    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL transationSucceeded = YES;
+        for (ContactModel *contactObj in contactArray){
+            transationSucceeded = transationSucceeded ? [db executeUpdate:@"DELETE FROM Contacts WHERE contactID = ?"
+                                                         ,contactObj.contactID] : NO;
+        }
+        if (!transationSucceeded){
+            *rollback = YES;
+            if (finished) {
+                finished(NO);
+            }
+        }else{
+            if (finished) {
+                finished(YES);
+            }
+        }
+    }];
+}
+
+//更新联系人信息
+//+ (void)updateContact:(ContactModel *)contactObj withFinished:(void (^)(BOOL flag))finished{
+//    if (!contactObj) {
+//        if (finished) {
+//            finished(NO);
+//        }
+//    }
+//    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+//        BOOL transationSucceeded;
+//        transationSucceeded = [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
+//                                   ,contactObj.contactNickname
+//                                   ,contactObj.contactAvatar
+//                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
+//                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
+//                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
+//                                   ,contactObj.contactRemark
+//                                   ,contactObj.contactID];
+//        
+//        if (!transationSucceeded){
+//            *rollback = YES;
+//            if (finished) {
+//                finished(NO);
+//            }
+//        }else{
+//            if (finished) {
+//                finished(YES);
+//            }
+//        }
+//    }];
+//}
+
 #pragma mark 最近对话
-///保存最近对话信息
-+ (void)saveConversation:(ConversationModel *)conversation withFinished:(void (^)(BOOL flag))finished{
-    if (!conversation) {
+///保存最近对话信息 (更新 / 插入)
++ (void)saveConversation:(NSArray *)conversationArray withFinished:(void (^)(BOOL flag))finished{
+    if (!conversationArray || conversationArray.count < 1) {
         if (finished) {
             finished(NO);
         }
         return;
     }
-    //查找是否存在
-    [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
-        FMResultSet *resultSet = [db executeQuery:@""];
-        if ([resultSet next]) { //存在 ,更新日期即可
-            [resultSet close];
-            [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                BOOL transactionSucceeded = [db executeUpdate:@"UPDATE Conversations SET lastCommunicateTime = ? WHERE contactID = ?",
-                                             conversation.conversationLastCommunicateTime,
-                                             conversation.conversationContactID.intValue];
-                if (transactionSucceeded) {
-                    if (finished) {
-                        finished(YES);
-                    }
-                }else{
-                    *rollback = YES;
-                    if (finished) {
-                        finished(NO);
-                    }
-                }
-            }];
+    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        FMResultSet *resultSet;
+        BOOL transactionSucceeded = YES;
+        for (ConversationModel *conversation in conversationArray){
+            resultSet = [db executeQuery:@"SELECT contactID FROM Conversations WHERE contactID = ?" ,conversation.conversationContactID];
+            if ([resultSet next]) {  //存在
+                [resultSet close];
+                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"UPDATE Conversations SET lastCommunicateTime = ? WHERE contactID = ?",
+                                                               conversation.conversationLastCommunicateTime,
+                                                               conversation.conversationContactID] : NO;
+            }else{
+                [resultSet close];
+                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"INSERT INTO Conversations (contactID ,lastCommunicateTime) VALUES (? ,?)",
+                                                               [NSNumber numberWithInteger:conversation.conversationContactID.integerValue],conversation.conversationLastCommunicateTime
+                                                               ] : NO;
+            }
+        }
+        if (transactionSucceeded) {
+            if (finished) {
+                finished(YES);
+            }
         }else{
-            [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-                BOOL transactionSucceeded = [db executeUpdate:@"INSERT INTO Conversations (contactID ,lastCommunicateTime) VALUES (? ,?)"
-                                             ,conversation.conversationContactID.intValue
-                                             ,conversation.conversationLastCommunicateTime];
-                if (transactionSucceeded) {
-                    if (finished) {
-                        finished(YES);
-                    }
-                }else{
-                    *rollback = YES;
-                    if (finished) {
-                        finished(NO);
-                    }
-                }
-            }];
+            *rollback = YES;
+            if (finished) {
+                finished(NO);
+            }
         }
     }];
+    NSLog(@"我return了");
 }
 
 ///查找所有最近对话信息
@@ -325,7 +390,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL executeSucceeded;
-        executeSucceeded = [db executeUpdate:@"DELETE FROM Conversations WHERE contactID = ?",contactID.intValue];
+        executeSucceeded = [db executeUpdate:@"DELETE FROM Conversations WHERE contactID = ?",contactID];
         if (executeSucceeded) {
             if (finished) {
                 finished(YES);
@@ -341,8 +406,8 @@ static LHLDBTools *staticDBTools;
 
 #pragma mark 聊天记录
 ///保存一条聊天记录
-+ (void)saveChattingRecord:(MessageModel *)chattingRecord withFinished:(void (^)(BOOL flag))finished{
-    if (!chattingRecord) {
++ (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished{
+    if (!chattingRecordArray || chattingRecordArray.count < 1) {
         if (finished) {
             finished(NO);
         }
@@ -350,14 +415,16 @@ static LHLDBTools *staticDBTools;
     }
     //聊天记录不用update
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL executeSucceeded;
-        executeSucceeded = [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status) VALUES (? ,? ,? ,? ,?)"
-                            ,chattingRecord.messageRecieverID.intValue
-                            ,chattingRecord.messageSendTime
-                            ,chattingRecord.messageContent
-                            ,chattingRecord.messageAttachment
-                            ,chattingRecord.messageStatus
-                            ];
+        BOOL executeSucceeded = YES;
+        for (MessageModel *chattingRecord in chattingRecordArray){
+            executeSucceeded = executeSucceeded ? [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status) VALUES (? ,? ,? ,? ,?)"
+                                                   ,chattingRecord.messageRecieverID
+                                                   ,chattingRecord.messageSendTime
+                                                   ,chattingRecord.messageContent
+                                                   ,chattingRecord.messageAttachment
+                                                   ,[NSNumber numberWithInt:chattingRecord.messageStatus]
+                                                   ] : NO;
+        }
         if (finished) {
             finished(executeSucceeded);
         }
@@ -377,7 +444,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSMutableArray *records = [NSMutableArray array];
-        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id LIMIT ?",contactID.intValue,kNUMBER_OF_CHAT_PER_LOAD];
+        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id DESC LIMIT ?",contactID,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD]];
         while ([rst next]) {
             MessageModel *message = [LHLDBTools convertToMessageFromResultSet:rst];
             [records addObject:message];
@@ -405,7 +472,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSMutableArray *records = [NSMutableArray array];
-        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id LIMIT ? OFFSET ?",contactID.intValue ,kNUMBER_OF_CHAT_PER_LOAD ,index];
+        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id DESC LIMIT ? OFFSET ?",contactID ,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD] ,[NSNumber numberWithInteger:index]];
         while ([rst next]) {
             MessageModel *message = [LHLDBTools convertToMessageFromResultSet:rst];
             [records addObject:message];
@@ -439,7 +506,7 @@ static LHLDBTools *staticDBTools;
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSInteger quantity = 0;
         //3表示status的未读状态
-        FMResultSet *rst = [db executeQuery:@"SELECT COUNT(id) quantity FROM ChattingRecords WHERE contactID = ? AND status = 3",contactID.intValue ,kNUMBER_OF_CHAT_PER_LOAD ,index];
+        FMResultSet *rst = [db executeQuery:@"SELECT COUNT(id) quantity FROM ChattingRecords WHERE contactID = ? AND status = 3",contactID];
         while ([rst next]) {
             quantity = [rst intForColumn:@"quantity"];
         }
@@ -460,7 +527,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL executeSucceeded;
-        executeSucceeded = [db executeUpdate:@"UPDATE ChattingRecords SET status = 4 WHERE status = 3 AND contactID = ?",contactID.intValue];
+        executeSucceeded = [db executeUpdate:@"UPDATE ChattingRecords SET status = 4 WHERE status = 3 AND contactID = ?",contactID];
         if (executeSucceeded) {
             if (finished) {
                 finished(YES);
@@ -483,7 +550,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         BOOL executeSucceeded;
-        executeSucceeded = [db executeUpdate:@"DELETE FROM ChattingRecords WHERE contactID = ?",contactID.intValue];
+        executeSucceeded = [db executeUpdate:@"DELETE FROM ChattingRecords WHERE contactID = ?",contactID];
         if (executeSucceeded) {
             if (finished) {
                 finished(YES);

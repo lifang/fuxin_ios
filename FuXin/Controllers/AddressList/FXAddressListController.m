@@ -95,7 +95,7 @@
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSLog(@"%d",[[FXCompareCN tableViewIndexArray:_dataItems] count]);
+    NSLog(@"%lu",(unsigned long)[[FXCompareCN tableViewIndexArray:_dataItems] count]);
     return [[FXCompareCN tableViewIndexArray:_dataItems] count];
 }
 
