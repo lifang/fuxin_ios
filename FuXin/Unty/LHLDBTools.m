@@ -124,7 +124,7 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Conversations'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (contactID INTEGER PRAMARY KEY NOT NULL, lastCommunicateTime TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (contactID INTEGER PRIMARY KEY NOT NULL, lastCommunicateTime TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX conversations_contactID_index ON Conversations(contactID)"] : NO; //索引
             if (!everythingIsOK) {
@@ -338,8 +338,8 @@ static LHLDBTools *staticDBTools;
             }else{
                 [resultSet close];
                 transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"INSERT INTO Conversations (contactID ,lastCommunicateTime) VALUES (? ,?)",
-                                                               conversation.conversationLastCommunicateTime,
-                                                               conversation.conversationContactID] : NO;
+                                                               [NSNumber numberWithInteger:conversation.conversationContactID.integerValue],conversation.conversationLastCommunicateTime
+                                                               ] : NO;
             }
         }
         if (transactionSucceeded) {
@@ -353,6 +353,7 @@ static LHLDBTools *staticDBTools;
             }
         }
     }];
+    NSLog(@"我return了");
 }
 
 ///查找所有最近对话信息
@@ -405,8 +406,8 @@ static LHLDBTools *staticDBTools;
 
 #pragma mark 聊天记录
 ///保存一条聊天记录
-+ (void)saveChattingRecord:(MessageModel *)chattingRecord withFinished:(void (^)(BOOL flag))finished{
-    if (!chattingRecord) {
++ (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished{
+    if (!chattingRecordArray || chattingRecordArray.count < 1) {
         if (finished) {
             finished(NO);
         }
@@ -414,14 +415,16 @@ static LHLDBTools *staticDBTools;
     }
     //聊天记录不用update
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-        BOOL executeSucceeded;
-        executeSucceeded = [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status) VALUES (? ,? ,? ,? ,?)"
-                            ,chattingRecord.messageRecieverID
-                            ,chattingRecord.messageSendTime
-                            ,chattingRecord.messageContent
-                            ,chattingRecord.messageAttachment
-                            ,[NSNumber numberWithInt:chattingRecord.messageStatus]
-                            ];
+        BOOL executeSucceeded = YES;
+        for (MessageModel *chattingRecord in chattingRecordArray){
+            executeSucceeded = executeSucceeded ? [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status) VALUES (? ,? ,? ,? ,?)"
+                                                   ,chattingRecord.messageRecieverID
+                                                   ,chattingRecord.messageSendTime
+                                                   ,chattingRecord.messageContent
+                                                   ,chattingRecord.messageAttachment
+                                                   ,[NSNumber numberWithInt:chattingRecord.messageStatus]
+                                                   ] : NO;
+        }
         if (finished) {
             finished(executeSucceeded);
         }
@@ -441,7 +444,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSMutableArray *records = [NSMutableArray array];
-        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id LIMIT ?",contactID,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD]];
+        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id DESC LIMIT ?",contactID,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD]];
         while ([rst next]) {
             MessageModel *message = [LHLDBTools convertToMessageFromResultSet:rst];
             [records addObject:message];
@@ -469,7 +472,7 @@ static LHLDBTools *staticDBTools;
     }
     [[LHLDBTools shareLHLDBTools].databaseQueue inDatabase:^(FMDatabase *db) {
         NSMutableArray *records = [NSMutableArray array];
-        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id LIMIT ? OFFSET ?",contactID ,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD] ,[NSNumber numberWithInt:index]];
+        FMResultSet *rst = [db executeQuery:@"SELECT * FROM ChattingRecords WHERE contactID = ? ORDER BY id DESC LIMIT ? OFFSET ?",contactID ,[NSNumber numberWithInt:kNUMBER_OF_CHAT_PER_LOAD] ,[NSNumber numberWithInteger:index]];
         while ([rst next]) {
             MessageModel *message = [LHLDBTools convertToMessageFromResultSet:rst];
             [records addObject:message];

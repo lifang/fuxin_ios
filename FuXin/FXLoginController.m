@@ -176,24 +176,65 @@
 }
 
 - (void)testButton:(id)sender{
-    __block NSMutableArray *contacts = [NSMutableArray array];
-//    ContactModel *contact;
-//    for (int i = 0; i < 10000; i ++) {
-//        contact = [[ContactModel alloc] init];
-//        contact.contactID = [NSString stringWithFormat:@"%d",i];
-//        contact.contactNickname = [NSString stringWithFormat:@"doggie_%d",100000 - i];
-//        contact.contactSex = i % 2;
-//        [contacts addObject:contact];
-//    }
+    __block NSMutableArray *dataArray = [NSMutableArray array];
+    MessageModel *msg;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"HH:mm:ss .SSS"];
+    for (int i = 10000; i < 90000; i ++) {
+        msg = [[MessageModel alloc] init];
+        msg.messageRecieverID = [NSString stringWithFormat:@"%d" ,i % 7 ];
+        msg.messageSendTime = [formatter stringFromDate:[NSDate date]];
+        msg.messageContent = @"一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .";
+        if (i % 6 == 0) {
+            msg.messageContent = @"一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .一二三四五 ,上山打老虎 ,老虎没打着 ,打着小松鼠 .";
+        }
+        msg.messageAttachment = [NSString stringWithFormat:@"img/photo_2014_200%d", i];
+        msg.messageStatus = (MessageStatus)(i % 4 + 1);
+        
+        [dataArray addObject:msg];
+    }
     
+    __block NSMutableArray *resultArray = [NSMutableArray array];
+    [LHLDBTools shareLHLDBTools];
     NSLog(@"开始");
-    [LHLDBTools getAllContactsWithFinished:^(NSArray *contactsArray, NSString *errorMessage) {
-        contacts = [NSMutableArray arrayWithArray:contactsArray];
+    [LHLDBTools saveChattingRecord:dataArray withFinished:^(BOOL flag) {
+        
     }];
-//    [LHLDBTools deleteContact:contacts withFinished:^(BOOL flag) {
-//        
+    NSLog(@"11");
+    [LHLDBTools deleteChattingRecordsWithContactID:@"3" withFinished:^(BOOL flag) {   //慢 一秒
+        
+    }];
+    NSLog(@"删除成功");
+//    [LHLDBTools getLatestChattingRecordsWithContactID:@"2" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+//        [resultArray addObjectsFromArray:recordsArray];
 //    }];
+//    NSLog(@"22");
+////    [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:0 withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+////        [resultArray addObjectsFromArray:recordsArray];
+////    }];
+//    for (int i = 0; i < 3; i ++) {
+//        [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:resultArray.count withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+//            [resultArray addObjectsFromArray:recordsArray];
+//        }];
+//    }
+//    NSLog(@"33");
+    __block NSInteger number = 0;
+    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {  //略慢  0.03秒
+        number = quantity ;
+    }];
+    NSLog(@"未读聊天记录有: %ld 条 ,我们来更新一下",(long)number);
+    [LHLDBTools clearUnreadStatusWithContactID:@"1" withFinished:^(BOOL flag) {    //慢 0.9秒
+        
+    }];
+    NSLog(@"44");
+    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {
+        number = quantity ;
+    }];
+    NSLog(@"未读聊天记录有: %ld 条 ",(long)number);
     NSLog(@"结束");
+//    for (MessageModel *obj in resultArray){
+//        NSLog(@"%@-%@-%@",obj.messageSendTime ,obj.messageAttachment ,obj.messageRecieverID);
+//    }
     
 }
 

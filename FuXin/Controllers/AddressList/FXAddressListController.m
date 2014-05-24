@@ -77,7 +77,7 @@
 #pragma mark - Action
 
 - (IBAction)selectedType:(id)sender {
-    NSLog(@"!!!!%d",[(UISegmentedControl *)sender selectedSegmentIndex]);
+    NSLog(@"!!!!%ld",(long)[(UISegmentedControl *)sender selectedSegmentIndex]);
     for (UIView *view in _dataTableView.subviews) {
         if (view.frame.origin.x == 305) {
             NSLog(@"%@",[view class]);
@@ -88,7 +88,7 @@
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSLog(@"%d",[[FXCompareCN tableViewIndexArray:_dataItems] count]);
+    NSLog(@"%lu",(unsigned long)[[FXCompareCN tableViewIndexArray:_dataItems] count]);
     return [[FXCompareCN tableViewIndexArray:_dataItems] count];
 }
 

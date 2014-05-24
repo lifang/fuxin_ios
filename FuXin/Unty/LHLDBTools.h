@@ -23,10 +23,13 @@
 @interface LHLDBTools : NSObject
 ///数据库路径
 @property (nonatomic,strong,readonly) NSString *databasePath;
+
 ///数据库操作单例
 @property (nonatomic,strong,readonly) FMDatabaseQueue *databaseQueue;
+
 ///DateFormatter
 @property (nonatomic,strong,readonly) NSDateFormatter *dateFormatter;
+
 ///返回本类的单例
 + (instancetype)shareLHLDBTools;
 
@@ -39,34 +42,46 @@
 #pragma mark 联系人
 ///查找所有联系人
 + (void)getAllContactsWithFinished:(void (^)(NSArray *contactsArray,NSString *errorMessage))finished;
+
 ///根据联系人ID查找联系人
 + (void)findContactWithContactID:(NSString *)contactID withFinished:(void (^)(ContactModel *contact,NSString *errorMessage))finished;
+
 ///保存联系人(自动判断插入/更新)
 + (void)saveContact:(NSArray *)contactArray withFinished:(void (^)(BOOL flag))finished;
+
 ///删除联系人
 + (void)deleteContact:(NSArray *)contactArray withFinished:(void (^)(BOOL flag))finished;
 
 #pragma mark 最近对话
 ///保存最近对话信息 (自动判断插入/更新)
 + (void)saveConversation:(NSArray *)conversationArray withFinished:(void (^)(BOOL flag))finished;
+
 ///查找所有最近对话信息
 + (void)getConversationsWithFinished:(void (^)(NSMutableArray *conversationsArray,NSString *errorMessage))finished;
+
 ///删除最近对话信息
 + (void)deleteConversationWithID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 
+
 #pragma mark 聊天记录
 ///保存一条聊天记录
-+ (void)saveChattingRecord:(MessageModel *)chattingRecord withFinished:(void (^)(BOOL flag))finished;
-///查询与某个联系人的最后N条聊天记录
++ (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished;
+
+///查询与某个联系人的最后N条聊天记录  (目前按时间倒序排列)
 + (void)getLatestChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSArray *recordsArray,NSString *errorMessage))finished;
-///按index查询之前若干条聊天记录
+
+///按index查询之前若干条聊天记录   (目前按时间倒序排列) (使用: index为已有数据数组的count ,直接add在数组后面即可)
 + (void)getChattingRecordsWithContactID:(NSString *)contactID beforeIndex:(NSInteger)index withFinished:(void (^)(NSArray *recordsArray,NSString *errorMessage))finished;
-///查询某个时间点之前的N条聊天记录
+
+///查询某个时间点之前的N条聊天记录 (暂时弃用)
 + (void)getChattingRecordsBeforeTime:(NSString *)timeString WithContactID:(NSString *)contactID withFinished:(void (^)(NSArray *recordsArray,NSString *errorMessage))finished;
+
 ///查询某联系人未读信息的数量
 + (void)numberOfUnreadChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSInteger quantity,NSString *errorMessage))finished;
+
 ///清除某联系人的未读状态
 + (void)clearUnreadStatusWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
+
 ///删除某个联系人的聊天记录
 + (void)deleteChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 
