@@ -8,6 +8,7 @@
 
 #import "FXLoginController.h"
 #import "FXRegisterController.h"
+#import "FXForgotPasswordController.h"
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
 #import "SharedClass.h"
@@ -147,7 +148,8 @@
 }
 
 - (IBAction)forgetPassword:(id)sender {
-    
+    FXForgotPasswordController *forgotPWDController = [[FXForgotPasswordController alloc] initWithNibName:@"FXForgotPasswordController" bundle:nil];
+    [self.navigationController pushViewController:forgotPWDController animated:YES];
 }
 
 #pragma mark - UITextFieldDelegate 
