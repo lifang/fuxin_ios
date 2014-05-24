@@ -1,0 +1,851 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7702C723192AE2810015A178 /* FXSettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C722192AE2810015A178 /* FXSettingController.m */; };
+		7702C7AC192AF2250015A178 /* FXAdjustViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C7AB192AF2250015A178 /* FXAdjustViewController.m */; };
+		7702C7B3192B03D70015A178 /* addr@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7AD192B03D70015A178 /* addr@2x.png */; };
+		7702C7B5192B03D70015A178 /* chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7AF192B03D70015A178 /* chat@2x.png */; };
+		7702C7B7192B03D70015A178 /* setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7B1192B03D70015A178 /* setting@2x.png */; };
+		7702C7BB192B27950015A178 /* FXChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C7BA192B27950015A178 /* FXChatCell.m */; };
+		7702C7BD192B45DF0015A178 /* messnum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7BC192B45DF0015A178 /* messnum@2x.png */; };
+		7702C7C0192B47290015A178 /* FXChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C7BF192B47290015A178 /* FXChatViewController.m */; };
+		7702C7C4192B48420015A178 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7C3192B48420015A178 /* info@2x.png */; };
+		7702C7C6192B4AF20015A178 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7702C7C5192B4AF20015A178 /* back@2x.png */; };
+		7702C7CB192B4D370015A178 /* KxMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7702C7CA192B4D370015A178 /* KxMenu.m */; };
+		770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 770319BA192C351E00798D4D /* FXMessageBoxCell.m */; };
+		770319BE192C3D5B00798D4D /* express_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319BC192C3D5B00798D4D /* express_selected@2x.png */; };
+		770319BF192C3D5B00798D4D /* express@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319BD192C3D5B00798D4D /* express@2x.png */; };
+		770319C2192C3DAD00798D4D /* FXChatInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770319C1192C3DAD00798D4D /* FXChatInputView.m */; };
+		770319CC192C580900798D4D /* password@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319C9192C580900798D4D /* password@2x.png */; };
+		770319CD192C580900798D4D /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319CA192C580900798D4D /* user@2x.png */; };
+		770319CE192C580900798D4D /* username@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319CB192C580900798D4D /* username@2x.png */; };
+		770319D2192C5A0600798D4D /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319D0192C5A0600798D4D /* check@2x.png */; };
+		770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319D1192C5A0600798D4D /* uncheck@2x.png */; };
+		770319DC192C7F0300798D4D /* FXKeyboardAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 770319DB192C7F0300798D4D /* FXKeyboardAnimation.m */; };
+		770319DF192C9C2100798D4D /* receive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319DD192C9C2100798D4D /* receive@2x.png */; };
+		770319E0192C9C2100798D4D /* sender@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319DE192C9C2100798D4D /* sender@2x.png */; };
+		7706BD3E1929A7F700C3E0E5 /* FXRegisterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD3D1929A7F700C3E0E5 /* FXRegisterController.m */; };
+		7706BD411929A95F00C3E0E5 /* FXInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD401929A95F00C3E0E5 /* FXInputView.m */; };
+		7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD431929D4E000C3E0E5 /* FXReviewController.m */; };
+		7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD461929EAE500C3E0E5 /* FXFinishConroller.m */; };
+		7706BD50192A040400C3E0E5 /* FXChatListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD4F192A040400C3E0E5 /* FXChatListController.m */; };
+		7706BD53192A0CE800C3E0E5 /* FXAddressListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD52192A0CE800C3E0E5 /* FXAddressListController.m */; };
+		7706BD56192A0FF400C3E0E5 /* FXMainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD55192A0FF400C3E0E5 /* FXMainController.m */; };
+		770BC264192D8F18008104ED /* add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770BC262192D8F18008104ED /* add@2x.png */; };
+		770BC265192D8F18008104ED /* addselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770BC263192D8F18008104ED /* addselected@2x.png */; };
+		770BC269192DA596008104ED /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 770BC267192DA596008104ED /* pinyin.c */; };
+		770BC26C192DA5B3008104ED /* FXChineseName.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC26B192DA5B3008104ED /* FXChineseName.m */; };
+		770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC26E192DA65B008104ED /* FXCompareCN.m */; };
+		770BC284192DF23A008104ED /* FXEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC283192DF23A008104ED /* FXEmojiView.m */; };
+		770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC29B192E0B42008104ED /* FXTableHeaderView.m */; };
+		773ECB541926151000C57DDC /* FXUserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB531926151000C57DDC /* FXUserView.m */; };
+		773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB56192615FF00C57DDC /* FXShadowView.m */; };
+		77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786276F192313B9009AF6E6 /* Foundation.framework */; };
+		77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862771192313B9009AF6E6 /* CoreGraphics.framework */; };
+		77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862773192313B9009AF6E6 /* UIKit.framework */; };
+		7786277A192313B9009AF6E6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77862778192313B9009AF6E6 /* InfoPlist.strings */; };
+		7786277C192313B9009AF6E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786277B192313B9009AF6E6 /* main.m */; };
+		77862780192313B9009AF6E6 /* FXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786277F192313B9009AF6E6 /* FXAppDelegate.m */; };
+		77862782192313B9009AF6E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77862781192313B9009AF6E6 /* Images.xcassets */; };
+		77862789192313B9009AF6E6 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862788192313B9009AF6E6 /* XCTest.framework */; };
+		7786278A192313B9009AF6E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786276F192313B9009AF6E6 /* Foundation.framework */; };
+		7786278B192313B9009AF6E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862773192313B9009AF6E6 /* UIKit.framework */; };
+		77862793192313B9009AF6E6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 77862791192313B9009AF6E6 /* InfoPlist.strings */; };
+		77862795192313B9009AF6E6 /* FuXinTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 77862794192313B9009AF6E6 /* FuXinTests.m */; };
+		778627A0192313DA009AF6E6 /* FXLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7786279F192313DA009AF6E6 /* FXLoginController.m */; };
+		7790A0BD1926708600498659 /* FXRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7790A0BC1926708600498659 /* FXRootViewController.m */; };
+		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
+		93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3326192EFD3000D0DE49 /* ContactModel.m */; };
+		93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3328192EFD3000D0DE49 /* ConversationModel.m */; };
+		93EC332D192EFD3000D0DE49 /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC332A192EFD3000D0DE49 /* MessageModel.m */; };
+		93EC3357192EFD7800D0DE49 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3349192EFD7800D0DE49 /* FMDatabase.m */; };
+		93EC3358192EFD7800D0DE49 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC334B192EFD7800D0DE49 /* FMDatabaseAdditions.m */; };
+		93EC3359192EFD7800D0DE49 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC334D192EFD7800D0DE49 /* FMDatabasePool.m */; };
+		93EC335A192EFD7800D0DE49 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC334F192EFD7800D0DE49 /* FMDatabaseQueue.m */; };
+		93EC335B192EFD7800D0DE49 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3352192EFD7800D0DE49 /* FMResultSet.m */; };
+		93EC335C192EFD7800D0DE49 /* LHLDBTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3354192EFD7800D0DE49 /* LHLDBTools.m */; };
+		93EC335D192EFD7800D0DE49 /* SharedClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3356192EFD7800D0DE49 /* SharedClass.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7786278C192313B9009AF6E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 77862764192313B9009AF6E6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7786276B192313B9009AF6E6;
+			remoteInfo = FuXin;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7702C721192AE2810015A178 /* FXSettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXSettingController.h; sourceTree = "<group>"; };
+		7702C722192AE2810015A178 /* FXSettingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXSettingController.m; sourceTree = "<group>"; };
+		7702C7AA192AF2250015A178 /* FXAdjustViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXAdjustViewController.h; sourceTree = "<group>"; };
+		7702C7AB192AF2250015A178 /* FXAdjustViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXAdjustViewController.m; sourceTree = "<group>"; };
+		7702C7AD192B03D70015A178 /* addr@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addr@2x.png"; sourceTree = "<group>"; };
+		7702C7AF192B03D70015A178 /* chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chat@2x.png"; sourceTree = "<group>"; };
+		7702C7B1192B03D70015A178 /* setting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting@2x.png"; sourceTree = "<group>"; };
+		7702C7B9192B27950015A178 /* FXChatCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXChatCell.h; sourceTree = "<group>"; };
+		7702C7BA192B27950015A178 /* FXChatCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXChatCell.m; sourceTree = "<group>"; };
+		7702C7BC192B45DF0015A178 /* messnum@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "messnum@2x.png"; sourceTree = "<group>"; };
+		7702C7BE192B47290015A178 /* FXChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXChatViewController.h; sourceTree = "<group>"; };
+		7702C7BF192B47290015A178 /* FXChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXChatViewController.m; sourceTree = "<group>"; };
+		7702C7C3192B48420015A178 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
+		7702C7C5192B4AF20015A178 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back@2x.png"; sourceTree = "<group>"; };
+		7702C7C9192B4D370015A178 /* KxMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KxMenu.h; sourceTree = "<group>"; };
+		7702C7CA192B4D370015A178 /* KxMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KxMenu.m; sourceTree = "<group>"; };
+		770319B9192C351E00798D4D /* FXMessageBoxCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXMessageBoxCell.h; sourceTree = "<group>"; };
+		770319BA192C351E00798D4D /* FXMessageBoxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXMessageBoxCell.m; sourceTree = "<group>"; };
+		770319BC192C3D5B00798D4D /* express_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "express_selected@2x.png"; sourceTree = "<group>"; };
+		770319BD192C3D5B00798D4D /* express@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "express@2x.png"; sourceTree = "<group>"; };
+		770319C0192C3DAD00798D4D /* FXChatInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXChatInputView.h; sourceTree = "<group>"; };
+		770319C1192C3DAD00798D4D /* FXChatInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXChatInputView.m; sourceTree = "<group>"; };
+		770319C9192C580900798D4D /* password@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "password@2x.png"; sourceTree = "<group>"; };
+		770319CA192C580900798D4D /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
+		770319CB192C580900798D4D /* username@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "username@2x.png"; sourceTree = "<group>"; };
+		770319D0192C5A0600798D4D /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
+		770319D1192C5A0600798D4D /* uncheck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uncheck@2x.png"; sourceTree = "<group>"; };
+		770319DA192C7F0300798D4D /* FXKeyboardAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXKeyboardAnimation.h; sourceTree = "<group>"; };
+		770319DB192C7F0300798D4D /* FXKeyboardAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXKeyboardAnimation.m; sourceTree = "<group>"; };
+		770319DD192C9C2100798D4D /* receive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "receive@2x.png"; sourceTree = "<group>"; };
+		770319DE192C9C2100798D4D /* sender@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sender@2x.png"; sourceTree = "<group>"; };
+		7706BD3C1929A7F700C3E0E5 /* FXRegisterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXRegisterController.h; sourceTree = "<group>"; };
+		7706BD3D1929A7F700C3E0E5 /* FXRegisterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXRegisterController.m; sourceTree = "<group>"; };
+		7706BD3F1929A95F00C3E0E5 /* FXInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXInputView.h; sourceTree = "<group>"; };
+		7706BD401929A95F00C3E0E5 /* FXInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXInputView.m; sourceTree = "<group>"; };
+		7706BD421929D4E000C3E0E5 /* FXReviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXReviewController.h; sourceTree = "<group>"; };
+		7706BD431929D4E000C3E0E5 /* FXReviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXReviewController.m; sourceTree = "<group>"; };
+		7706BD451929EAE500C3E0E5 /* FXFinishConroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXFinishConroller.h; sourceTree = "<group>"; };
+		7706BD461929EAE500C3E0E5 /* FXFinishConroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXFinishConroller.m; sourceTree = "<group>"; };
+		7706BD4E192A040400C3E0E5 /* FXChatListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXChatListController.h; sourceTree = "<group>"; };
+		7706BD4F192A040400C3E0E5 /* FXChatListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXChatListController.m; sourceTree = "<group>"; };
+		7706BD51192A0CE800C3E0E5 /* FXAddressListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXAddressListController.h; sourceTree = "<group>"; };
+		7706BD52192A0CE800C3E0E5 /* FXAddressListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXAddressListController.m; sourceTree = "<group>"; };
+		7706BD54192A0FF400C3E0E5 /* FXMainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXMainController.h; sourceTree = "<group>"; };
+		7706BD55192A0FF400C3E0E5 /* FXMainController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXMainController.m; sourceTree = "<group>"; };
+		770BC262192D8F18008104ED /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
+		770BC263192D8F18008104ED /* addselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addselected@2x.png"; sourceTree = "<group>"; };
+		770BC267192DA596008104ED /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
+		770BC268192DA596008104ED /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
+		770BC26A192DA5B3008104ED /* FXChineseName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXChineseName.h; sourceTree = "<group>"; };
+		770BC26B192DA5B3008104ED /* FXChineseName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXChineseName.m; sourceTree = "<group>"; };
+		770BC26D192DA65B008104ED /* FXCompareCN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXCompareCN.h; sourceTree = "<group>"; };
+		770BC26E192DA65B008104ED /* FXCompareCN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXCompareCN.m; sourceTree = "<group>"; };
+		770BC282192DF23A008104ED /* FXEmojiView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXEmojiView.h; sourceTree = "<group>"; };
+		770BC283192DF23A008104ED /* FXEmojiView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXEmojiView.m; sourceTree = "<group>"; };
+		770BC288192DF30B008104ED /* FXEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXEmoji.h; sourceTree = "<group>"; };
+		770BC29A192E0B42008104ED /* FXTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXTableHeaderView.h; sourceTree = "<group>"; };
+		770BC29B192E0B42008104ED /* FXTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTableHeaderView.m; sourceTree = "<group>"; };
+		773ECB521926151000C57DDC /* FXUserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserView.h; sourceTree = "<group>"; };
+		773ECB531926151000C57DDC /* FXUserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUserView.m; sourceTree = "<group>"; };
+		773ECB55192615FF00C57DDC /* FXShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXShadowView.h; sourceTree = "<group>"; };
+		773ECB56192615FF00C57DDC /* FXShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXShadowView.m; sourceTree = "<group>"; };
+		7786276C192313B9009AF6E6 /* FuXin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuXin.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7786276F192313B9009AF6E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		77862771192313B9009AF6E6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		77862773192313B9009AF6E6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		77862777192313B9009AF6E6 /* FuXin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuXin-Info.plist"; sourceTree = "<group>"; };
+		77862779192313B9009AF6E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7786277B192313B9009AF6E6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7786277D192313B9009AF6E6 /* FuXin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FuXin-Prefix.pch"; sourceTree = "<group>"; };
+		7786277E192313B9009AF6E6 /* FXAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXAppDelegate.h; sourceTree = "<group>"; };
+		7786277F192313B9009AF6E6 /* FXAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FXAppDelegate.m; sourceTree = "<group>"; };
+		77862781192313B9009AF6E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		77862787192313B9009AF6E6 /* FuXinTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FuXinTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		77862788192313B9009AF6E6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		77862790192313B9009AF6E6 /* FuXinTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FuXinTests-Info.plist"; sourceTree = "<group>"; };
+		77862792192313B9009AF6E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		77862794192313B9009AF6E6 /* FuXinTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FuXinTests.m; sourceTree = "<group>"; };
+		7786279E192313DA009AF6E6 /* FXLoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXLoginController.h; sourceTree = "<group>"; };
+		7786279F192313DA009AF6E6 /* FXLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXLoginController.m; sourceTree = "<group>"; };
+		778627A319231A41009AF6E6 /* FXConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXConstants.h; sourceTree = "<group>"; };
+		7790A0BB1926708600498659 /* FXRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXRootViewController.h; sourceTree = "<group>"; };
+		7790A0BC1926708600498659 /* FXRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXRootViewController.m; sourceTree = "<group>"; };
+		93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		93EC3325192EFD3000D0DE49 /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
+		93EC3326192EFD3000D0DE49 /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactModel.m; sourceTree = "<group>"; };
+		93EC3327192EFD3000D0DE49 /* ConversationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationModel.h; sourceTree = "<group>"; };
+		93EC3328192EFD3000D0DE49 /* ConversationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationModel.m; sourceTree = "<group>"; };
+		93EC3329192EFD3000D0DE49 /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		93EC332A192EFD3000D0DE49 /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		93EC3348192EFD7800D0DE49 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		93EC3349192EFD7800D0DE49 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		93EC334A192EFD7800D0DE49 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		93EC334B192EFD7800D0DE49 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		93EC334C192EFD7800D0DE49 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		93EC334D192EFD7800D0DE49 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		93EC334E192EFD7800D0DE49 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		93EC334F192EFD7800D0DE49 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		93EC3350192EFD7800D0DE49 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		93EC3351192EFD7800D0DE49 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		93EC3352192EFD7800D0DE49 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		93EC3353192EFD7800D0DE49 /* LHLDBTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LHLDBTools.h; sourceTree = "<group>"; };
+		93EC3354192EFD7800D0DE49 /* LHLDBTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LHLDBTools.m; sourceTree = "<group>"; };
+		93EC3355192EFD7800D0DE49 /* SharedClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedClass.h; sourceTree = "<group>"; };
+		93EC3356192EFD7800D0DE49 /* SharedClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SharedClass.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77862769192313B9009AF6E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */,
+				77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */,
+				77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */,
+				77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77862784192313B9009AF6E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77862789192313B9009AF6E6 /* XCTest.framework in Frameworks */,
+				7786278B192313B9009AF6E6 /* UIKit.framework in Frameworks */,
+				7786278A192313B9009AF6E6 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7702C7C7192B4CC50015A178 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				7702C7C8192B4D1D0015A178 /* KxMenu */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		7702C7C8192B4D1D0015A178 /* KxMenu */ = {
+			isa = PBXGroup;
+			children = (
+				7702C7C9192B4D370015A178 /* KxMenu.h */,
+				7702C7CA192B4D370015A178 /* KxMenu.m */,
+			);
+			path = KxMenu;
+			sourceTree = "<group>";
+		};
+		770319CF192C593C00798D4D /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				770319DA192C7F0300798D4D /* FXKeyboardAnimation.h */,
+				770319DB192C7F0300798D4D /* FXKeyboardAnimation.m */,
+				770BC288192DF30B008104ED /* FXEmoji.h */,
+				770BC266192DA551008104ED /* CNCompare */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		7706BD361929A51800C3E0E5 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7706BD3B1929A7E500C3E0E5 /* Register */,
+				7706BD4B192A027D00C3E0E5 /* Chat */,
+				7706BD4C192A02C200C3E0E5 /* AddressList */,
+				7706BD4D192A02D800C3E0E5 /* Setting */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		7706BD3B1929A7E500C3E0E5 /* Register */ = {
+			isa = PBXGroup;
+			children = (
+				7706BD3C1929A7F700C3E0E5 /* FXRegisterController.h */,
+				7706BD3D1929A7F700C3E0E5 /* FXRegisterController.m */,
+				7706BD421929D4E000C3E0E5 /* FXReviewController.h */,
+				7706BD431929D4E000C3E0E5 /* FXReviewController.m */,
+				7706BD451929EAE500C3E0E5 /* FXFinishConroller.h */,
+				7706BD461929EAE500C3E0E5 /* FXFinishConroller.m */,
+			);
+			path = Register;
+			sourceTree = "<group>";
+		};
+		7706BD4B192A027D00C3E0E5 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				7706BD4E192A040400C3E0E5 /* FXChatListController.h */,
+				7706BD4F192A040400C3E0E5 /* FXChatListController.m */,
+				7702C7BE192B47290015A178 /* FXChatViewController.h */,
+				7702C7BF192B47290015A178 /* FXChatViewController.m */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		7706BD4C192A02C200C3E0E5 /* AddressList */ = {
+			isa = PBXGroup;
+			children = (
+				7706BD51192A0CE800C3E0E5 /* FXAddressListController.h */,
+				7706BD52192A0CE800C3E0E5 /* FXAddressListController.m */,
+			);
+			path = AddressList;
+			sourceTree = "<group>";
+		};
+		7706BD4D192A02D800C3E0E5 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				7702C721192AE2810015A178 /* FXSettingController.h */,
+				7702C722192AE2810015A178 /* FXSettingController.m */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		770BC266192DA551008104ED /* CNCompare */ = {
+			isa = PBXGroup;
+			children = (
+				770BC267192DA596008104ED /* pinyin.c */,
+				770BC268192DA596008104ED /* pinyin.h */,
+				770BC26A192DA5B3008104ED /* FXChineseName.h */,
+				770BC26B192DA5B3008104ED /* FXChineseName.m */,
+				770BC26D192DA65B008104ED /* FXCompareCN.h */,
+				770BC26E192DA65B008104ED /* FXCompareCN.m */,
+			);
+			path = CNCompare;
+			sourceTree = "<group>";
+		};
+		773ECB51192614EB00C57DDC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				773ECB521926151000C57DDC /* FXUserView.h */,
+				773ECB531926151000C57DDC /* FXUserView.m */,
+				773ECB55192615FF00C57DDC /* FXShadowView.h */,
+				773ECB56192615FF00C57DDC /* FXShadowView.m */,
+				7706BD3F1929A95F00C3E0E5 /* FXInputView.h */,
+				7706BD401929A95F00C3E0E5 /* FXInputView.m */,
+				7702C7B9192B27950015A178 /* FXChatCell.h */,
+				7702C7BA192B27950015A178 /* FXChatCell.m */,
+				770319B9192C351E00798D4D /* FXMessageBoxCell.h */,
+				770319BA192C351E00798D4D /* FXMessageBoxCell.m */,
+				770319C0192C3DAD00798D4D /* FXChatInputView.h */,
+				770319C1192C3DAD00798D4D /* FXChatInputView.m */,
+				770BC29A192E0B42008104ED /* FXTableHeaderView.h */,
+				770BC29B192E0B42008104ED /* FXTableHeaderView.m */,
+				770BC282192DF23A008104ED /* FXEmojiView.h */,
+				770BC283192DF23A008104ED /* FXEmojiView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		77862763192313B9009AF6E6 = {
+			isa = PBXGroup;
+			children = (
+				77862775192313B9009AF6E6 /* FuXin */,
+				7786278E192313B9009AF6E6 /* FuXinTests */,
+				7786276E192313B9009AF6E6 /* Frameworks */,
+				7786276D192313B9009AF6E6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7786276D192313B9009AF6E6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7786276C192313B9009AF6E6 /* FuXin.app */,
+				77862787192313B9009AF6E6 /* FuXinTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7786276E192313B9009AF6E6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */,
+				7786276F192313B9009AF6E6 /* Foundation.framework */,
+				77862771192313B9009AF6E6 /* CoreGraphics.framework */,
+				77862773192313B9009AF6E6 /* UIKit.framework */,
+				77862788192313B9009AF6E6 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		77862775192313B9009AF6E6 /* FuXin */ = {
+			isa = PBXGroup;
+			children = (
+				7786277E192313B9009AF6E6 /* FXAppDelegate.h */,
+				7786277F192313B9009AF6E6 /* FXAppDelegate.m */,
+				778627A319231A41009AF6E6 /* FXConstants.h */,
+				7702C7AA192AF2250015A178 /* FXAdjustViewController.h */,
+				7702C7AB192AF2250015A178 /* FXAdjustViewController.m */,
+				7790A0BB1926708600498659 /* FXRootViewController.h */,
+				7790A0BC1926708600498659 /* FXRootViewController.m */,
+				7786279E192313DA009AF6E6 /* FXLoginController.h */,
+				7786279F192313DA009AF6E6 /* FXLoginController.m */,
+				7706BD54192A0FF400C3E0E5 /* FXMainController.h */,
+				7706BD55192A0FF400C3E0E5 /* FXMainController.m */,
+				93EC3346192EFD7100D0DE49 /* Unty */,
+				7702C7C7192B4CC50015A178 /* Library */,
+				7706BD361929A51800C3E0E5 /* Controllers */,
+				773ECB51192614EB00C57DDC /* Views */,
+				770319CF192C593C00798D4D /* Tools */,
+				77C0863E19267E69000C4532 /* Images */,
+				93EC3324192EFD2A00D0DE49 /* Model */,
+				77862781192313B9009AF6E6 /* Images.xcassets */,
+				77862776192313B9009AF6E6 /* Supporting Files */,
+			);
+			path = FuXin;
+			sourceTree = "<group>";
+		};
+		77862776192313B9009AF6E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77862777192313B9009AF6E6 /* FuXin-Info.plist */,
+				77862778192313B9009AF6E6 /* InfoPlist.strings */,
+				7786277B192313B9009AF6E6 /* main.m */,
+				7786277D192313B9009AF6E6 /* FuXin-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7786278E192313B9009AF6E6 /* FuXinTests */ = {
+			isa = PBXGroup;
+			children = (
+				77862794192313B9009AF6E6 /* FuXinTests.m */,
+				7786278F192313B9009AF6E6 /* Supporting Files */,
+			);
+			path = FuXinTests;
+			sourceTree = "<group>";
+		};
+		7786278F192313B9009AF6E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				77862790192313B9009AF6E6 /* FuXinTests-Info.plist */,
+				77862791192313B9009AF6E6 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		77C0863E19267E69000C4532 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				770319CA192C580900798D4D /* user@2x.png */,
+				770319CB192C580900798D4D /* username@2x.png */,
+				770319C9192C580900798D4D /* password@2x.png */,
+				7702C7AD192B03D70015A178 /* addr@2x.png */,
+				7702C7AF192B03D70015A178 /* chat@2x.png */,
+				7702C7B1192B03D70015A178 /* setting@2x.png */,
+				7702C7BC192B45DF0015A178 /* messnum@2x.png */,
+				7702C7C5192B4AF20015A178 /* back@2x.png */,
+				7702C7C3192B48420015A178 /* info@2x.png */,
+				770319BC192C3D5B00798D4D /* express_selected@2x.png */,
+				770319BD192C3D5B00798D4D /* express@2x.png */,
+				770319D0192C5A0600798D4D /* check@2x.png */,
+				770319D1192C5A0600798D4D /* uncheck@2x.png */,
+				770319DD192C9C2100798D4D /* receive@2x.png */,
+				770319DE192C9C2100798D4D /* sender@2x.png */,
+				770BC262192D8F18008104ED /* add@2x.png */,
+				770BC263192D8F18008104ED /* addselected@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		93EC3324192EFD2A00D0DE49 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				93EC3325192EFD3000D0DE49 /* ContactModel.h */,
+				93EC3326192EFD3000D0DE49 /* ContactModel.m */,
+				93EC3327192EFD3000D0DE49 /* ConversationModel.h */,
+				93EC3328192EFD3000D0DE49 /* ConversationModel.m */,
+				93EC3329192EFD3000D0DE49 /* MessageModel.h */,
+				93EC332A192EFD3000D0DE49 /* MessageModel.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		93EC3346192EFD7100D0DE49 /* Unty */ = {
+			isa = PBXGroup;
+			children = (
+				93EC3347192EFD7800D0DE49 /* fmdb */,
+				93EC3353192EFD7800D0DE49 /* LHLDBTools.h */,
+				93EC3354192EFD7800D0DE49 /* LHLDBTools.m */,
+				93EC3355192EFD7800D0DE49 /* SharedClass.h */,
+				93EC3356192EFD7800D0DE49 /* SharedClass.m */,
+			);
+			path = Unty;
+			sourceTree = "<group>";
+		};
+		93EC3347192EFD7800D0DE49 /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				93EC3348192EFD7800D0DE49 /* FMDatabase.h */,
+				93EC3349192EFD7800D0DE49 /* FMDatabase.m */,
+				93EC334A192EFD7800D0DE49 /* FMDatabaseAdditions.h */,
+				93EC334B192EFD7800D0DE49 /* FMDatabaseAdditions.m */,
+				93EC334C192EFD7800D0DE49 /* FMDatabasePool.h */,
+				93EC334D192EFD7800D0DE49 /* FMDatabasePool.m */,
+				93EC334E192EFD7800D0DE49 /* FMDatabaseQueue.h */,
+				93EC334F192EFD7800D0DE49 /* FMDatabaseQueue.m */,
+				93EC3350192EFD7800D0DE49 /* FMDB.h */,
+				93EC3351192EFD7800D0DE49 /* FMResultSet.h */,
+				93EC3352192EFD7800D0DE49 /* FMResultSet.m */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7786276B192313B9009AF6E6 /* FuXin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77862798192313B9009AF6E6 /* Build configuration list for PBXNativeTarget "FuXin" */;
+			buildPhases = (
+				77862768192313B9009AF6E6 /* Sources */,
+				77862769192313B9009AF6E6 /* Frameworks */,
+				7786276A192313B9009AF6E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FuXin;
+			productName = FuXin;
+			productReference = 7786276C192313B9009AF6E6 /* FuXin.app */;
+			productType = "com.apple.product-type.application";
+		};
+		77862786192313B9009AF6E6 /* FuXinTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7786279B192313B9009AF6E6 /* Build configuration list for PBXNativeTarget "FuXinTests" */;
+			buildPhases = (
+				77862783192313B9009AF6E6 /* Sources */,
+				77862784192313B9009AF6E6 /* Frameworks */,
+				77862785192313B9009AF6E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7786278D192313B9009AF6E6 /* PBXTargetDependency */,
+			);
+			name = FuXinTests;
+			productName = FuXinTests;
+			productReference = 77862787192313B9009AF6E6 /* FuXinTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		77862764192313B9009AF6E6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = FX;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "___MyCompanyName___";
+				TargetAttributes = {
+					77862786192313B9009AF6E6 = {
+						TestTargetID = 7786276B192313B9009AF6E6;
+					};
+				};
+			};
+			buildConfigurationList = 77862767192313B9009AF6E6 /* Build configuration list for PBXProject "FuXin" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 77862763192313B9009AF6E6;
+			productRefGroup = 7786276D192313B9009AF6E6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7786276B192313B9009AF6E6 /* FuXin */,
+				77862786192313B9009AF6E6 /* FuXinTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7786276A192313B9009AF6E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7702C7B5192B03D70015A178 /* chat@2x.png in Resources */,
+				770319CC192C580900798D4D /* password@2x.png in Resources */,
+				770BC264192D8F18008104ED /* add@2x.png in Resources */,
+				7702C7C6192B4AF20015A178 /* back@2x.png in Resources */,
+				770319CD192C580900798D4D /* user@2x.png in Resources */,
+				770319BF192C3D5B00798D4D /* express@2x.png in Resources */,
+				7786277A192313B9009AF6E6 /* InfoPlist.strings in Resources */,
+				7702C7B3192B03D70015A178 /* addr@2x.png in Resources */,
+				770319CE192C580900798D4D /* username@2x.png in Resources */,
+				770BC265192D8F18008104ED /* addselected@2x.png in Resources */,
+				770319E0192C9C2100798D4D /* sender@2x.png in Resources */,
+				7702C7BD192B45DF0015A178 /* messnum@2x.png in Resources */,
+				77862782192313B9009AF6E6 /* Images.xcassets in Resources */,
+				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
+				7702C7C4192B48420015A178 /* info@2x.png in Resources */,
+				7702C7B7192B03D70015A178 /* setting@2x.png in Resources */,
+				770319BE192C3D5B00798D4D /* express_selected@2x.png in Resources */,
+				770319DF192C9C2100798D4D /* receive@2x.png in Resources */,
+				770319D2192C5A0600798D4D /* check@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77862785192313B9009AF6E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77862793192313B9009AF6E6 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77862768192313B9009AF6E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				770BC26C192DA5B3008104ED /* FXChineseName.m in Sources */,
+				778627A0192313DA009AF6E6 /* FXLoginController.m in Sources */,
+				7706BD411929A95F00C3E0E5 /* FXInputView.m in Sources */,
+				93EC3357192EFD7800D0DE49 /* FMDatabase.m in Sources */,
+				7706BD53192A0CE800C3E0E5 /* FXAddressListController.m in Sources */,
+				93EC3358192EFD7800D0DE49 /* FMDatabaseAdditions.m in Sources */,
+				93EC332D192EFD3000D0DE49 /* MessageModel.m in Sources */,
+				77862780192313B9009AF6E6 /* FXAppDelegate.m in Sources */,
+				93EC335A192EFD7800D0DE49 /* FMDatabaseQueue.m in Sources */,
+				7702C723192AE2810015A178 /* FXSettingController.m in Sources */,
+				93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */,
+				770319C2192C3DAD00798D4D /* FXChatInputView.m in Sources */,
+				7702C7C0192B47290015A178 /* FXChatViewController.m in Sources */,
+				93EC335D192EFD7800D0DE49 /* SharedClass.m in Sources */,
+				7702C7BB192B27950015A178 /* FXChatCell.m in Sources */,
+				93EC3359192EFD7800D0DE49 /* FMDatabasePool.m in Sources */,
+				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
+				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
+				7706BD3E1929A7F700C3E0E5 /* FXRegisterController.m in Sources */,
+				93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */,
+				93EC335C192EFD7800D0DE49 /* LHLDBTools.m in Sources */,
+				7706BD56192A0FF400C3E0E5 /* FXMainController.m in Sources */,
+				7790A0BD1926708600498659 /* FXRootViewController.m in Sources */,
+				770BC269192DA596008104ED /* pinyin.c in Sources */,
+				770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */,
+				770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */,
+				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
+				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,
+				770319DC192C7F0300798D4D /* FXKeyboardAnimation.m in Sources */,
+				7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */,
+				7702C7CB192B4D370015A178 /* KxMenu.m in Sources */,
+				7702C7AC192AF2250015A178 /* FXAdjustViewController.m in Sources */,
+				93EC335B192EFD7800D0DE49 /* FMResultSet.m in Sources */,
+				7786277C192313B9009AF6E6 /* main.m in Sources */,
+				773ECB541926151000C57DDC /* FXUserView.m in Sources */,
+				7706BD50192A040400C3E0E5 /* FXChatListController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		77862783192313B9009AF6E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77862795192313B9009AF6E6 /* FuXinTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7786278D192313B9009AF6E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7786276B192313B9009AF6E6 /* FuXin */;
+			targetProxy = 7786278C192313B9009AF6E6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		77862778192313B9009AF6E6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77862779192313B9009AF6E6 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		77862791192313B9009AF6E6 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				77862792192313B9009AF6E6 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		77862796192313B9009AF6E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		77862797192313B9009AF6E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		77862799192313B9009AF6E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
+				INFOPLIST_FILE = "FuXin/FuXin-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7786279A192313B9009AF6E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
+				INFOPLIST_FILE = "FuXin/FuXin-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		7786279C192313B9009AF6E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuXin.app/FuXin";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "FuXinTests/FuXinTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		7786279D192313B9009AF6E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/FuXin.app/FuXin";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
+				INFOPLIST_FILE = "FuXinTests/FuXinTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		77862767192313B9009AF6E6 /* Build configuration list for PBXProject "FuXin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77862796192313B9009AF6E6 /* Debug */,
+				77862797192313B9009AF6E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		77862798192313B9009AF6E6 /* Build configuration list for PBXNativeTarget "FuXin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				77862799192313B9009AF6E6 /* Debug */,
+				7786279A192313B9009AF6E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7786279B192313B9009AF6E6 /* Build configuration list for PBXNativeTarget "FuXinTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7786279C192313B9009AF6E6 /* Debug */,
+				7786279D192313B9009AF6E6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 77862764192313B9009AF6E6 /* Project object */;
+}
