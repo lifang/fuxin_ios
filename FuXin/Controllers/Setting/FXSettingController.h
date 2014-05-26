@@ -8,6 +8,6 @@
 
 #import "FXAdjustViewController.h"
 
-@interface FXSettingController : FXAdjustViewController
-
+@interface FXSettingController : FXAdjustViewController<UITableViewDataSource,UITableViewDelegate>
+@property (nonatomic,retain) UITableView *setTable;
 @end
