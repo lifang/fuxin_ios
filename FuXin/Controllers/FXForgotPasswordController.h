@@ -8,6 +8,6 @@
 
 #import "FXAdjustViewController.h"
 
-@interface FXForgotPasswordController : FXAdjustViewController<UITableViewDataSource ,UITableViewDelegate>
+@interface FXForgotPasswordController : FXAdjustViewController<UITableViewDataSource ,UITableViewDelegate ,UITextFieldDelegate>
 
 @end
