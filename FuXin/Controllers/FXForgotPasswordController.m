@@ -84,7 +84,7 @@
         [subview removeFromSuperview];
     }
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.scrollEnabled = NO;
+//    self.tableView.scrollEnabled = NO;
     
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
     self.alertLabel.textColor = kColor(255, 0, 9, 1);
