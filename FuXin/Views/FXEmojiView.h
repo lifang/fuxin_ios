@@ -7,7 +7,24 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Emoji.h"
 
-@interface FXEmojiView : UIScrollView
+@protocol EmojiDelegate;
+
+@interface FXEmojiView : UIView<UIScrollViewDelegate>
+
+@property (nonatomic, assign) id<EmojiDelegate> emojiDelegate;
+
+@property (nonatomic, strong) NSArray *emojiArray;
+
+@property (nonatomic, strong) UIScrollView *emojiScrollView;
+
+@property (nonatomic, strong) UIPageControl *pageControl;
+
+@end
+
+@protocol EmojiDelegate <NSObject>
+
+- (void)touchEmojiButton:(UIButton *)sender;
 
 @end

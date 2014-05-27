@@ -41,7 +41,7 @@
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
     
-    [self testDBMethod];
+//    [self testDBMethod];
 }
 
 - (void)didReceiveMemoryWarning
@@ -139,6 +139,7 @@
 #pragma mark - Action
 
 - (IBAction)userLogin:(id)sender {
+    [(UIButton *)sender setUserInteractionEnabled:NO];
     [_usernameField resignFirstResponder];
     [_passwordField resignFirstResponder];
     if ([_usernameField.text isEqualToString:@""] || [_passwordField.text isEqualToString:@""]) {
@@ -148,6 +149,7 @@
                                               cancelButtonTitle:@"确定"
                                               otherButtonTitles:nil];
         [alert show];
+        [(UIButton *)sender setUserInteractionEnabled:YES];
         return;
     }
     else {
@@ -155,6 +157,7 @@
          authenticationInWithUsername:_usernameField.text
          Password:_passwordField.text
          Finished:^(BOOL success, NSData *response) {
+             [(UIButton *)sender setUserInteractionEnabled:YES];
              if (success) {
                  AuthenticationResponse *resp = [AuthenticationResponse parseFromData:response];
                  if (resp.isSucceed) {

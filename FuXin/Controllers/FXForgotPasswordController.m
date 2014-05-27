@@ -7,6 +7,7 @@
 //
 
 #import "FXForgotPasswordController.h"
+#import "FXRequestDataFormat.h"
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
@@ -61,6 +62,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self setLeftNavBarItemWithImageName:@"back.png"];
 
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     [self initViews];
@@ -455,6 +458,7 @@
             [self changeRewriteButtonStatus:NO];
         }
         
+        
         if ([identifyingCodeText isEqualToString:@"123456"]) {  //验证码正确
             self.alertIdentiyingLabel.text = @"验证码正确!";
             self.alertIdentiyingLabel.textColor = [UIColor greenColor];
@@ -536,7 +540,7 @@
 - (void)changeDoneButtonStatus{
     if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK) {
         self.doneButton.enabled = YES;
-        self.doneButton.backgroundColor = kColor(255, 0, 9, 1);
+        self.doneButton.backgroundColor = kColor(209, 27, 33, 1);
     }else{
         self.doneButton.enabled = NO;
         self.doneButton.backgroundColor = kColor(201, 201, 201, 1);
