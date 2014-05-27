@@ -86,7 +86,7 @@
     
     UITextField *nameTextField = [[UITextField alloc] init];
     nameTextField.placeholder = @"输入昵称,建议6到8个字符";
-    nameTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    nameTextField.keyboardType = UIKeyboardTypeDefault;
     nameTextField.returnKeyType = UIReturnKeyNext;
     nameTextField.textColor = kColor(51, 51, 51, 1);
     nameTextField.font = [UIFont systemFontOfSize:14.];
@@ -375,10 +375,11 @@
         return NO;
     }
     
+    if ([string isEqualToString:@""]) {
+        return YES;
+    }
+    
     if (textField == self.phoneNumberTextField) {  //电话号码特殊格式
-        if ([string isEqualToString:@""]) {
-            return YES;
-        }
         if (string.length == 1){
             if ([string characterAtIndex:0] >= '0' &&  [string characterAtIndex:0] <= '9') {
                 if (self.phoneNumberTextField.text.length == 3 || self.phoneNumberTextField.text.length == 8) {
@@ -396,9 +397,6 @@
     }
     
     if (textField == self.identifyingCodeTextField) {
-        if ([string isEqualToString:@""]) {
-            return YES;
-        }
         if (string.length == 1){
             if ([string characterAtIndex:0] >= '0' &&  [string characterAtIndex:0] <= '9') {
                 if (self.identifyingCodeTextField.text.length >= 6) {
@@ -408,6 +406,13 @@
             }else{
                 return NO;
             }
+        }
+    }
+    
+    if (textField == self.userNameTextField) {
+        //长度小于15
+        if (textField.text.length + string.length > 15) {
+            return NO;
         }
     }
     
@@ -499,61 +504,62 @@
 }
 #pragma mark timer触发
 
-//文本输入动作 触发timer . 验证输入结果是否合法
+//输入动作触发timer . 验证输入结果是否合法 ,并提示
 - (void)timerFired:(NSTimer *)timer{
-    UITextField *textField = (UITextField *)[timer.userInfo objectForKey:@"textField"];
-    if (textField) {
-        NSString *usernameText = [self.userNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if (usernameText == nil || [usernameText isEqualToString:@""]) {
-            self.usernameIsOK = NO;
-            self.userNameTipLabel.text = @"!";
-        }else{
-            self.usernameIsOK = YES;
-            self.userNameTipLabel.text = @"";
-        }
-        
-        if (passwordText == nil || [passwordText isEqualToString:@""]) {
-            self.passwordTipLabel.text = @"未输入密码";
+    NSString *usernameText = self.userNameTextField.text;
+    NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (usernameText == nil || usernameText.length < 3) {
+        self.usernameIsOK = NO;
+        self.userNameTipLabel.text = @"!";
+    }else if ([usernameText rangeOfString:@"^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$" options:NSRegularExpressionSearch].length < 1){ //只匹配字母数字汉字和下划线 ,且不能用下划线开始和结尾
+        self.usernameIsOK = NO;
+        self.userNameTipLabel.text = @"非法字符";
+        [self performSelector:@selector(timerFired:) withObject:nil afterDelay:2];  //防止拼音输入法的bug
+    }else{
+        self.usernameIsOK = YES;
+        self.userNameTipLabel.text = @"";
+    }
+    
+    if (passwordText == nil || [passwordText isEqualToString:@""]) {
+        self.passwordTipLabel.text = @"未输入密码";
+        self.passwordIsOK = NO;
+    }else{
+        if (confirmPasswordText == nil || ![passwordText isEqualToString:confirmPasswordText]) {
+            self.passwordTipLabel.text = @"密码不一致";
             self.passwordIsOK = NO;
         }else{
-            if (confirmPasswordText == nil || ![passwordText isEqualToString:confirmPasswordText]) {
-                self.passwordTipLabel.text = @"密码不一致";
-                self.passwordIsOK = NO;
-            }else{
-                self.passwordTipLabel.text = @"";
-                self.passwordIsOK = YES;
-            }
+            self.passwordTipLabel.text = @"";
+            self.passwordIsOK = YES;
         }
-        
-        if ([phoneNumberText rangeOfString:@"^[0-9]{11}$" options:NSRegularExpressionSearch].length > 0) { //电话号码格式正确
-            self.alertLabel.text = @"";
-            [self changeRewriteButtonStatus:YES];
-            
-        }else{
-            self.alertLabel.text = @"格式错误!";
-            [self changeRewriteButtonStatus:NO];
-        }
-        
-        if ([identifyingCodeText isEqualToString:@"123456"]) {  //验证码正确
-            self.alertIdentiyingLabel.text = @"验证码正确!";
-            self.alertIdentiyingLabel.textColor = [UIColor greenColor];
-            self.reSendButton.hidden = YES;
-            self.rewriteButton.hidden = YES;
-            self.coundDownLabel.text = @"";
-            [self.reSendTimer invalidate];
-            self.identiCodeIsOK = YES;
-            [self.identifyingCodeTextField resignFirstResponder];
-            self.identifyingCodeTextField.enabled = NO;
-        }else{
-            self.alertIdentiyingLabel.text = @"验证码错误!";
-            self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
-        }
-        [self changeDoneButtonStatus];
     }
+    
+    if ([phoneNumberText rangeOfString:@"^[0-9]{11}$" options:NSRegularExpressionSearch].length > 0) { //电话号码格式正确
+        self.alertLabel.text = @"";
+        [self changeRewriteButtonStatus:YES];
+        
+    }else{
+        self.alertLabel.text = @"格式错误!";
+        [self changeRewriteButtonStatus:NO];
+    }
+    
+    if ([identifyingCodeText isEqualToString:@"123456"]) {  //验证码正确
+        self.alertIdentiyingLabel.text = @"验证码正确!";
+        self.alertIdentiyingLabel.textColor = [UIColor greenColor];
+        self.reSendButton.hidden = YES;
+        self.rewriteButton.hidden = YES;
+        self.coundDownLabel.text = @"";
+        [self.reSendTimer invalidate];
+        self.identiCodeIsOK = YES;
+        [self.identifyingCodeTextField resignFirstResponder];
+        self.identifyingCodeTextField.enabled = NO;
+    }else{
+        self.alertIdentiyingLabel.text = @"验证码错误!";
+        self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
+    }
+    [self changeDoneButtonStatus];
 }
 
 //计时timer触发

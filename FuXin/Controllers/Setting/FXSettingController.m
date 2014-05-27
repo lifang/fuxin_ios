@@ -73,6 +73,7 @@
         if (!nibsRegister) {
             UINib *nib = [UINib nibWithNibName:@"FXSettingTableViewCell" bundle:nil];
             [tableView registerNib:nib forCellReuseIdentifier:ID];
+            nibsRegister = YES;
         }
         FXSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
         if (cell == nil) {
@@ -81,6 +82,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
         [cell initCellImage];
+        [cell setNeedsLayout];
         return cell;
     }
     
