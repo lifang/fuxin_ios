@@ -242,7 +242,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
     tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
     return kCell_Height;
 }
 
