@@ -84,6 +84,7 @@
         [subview removeFromSuperview];
     }
     self.tableView.backgroundColor = [UIColor clearColor];
+    
 //    self.tableView.scrollEnabled = NO;
     
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
@@ -92,17 +93,20 @@
     
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    self.passwordTextField.returnKeyType = UIReturnKeyNext;
     self.passwordTextField.textColor = kColor(51, 51, 51, 1);
     self.passwordTextField.delegate = self;
     
     self.confirmPasswordTextField.secureTextEntry = YES;
     self.confirmPasswordTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    self.confirmPasswordTextField.returnKeyType = UIReturnKeyNext;
     self.confirmPasswordTextField.textColor = kColor(51, 51, 51, 1);
     self.confirmPasswordTextField.delegate = self;
     
     self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
     self.phoneNumberTextField.delegate = self;
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
     [self changeRewriteButtonStatus:NO];
     [self.rewriteButton setTitle:@"确认" forState:UIControlStateNormal];
@@ -113,6 +117,7 @@
     self.identifyingCodeTextField.textColor = kColor(51, 51, 51, 1);
     self.identifyingCodeTextField.delegate = self;
     self.identifyingCodeTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
 //    self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
     
     [self.checkButton addTarget:self action:@selector(checkButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -147,6 +152,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
+    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)dealloc{
@@ -167,6 +173,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
     tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
     return kCell_Height;
 }
 
@@ -544,5 +551,21 @@
 }
 
 #pragma mark Notifications
+
+#pragma mark KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"contentOffset"]) {
+        NSValue *oldOffset = [change objectForKey:@"old"];
+        NSValue *newOffset = [change objectForKey:@"new"];
+        CGPoint oldCoordinate;
+        CGPoint newCoordinate;
+        [oldOffset getValue:&oldCoordinate];
+        [newOffset getValue:&newCoordinate];
+        CGFloat distance = newCoordinate.y -  oldCoordinate.y;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
+        });
+    }
+}
 
 @end

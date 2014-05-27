@@ -87,6 +87,7 @@
     UITextField *nameTextField = [[UITextField alloc] init];
     nameTextField.placeholder = @"输入昵称,建议6到8个字符";
     nameTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    nameTextField.returnKeyType = UIReturnKeyNext;
     nameTextField.textColor = kColor(51, 51, 51, 1);
     nameTextField.font = [UIFont systemFontOfSize:14.];
     nameTextField.delegate = self;
@@ -106,7 +107,7 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.separatorColor = kColor(191, 191, 191, 1);
-    self.tableView.scrollEnabled = NO;
+//    self.tableView.scrollEnabled = NO;
     
     self.passwordTipLabel = [[UILabel alloc] init];
     self.passwordTipLabel.font = [UIFont systemFontOfSize:12.];
@@ -128,6 +129,7 @@
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.placeholder = @"输入密码";
     self.passwordTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    self.passwordTextField.returnKeyType = UIReturnKeyNext;
     self.passwordTextField.textColor = kColor(51, 51, 51, 1);
     self.passwordTextField.font = [UIFont systemFontOfSize:14.];
     self.passwordTextField.delegate = self;
@@ -136,6 +138,7 @@
     self.confirmPasswordTextField.secureTextEntry = YES;
     self.confirmPasswordTextField.placeholder = @"确认密码";
     self.confirmPasswordTextField.keyboardType = UIKeyboardTypeASCIICapable;
+    self.confirmPasswordTextField.returnKeyType = UIReturnKeyNext;
     self.confirmPasswordTextField.textColor = kColor(51, 51, 51, 1);
     self.confirmPasswordTextField.font = [UIFont systemFontOfSize:14.];
     self.confirmPasswordTextField.delegate = self;
@@ -146,6 +149,7 @@
     self.phoneNumberTextField.delegate = self;
     self.phoneNumberTextField.font = [UIFont systemFontOfSize:14.];
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
     self.rewriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self changeRewriteButtonStatus:NO];
@@ -161,6 +165,7 @@
     self.identifyingCodeTextField.placeholder = @"输入验证码";
     self.identifyingCodeTextField.delegate = self;
     self.identifyingCodeTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
     
     self.checkButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.checkButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
@@ -216,7 +221,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    NSLog(@"%@",NSStringFromCGRect(self.tableView.frame));
+    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)dealloc{
@@ -237,7 +242,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
     tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
-    NSLog(@"%@",NSStringFromCGRect(self.tableView.frame));
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 150, 0);
     return kCell_Height;
 }
 
@@ -622,5 +627,21 @@
 }
 
 #pragma mark Notifications
+
+#pragma mark KVO
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    if ([keyPath isEqualToString:@"contentOffset"]) {
+        NSValue *oldOffset = [change objectForKey:@"old"];
+        NSValue *newOffset = [change objectForKey:@"new"];
+        CGPoint oldCoordinate;
+        CGPoint newCoordinate;
+        [oldOffset getValue:&oldCoordinate];
+        [newOffset getValue:&newCoordinate];
+        CGFloat distance = newCoordinate.y -  oldCoordinate.y;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
+        });
+    }
+}
 
 @end
