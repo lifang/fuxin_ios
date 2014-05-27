@@ -7,11 +7,17 @@
 //
 
 #import "FXAdjustViewController.h"
+#import "FXRequestDataFormat.h"
+#import "FXChatViewController.h"
 
-@interface FXSearchViewController : FXAdjustViewController<UISearchBarDelegate,UISearchDisplayDelegate>
+@interface FXSearchViewController : FXAdjustViewController<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 
 @property (nonatomic, strong) UISearchBar *searchBar;
+
+@property (nonatomic, strong) NSArray *primaryArray;
+
+@property (nonatomic, strong) NSMutableArray *resultArray;
 
 @end

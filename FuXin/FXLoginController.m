@@ -11,6 +11,7 @@
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
 #import "SharedClass.h"
+#import "FXRequestDataFormat.h"
 
 @interface FXLoginController ()<UITextFieldDelegate>
 //@property (assign ,nonatomic) NSTimeInterval seconds;
@@ -137,8 +138,48 @@
 #pragma mark - Action
 
 - (IBAction)userLogin:(id)sender {
-    FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
-    [rootController showMainViewController];
+    [_usernameField resignFirstResponder];
+    [_passwordField resignFirstResponder];
+    if ([_usernameField.text isEqualToString:@""] || [_passwordField.text isEqualToString:@""]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:@"用户名或密码不能为空！"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    else {
+        [FXRequestDataFormat
+         authenticationInWithUsername:_usernameField.text
+         Password:_passwordField.text
+         Finished:^(BOOL success, NSData *response) {
+             if (success) {
+                 AuthenticationResponse *resp = [AuthenticationResponse parseFromData:response];
+                 if (resp.isSucceed) {
+                     //正确
+                     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+                     delegate.userID = resp.userId;
+                     delegate.token = resp.token;
+                     
+                     FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
+                     [rootController showMainViewController];
+                 }
+                 else {
+                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                     message:@"用户名或密码不正确！"
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"确定"
+                                                           otherButtonTitles:nil];
+                     [alert show];
+                 }
+                 NSLog(@"%d,%d,%@",resp.isSucceed,resp.userId,resp.token);
+             }
+             else {
+                 NSLog(@"auth fail :%@",[[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding]);
+             }
+         }];
+    }
 }
 
 - (IBAction)userRegister:(id)sender {
@@ -194,7 +235,7 @@
         [dataArray addObject:msg];
     }
     
-    __block NSMutableArray *resultArray = [NSMutableArray array];
+//    __block NSMutableArray *resultArray = [NSMutableArray array];
     [LHLDBTools shareLHLDBTools];
     NSLog(@"开始");
     [LHLDBTools saveChattingRecord:dataArray withFinished:^(BOOL flag) {

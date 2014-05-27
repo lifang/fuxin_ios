@@ -8,24 +8,26 @@
 
 #import <Foundation/Foundation.h>
 #import "ASIHttpHeaders.h"
+#import "FXNetworkInterface.h"
+#import "Models.pb.h"
+#import "GTMBase64.h"
 
-@protocol FXHttpRequestDelegate;
+/*请求返回的结果
+ success: YES 请求成功
+          NO  请求失败
+ response:返回的protoBuffer二进制流
+ */
+typedef void (^Result)(BOOL success, NSData *response);
 
 @interface FXHttpRequest : NSObject
 
-@property (nonatomic, assign) id<FXHttpRequestDelegate>_delegate;
-
-- (void)setHttpRequestWithInfo:(NSDictionary *)dict;
-
-
-@end
-
-@protocol FXHttpRequestDelegate <NSObject>
-
-- (void)requestDidFinished:(ASIHTTPRequest *)request;
-
-@optional
-
-- (void)requestDidFail:(ASIHTTPRequest *)request;
+/*
+ dict: 请求URL
+       请求方式
+       请求body
+ */
++ (void)setHttpRequestWithInfo:(NSDictionary *)dict
+                responseResult:(Result)result;
 
 @end
+

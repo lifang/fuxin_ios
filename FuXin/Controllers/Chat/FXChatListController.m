@@ -7,10 +7,9 @@
 //
 
 #import "FXChatListController.h"
-#import "FXChatViewController.h"
 #import "FXChatCell.h"
 
-static NSString *cellIdentifier = @"cellIdentifier";
+static NSString *chatCellIdentifier = @"CCI";
 
 @interface FXChatListController ()
 
@@ -34,7 +33,6 @@ static NSString *cellIdentifier = @"cellIdentifier";
     [super viewDidLoad];
     
     self.title = @"对话";
-    [self setRightNavBarItemWithImageName:@"info.png"];
     [self initUI];
 }
 
@@ -51,58 +49,81 @@ static NSString *cellIdentifier = @"cellIdentifier";
     _chatListTable.delegate = self;
     _chatListTable.dataSource = self;
     [self.view addSubview:_chatListTable];
-    [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:cellIdentifier];
-    [self.view addSubview:self.searchBar];
+    [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:chatCellIdentifier];
+
 }
 
 #pragma mark - 重写
 
 - (IBAction)rightBarTouched:(id)sender {
-    self.searchBar.hidden = NO;
-    [self.searchBar becomeFirstResponder];
+
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
-    return 1;
+    if (tableView == _chatListTable) {
+        return 1;
+    }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    return 15;
+    if (tableView == _chatListTable) {
+        return 15;
+    }
+    return 0;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier = @"cellIdentifier";
-    FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
-
-    cell.photoView.image = [UIImage imageNamed:@"user.png"];
-    cell.nameLabel.text = @"钱学生";
-    cell.detailLabel.text = @"好的，下周课堂见";
-    cell.timeLabel.text = @"早上9：30";
-    cell.numberLabel.text = @"99";
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    // Configure the cell...
-    
-    return cell;
+    if (tableView == _chatListTable) {
+        FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
+        
+        cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        cell.nameLabel.text = @"钱学生";
+        cell.detailLabel.text = @"好的，下周课堂见";
+        cell.timeLabel.text = @"早上9：30";
+        cell.numberLabel.text = @"99";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        // Configure the cell...
+        
+        return cell;
+    }
+    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FXChatViewController *chat = [[FXChatViewController alloc] init];
-    chat.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:chat animated:YES];
+    if (tableView == _chatListTable) {
+        FXChatViewController *chat = [[FXChatViewController alloc] init];
+        chat.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:chat animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 54.0f;
+    if (tableView == _chatListTable) {
+        return 54.0f;
+    }
+    return 0;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (tableView == _chatListTable) {
+        return nil;
+    }
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if (tableView == _chatListTable) {
+        return 0;
+    }
+    return 0;
+}
 
 
 // Override to support conditional editing of the table view.

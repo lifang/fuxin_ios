@@ -32,6 +32,7 @@
 		770319E0192C9C2100798D4D /* sender@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770319DE192C9C2100798D4D /* sender@2x.png */; };
 		770351A7193050F6002054EA /* red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 770351A6193050F6002054EA /* red@2x.png */; };
 		770351AA193054EA002054EA /* FXSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 770351A9193054EA002054EA /* FXSearchViewController.m */; };
+		770351AD193085A1002054EA /* FXRequestDataFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 770351AC193085A1002054EA /* FXRequestDataFormat.m */; };
 		7706BD3E1929A7F700C3E0E5 /* FXRegisterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD3D1929A7F700C3E0E5 /* FXRegisterController.m */; };
 		7706BD411929A95F00C3E0E5 /* FXInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD401929A95F00C3E0E5 /* FXInputView.m */; };
 		7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7706BD431929D4E000C3E0E5 /* FXReviewController.m */; };
@@ -46,8 +47,20 @@
 		770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC26E192DA65B008104ED /* FXCompareCN.m */; };
 		770BC284192DF23A008104ED /* FXEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC283192DF23A008104ED /* FXEmojiView.m */; };
 		770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC29B192E0B42008104ED /* FXTableHeaderView.m */; };
+		7717734C19330FF50099B459 /* Models.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 7717734B19330FF50099B459 /* Models.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7720F3D419309627001F20F4 /* FXNetworkInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7720F3D319309627001F20F4 /* FXNetworkInterface.m */; };
+		7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7720F3D81930BBD8001F20F4 /* search@2x.png */; };
+		7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7720F3DA1930BC1D001F20F4 /* index@2x.png */; };
+		7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7720F3DD1930BD9E001F20F4 /* FXSelectIndexView.m */; };
 		773ECB541926151000C57DDC /* FXUserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB531926151000C57DDC /* FXUserView.m */; };
 		773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB56192615FF00C57DDC /* FXShadowView.m */; };
+		7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7755EC7F19319A7500ADD1A6 /* FXAddressListCell.m */; };
+		7755EC861931C40300ADD1A6 /* placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC851931C40300ADD1A6 /* placeholder@2x.png */; };
+		7755EC891931CAD600ADD1A6 /* FXShowPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7755EC881931CAD600ADD1A6 /* FXShowPhotoView.m */; };
+		7755EC8E1931CD5700ADD1A6 /* cameraselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8A1931CD5700ADD1A6 /* cameraselected@2x.png */; };
+		7755EC8F1931CD5700ADD1A6 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8B1931CD5700ADD1A6 /* camera@2x.png */; };
+		7755EC901931CD5700ADD1A6 /* pictureselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8C1931CD5700ADD1A6 /* pictureselected@2x.png */; };
+		7755EC911931CD5700ADD1A6 /* picture@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8D1931CD5700ADD1A6 /* picture@2x.png */; };
 		77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786276F192313B9009AF6E6 /* Foundation.framework */; };
 		77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862771192313B9009AF6E6 /* CoreGraphics.framework */; };
 		77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862773192313B9009AF6E6 /* UIKit.framework */; };
@@ -98,7 +111,6 @@
 		77FC8A6C192F361A00FFFCDB /* UnknownFieldSet_Builder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A55192F361A00FFFCDB /* UnknownFieldSet_Builder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		77FC8A6D192F361A00FFFCDB /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A57192F361A00FFFCDB /* Utilities.m */; };
 		77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A59192F361A00FFFCDB /* WireFormat.m */; };
-		77FC8A71192F378E00FFFCDB /* ModelsNew.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A70192F378E00FFFCDB /* ModelsNew.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
 		93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3326192EFD3000D0DE49 /* ContactModel.m */; };
 		93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3328192EFD3000D0DE49 /* ConversationModel.m */; };
@@ -157,6 +169,8 @@
 		770351A6193050F6002054EA /* red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red@2x.png"; sourceTree = "<group>"; };
 		770351A8193054EA002054EA /* FXSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXSearchViewController.h; sourceTree = "<group>"; };
 		770351A9193054EA002054EA /* FXSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXSearchViewController.m; sourceTree = "<group>"; };
+		770351AB193085A1002054EA /* FXRequestDataFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXRequestDataFormat.h; sourceTree = "<group>"; };
+		770351AC193085A1002054EA /* FXRequestDataFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXRequestDataFormat.m; sourceTree = "<group>"; };
 		7706BD3C1929A7F700C3E0E5 /* FXRegisterController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXRegisterController.h; sourceTree = "<group>"; };
 		7706BD3D1929A7F700C3E0E5 /* FXRegisterController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXRegisterController.m; sourceTree = "<group>"; };
 		7706BD3F1929A95F00C3E0E5 /* FXInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXInputView.h; sourceTree = "<group>"; };
@@ -184,10 +198,27 @@
 		770BC288192DF30B008104ED /* FXEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXEmoji.h; sourceTree = "<group>"; };
 		770BC29A192E0B42008104ED /* FXTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXTableHeaderView.h; sourceTree = "<group>"; };
 		770BC29B192E0B42008104ED /* FXTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTableHeaderView.m; sourceTree = "<group>"; };
+		7717734A19330FF50099B459 /* Models.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.pb.h; sourceTree = "<group>"; };
+		7717734B19330FF50099B459 /* Models.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Models.pb.m; sourceTree = "<group>"; };
+		7720F3D219309627001F20F4 /* FXNetworkInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNetworkInterface.h; sourceTree = "<group>"; };
+		7720F3D319309627001F20F4 /* FXNetworkInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNetworkInterface.m; sourceTree = "<group>"; };
+		7720F3D81930BBD8001F20F4 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
+		7720F3DA1930BC1D001F20F4 /* index@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "index@2x.png"; sourceTree = "<group>"; };
+		7720F3DC1930BD9E001F20F4 /* FXSelectIndexView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXSelectIndexView.h; sourceTree = "<group>"; };
+		7720F3DD1930BD9E001F20F4 /* FXSelectIndexView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXSelectIndexView.m; sourceTree = "<group>"; };
 		773ECB521926151000C57DDC /* FXUserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserView.h; sourceTree = "<group>"; };
 		773ECB531926151000C57DDC /* FXUserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUserView.m; sourceTree = "<group>"; };
 		773ECB55192615FF00C57DDC /* FXShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXShadowView.h; sourceTree = "<group>"; };
 		773ECB56192615FF00C57DDC /* FXShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXShadowView.m; sourceTree = "<group>"; };
+		7755EC7E19319A7500ADD1A6 /* FXAddressListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXAddressListCell.h; sourceTree = "<group>"; };
+		7755EC7F19319A7500ADD1A6 /* FXAddressListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXAddressListCell.m; sourceTree = "<group>"; };
+		7755EC851931C40300ADD1A6 /* placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder@2x.png"; sourceTree = "<group>"; };
+		7755EC871931CAD600ADD1A6 /* FXShowPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXShowPhotoView.h; sourceTree = "<group>"; };
+		7755EC881931CAD600ADD1A6 /* FXShowPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXShowPhotoView.m; sourceTree = "<group>"; };
+		7755EC8A1931CD5700ADD1A6 /* cameraselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cameraselected@2x.png"; sourceTree = "<group>"; };
+		7755EC8B1931CD5700ADD1A6 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
+		7755EC8C1931CD5700ADD1A6 /* pictureselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pictureselected@2x.png"; sourceTree = "<group>"; };
+		7755EC8D1931CD5700ADD1A6 /* picture@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture@2x.png"; sourceTree = "<group>"; };
 		7786276C192313B9009AF6E6 /* FuXin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuXin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7786276F192313B9009AF6E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77862771192313B9009AF6E6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -236,7 +267,6 @@
 		77FC8A17192F191A00FFFCDB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		77FC8A19192F192200FFFCDB /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		77FC8A1B192F194200FFFCDB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		77FC8A1E192F1B9A00FFFCDB /* FXNetworkInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNetworkInterface.h; sourceTree = "<group>"; };
 		77FC8A21192F1DFB00FFFCDB /* FXHttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXHttpRequest.h; sourceTree = "<group>"; };
 		77FC8A22192F1DFB00FFFCDB /* FXHttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXHttpRequest.m; sourceTree = "<group>"; };
 		77FC8A25192F353900FFFCDB /* GTMBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMBase64.h; sourceTree = "<group>"; };
@@ -290,8 +320,6 @@
 		77FC8A57192F361A00FFFCDB /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		77FC8A58192F361A00FFFCDB /* WireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireFormat.h; sourceTree = "<group>"; };
 		77FC8A59192F361A00FFFCDB /* WireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireFormat.m; sourceTree = "<group>"; };
-		77FC8A6F192F378E00FFFCDB /* ModelsNew.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelsNew.pb.h; sourceTree = "<group>"; };
-		77FC8A70192F378E00FFFCDB /* ModelsNew.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelsNew.pb.m; sourceTree = "<group>"; };
 		93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		93EC3325192EFD3000D0DE49 /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
 		93EC3326192EFD3000D0DE49 /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactModel.m; sourceTree = "<group>"; };
@@ -461,6 +489,12 @@
 				770319C1192C3DAD00798D4D /* FXChatInputView.m */,
 				770BC29A192E0B42008104ED /* FXTableHeaderView.h */,
 				770BC29B192E0B42008104ED /* FXTableHeaderView.m */,
+				7720F3DC1930BD9E001F20F4 /* FXSelectIndexView.h */,
+				7720F3DD1930BD9E001F20F4 /* FXSelectIndexView.m */,
+				7755EC7E19319A7500ADD1A6 /* FXAddressListCell.h */,
+				7755EC7F19319A7500ADD1A6 /* FXAddressListCell.m */,
+				7755EC871931CAD600ADD1A6 /* FXShowPhotoView.h */,
+				7755EC881931CAD600ADD1A6 /* FXShowPhotoView.m */,
 				770BC282192DF23A008104ED /* FXEmojiView.h */,
 				770BC283192DF23A008104ED /* FXEmojiView.m */,
 			);
@@ -580,6 +614,13 @@
 				770BC262192D8F18008104ED /* add@2x.png */,
 				770BC263192D8F18008104ED /* addselected@2x.png */,
 				770351A6193050F6002054EA /* red@2x.png */,
+				7720F3D81930BBD8001F20F4 /* search@2x.png */,
+				7720F3DA1930BC1D001F20F4 /* index@2x.png */,
+				7755EC851931C40300ADD1A6 /* placeholder@2x.png */,
+				7755EC8A1931CD5700ADD1A6 /* cameraselected@2x.png */,
+				7755EC8B1931CD5700ADD1A6 /* camera@2x.png */,
+				7755EC8C1931CD5700ADD1A6 /* pictureselected@2x.png */,
+				7755EC8D1931CD5700ADD1A6 /* picture@2x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -617,9 +658,12 @@
 		77FC8A1D192F1B6900FFFCDB /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				77FC8A1E192F1B9A00FFFCDB /* FXNetworkInterface.h */,
+				7720F3D219309627001F20F4 /* FXNetworkInterface.h */,
+				7720F3D319309627001F20F4 /* FXNetworkInterface.m */,
 				77FC8A21192F1DFB00FFFCDB /* FXHttpRequest.h */,
 				77FC8A22192F1DFB00FFFCDB /* FXHttpRequest.m */,
+				770351AB193085A1002054EA /* FXRequestDataFormat.h */,
+				770351AC193085A1002054EA /* FXRequestDataFormat.m */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -692,8 +736,8 @@
 		93EC3324192EFD2A00D0DE49 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				77FC8A6F192F378E00FFFCDB /* ModelsNew.pb.h */,
-				77FC8A70192F378E00FFFCDB /* ModelsNew.pb.m */,
+				7717734A19330FF50099B459 /* Models.pb.h */,
+				7717734B19330FF50099B459 /* Models.pb.m */,
 				93EC3325192EFD3000D0DE49 /* ContactModel.h */,
 				93EC3326192EFD3000D0DE49 /* ContactModel.m */,
 				93EC3327192EFD3000D0DE49 /* ConversationModel.h */,
@@ -810,21 +854,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7755EC861931C40300ADD1A6 /* placeholder@2x.png in Resources */,
+				7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */,
 				7702C7B5192B03D70015A178 /* chat@2x.png in Resources */,
 				770319CC192C580900798D4D /* password@2x.png in Resources */,
 				770BC264192D8F18008104ED /* add@2x.png in Resources */,
 				7702C7C6192B4AF20015A178 /* back@2x.png in Resources */,
+				7755EC8F1931CD5700ADD1A6 /* camera@2x.png in Resources */,
 				770319CD192C580900798D4D /* user@2x.png in Resources */,
 				770319BF192C3D5B00798D4D /* express@2x.png in Resources */,
+				7755EC901931CD5700ADD1A6 /* pictureselected@2x.png in Resources */,
 				7786277A192313B9009AF6E6 /* InfoPlist.strings in Resources */,
 				7702C7B3192B03D70015A178 /* addr@2x.png in Resources */,
 				770319CE192C580900798D4D /* username@2x.png in Resources */,
+				7755EC911931CD5700ADD1A6 /* picture@2x.png in Resources */,
 				770BC265192D8F18008104ED /* addselected@2x.png in Resources */,
 				770351A7193050F6002054EA /* red@2x.png in Resources */,
 				770319E0192C9C2100798D4D /* sender@2x.png in Resources */,
 				7702C7BD192B45DF0015A178 /* messnum@2x.png in Resources */,
 				77862782192313B9009AF6E6 /* Images.xcassets in Resources */,
 				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
+				7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */,
+				7755EC8E1931CD5700ADD1A6 /* cameraselected@2x.png in Resources */,
 				7702C7C4192B48420015A178 /* info@2x.png in Resources */,
 				7702C7B7192B03D70015A178 /* setting@2x.png in Resources */,
 				770319BE192C3D5B00798D4D /* express_selected@2x.png in Resources */,
@@ -848,6 +899,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				770351AD193085A1002054EA /* FXRequestDataFormat.m in Sources */,
 				770351AA193054EA002054EA /* FXSearchViewController.m in Sources */,
 				770BC26C192DA5B3008104ED /* FXChineseName.m in Sources */,
 				778627A0192313DA009AF6E6 /* FXLoginController.m in Sources */,
@@ -866,6 +918,7 @@
 				77862780192313B9009AF6E6 /* FXAppDelegate.m in Sources */,
 				93EC335A192EFD7800D0DE49 /* FMDatabaseQueue.m in Sources */,
 				77CB6F1F192F682E00936F7F /* ASIFormDataRequest.m in Sources */,
+				7755EC891931CAD600ADD1A6 /* FXShowPhotoView.m in Sources */,
 				77FC8A5B192F361A00FFFCDB /* AbstractMessage_Builder.m in Sources */,
 				77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */,
 				77FC8A64192F361A00FFFCDB /* GeneratedMessage.m in Sources */,
@@ -879,16 +932,20 @@
 				770319C2192C3DAD00798D4D /* FXChatInputView.m in Sources */,
 				7702C7C0192B47290015A178 /* FXChatViewController.m in Sources */,
 				93EC335D192EFD7800D0DE49 /* SharedClass.m in Sources */,
+				7720F3D419309627001F20F4 /* FXNetworkInterface.m in Sources */,
 				7702C7BB192B27950015A178 /* FXChatCell.m in Sources */,
 				93EC3359192EFD7800D0DE49 /* FMDatabasePool.m in Sources */,
+				7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */,
 				77CB6F22192F682E00936F7F /* ASINetworkQueue.m in Sources */,
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
+				7717734C19330FF50099B459 /* Models.pb.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
 				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
 				77FC8A23192F1DFB00FFFCDB /* FXHttpRequest.m in Sources */,
 				77CB6F1D192F682E00936F7F /* ASIDataDecompressor.m in Sources */,
 				7706BD3E1929A7F700C3E0E5 /* FXRegisterController.m in Sources */,
 				77FC8A65192F361A00FFFCDB /* GeneratedMessage_Builder.m in Sources */,
+				7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */,
 				77CB6F23192F682E00936F7F /* Reachability.m in Sources */,
 				93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */,
 				93EC335C192EFD7800D0DE49 /* LHLDBTools.m in Sources */,
@@ -898,7 +955,6 @@
 				77FC8A5C192F361A00FFFCDB /* CodedInputStream.m in Sources */,
 				770BC269192DA596008104ED /* pinyin.c in Sources */,
 				770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */,
-				77FC8A71192F378E00FFFCDB /* ModelsNew.pb.m in Sources */,
 				770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */,
 				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,

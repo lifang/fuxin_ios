@@ -7,11 +7,18 @@
 //
 
 #import "FXAdjustViewController.h"
+#import "FXShowPhotoView.h"
+#import "FXRequestDataFormat.h"
 
 @interface FXChatViewController : FXAdjustViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *chatTableView;
 
 @property (nonatomic, strong) NSMutableArray *dataItems;
+
+@property (nonatomic, strong) FXShowPhotoView *pictureListView;
+
+//聊天联系人信息
+@property (nonatomic, strong) Contact *contact;
 
 @end

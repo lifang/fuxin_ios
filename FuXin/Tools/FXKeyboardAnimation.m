@@ -11,17 +11,7 @@
 
 @implementation FXKeyboardAnimation
 
-+ (void)moveUpView:(UIView *)view withOffset:(CGFloat)height {
-    NSTimeInterval duration = 0.3f;
-    CGRect rect = view.frame;
-    rect.origin.y -= height;
-    [UIView beginAnimations:@"adjustKeyboard" context:nil];
-    [UIView setAnimationDuration:duration];
-    view.frame = rect;
-    [UIView commitAnimations];
-}
-
-+ (void)resetView:(UIView *)view withOffset:(CGFloat)height{
++ (void)moveView:(UIView *)view withOffset:(CGFloat)height {
     NSTimeInterval duration = 0.3f;
     CGRect rect = view.frame;
     rect.origin.y += height;

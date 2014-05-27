@@ -49,22 +49,26 @@
     NSMutableArray *otherArray = [NSMutableArray array];
     for (FXChineseName *object in sortArray) {
         NSString *firstCharacter = [object.nameEnglish substringToIndex:1];
-        NSString *name = object.nameChinese;
+//        NSString *name = object.nameChinese;
+        NSDictionary *nameInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  object.nameChinese, kName,
+                                  object.nameIndex, kIndex,
+                                  nil];
         //若第一个字符为非A-Z
         char firstChar = [firstCharacter characterAtIndex:0];
         if (!(firstChar >= 'A' && firstChar <= 'Z')) {
-            [otherArray addObject:name];
+            [otherArray addObject:nameInfo];
         }
         else {
             //A-Z
             if (![indexString isEqualToString:firstCharacter]) {
                 sectionArray = [NSMutableArray array];
-                [sectionArray addObject:name];
+                [sectionArray addObject:nameInfo];
                 [resultArray addObject:sectionArray];
                 indexString = firstCharacter;
             }
             else {
-                [sectionArray addObject:name];
+                [sectionArray addObject:nameInfo];
             }
         }
     }
@@ -78,6 +82,7 @@
     for (int i = 0; i < [nameList count]; i++) {
         FXChineseName *name = [[FXChineseName alloc] init];
         name.nameChinese = [NSString stringWithString:[nameList objectAtIndex:i]];
+        name.nameIndex = [NSNumber numberWithInt:i];
         if (name.nameChinese == nil) {
             name.nameChinese = @"";
         }

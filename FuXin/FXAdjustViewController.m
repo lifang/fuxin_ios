@@ -27,8 +27,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    float systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersion >= 7.0) {
+    if (kDeviceVersion >= 7.0) {
         //支持7.0以上版本的方法
         self.edgesForExtendedLayout = UIRectEdgeNone;
         self.extendedLayoutIncludesOpaqueBars = NO;

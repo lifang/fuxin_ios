@@ -72,7 +72,7 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(kLargeOffset, 5, size.width , size.height);
+            _contentLabel.frame = CGRectMake(kLargeOffset, 6, size.width , size.height);
             _contentLabel.numberOfLines = 0;
             _backgroundView.frame = CGRectMake(kSmallOffset, 5, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
@@ -84,7 +84,7 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(320 - kSmallOffset - size.width - 12, 5, size.width, size.height);
+            _contentLabel.frame = CGRectMake(320 - kSmallOffset - size.width - 12, 6, size.width, size.height);
             _contentLabel.numberOfLines = 0;
             _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, 5, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
@@ -93,7 +93,7 @@
         default:
             break;
     }
-    _userPhotoView.image = [UIImage imageNamed:@"user.png"];
+    _userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
 }
 
 - (void)setContents:(NSString *)content {

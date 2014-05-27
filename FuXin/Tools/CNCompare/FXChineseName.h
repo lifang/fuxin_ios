@@ -14,5 +14,7 @@
 @property (nonatomic, strong) NSString *nameChinese;
 //拼音
 @property (nonatomic, strong) NSString *nameEnglish;
+//排序前序号
+@property (nonatomic, strong) NSNumber *nameIndex;
 
 @end

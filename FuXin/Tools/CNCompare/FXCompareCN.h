@@ -11,6 +11,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define kName  @"name"
+#define kIndex @"index"
+
 @interface FXCompareCN : NSObject
 
 //返回数组为tableview右侧索引框

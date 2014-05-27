@@ -11,3 +11,6 @@
 
 //屏幕高度
 #define kScreenHeight  [UIScreen mainScreen].bounds.size.height
+
+//手机系统版本
+#define kDeviceVersion [[[UIDevice currentDevice] systemVersion] floatValue]

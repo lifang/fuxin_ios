@@ -16,6 +16,8 @@ static FXMainController       *s_mainController = nil;
 @implementation FXAppDelegate
 
 @synthesize rootController = _rootController;
+@synthesize userID = _userID;
+@synthesize token = _token;
 
 + (FXAppDelegate *)shareFXAppDelegate {
     return [[UIApplication sharedApplication] delegate];
@@ -46,8 +48,7 @@ static FXMainController       *s_mainController = nil;
 //设置导航栏颜色
 + (void)setNavigationBarTinColor:(UINavigationController *)nav {
     UIColor *color = kColor(209, 27, 33, 1);
-    float systemVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersion >= 7.0) {
+    if (kDeviceVersion >= 7.0) {
         nav.navigationBar.barTintColor = color;
         [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     }

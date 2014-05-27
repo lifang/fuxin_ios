@@ -33,12 +33,8 @@
 @class ContactResponse_Builder;
 @class Contact_Builder;
 @class Message;
-@class MessageInfo;
-@class MessageInfoRequest;
-@class MessageInfoRequest_Builder;
-@class MessageInfoResponse;
-@class MessageInfoResponse_Builder;
-@class MessageInfo_Builder;
+@class MessageList;
+@class MessageList_Builder;
 @class MessageRequest;
 @class MessageRequest_Builder;
 @class MessageResponse;
@@ -62,6 +58,20 @@
 @class UnAuthenticationRequest_Builder;
 @class UnAuthenticationResponse;
 @class UnAuthenticationResponse_Builder;
+@class ValidateCodeRequest;
+@class ValidateCodeRequest_Builder;
+@class ValidateCodeResponse;
+@class ValidateCodeResponse_Builder;
+typedef enum {
+  AuthenticationResponse_ErrorCodeTypeInvalidUserName = 1,
+  AuthenticationResponse_ErrorCodeTypeInvalidPassword = 2,
+  AuthenticationResponse_ErrorCodeTypeInvalidPasswordExceedCount = 3,
+  AuthenticationResponse_ErrorCodeTypeNotActivate = 4,
+  AuthenticationResponse_ErrorCodeTypeSucceed = 5,
+} AuthenticationResponse_ErrorCodeType;
+
+BOOL AuthenticationResponse_ErrorCodeTypeIsValidValue(AuthenticationResponse_ErrorCodeType value);
+
 typedef enum {
   Contact_ContactSourceTypeOrderFrom = 1,
   Contact_ContactSourceTypeOrderTo = 2,
@@ -71,17 +81,8 @@ typedef enum {
 
 BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 
-typedef enum {
-  Profile_ContactSourceTypeOrderFrom = 1,
-  Profile_ContactSourceTypeOrderTo = 2,
-  Profile_ContactSourceTypeSubscribeFrom = 4,
-  Profile_ContactSourceTypeSubscribeTo = 8,
-} Profile_ContactSourceType;
 
-BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
-
-
-@interface ModelsNewRoot : NSObject {
+@interface ModelsRoot : NSObject {
 }
 + (PBExtensionRegistry*) extensionRegistry;
 + (void) registerAllExtensions:(PBMutableExtensionRegistry*) registry;
@@ -148,17 +149,25 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasUserId_:1;
+  BOOL hasPasswordFailCount_:1;
   BOOL hasToken_:1;
+  BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
   int32_t userId;
+  int32_t passwordFailCount;
   NSString* token;
+  AuthenticationResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasUserId;
 - (BOOL) hasToken;
+- (BOOL) hasPasswordFailCount;
+- (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
 @property (readonly) int32_t userId;
 @property (readonly, retain) NSString* token;
+@property (readonly) int32_t passwordFailCount;
+@property (readonly) AuthenticationResponse_ErrorCodeType errorCode;
 
 + (AuthenticationResponse*) defaultInstance;
 - (AuthenticationResponse*) defaultInstance;
@@ -208,6 +217,16 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (NSString*) token;
 - (AuthenticationResponse_Builder*) setToken:(NSString*) value;
 - (AuthenticationResponse_Builder*) clearToken;
+
+- (BOOL) hasPasswordFailCount;
+- (int32_t) passwordFailCount;
+- (AuthenticationResponse_Builder*) setPasswordFailCount:(int32_t) value;
+- (AuthenticationResponse_Builder*) clearPasswordFailCount;
+
+- (BOOL) hasErrorCode;
+- (AuthenticationResponse_ErrorCodeType) errorCode;
+- (AuthenticationResponse_Builder*) setErrorCode:(AuthenticationResponse_ErrorCodeType) value;
+- (AuthenticationResponse_Builder*) clearErrorCode;
 @end
 
 @interface UnAuthenticationRequest : PBGeneratedMessage {
@@ -328,34 +347,37 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @private
   BOOL hasIsBlocked_:1;
   BOOL hasIsProvider_:1;
-  BOOL hasUserId_:1;
+  BOOL hasContactId_:1;
   BOOL hasGender_:1;
+  BOOL hasSource_:1;
   BOOL hasName_:1;
   BOOL hasCustomName_:1;
   BOOL hasPinyin_:1;
-  BOOL hasSource_:1;
+  BOOL hasLastContactTime_:1;
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
   BOOL hasPublishClassType_:1;
   BOOL hasSignature_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
-  int32_t userId;
+  int32_t contactId;
   int32_t gender;
+  int32_t source;
   NSString* name;
   NSString* customName;
   NSString* pinyin;
-  NSString* source;
+  NSString* lastContactTime;
   NSString* tileUrl;
   NSString* lisence;
   NSString* publishClassType;
   NSString* signature;
 }
-- (BOOL) hasUserId;
+- (BOOL) hasContactId;
 - (BOOL) hasName;
 - (BOOL) hasCustomName;
 - (BOOL) hasPinyin;
 - (BOOL) hasIsBlocked;
+- (BOOL) hasLastContactTime;
 - (BOOL) hasGender;
 - (BOOL) hasSource;
 - (BOOL) hasTileUrl;
@@ -363,13 +385,14 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (BOOL) hasLisence;
 - (BOOL) hasPublishClassType;
 - (BOOL) hasSignature;
-@property (readonly) int32_t userId;
+@property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
 @property (readonly, retain) NSString* pinyin;
 - (BOOL) isBlocked;
+@property (readonly, retain) NSString* lastContactTime;
 @property (readonly) int32_t gender;
-@property (readonly, retain) NSString* source;
+@property (readonly) int32_t source;
 @property (readonly, retain) NSString* tileUrl;
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
@@ -410,10 +433,10 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (Contact_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (Contact_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasUserId;
-- (int32_t) userId;
-- (Contact_Builder*) setUserId:(int32_t) value;
-- (Contact_Builder*) clearUserId;
+- (BOOL) hasContactId;
+- (int32_t) contactId;
+- (Contact_Builder*) setContactId:(int32_t) value;
+- (Contact_Builder*) clearContactId;
 
 - (BOOL) hasName;
 - (NSString*) name;
@@ -435,14 +458,19 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (Contact_Builder*) setIsBlocked:(BOOL) value;
 - (Contact_Builder*) clearIsBlocked;
 
+- (BOOL) hasLastContactTime;
+- (NSString*) lastContactTime;
+- (Contact_Builder*) setLastContactTime:(NSString*) value;
+- (Contact_Builder*) clearLastContactTime;
+
 - (BOOL) hasGender;
 - (int32_t) gender;
 - (Contact_Builder*) setGender:(int32_t) value;
 - (Contact_Builder*) clearGender;
 
 - (BOOL) hasSource;
-- (NSString*) source;
-- (Contact_Builder*) setSource:(NSString*) value;
+- (int32_t) source;
+- (Contact_Builder*) setSource:(int32_t) value;
 - (Contact_Builder*) clearSource;
 
 - (BOOL) hasTileUrl;
@@ -475,13 +503,17 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @private
   BOOL hasUserId_:1;
   BOOL hasToken_:1;
+  BOOL hasTimeStamp_:1;
   int32_t userId;
   NSString* token;
+  NSString* timeStamp;
 }
 - (BOOL) hasToken;
 - (BOOL) hasUserId;
+- (BOOL) hasTimeStamp;
 @property (readonly, retain) NSString* token;
 @property (readonly) int32_t userId;
+@property (readonly, retain) NSString* timeStamp;
 
 + (ContactRequest*) defaultInstance;
 - (ContactRequest*) defaultInstance;
@@ -526,16 +558,25 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (int32_t) userId;
 - (ContactRequest_Builder*) setUserId:(int32_t) value;
 - (ContactRequest_Builder*) clearUserId;
+
+- (BOOL) hasTimeStamp;
+- (NSString*) timeStamp;
+- (ContactRequest_Builder*) setTimeStamp:(NSString*) value;
+- (ContactRequest_Builder*) clearTimeStamp;
 @end
 
 @interface ContactResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
+  BOOL hasTimeStamp_:1;
   BOOL isSucceed_:1;
+  NSString* timeStamp;
   NSMutableArray* mutableContactsList;
 }
 - (BOOL) hasIsSucceed;
+- (BOOL) hasTimeStamp;
 - (BOOL) isSucceed;
+@property (readonly, retain) NSString* timeStamp;
 - (NSArray*) contactsList;
 - (Contact*) contactsAtIndex:(int32_t) index;
 
@@ -584,6 +625,11 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (ContactResponse_Builder*) addContacts:(Contact*) value;
 - (ContactResponse_Builder*) addAllContacts:(NSArray*) values;
 - (ContactResponse_Builder*) clearContactsList;
+
+- (BOOL) hasTimeStamp;
+- (NSString*) timeStamp;
+- (ContactResponse_Builder*) setTimeStamp:(NSString*) value;
+- (ContactResponse_Builder*) clearTimeStamp;
 @end
 
 @interface BlockContactRequest : PBGeneratedMessage {
@@ -1219,13 +1265,17 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @private
   BOOL hasUserId_:1;
   BOOL hasToken_:1;
+  BOOL hasProfile_:1;
   int32_t userId;
   NSString* token;
+  Profile* profile;
 }
 - (BOOL) hasToken;
 - (BOOL) hasUserId;
+- (BOOL) hasProfile;
 @property (readonly, retain) NSString* token;
 @property (readonly) int32_t userId;
+@property (readonly, retain) Profile* profile;
 
 + (ChangeProfileRequest*) defaultInstance;
 - (ChangeProfileRequest*) defaultInstance;
@@ -1270,6 +1320,13 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (int32_t) userId;
 - (ChangeProfileRequest_Builder*) setUserId:(int32_t) value;
 - (ChangeProfileRequest_Builder*) clearUserId;
+
+- (BOOL) hasProfile;
+- (Profile*) profile;
+- (ChangeProfileRequest_Builder*) setProfile:(Profile*) value;
+- (ChangeProfileRequest_Builder*) setProfileBuilder:(Profile_Builder*) builderForValue;
+- (ChangeProfileRequest_Builder*) mergeProfile:(Profile*) value;
+- (ChangeProfileRequest_Builder*) clearProfile;
 @end
 
 @interface ChangeProfileResponse : PBGeneratedMessage {
@@ -1331,209 +1388,23 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (ChangeProfileResponse_Builder*) clearProfile;
 @end
 
-@interface MessageInfo : PBGeneratedMessage {
-@private
-  BOOL hasUserId_:1;
-  BOOL hasMessageCount_:1;
-  BOOL hasSendTime_:1;
-  int32_t userId;
-  int32_t messageCount;
-  NSString* sendTime;
-}
-- (BOOL) hasUserId;
-- (BOOL) hasMessageCount;
-- (BOOL) hasSendTime;
-@property (readonly) int32_t userId;
-@property (readonly) int32_t messageCount;
-@property (readonly, retain) NSString* sendTime;
-
-+ (MessageInfo*) defaultInstance;
-- (MessageInfo*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (MessageInfo_Builder*) builder;
-+ (MessageInfo_Builder*) builder;
-+ (MessageInfo_Builder*) builderWithPrototype:(MessageInfo*) prototype;
-
-+ (MessageInfo*) parseFromData:(NSData*) data;
-+ (MessageInfo*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfo*) parseFromInputStream:(NSInputStream*) input;
-+ (MessageInfo*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (MessageInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface MessageInfo_Builder : PBGeneratedMessage_Builder {
-@private
-  MessageInfo* result;
-}
-
-- (MessageInfo*) defaultInstance;
-
-- (MessageInfo_Builder*) clear;
-- (MessageInfo_Builder*) clone;
-
-- (MessageInfo*) build;
-- (MessageInfo*) buildPartial;
-
-- (MessageInfo_Builder*) mergeFrom:(MessageInfo*) other;
-- (MessageInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (MessageInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasUserId;
-- (int32_t) userId;
-- (MessageInfo_Builder*) setUserId:(int32_t) value;
-- (MessageInfo_Builder*) clearUserId;
-
-- (BOOL) hasMessageCount;
-- (int32_t) messageCount;
-- (MessageInfo_Builder*) setMessageCount:(int32_t) value;
-- (MessageInfo_Builder*) clearMessageCount;
-
-- (BOOL) hasSendTime;
-- (NSString*) sendTime;
-- (MessageInfo_Builder*) setSendTime:(NSString*) value;
-- (MessageInfo_Builder*) clearSendTime;
-@end
-
-@interface MessageInfoRequest : PBGeneratedMessage {
-@private
-  BOOL hasUserId_:1;
-  BOOL hasToken_:1;
-  BOOL hasTimeStamp_:1;
-  int32_t userId;
-  NSString* token;
-  NSString* timeStamp;
-}
-- (BOOL) hasToken;
-- (BOOL) hasUserId;
-- (BOOL) hasTimeStamp;
-@property (readonly, retain) NSString* token;
-@property (readonly) int32_t userId;
-@property (readonly, retain) NSString* timeStamp;
-
-+ (MessageInfoRequest*) defaultInstance;
-- (MessageInfoRequest*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (MessageInfoRequest_Builder*) builder;
-+ (MessageInfoRequest_Builder*) builder;
-+ (MessageInfoRequest_Builder*) builderWithPrototype:(MessageInfoRequest*) prototype;
-
-+ (MessageInfoRequest*) parseFromData:(NSData*) data;
-+ (MessageInfoRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfoRequest*) parseFromInputStream:(NSInputStream*) input;
-+ (MessageInfoRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (MessageInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface MessageInfoRequest_Builder : PBGeneratedMessage_Builder {
-@private
-  MessageInfoRequest* result;
-}
-
-- (MessageInfoRequest*) defaultInstance;
-
-- (MessageInfoRequest_Builder*) clear;
-- (MessageInfoRequest_Builder*) clone;
-
-- (MessageInfoRequest*) build;
-- (MessageInfoRequest*) buildPartial;
-
-- (MessageInfoRequest_Builder*) mergeFrom:(MessageInfoRequest*) other;
-- (MessageInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (MessageInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasToken;
-- (NSString*) token;
-- (MessageInfoRequest_Builder*) setToken:(NSString*) value;
-- (MessageInfoRequest_Builder*) clearToken;
-
-- (BOOL) hasUserId;
-- (int32_t) userId;
-- (MessageInfoRequest_Builder*) setUserId:(int32_t) value;
-- (MessageInfoRequest_Builder*) clearUserId;
-
-- (BOOL) hasTimeStamp;
-- (NSString*) timeStamp;
-- (MessageInfoRequest_Builder*) setTimeStamp:(NSString*) value;
-- (MessageInfoRequest_Builder*) clearTimeStamp;
-@end
-
-@interface MessageInfoResponse : PBGeneratedMessage {
-@private
-  BOOL hasIsSucceed_:1;
-  BOOL isSucceed_:1;
-  NSMutableArray* mutableMessageInfoList;
-}
-- (BOOL) hasIsSucceed;
-- (BOOL) isSucceed;
-- (NSArray*) messageInfoList;
-- (MessageInfo*) messageInfoAtIndex:(int32_t) index;
-
-+ (MessageInfoResponse*) defaultInstance;
-- (MessageInfoResponse*) defaultInstance;
-
-- (BOOL) isInitialized;
-- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
-- (MessageInfoResponse_Builder*) builder;
-+ (MessageInfoResponse_Builder*) builder;
-+ (MessageInfoResponse_Builder*) builderWithPrototype:(MessageInfoResponse*) prototype;
-
-+ (MessageInfoResponse*) parseFromData:(NSData*) data;
-+ (MessageInfoResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfoResponse*) parseFromInputStream:(NSInputStream*) input;
-+ (MessageInfoResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-+ (MessageInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input;
-+ (MessageInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-@end
-
-@interface MessageInfoResponse_Builder : PBGeneratedMessage_Builder {
-@private
-  MessageInfoResponse* result;
-}
-
-- (MessageInfoResponse*) defaultInstance;
-
-- (MessageInfoResponse_Builder*) clear;
-- (MessageInfoResponse_Builder*) clone;
-
-- (MessageInfoResponse*) build;
-- (MessageInfoResponse*) buildPartial;
-
-- (MessageInfoResponse_Builder*) mergeFrom:(MessageInfoResponse*) other;
-- (MessageInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
-- (MessageInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
-
-- (BOOL) hasIsSucceed;
-- (BOOL) isSucceed;
-- (MessageInfoResponse_Builder*) setIsSucceed:(BOOL) value;
-- (MessageInfoResponse_Builder*) clearIsSucceed;
-
-- (NSArray*) messageInfoList;
-- (MessageInfo*) messageInfoAtIndex:(int32_t) index;
-- (MessageInfoResponse_Builder*) replaceMessageInfoAtIndex:(int32_t) index with:(MessageInfo*) value;
-- (MessageInfoResponse_Builder*) addMessageInfo:(MessageInfo*) value;
-- (MessageInfoResponse_Builder*) addAllMessageInfo:(NSArray*) values;
-- (MessageInfoResponse_Builder*) clearMessageInfoList;
-@end
-
 @interface Message : PBGeneratedMessage {
 @private
   BOOL hasUserId_:1;
+  BOOL hasContactId_:1;
   BOOL hasContent_:1;
   BOOL hasSendTime_:1;
   int32_t userId;
+  int32_t contactId;
   NSString* content;
   NSString* sendTime;
 }
 - (BOOL) hasUserId;
+- (BOOL) hasContactId;
 - (BOOL) hasContent;
 - (BOOL) hasSendTime;
 @property (readonly) int32_t userId;
+@property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* content;
 @property (readonly, retain) NSString* sendTime;
 
@@ -1576,6 +1447,11 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (Message_Builder*) setUserId:(int32_t) value;
 - (Message_Builder*) clearUserId;
 
+- (BOOL) hasContactId;
+- (int32_t) contactId;
+- (Message_Builder*) setContactId:(int32_t) value;
+- (Message_Builder*) clearContactId;
+
 - (BOOL) hasContent;
 - (NSString*) content;
 - (Message_Builder*) setContent:(NSString*) value;
@@ -1587,24 +1463,78 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (Message_Builder*) clearSendTime;
 @end
 
+@interface MessageList : PBGeneratedMessage {
+@private
+  BOOL hasContactId_:1;
+  int32_t contactId;
+  NSMutableArray* mutableMessagesList;
+}
+- (BOOL) hasContactId;
+@property (readonly) int32_t contactId;
+- (NSArray*) messagesList;
+- (Message*) messagesAtIndex:(int32_t) index;
+
++ (MessageList*) defaultInstance;
+- (MessageList*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (MessageList_Builder*) builder;
++ (MessageList_Builder*) builder;
++ (MessageList_Builder*) builderWithPrototype:(MessageList*) prototype;
+
++ (MessageList*) parseFromData:(NSData*) data;
++ (MessageList*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageList*) parseFromInputStream:(NSInputStream*) input;
++ (MessageList*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageList*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (MessageList*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface MessageList_Builder : PBGeneratedMessage_Builder {
+@private
+  MessageList* result;
+}
+
+- (MessageList*) defaultInstance;
+
+- (MessageList_Builder*) clear;
+- (MessageList_Builder*) clone;
+
+- (MessageList*) build;
+- (MessageList*) buildPartial;
+
+- (MessageList_Builder*) mergeFrom:(MessageList*) other;
+- (MessageList_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (MessageList_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasContactId;
+- (int32_t) contactId;
+- (MessageList_Builder*) setContactId:(int32_t) value;
+- (MessageList_Builder*) clearContactId;
+
+- (NSArray*) messagesList;
+- (Message*) messagesAtIndex:(int32_t) index;
+- (MessageList_Builder*) replaceMessagesAtIndex:(int32_t) index with:(Message*) value;
+- (MessageList_Builder*) addMessages:(Message*) value;
+- (MessageList_Builder*) addAllMessages:(NSArray*) values;
+- (MessageList_Builder*) clearMessagesList;
+@end
+
 @interface MessageRequest : PBGeneratedMessage {
 @private
   BOOL hasUserId_:1;
-  BOOL hasContactId_:1;
   BOOL hasToken_:1;
   BOOL hasTimeStamp_:1;
   int32_t userId;
-  int32_t contactId;
   NSString* token;
   NSString* timeStamp;
 }
 - (BOOL) hasToken;
 - (BOOL) hasUserId;
-- (BOOL) hasContactId;
 - (BOOL) hasTimeStamp;
 @property (readonly, retain) NSString* token;
 @property (readonly) int32_t userId;
-@property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* timeStamp;
 
 + (MessageRequest*) defaultInstance;
@@ -1651,11 +1581,6 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (MessageRequest_Builder*) setUserId:(int32_t) value;
 - (MessageRequest_Builder*) clearUserId;
 
-- (BOOL) hasContactId;
-- (int32_t) contactId;
-- (MessageRequest_Builder*) setContactId:(int32_t) value;
-- (MessageRequest_Builder*) clearContactId;
-
 - (BOOL) hasTimeStamp;
 - (NSString*) timeStamp;
 - (MessageRequest_Builder*) setTimeStamp:(NSString*) value;
@@ -1665,21 +1590,17 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @interface MessageResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
-  BOOL hasContactId_:1;
   BOOL hasTimeStamp_:1;
   BOOL isSucceed_:1;
-  int32_t contactId;
   NSString* timeStamp;
-  NSMutableArray* mutableMessagesList;
+  NSMutableArray* mutableMessageListsList;
 }
 - (BOOL) hasIsSucceed;
-- (BOOL) hasContactId;
 - (BOOL) hasTimeStamp;
 - (BOOL) isSucceed;
-@property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* timeStamp;
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
+- (NSArray*) messageListsList;
+- (MessageList*) messageListsAtIndex:(int32_t) index;
 
 + (MessageResponse*) defaultInstance;
 - (MessageResponse*) defaultInstance;
@@ -1720,17 +1641,12 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (MessageResponse_Builder*) setIsSucceed:(BOOL) value;
 - (MessageResponse_Builder*) clearIsSucceed;
 
-- (BOOL) hasContactId;
-- (int32_t) contactId;
-- (MessageResponse_Builder*) setContactId:(int32_t) value;
-- (MessageResponse_Builder*) clearContactId;
-
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
-- (MessageResponse_Builder*) replaceMessagesAtIndex:(int32_t) index with:(Message*) value;
-- (MessageResponse_Builder*) addMessages:(Message*) value;
-- (MessageResponse_Builder*) addAllMessages:(NSArray*) values;
-- (MessageResponse_Builder*) clearMessagesList;
+- (NSArray*) messageListsList;
+- (MessageList*) messageListsAtIndex:(int32_t) index;
+- (MessageResponse_Builder*) replaceMessageListsAtIndex:(int32_t) index with:(MessageList*) value;
+- (MessageResponse_Builder*) addMessageLists:(MessageList*) value;
+- (MessageResponse_Builder*) addAllMessageLists:(NSArray*) values;
+- (MessageResponse_Builder*) clearMessageListsList;
 
 - (BOOL) hasTimeStamp;
 - (NSString*) timeStamp;
@@ -1809,14 +1725,14 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @interface SendMessageResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
-  BOOL hasMessage_:1;
+  BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
-  NSString* message;
+  int32_t errorCode;
 }
 - (BOOL) hasIsSucceed;
-- (BOOL) hasMessage;
+- (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
-@property (readonly, retain) NSString* message;
+@property (readonly) int32_t errorCode;
 
 + (SendMessageResponse*) defaultInstance;
 - (SendMessageResponse*) defaultInstance;
@@ -1857,10 +1773,10 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (SendMessageResponse_Builder*) setIsSucceed:(BOOL) value;
 - (SendMessageResponse_Builder*) clearIsSucceed;
 
-- (BOOL) hasMessage;
-- (NSString*) message;
-- (SendMessageResponse_Builder*) setMessage:(NSString*) value;
-- (SendMessageResponse_Builder*) clearMessage;
+- (BOOL) hasErrorCode;
+- (int32_t) errorCode;
+- (SendMessageResponse_Builder*) setErrorCode:(int32_t) value;
+- (SendMessageResponse_Builder*) clearErrorCode;
 @end
 
 @interface RegisterRequest : PBGeneratedMessage {
@@ -1951,16 +1867,17 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasUserId_:1;
+  BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
   int32_t userId;
-  NSMutableArray* mutableMessagesList;
+  int32_t errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasUserId;
+- (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
 @property (readonly) int32_t userId;
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
+@property (readonly) int32_t errorCode;
 
 + (RegisterResponse*) defaultInstance;
 - (RegisterResponse*) defaultInstance;
@@ -2001,17 +1918,15 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (RegisterResponse_Builder*) setIsSucceed:(BOOL) value;
 - (RegisterResponse_Builder*) clearIsSucceed;
 
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
-- (RegisterResponse_Builder*) replaceMessagesAtIndex:(int32_t) index with:(Message*) value;
-- (RegisterResponse_Builder*) addMessages:(Message*) value;
-- (RegisterResponse_Builder*) addAllMessages:(NSArray*) values;
-- (RegisterResponse_Builder*) clearMessagesList;
-
 - (BOOL) hasUserId;
 - (int32_t) userId;
 - (RegisterResponse_Builder*) setUserId:(int32_t) value;
 - (RegisterResponse_Builder*) clearUserId;
+
+- (BOOL) hasErrorCode;
+- (int32_t) errorCode;
+- (RegisterResponse_Builder*) setErrorCode:(int32_t) value;
+- (RegisterResponse_Builder*) clearErrorCode;
 @end
 
 @interface ChangePasswordRequest : PBGeneratedMessage {
@@ -2101,13 +2016,14 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 @interface ChangePasswordResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
+  BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
-  NSMutableArray* mutableMessagesList;
+  int32_t errorCode;
 }
 - (BOOL) hasIsSucceed;
+- (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
+@property (readonly) int32_t errorCode;
 
 + (ChangePasswordResponse*) defaultInstance;
 - (ChangePasswordResponse*) defaultInstance;
@@ -2148,11 +2064,123 @@ BOOL Profile_ContactSourceTypeIsValidValue(Profile_ContactSourceType value);
 - (ChangePasswordResponse_Builder*) setIsSucceed:(BOOL) value;
 - (ChangePasswordResponse_Builder*) clearIsSucceed;
 
-- (NSArray*) messagesList;
-- (Message*) messagesAtIndex:(int32_t) index;
-- (ChangePasswordResponse_Builder*) replaceMessagesAtIndex:(int32_t) index with:(Message*) value;
-- (ChangePasswordResponse_Builder*) addMessages:(Message*) value;
-- (ChangePasswordResponse_Builder*) addAllMessages:(NSArray*) values;
-- (ChangePasswordResponse_Builder*) clearMessagesList;
+- (BOOL) hasErrorCode;
+- (int32_t) errorCode;
+- (ChangePasswordResponse_Builder*) setErrorCode:(int32_t) value;
+- (ChangePasswordResponse_Builder*) clearErrorCode;
+@end
+
+@interface ValidateCodeRequest : PBGeneratedMessage {
+@private
+  BOOL hasPhoneNumber_:1;
+  NSString* phoneNumber;
+}
+- (BOOL) hasPhoneNumber;
+@property (readonly, retain) NSString* phoneNumber;
+
++ (ValidateCodeRequest*) defaultInstance;
+- (ValidateCodeRequest*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ValidateCodeRequest_Builder*) builder;
++ (ValidateCodeRequest_Builder*) builder;
++ (ValidateCodeRequest_Builder*) builderWithPrototype:(ValidateCodeRequest*) prototype;
+
++ (ValidateCodeRequest*) parseFromData:(NSData*) data;
++ (ValidateCodeRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ValidateCodeRequest*) parseFromInputStream:(NSInputStream*) input;
++ (ValidateCodeRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ValidateCodeRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ValidateCodeRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ValidateCodeRequest_Builder : PBGeneratedMessage_Builder {
+@private
+  ValidateCodeRequest* result;
+}
+
+- (ValidateCodeRequest*) defaultInstance;
+
+- (ValidateCodeRequest_Builder*) clear;
+- (ValidateCodeRequest_Builder*) clone;
+
+- (ValidateCodeRequest*) build;
+- (ValidateCodeRequest*) buildPartial;
+
+- (ValidateCodeRequest_Builder*) mergeFrom:(ValidateCodeRequest*) other;
+- (ValidateCodeRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ValidateCodeRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasPhoneNumber;
+- (NSString*) phoneNumber;
+- (ValidateCodeRequest_Builder*) setPhoneNumber:(NSString*) value;
+- (ValidateCodeRequest_Builder*) clearPhoneNumber;
+@end
+
+@interface ValidateCodeResponse : PBGeneratedMessage {
+@private
+  BOOL hasIsSucceed_:1;
+  BOOL hasErrorCode_:1;
+  BOOL hasValidateCode_:1;
+  BOOL isSucceed_:1;
+  int32_t errorCode;
+  NSString* validateCode;
+}
+- (BOOL) hasIsSucceed;
+- (BOOL) hasErrorCode;
+- (BOOL) hasValidateCode;
+- (BOOL) isSucceed;
+@property (readonly) int32_t errorCode;
+@property (readonly, retain) NSString* validateCode;
+
++ (ValidateCodeResponse*) defaultInstance;
+- (ValidateCodeResponse*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ValidateCodeResponse_Builder*) builder;
++ (ValidateCodeResponse_Builder*) builder;
++ (ValidateCodeResponse_Builder*) builderWithPrototype:(ValidateCodeResponse*) prototype;
+
++ (ValidateCodeResponse*) parseFromData:(NSData*) data;
++ (ValidateCodeResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ValidateCodeResponse*) parseFromInputStream:(NSInputStream*) input;
++ (ValidateCodeResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ValidateCodeResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ValidateCodeResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ValidateCodeResponse_Builder : PBGeneratedMessage_Builder {
+@private
+  ValidateCodeResponse* result;
+}
+
+- (ValidateCodeResponse*) defaultInstance;
+
+- (ValidateCodeResponse_Builder*) clear;
+- (ValidateCodeResponse_Builder*) clone;
+
+- (ValidateCodeResponse*) build;
+- (ValidateCodeResponse*) buildPartial;
+
+- (ValidateCodeResponse_Builder*) mergeFrom:(ValidateCodeResponse*) other;
+- (ValidateCodeResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ValidateCodeResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasIsSucceed;
+- (BOOL) isSucceed;
+- (ValidateCodeResponse_Builder*) setIsSucceed:(BOOL) value;
+- (ValidateCodeResponse_Builder*) clearIsSucceed;
+
+- (BOOL) hasErrorCode;
+- (int32_t) errorCode;
+- (ValidateCodeResponse_Builder*) setErrorCode:(int32_t) value;
+- (ValidateCodeResponse_Builder*) clearErrorCode;
+
+- (BOOL) hasValidateCode;
+- (NSString*) validateCode;
+- (ValidateCodeResponse_Builder*) setValidateCode:(NSString*) value;
+- (ValidateCodeResponse_Builder*) clearValidateCode;
 @end
 

@@ -17,6 +17,10 @@
 
 @property (nonatomic, strong) FXRootViewController *rootController;
 
+//登录返回的userID
+@property (nonatomic, assign) int32_t userID;
+//登录返回的令牌
+@property (nonatomic, strong) NSString *token;
 
 + (FXAppDelegate *)shareFXAppDelegate;
 - (FXRootViewController *)shareRootViewContorller;

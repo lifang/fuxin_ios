@@ -11,17 +11,17 @@
 #import "FXChatInputView.h"
 #import "FXMessageBoxCell.h"
 #import "FXKeyboardAnimation.h"
+#import "FXAppDelegate.h"
 
-static NSString *MessageIdentifier = @"messageIdentifier";
+static NSString *MessageCellIdentifier = @"MCI";
 
-@interface FXChatViewController ()<GetInputTextDelegate>
+@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate>
 
 @property (nonatomic, strong) FXChatInputView *inputView;
 
-//若键盘出现view上移则YES，若不上移为NO
-@property (nonatomic, assign) BOOL needResetView;
+@property (nonatomic, assign) BOOL showListView;
 
-@property (nonatomic, assign) BOOL needResetInputView;
+@property (nonatomic, assign) BOOL showKeyBoard;
 
 @end
 
@@ -31,8 +31,11 @@ static NSString *MessageIdentifier = @"messageIdentifier";
 
 @synthesize chatTableView = _chatTableView;
 @synthesize dataItems = _dataItems;
-@synthesize needResetView = _needResetView;
-@synthesize needResetInputView = _needResetInputView;
+@synthesize pictureListView = _pictureListView;
+@synthesize showListView = _showListView;
+@synthesize showKeyBoard = _showKeyBoard;
+@synthesize contact = _contact;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,7 +50,7 @@ static NSString *MessageIdentifier = @"messageIdentifier";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"聊天";
+    self.title = _contact.name;
     self.view.backgroundColor = [UIColor whiteColor];
     [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setRightNavBarItemWithImageName:@"info.png"];
@@ -72,7 +75,7 @@ static NSString *MessageIdentifier = @"messageIdentifier";
     _chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _chatTableView.delegate = self;
     _chatTableView.dataSource = self;
-    [_chatTableView registerClass:[FXMessageBoxCell class] forCellReuseIdentifier:MessageIdentifier];
+    [_chatTableView registerClass:[FXMessageBoxCell class] forCellReuseIdentifier:MessageCellIdentifier];
     [self.view addSubview:_chatTableView];
     //清除多余划线
     [self hiddenExtraCellLine];
@@ -82,12 +85,21 @@ static NSString *MessageIdentifier = @"messageIdentifier";
     [self.view addSubview:_inputView];
     
     _dataItems = [[NSMutableArray alloc] init];
+    
+    [self initPictureListView];
 }
 
 - (void)hiddenExtraCellLine {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     [_chatTableView setTableFooterView:view];
+}
+
+//添加图片菜单
+- (void)initPictureListView {
+    _pictureListView = [[FXShowPhotoView alloc] initWithFrame:CGRectMake(0, kScreenHeight - 64, 320, 216)];
+    _pictureListView.pictureDelegate = self;
+    [self.view addSubview:_pictureListView];
 }
 
 #pragma mark - 重写父类方法
@@ -129,7 +141,7 @@ static NSString *MessageIdentifier = @"messageIdentifier";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FXMessageBoxCell *cell = [tableView dequeueReusableCellWithIdentifier:MessageIdentifier forIndexPath:indexPath];
+    FXMessageBoxCell *cell = [tableView dequeueReusableCellWithIdentifier:MessageCellIdentifier forIndexPath:indexPath];
     cell.cellStyle = indexPath.row % 2 == 0 ? MessageCellStyleSender : MessageCellStyleReceive;
     [cell setContents:[_dataItems objectAtIndex:indexPath.row]];
     return cell;
@@ -143,48 +155,117 @@ static NSString *MessageIdentifier = @"messageIdentifier";
     return height < 44 ? 64 : height + 20;
 }
 
-#pragma mark - 获取发送信息和键盘代理
+#pragma mark - 获取发送信息和键盘代理 
+#pragma mark - GetInputTextDelegate
 - (void)getInputText:(NSString *)intputText {
-    [_dataItems addObject:intputText];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_dataItems count] - 1 inSection:0];
-    NSArray *message = [NSArray arrayWithObject:indexPath];
-    [self.chatTableView insertRowsAtIndexPaths:message withRowAnimation:UITableViewRowAnimationBottom];
-    [self.chatTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//    [self.chatTableView reloadData];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:_contact.contactId] setContent:intputText] setSendTime:nil] build];
+    [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:sendMessage Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            SendMessageResponse *resp = [SendMessageResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //成功发送
+                [_dataItems addObject:intputText];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_dataItems count] - 1 inSection:0];
+                NSArray *message = [NSArray arrayWithObject:indexPath];
+                [self.chatTableView insertRowsAtIndexPaths:message withRowAnimation:UITableViewRowAnimationBottom];
+                [self.chatTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            }
+            else {
+                NSLog(@"errorCode = %d",resp.errorCode);
+            }
+        }
+    }];
 }
 
-//键盘事件
-- (void)viewNeedMoveUpWithKeyboardHeight:(CGFloat)height {
-    if ([_dataItems count] > 0) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_dataItems count] - 1 inSection:0];
-        UITableViewCell *cell = [self.chatTableView cellForRowAtIndexPath:indexPath];
-        CGFloat dy = kScreenHeight - 64 - cell.frame.origin.y - cell.frame.size.height;
-        if (dy > height) {
-            _needResetView = NO;
+- (void)sendActionWithButtonTag:(PictureTags)tag {
+    [self adjustViewWithKeyboard];
+    switch (tag) {
+        case PictureEmoji: {
+            NSLog(@"Emoji!");
+        }
+            break;
+        case PicturePhoto: {
+            NSLog(@"Picture!");
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (void)adjustViewWithKeyboard {
+    if (!_showListView) {
+        //若没有弹出表情框
+        _showListView = YES;
+        if (_showKeyBoard) {
+            [_inputView.inputView resignFirstResponder];
         }
         else {
-            _needResetView = YES;
-            [FXKeyboardAnimation moveUpView:self.view withOffset:height];
+            [FXKeyboardAnimation moveView:_inputView withOffset:-_pictureListView.bounds.size.height];
+            [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+        }
+    }
+}
+
+- (void)keyboardWillChangeWithInfo:(NSDictionary *)info {
+    CGRect beginRect = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGRect endRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat offset = 0;
+    if (endRect.origin.y >= kScreenHeight) {
+        //键盘收回
+        _showKeyBoard = NO;
+        if (_showListView) {
+            //若弹出表情框，则计算表情框与键盘高度差
+            offset = endRect.size.height -  _pictureListView.bounds.size.height;
+            [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+        }
+        else {
+            //键盘收回
+            offset = endRect.size.height;
         }
     }
     else {
-        _needResetView = YES;
-        [FXKeyboardAnimation moveUpView:self.view withOffset:height];
+        //键盘出现
+        _showKeyBoard = YES;
+        if (_showListView) {
+            //若此时已经弹出表情框
+            offset = _pictureListView.bounds.size.height - endRect.size.height;
+            //隐藏表情框
+            [FXKeyboardAnimation moveView:_pictureListView withOffset:_pictureListView.bounds.size.height];
+            _showListView = NO;
+        }
+        else {
+            //未弹出表情框
+            if (beginRect.size.height == endRect.size.height) {
+                //键盘弹出
+                offset = -beginRect.size.height;
+            }
+            else {
+                //键盘高度改变
+                offset = beginRect.size.height - endRect.size.height;
+            }
+        }
     }
-    if (!_needResetView) {
-        _needResetInputView = YES;
-        [FXKeyboardAnimation moveUpView:_inputView withOffset:height];
-    }
+    [FXKeyboardAnimation moveView:_inputView withOffset:offset];
 }
 
-- (void)viewNeedMoveResetWithKeyBoardHeight:(CGFloat)height {
-    if (_needResetInputView) {
-        _needResetInputView = NO;
-        [FXKeyboardAnimation resetView:_inputView withOffset:height];
-    }
-    if (_needResetView) {
-        _needResetView = NO;
-        [FXKeyboardAnimation resetView:self.view withOffset:height];
+#pragma mark - 图片菜单代理
+#pragma mark - PictureButtonDelegate
+
+- (void)pictureButtonFunctionWithTag:(ButtonTags)tag {
+    switch (tag) {
+        case ButtonTagePicture: {
+            NSLog(@"本地相册！");
+        }
+            break;
+        case ButtonTagPhoto: {
+            NSLog(@"拍照！");
+        }
+            break;
+        default:
+            break;
     }
 }
 

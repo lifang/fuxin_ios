@@ -45,7 +45,7 @@
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 150, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
-    _nameLabel.font = [UIFont systemFontOfSize:14];
+    _nameLabel.font = [UIFont boldSystemFontOfSize:14];
     _nameLabel.textColor = kColor(70, 154, 211, 1);
     [self.contentView addSubview:_nameLabel];
     
@@ -62,17 +62,17 @@
     [self.contentView addSubview:_detailLabel];
     
     
-    UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(25, 0, 24, 24)];
+    UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 6, 18, 18)];
     backView.image = [UIImage imageNamed:@"messnum.png"];
     [self.contentView addSubview:backView];
     
-    _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(30, 5, 14, 14)];
+    _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 2, 14, 14)];
     _numberLabel.backgroundColor = [UIColor clearColor];
     _numberLabel.font = [UIFont systemFontOfSize:10];
     _numberLabel.textColor = [UIColor whiteColor];
     _numberLabel.textAlignment = NSTextAlignmentCenter;
     _numberLabel.layer.masksToBounds = YES;
-    [self.contentView addSubview:_numberLabel];
+    [backView addSubview:_numberLabel];
 }
 
 @end

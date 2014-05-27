@@ -7,41 +7,54 @@
 //
 
 #import "FXHttpRequest.h"
-#import "FXNetworkInterface.h"
-#import "ModelsNew.pb.h"
-#import "GTMBase64.h"
 
 @implementation FXHttpRequest
 
-@synthesize _delegate;
+//传入的为protobuffer二进制
++ (NSMutableData *)encodePostdataWithData:(NSData *)data {
+    //base64加密
+    NSString *base64String = [GTMBase64 stringByEncodingData:data];
+    //JSON格式 前后加引号
+    NSString *JSONString = [NSString stringWithFormat:@"\"%@\"",base64String];
+    //UTF8格式
+    NSData *UTF8Data = [JSONString dataUsingEncoding:NSUTF8StringEncoding];
+    return [NSMutableData dataWithData:UTF8Data];
+}
 
-- (void)setHttpRequestWithInfo:(NSDictionary *)dict {
-//    NSURL *url = [NSURL URLWithString:[dict objectForKey:kRequestURL]];
-//    NSString *methodType = [dict objectForKey:kRequestType];
-//    NSString *parmName = [dict objectForKey:kRequestParm];
-    NSURL *url = [NSURL URLWithString:@"https://mobileim.mock.fuwu.com/api/Message"];
-    NSString *methodType = @"PUT";
+//传入的为返回的字符串
++ (NSData *)decodeResponseDataWithString:(NSString *)string {
+    //去JSON 前后引号
+    NSString *JSONString = [string substringWithRange:NSMakeRange(1, [string length] - 2)];
+    //base64解密
+    NSData *base64String = [GTMBase64 decodeString:JSONString];
+    return base64String;
+}
+
++ (void)setHttpRequestWithInfo:(NSDictionary *)dict responseResult:(Result)result {
+    NSURL *url = [NSURL URLWithString:[dict objectForKey:kRequestURL]];
+    NSString *methodType = [dict objectForKey:kRequestType];
+    NSData *PBData = [dict objectForKey:kRequestPostData];
     
-    Message *message = [[[[Message builder] setUserId:1] setContent:@"123"] build];
-    SendMessageRequest *send = [[[[[SendMessageRequest builder] setToken:@"MockToken"] setUserId:2] setMessage:message] build];
-    NSData *binary = [send data];
-    NSString *str = [GTMBase64 stringByEncodingData:binary];
-    NSString *json = [NSString stringWithFormat:@"\"%@\"",str];
-    NSData *dd = [json dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableData *postData = [[self class] encodePostdataWithData:PBData];
+    
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setRequestMethod:methodType];
-    [request addRequestHeader:@"Content-Type" value:@"application/xml;charset=UTF-8"];
-    [request setPostBody:[NSMutableData dataWithData:dd]];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    [request setPostBody:postData];
     [request setValidatesSecureCertificate:NO];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
-    
+
     __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
-        NSLog(@"!!!%@",[wRequest responseString]);
+        NSLog(@"success");
+        NSString *UTF8String = [wRequest responseString];
+        NSData *PBData = [[self class] decodeResponseDataWithString:UTF8String];
+        result(YES, PBData);
     }];
     [request setFailedBlock:^{
-        NSLog(@"!!%@",[wRequest responseString]);
+        NSLog(@"fail");
+        result(NO, [wRequest responseData]);
     }];
 }
 

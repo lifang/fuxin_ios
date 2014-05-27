@@ -10,7 +10,6 @@
 
 @interface FXKeyboardAnimation : NSObject
 
-+ (void)moveUpView:(UIView *)view withOffset:(CGFloat)height;
-+ (void)resetView:(UIView *)view withOffset:(CGFloat)height;
++ (void)moveView:(UIView *)view withOffset:(CGFloat)height;
 
 @end
