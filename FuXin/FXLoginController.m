@@ -8,6 +8,7 @@
 
 #import "FXLoginController.h"
 #import "FXRegisterController.h"
+#import "FXForgotPasswordController.h"
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
 #import "SharedClass.h"
@@ -188,7 +189,8 @@
 }
 
 - (IBAction)forgetPassword:(id)sender {
-    
+    FXForgotPasswordController *forgotPWDController = [[FXForgotPasswordController alloc] initWithNibName:@"FXForgotPasswordController" bundle:nil];
+    [self.navigationController pushViewController:forgotPWDController animated:YES];
 }
 
 #pragma mark - UITextFieldDelegate 
@@ -260,7 +262,7 @@
 //    }
 //    NSLog(@"33");
     __block NSInteger number = 0;
-    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {  //略慢  0.03秒
+    [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {
         number = quantity ;
     }];
     NSLog(@"未读聊天记录有: %ld 条 ,我们来更新一下",(long)number);

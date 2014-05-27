@@ -15,7 +15,7 @@
 //    RegisterFinish,     //注册完成界面
 //}RegisterViews;
 
-@interface FXRegisterController : FXAdjustViewController
+@interface FXRegisterController : FXAdjustViewController<UITableViewDataSource ,UITableViewDelegate ,UITextFieldDelegate>
 
 //第一步 填写手机号码
 @property (nonatomic, strong) FXInputView *phoneView;

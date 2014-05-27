@@ -1,45 +1,41 @@
 //
-//  FXRegisterController.m
+//  FXForgotPasswordController.m
 //  FuXin
 //
-//  Created by 徐宝桥 on 14-5-19.
+//  Created by lihongliang on 14-5-24.
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
-#import "FXRegisterController.h"
-#import "FXReviewController.h"
+#import "FXForgotPasswordController.h"
 
 #define kBlank_Size 15   //边缘空白
-#define kCell_Height 44
+#define kCell_Height 44   
 #define kReSendTime 20  //重发验证码间隔
 #define kIdentifyingCodeTime 20   //验证码有效期
 
-@interface FXRegisterController ()
+@interface FXForgotPasswordController ()
 //控件区
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) UITextField *passwordTextField;   //密码
-@property (strong, nonatomic) UILabel *passwordTipLabel;  //密码输入提示
-@property (strong, nonatomic) UITextField *confirmPasswordTextField;  //确认密码
-@property (strong, nonatomic) UILabel *tipLabel;   //提示信息
-@property (strong, nonatomic) UILabel *coundDownLabel;   //验证码倒计时
-@property (strong, nonatomic) UITextField *phoneNumberTextField;  //电话号码
-@property (strong, nonatomic) UITextField *identifyingCodeTextField;  //验证码
-@property (strong, nonatomic) UILabel *alertLabel;   //电话号码错误警示
-@property (strong, nonatomic) UILabel *alertIdentiyingLabel;   //验证码错误警示
-@property (strong, nonatomic) UIButton *rewriteButton;   //重填电话号码
-@property (strong, nonatomic) UIButton *reSendButton;    //重发验证码
-@property (strong, nonatomic) UIButton *checkButton;    //选中同意
-@property (strong, nonatomic) UIButton *serviceTextButton;   //服务协议
-@property (strong, nonatomic) UILabel *agreeLabel;   //酱油
-@property (strong, nonatomic) UIButton *doneButton;   //完成按钮
-@property (strong, nonatomic) UITextField *userNameTextField;  //用户名
-@property (strong, nonatomic) UILabel *userNameTipLabel; //用户名提示
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;   //密码
+@property (weak, nonatomic) IBOutlet UILabel *passwordTipLabel;  //密码输入提示
+@property (weak, nonatomic) IBOutlet UITextField *confirmPasswordTextField;  //确认密码
+@property (weak, nonatomic) IBOutlet UILabel *tipLabel;   //提示信息
+@property (weak, nonatomic) IBOutlet UILabel *coundDownLabel;   //验证码倒计时
+@property (weak, nonatomic) IBOutlet UITextField *phoneNumberTextField;  //电话号码
+@property (weak, nonatomic) IBOutlet UITextField *identifyingCodeTextField;  //验证码
+@property (weak, nonatomic) IBOutlet UILabel *alertLabel;   //电话号码错误警示
+@property (weak, nonatomic) IBOutlet UILabel *alertIdentiyingLabel;   //验证码错误警示
+@property (weak, nonatomic) IBOutlet UIButton *rewriteButton;   //重填电话号码
+@property (weak, nonatomic) IBOutlet UIButton *reSendButton;    //重发验证码
+@property (weak, nonatomic) IBOutlet UIButton *checkButton;    //选中同意
+@property (weak, nonatomic) IBOutlet UIButton *serviceTextButton;   //服务协议
+@property (weak, nonatomic) IBOutlet UILabel *agreeLabel;   //酱油
+@property (weak, nonatomic) IBOutlet UIButton *doneButton;
 
 - (IBAction)spaceAreaClicked:(id)sender;
 
 //数据区
 @property (strong, nonatomic) NSString *phoneNumberString; //真实电话号码
-@property (assign, nonatomic) BOOL usernameIsOK; //用户名无问题
 @property (assign, nonatomic) BOOL serviceTextAgreed; //已同意"服务条款"
 @property (assign, nonatomic) BOOL passwordIsOK; //密码无问题
 @property (assign, nonatomic) BOOL identiCodeIsOK;  //验证码OK
@@ -51,13 +47,13 @@
 @property (strong ,nonatomic) NSTimer *timingTimer;  //计时timer
 @end
 
-@implementation FXRegisterController
+@implementation FXForgotPasswordController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        // Custom initialization
     }
     return self;
 }
@@ -65,145 +61,80 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     [self initViews];
     
     self.timingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timingTimerFired:) userInfo:nil repeats:YES];
     self.serviceTextAgreed = YES;
     self.passwordIsOK = NO;
     self.identiCodeIsOK = NO;
-    self.usernameIsOK = NO;
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spaceAreaClicked:)];
-    [self.view addGestureRecognizer:tapGestureRecognizer];
 }
 
 //各种控件初始化
 - (void)initViews{
-    self.title = @"注册";
-    self.view.backgroundColor = kColor(250, 250, 250, 1);
-    
-    UITextField *nameTextField = [[UITextField alloc] init];
-    nameTextField.placeholder = @"输入昵称,建议6到8个字符";
-    nameTextField.keyboardType = UIKeyboardTypeASCIICapable;
-    nameTextField.textColor = kColor(51, 51, 51, 1);
-    nameTextField.font = [UIFont systemFontOfSize:14.];
-    nameTextField.delegate = self;
-    self.userNameTextField = nameTextField;
-    
-    UILabel *nameTip = [[UILabel alloc] init];
-    nameTip.font = [UIFont systemFontOfSize:12.];
-    nameTip.textColor = kColor(255, 0, 9, 1);
-    nameTip.textAlignment = NSTextAlignmentRight;
-    self.userNameTipLabel = nameTip;
-    
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(kBlank_Size, 0, 290, 300) style:UITableViewStylePlain];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    self.tableView.dataSource = self;
-    self.tableView.delegate = self;
-    [self.view addSubview:self.tableView];
+    for (UIView *subview in self.view.subviews){
+        self.title = @"找回密码";
+        self.view.backgroundColor = kColor(250, 250, 250, 1);
+        
+        if (subview == self.tableView || subview == self.doneButton) {
+            continue;
+        }
+        [subview removeFromSuperview];
+    }
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    self.tableView.separatorColor = kColor(191, 191, 191, 1);
     self.tableView.scrollEnabled = NO;
     
-    self.passwordTipLabel = [[UILabel alloc] init];
-    self.passwordTipLabel.font = [UIFont systemFontOfSize:12.];
-    self.passwordTipLabel.textAlignment = NSTextAlignmentRight;
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
-    
-    self.alertLabel = [[UILabel alloc] init];
-    self.alertLabel.text = @"格式不正确!";
-    self.alertLabel.textAlignment = NSTextAlignmentRight;
-    self.alertLabel.font = [UIFont systemFontOfSize:12.];
     self.alertLabel.textColor = kColor(255, 0, 9, 1);
-    
-    self.alertIdentiyingLabel = [[UILabel alloc] init];
-    self.alertIdentiyingLabel.font = [UIFont systemFontOfSize:12.];
-    self.alertIdentiyingLabel.textAlignment = NSTextAlignmentRight;
     self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
     
-    self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.secureTextEntry = YES;
-    self.passwordTextField.placeholder = @"输入密码";
     self.passwordTextField.keyboardType = UIKeyboardTypeASCIICapable;
     self.passwordTextField.textColor = kColor(51, 51, 51, 1);
-    self.passwordTextField.font = [UIFont systemFontOfSize:14.];
     self.passwordTextField.delegate = self;
     
-    self.confirmPasswordTextField = [[UITextField alloc] init];
     self.confirmPasswordTextField.secureTextEntry = YES;
-    self.confirmPasswordTextField.placeholder = @"确认密码";
     self.confirmPasswordTextField.keyboardType = UIKeyboardTypeASCIICapable;
     self.confirmPasswordTextField.textColor = kColor(51, 51, 51, 1);
-    self.confirmPasswordTextField.font = [UIFont systemFontOfSize:14.];
     self.confirmPasswordTextField.delegate = self;
     
-    self.phoneNumberTextField = [[UITextField alloc] init];
     self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
-    self.phoneNumberTextField.placeholder = @"电话号码";
     self.phoneNumberTextField.delegate = self;
-    self.phoneNumberTextField.font = [UIFont systemFontOfSize:14.];
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     
-    self.rewriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self changeRewriteButtonStatus:NO];
     [self.rewriteButton setTitle:@"确认" forState:UIControlStateNormal];
     self.rewriteButton.layer.cornerRadius = 6.;
     self.rewriteButton.layer.borderWidth = .7;
-    self.rewriteButton.titleLabel.font = [UIFont systemFontOfSize:13.];
     [self.rewriteButton addTarget:self action:@selector(rewriteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.identifyingCodeTextField = [[UITextField alloc] init];
     self.identifyingCodeTextField.textColor = kColor(51, 51, 51, 1);
-    self.identifyingCodeTextField.font = [UIFont systemFontOfSize:14.];
-    self.identifyingCodeTextField.placeholder = @"输入验证码";
     self.identifyingCodeTextField.delegate = self;
     self.identifyingCodeTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+//    self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
     
-    self.checkButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.checkButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
     [self.checkButton addTarget:self action:@selector(checkButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.tipLabel = [[UILabel alloc] init];
-    self.tipLabel.font = [UIFont systemFontOfSize:12.];
-    self.tipLabel.text = @"确认手机号码之后发送验证码";
-    self.tipLabel.textColor = kColor(191, 191, 191, 1);
-    
-    self.coundDownLabel = [[UILabel alloc] init];
-    self.coundDownLabel.font = [UIFont systemFontOfSize:12.];
-    self.coundDownLabel.textColor = kColor(191, 191, 191, 1);
-    
-    
-    self.agreeLabel = [[UILabel alloc] init];
-    self.agreeLabel.text = @"我已经阅读并同意";
-    self.agreeLabel.font = [UIFont systemFontOfSize:12.];
     self.agreeLabel.textColor = kColor(51, 51, 51, 1);
     
-    self.serviceTextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"服务协议"];
     [buttonString addAttribute:NSForegroundColorAttributeName value:kColor(255, 0, 9, 1) range:NSMakeRange(0, buttonString.length)];
     [buttonString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, buttonString.length)];
     [self.serviceTextButton setAttributedTitle:buttonString forState:UIControlStateNormal];
-    self.serviceTextButton.titleLabel.font = [UIFont systemFontOfSize:12.];
     [self.serviceTextButton addTarget:self action:@selector(serviceTextButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.reSendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self changeReSendButtonStatus:NO];
     [self.reSendButton setTitle:@"重新发送" forState:UIControlStateNormal];
     self.reSendButton.layer.cornerRadius = 6.;
     self.reSendButton.layer.borderWidth = .7;
-    self.reSendButton.titleLabel.font = [UIFont systemFontOfSize:13.];
     [self.reSendButton addTarget:self action:@selector(reSendButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     self.doneButton.layer.cornerRadius = 4.;
     self.doneButton.backgroundColor = kColor(255, 0, 9, 1);
-    [self.doneButton setTitle:@"完成" forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.doneButton];
     [self changeDoneButtonStatus];
 }
 
@@ -216,7 +147,6 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated{
-    NSLog(@"%@",NSStringFromCGRect(self.tableView.frame));
 }
 
 - (void)dealloc{
@@ -237,7 +167,6 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
     tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
-    NSLog(@"%@",NSStringFromCGRect(self.tableView.frame));
     return kCell_Height;
 }
 
@@ -245,84 +174,87 @@
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.backgroundColor = [UIColor clearColor];
-    CGSize cellSize = CGSizeMake(290, kCell_Height);
     switch (indexPath.row) {
-        case 0:
-            if ([self cell:cell isNotSuperOfView:self.userNameTextField]) {
-                self.userNameTextField.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
-                [cell.contentView addSubview:self.userNameTextField];
-            }
-            if ([self cell:cell isNotSuperOfView:self.userNameTipLabel]) {
-                self.userNameTipLabel.frame = (CGRect){(cellSize.width * 4 / 5) - 10 ,0 ,cellSize.width / 5 ,cellSize.height};
-                [cell.contentView addSubview:self.userNameTipLabel];
-            }
-            break;
-        case 1:  //密码
+        case 0:  //密码
             if ([self cell:cell isNotSuperOfView:self.passwordTextField]) {
+                CGSize cellSize = cell.frame.size;
                 self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTextField];
             }
             break;
-        case 2:   //确认密码
+        case 1:   //确认密码
             if ([self cell:cell isNotSuperOfView:self.confirmPasswordTextField]) {
+                CGSize cellSize = cell.frame.size;
                 self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
                 [cell.contentView addSubview:self.confirmPasswordTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.passwordTipLabel]) { //密码输入提示
+                CGSize cellSize = cell.frame.size;
                 self.passwordTipLabel.frame = (CGRect){cellSize.width - 10 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTipLabel];
             }
             break;
-        case 3:    //电话号码
+        case 2:    //电话号码
             if ([self cell:cell isNotSuperOfView:self.phoneNumberTextField]) {
-                self.phoneNumberTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
+                CGSize cellSize = cell.frame.size;
+                self.phoneNumberTextField.frame = (CGRect){10 ,0 ,cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.phoneNumberTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.rewriteButton]) {   //重填电话号码
+                CGSize cellSize = cell.frame.size;
                 CGFloat buttonWidth = 60;
                 self.rewriteButton.frame = (CGRect){cellSize.width - 10 - buttonWidth ,7 ,buttonWidth ,cellSize.height - 14};
                 [cell.contentView addSubview:self.rewriteButton];
             }
             if ([self cell:cell isNotSuperOfView:self.alertLabel]) {        //电话号码错误警示
+                CGSize cellSize = cell.frame.size;
                 self.alertLabel.frame = (CGRect){CGRectGetMinX(self.rewriteButton.frame) - 5 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.alertLabel];
             }
             break;
-        case 4:    //验证码
+        case 3:    //验证码
             if ([self cell:cell isNotSuperOfView:self.identifyingCodeTextField]) {
+                CGSize cellSize = cell.frame.size;
                 self.identifyingCodeTextField.frame = (CGRect){10 ,0 ,cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.identifyingCodeTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.reSendButton]) {  //重发验证码
+                CGSize cellSize = cell.frame.size;
                 CGFloat buttonWidth = 60;
                 self.reSendButton.frame = (CGRect){cellSize.width - 10 - buttonWidth ,7 ,buttonWidth ,cellSize.height - 14};
                 [cell.contentView addSubview:self.reSendButton];
             }
             if ([self cell:cell isNotSuperOfView:self.alertIdentiyingLabel]) {      //验证码错误警示
+                CGSize cellSize = cell.frame.size;
                 self.alertIdentiyingLabel.frame = (CGRect){CGRectGetMinX(self.reSendButton.frame) - 5 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.alertIdentiyingLabel];
             }
             break;
-        case 5:    //提示信息
+        case 4:    //提示信息
             if ([self cell:cell isNotSuperOfView:self.tipLabel]) {
+                CGSize cellSize = cell.frame.size;
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
+                CGSize cellSize = cell.frame.size;
                 self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.coundDownLabel];
             }
             break;
-        case 6:
+        case 5:
             if ([self cell:cell isNotSuperOfView:self.checkButton]) {   //选中同意
+                CGSize cellSize = cell.frame.size;
                 self.checkButton.frame = (CGRect){10 ,(cellSize.height - 19) / 2 ,19 ,19};
                 [cell.contentView addSubview:self.checkButton];
             }
             if ([self cell:cell isNotSuperOfView:self.agreeLabel]) {
+                CGSize cellSize = cell.frame.size;
                 self.agreeLabel.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.agreeLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.serviceTextButton]) { //服务协议
+                CGSize cellSize = cell.frame.size;
                 self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 94 ,0 ,cellSize.width / 4 ,cellSize.height - 1};
                 [cell.contentView addSubview:self.serviceTextButton];
             }
@@ -364,8 +296,6 @@
             [self.identifyingCodeTextField becomeFirstResponder];
         }else if (textField == self.identifyingCodeTextField){
             [textField resignFirstResponder];
-        }else if (textField == self.userNameTextField){
-            [self.passwordTextField becomeFirstResponder];
         }
         return NO;
     }
@@ -410,7 +340,7 @@
 }
 
 #pragma mark 控件响应
-- (void)spaceAreaClicked:(id)sender {
+- (IBAction)spaceAreaClicked:(id)sender {
     [self.passwordTextField resignFirstResponder];
     [self.confirmPasswordTextField resignFirstResponder];
     [self.phoneNumberTextField resignFirstResponder];
@@ -498,18 +428,10 @@
 - (void)timerFired:(NSTimer *)timer{
     UITextField *textField = (UITextField *)[timer.userInfo objectForKey:@"textField"];
     if (textField) {
-        NSString *usernameText = [self.userNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
         NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if (usernameText == nil || [usernameText isEqualToString:@""]) {
-            self.usernameIsOK = NO;
-            self.userNameTipLabel.text = @"!";
-        }else{
-            self.usernameIsOK = YES;
-            self.userNameTipLabel.text = @"";
-        }
         
         if (passwordText == nil || [passwordText isEqualToString:@""]) {
             self.passwordTipLabel.text = @"未输入密码";
@@ -582,7 +504,7 @@
     
 }
 
-#pragma mark action
+#pragma mark action 
 
 //改变resend按钮的状态
 - (void)changeReSendButtonStatus:(BOOL)enabled{
@@ -612,7 +534,7 @@
 
 //改变完成按钮的状态
 - (void)changeDoneButtonStatus{
-    if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK && self.usernameIsOK) {
+    if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK) {
         self.doneButton.enabled = YES;
         self.doneButton.backgroundColor = kColor(255, 0, 9, 1);
     }else{
