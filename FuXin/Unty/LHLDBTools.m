@@ -121,7 +121,7 @@ static LHLDBTools *staticDBTools;
             //生日
             //手机
             //邮箱
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,avatarURL TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
             if (!everythingIsOK) {
@@ -182,6 +182,7 @@ static LHLDBTools *staticDBTools;
     obj.contactNickname = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"nickname"]];
     obj.contactIdentity = [resultSet boolForColumn:@"identity"] ? ContactIdentityTeacher : ContactIdentityGuest;
     obj.contactAvatar = [NSData dataWithData:[resultSet dataForColumn:@"avatar"]];
+    obj.contactAvatarURL = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"avatarURL"]];
     obj.contactRemark = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"remark"]];
     obj.contactSex = [resultSet boolForColumn:@"sex"] ? ContactSexFemale : ContactSexMale;
     int relationshipValue = [resultSet intForColumn:@"relationship"];
@@ -251,9 +252,10 @@ static LHLDBTools *staticDBTools;
             resultSet = [db executeQuery:@"SELECT contactID FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
             if ([resultSet next]) {
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? WHERE contactID = ?"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,avatarURL = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? WHERE contactID = ?"
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
+                                                             ,contactObj.contactAvatarURL
                                                              ,[NSNumber numberWithInt:contactObj.contactSex ]
                                                              ,[NSNumber numberWithInt:contactObj.contactIdentity]
                                                              ,[NSNumber numberWithInt:contactObj.contactRelationship]
@@ -272,10 +274,11 @@ static LHLDBTools *staticDBTools;
                                                              ] : NO;
             }else{
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
                                                              ,contactObj.contactID
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
+                                                             ,contactObj.contactAvatarURL
                                                              ,[NSNumber numberWithInt:contactObj.contactSex ]
                                                              ,[NSNumber numberWithInt:contactObj.contactIdentity]
                                                              ,[NSNumber numberWithInt:contactObj.contactRelationship]
