@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) UITableView *chatListTable;
 
+@property (nonatomic, strong) NSDictionary *messageDict;
+
 @end

@@ -169,6 +169,9 @@
                      delegate.userID = resp.userId;
                      delegate.token = resp.token;
                      
+                     //数据库操作保存id
+                     [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",resp.userId];
+                     
                      FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
                      [rootController showMainViewController];
                  }

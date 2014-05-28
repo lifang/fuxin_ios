@@ -107,6 +107,7 @@
     self.userNameTipLabel = nameTip;
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(kBlank_Size, 0, 290, 300) style:UITableViewStylePlain];
+    self.tableView.showsVerticalScrollIndicator = NO;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -491,10 +492,14 @@
 - (void)rewriteButtonClicked:(UIButton *)sender{
     UIView *superView = [sender superview];
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
-        [FXRequestDataFormat validateCodeWithPhoneNumber:self.phoneNumberTextField.text Finished:^(BOOL success, NSData *response){
+        NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
+        [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
+        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Finished:^(BOOL success, NSData *response) {
+            NSLog(@"string = %@",phoneNumberString);
             if (success) {
                 //请求成功
                 ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+                NSLog(@"%d,%@,%d",resp.isSucceed,resp.validateCode,resp.errorCode);
                 if (resp.isSucceed) {
                     //获取验证码成功
                     NSLog(@"validate = %@",resp.validateCode);

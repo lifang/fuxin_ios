@@ -66,6 +66,7 @@
     [self setLeftNavBarItemWithImageName:@"back.png"];
 
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+    self.tableView.showsVerticalScrollIndicator = NO;
     [self initViews];
     
     self.timingTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timingTimerFired:) userInfo:nil repeats:YES];
