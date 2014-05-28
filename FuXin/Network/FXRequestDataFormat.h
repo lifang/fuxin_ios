@@ -51,10 +51,12 @@
  获取联系人
  token: 成功登入返回的令牌
  userID:成功登入返回的userID
+ timeStamp:时间戳
  result:返回结果
  */
 + (void)getContactListWithToken:(NSString *)token
                          UserId:(int32_t)userID
+                      TimeStamp:(NSString *)timeStamp
                        Finished:(Result)result;
 
 /*

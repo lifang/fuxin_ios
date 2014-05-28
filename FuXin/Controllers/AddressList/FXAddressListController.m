@@ -36,6 +36,16 @@ static NSString *AddressCellIdentifier = @"ACI";
     return self;
 }
 
+- (id)init {
+    if (self = [super init]) {
+        _nameLists = [[NSMutableArray alloc] init];
+        _contactLists = [[NSMutableArray alloc] init];
+        [self initUI];
+        [self.view addSubview:self.searchBar];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -43,36 +53,13 @@ static NSString *AddressCellIdentifier = @"ACI";
     self.title = @"通讯录";
     NSLog(@"%@",self.title);
     [self setRightNavBarItemWithImageName:@"search.png"];
-    [self initUI];
-    _nameLists = [[NSMutableArray alloc] init];
-    _contactLists = [[NSMutableArray alloc] init];
-    [self.view addSubview:self.searchBar];
-    [self getContactList];
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - 请求
-- (void)getContactList {
-    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat getContactListWithToken:delegate.token UserId:delegate.userID Finished:^(BOOL success, NSData *response){
-        if (success) {
-            //请求成功
-            [_nameLists removeAllObjects];
-            [_contactLists removeAllObjects];
-            ContactResponse *resp = [ContactResponse parseFromData:response];
-            for (Contact *user in resp.contactsList) {
-                [_nameLists addObject:user.name];
-                [_contactLists addObject:user];
-//                NSLog(@"id:%d|name:%@|customName:%@|pinyin:%@|last:%@|gender:%d|source:%d|isPro:%d|lisence:%@|pub:%@|sig:%@",user.contactId,user.name,user.customName,user.pinyin,user.lastContactTime,user.gender,user.source,user.isProvider,user.lisence,user.publishClassType,user.signature);
-            }
-            [_dataTableView reloadData];
-        }
-    }];
 }
 
 #pragma mark - 重写
@@ -127,7 +114,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 #pragma mark - Action
 
 - (IBAction)selectedType:(id)sender {
-    NSLog(@"!!!!%d",[(UISegmentedControl *)sender selectedSegmentIndex]);
+    NSLog(@"!!!!%ld",(long)[(UISegmentedControl *)sender selectedSegmentIndex]);
 //    FXHttpRequest *request = [[FXHttpRequest alloc] init];
 //    [request setHttpRequestWithInfo:nil];
 }
@@ -219,7 +206,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     if (tableView == _dataTableView) {
         FXTableHeaderView *headerView = [[FXTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
         headerView.indexLabel.text = [[FXCompareCN tableViewIndexArray:_nameLists] objectAtIndex:section];
-        headerView.numberString = [NSString stringWithFormat:@"%d",[tableView numberOfRowsInSection:section]];
+        headerView.numberString = [NSString stringWithFormat:@"%ld",(long)[tableView numberOfRowsInSection:section]];
         return headerView;
     }
     return nil;

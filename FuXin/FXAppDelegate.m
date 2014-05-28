@@ -64,6 +64,7 @@ static FXMainController       *s_mainController = nil;
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     _rootController = [[FXRootViewController alloc] init];
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];

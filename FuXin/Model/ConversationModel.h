@@ -16,4 +16,6 @@
 @property (strong ,nonatomic)NSString *conversationContactID;
 ///最后对话时间
 @property (strong ,nonatomic)NSString *conversationLastCommunicateTime;
+///最后对话
+@property (strong ,nonatomic)NSString *conversationLastChat;
 @end

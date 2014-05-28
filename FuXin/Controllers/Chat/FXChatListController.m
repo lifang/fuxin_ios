@@ -18,6 +18,7 @@ static NSString *chatCellIdentifier = @"CCI";
 @implementation FXChatListController
 
 @synthesize chatListTable = _chatListTable;
+@synthesize chatList = _chatList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -28,12 +29,18 @@ static NSString *chatCellIdentifier = @"CCI";
     return self;
 }
 
+- (id)init {
+    if (self = [super init]) {
+        [self initUI];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.title = @"对话";
-    [self initUI];
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,7 +57,17 @@ static NSString *chatCellIdentifier = @"CCI";
     _chatListTable.dataSource = self;
     [self.view addSubview:_chatListTable];
     [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:chatCellIdentifier];
+    _chatList = [[NSMutableArray alloc] init];
+}
 
+#pragma mark - 更新数据
+
+- (void)updateChatList:(NSArray *)list {
+    if (list && [list count] > 0) {
+        [_chatList removeAllObjects];
+        [_chatList addObjectsFromArray:list];
+        [_chatListTable reloadData];
+    }
 }
 
 #pragma mark - 重写
@@ -72,7 +89,7 @@ static NSString *chatCellIdentifier = @"CCI";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == _chatListTable) {
-        return 15;
+        return [_chatList count];
     }
     return 0;
 }
@@ -82,13 +99,19 @@ static NSString *chatCellIdentifier = @"CCI";
 {
     if (tableView == _chatListTable) {
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
+        NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
+        ContactModel *contact = [rowData objectForKey:@"Contact"];
+        cell.nameLabel.text = contact.contactNickname;
+        cell.numberLabel.text = [NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]];
+        cell.timeLabel.text = [rowData objectForKey:@"Time"];
+        cell.detailLabel.text = [rowData objectForKey:@"Record"];
+        if (contact.contactAvatar) {
+            cell.photoView.image = [UIImage imageWithData:contact.contactAvatar];
+        }
+        else {
+            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        }
         
-        cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-        cell.nameLabel.text = @"钱学生";
-        cell.detailLabel.text = @"好的，下周课堂见";
-        cell.timeLabel.text = @"早上9：30";
-        cell.numberLabel.text = @"99";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         // Configure the cell...
         
         return cell;

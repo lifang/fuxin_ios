@@ -27,6 +27,7 @@ static NSString *searchIdentifer = @"SI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [self initSearchBarAndController];
     }
     return self;
 }
@@ -35,7 +36,6 @@ static NSString *searchIdentifer = @"SI";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    [self initSearchBarAndController];
     
     _resultArray = [[NSMutableArray alloc] init];
 }

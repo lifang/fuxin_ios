@@ -69,10 +69,12 @@
 
 + (void)getContactListWithToken:(NSString *)token
                          UserId:(int32_t)userID
+                      TimeStamp:(NSString *)timeStamp
                        Finished:(Result)result {
-    ContactRequest *PBObject = [[[[ContactRequest builder]
+    ContactRequest *PBObject = [[[[[ContactRequest builder]
                                   setToken:token]
-                                 setUserId:userID] build];
+                                 setUserId:userID]
+                                 setTimeStamp:timeStamp ] build];
     NSData *PBData = [PBObject data];
     //获取联系人列表请求内容
     NSMutableDictionary *requestInfo = dictionaryForGetContactList();

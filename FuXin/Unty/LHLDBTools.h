@@ -64,7 +64,7 @@
 
 
 #pragma mark 聊天记录
-///保存一条聊天记录
+///保存聊天记录
 + (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished;
 
 ///查询与某个联系人的最后N条聊天记录  (目前按时间倒序排列)

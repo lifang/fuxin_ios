@@ -11,6 +11,7 @@
 #import "FXForgotPasswordController.h"
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
+#import "FXUtility.h"
 #import "SharedClass.h"
 #import "FXRequestDataFormat.h"
 
@@ -70,6 +71,7 @@
     [userBackView addSubview:userImageView];
     _usernameField = [[UITextField alloc] initWithFrame:CGRectMake(30, 115, 260, 36)];
     _usernameField.returnKeyType = UIReturnKeyDone;
+    _usernameField.text = @"MockUserName";
     _usernameField.borderStyle = UITextBorderStyleNone;
     _usernameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
@@ -90,6 +92,7 @@
     _passwordField = [[UITextField alloc] initWithFrame:CGRectMake(30, 175, 260, 36)];
     _passwordField.returnKeyType = UIReturnKeyDone;
     _passwordField.secureTextEntry = YES;
+    _passwordField.text = @"12";
     _passwordField.borderStyle = UITextBorderStyleNone;
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
@@ -139,6 +142,7 @@
 #pragma mark - Action
 
 - (IBAction)userLogin:(id)sender {
+    [(UIButton *)sender setUserInteractionEnabled:NO];
     [_usernameField resignFirstResponder];
     [_passwordField resignFirstResponder];
     if ([_usernameField.text isEqualToString:@""] || [_passwordField.text isEqualToString:@""]) {
@@ -148,6 +152,7 @@
                                               cancelButtonTitle:@"确定"
                                               otherButtonTitles:nil];
         [alert show];
+        [(UIButton *)sender setUserInteractionEnabled:YES];
         return;
     }
     else {
@@ -155,6 +160,7 @@
          authenticationInWithUsername:_usernameField.text
          Password:_passwordField.text
          Finished:^(BOOL success, NSData *response) {
+             [(UIButton *)sender setUserInteractionEnabled:YES];
              if (success) {
                  AuthenticationResponse *resp = [AuthenticationResponse parseFromData:response];
                  if (resp.isSucceed) {
@@ -162,6 +168,9 @@
                      FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
                      delegate.userID = resp.userId;
                      delegate.token = resp.token;
+                     
+                     //数据库操作保存id
+                     [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",resp.userId];
                      
                      FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
                      [rootController showMainViewController];
@@ -202,9 +211,7 @@
 
 #pragma mark 测试方法 -----------------------------
 - (void)testDBMethod{
-    [SharedClass sharedObject].userID = @"813";
-    
-    
+    [FXAppDelegate shareFXAppDelegate].userID = 813;
     //测试按钮
     UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
     forgetButton.frame = CGRectMake(120, 320, 80, 20);
@@ -216,6 +223,7 @@
     [forgetButton setTitle:@"测试功能？" forState:UIControlStateNormal];
     [forgetButton addTarget:self action:@selector(testButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetButton];
+    
 }
 
 - (void)testButton:(id)sender{
@@ -237,30 +245,18 @@
         [dataArray addObject:msg];
     }
     
-//    __block NSMutableArray *resultArray = [NSMutableArray array];
     [LHLDBTools shareLHLDBTools];
     NSLog(@"开始");
     [LHLDBTools saveChattingRecord:dataArray withFinished:^(BOOL flag) {
-        
+        [LHLDBTools getLatestChattingRecordsWithContactID:@"2" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+            
+        }];
     }];
     NSLog(@"11");
     [LHLDBTools deleteChattingRecordsWithContactID:@"3" withFinished:^(BOOL flag) {   //慢 一秒
         
     }];
     NSLog(@"删除成功");
-//    [LHLDBTools getLatestChattingRecordsWithContactID:@"2" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
-//        [resultArray addObjectsFromArray:recordsArray];
-//    }];
-//    NSLog(@"22");
-////    [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:0 withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
-////        [resultArray addObjectsFromArray:recordsArray];
-////    }];
-//    for (int i = 0; i < 3; i ++) {
-//        [LHLDBTools getChattingRecordsWithContactID:@"2" beforeIndex:resultArray.count withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
-//            [resultArray addObjectsFromArray:recordsArray];
-//        }];
-//    }
-//    NSLog(@"33");
     __block NSInteger number = 0;
     [LHLDBTools numberOfUnreadChattingRecordsWithContactID:@"1" withFinished:^(NSInteger quantity, NSString *errorMessage) {
         number = quantity ;
