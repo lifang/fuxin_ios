@@ -11,5 +11,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *setImage;
 @property (weak, nonatomic) IBOutlet UILabel *setName;
 @property (weak, nonatomic) IBOutlet UILabel *count;
+@property (weak, nonatomic) IBOutlet UIImageView *backimage;
 -(void)setlabel;
 @end

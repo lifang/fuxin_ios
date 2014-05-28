@@ -25,20 +25,27 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="messnum.png" translatesAutoresizingMaskIntoConstraints="NO" id="Yca-5B-Wb6">
+                        <rect key="frame" x="140" y="12" width="20" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
                     <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a1g-ap-fUs">
                         <rect key="frame" x="140" y="12" width="20" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </label>
                 </subviews>
             </tableViewCellContentView>
             <connections>
+                <outlet property="backimage" destination="Yca-5B-Wb6" id="vAY-TN-211"/>
                 <outlet property="count" destination="a1g-ap-fUs" id="hXR-Am-03d"/>
                 <outlet property="setImage" destination="RNK-XN-nYP" id="hKd-tt-d3y"/>
                 <outlet property="setName" destination="F68-8U-S1d" id="I0t-OR-dkf"/>
             </connections>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="messnum.png" width="22" height="22"/>
+    </resources>
 </document>
