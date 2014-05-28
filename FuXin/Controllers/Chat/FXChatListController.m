@@ -101,18 +101,15 @@ static NSString *chatCellIdentifier = @"CCI";
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         ContactModel *contact = [rowData objectForKey:@"Contact"];
-        NSArray *records = [rowData objectForKey:@"Record"];
         cell.nameLabel.text = contact.contactNickname;
-        cell.numberLabel.text = [rowData objectForKey:@"Number"];
+        cell.numberLabel.text = [NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]];
         cell.timeLabel.text = [rowData objectForKey:@"Time"];
+        cell.detailLabel.text = [rowData objectForKey:@"Record"];
         if (contact.contactAvatar) {
             cell.photoView.image = [UIImage imageWithData:contact.contactAvatar];
         }
         else {
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-        }
-        if ([records count] > 0) {
-            cell.detailLabel.text = [records objectAtIndex:0];
         }
         
         // Configure the cell...

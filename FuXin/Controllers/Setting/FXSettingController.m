@@ -124,7 +124,7 @@
             cell.setImage.image = [UIImage imageNamed:@"rubbish_2.png"];
             cell.setName.text = @"清除缓存";
         }else if (indexPath.row == 2){
-            cell.setImage.image = [UIImage imageNamed:@"u24"];
+            cell.setImage.image = [UIImage imageNamed:@"tri_arrow.png"];
             cell.setName.text = @"消息推送";
         }else if (indexPath.row == 3){
             cell.setImage.image = [UIImage imageNamed:@"key_icon.png"];

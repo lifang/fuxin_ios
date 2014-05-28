@@ -495,7 +495,6 @@
         NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
         [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
         [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Finished:^(BOOL success, NSData *response) {
-            NSLog(@"string = %@",phoneNumberString);
             if (success) {
                 //请求成功
                 ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];

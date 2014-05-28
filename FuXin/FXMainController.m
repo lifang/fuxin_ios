@@ -123,14 +123,24 @@
     [FXRequestDataFormat getContactListWithToken:delegate.token UserId:delegate.userID TimeStamp:nil Finished:^(BOOL success, NSData *response){
         if (success) {
             //请求成功
-            [_addrC.nameLists removeAllObjects];
-            [_addrC.contactLists removeAllObjects];
             ContactResponse *resp = [ContactResponse parseFromData:response];
-            for (Contact *user in resp.contactsList) {
-                [_addrC.nameLists addObject:user.name];
-                [_addrC.contactLists addObject:user];
+            if (resp.isSucceed) {
+                //获取联系人成功
+                [_addrC.nameLists removeAllObjects];
+                [_addrC.contactLists removeAllObjects];
+                [self DBSaveMessageWithArray:resp.contactsList];
+                for (Contact *user in resp.contactsList) {
+                    [_addrC.nameLists addObject:user.name];
+                    [_addrC.contactLists addObject:user];
+                }
+                [_addrC.dataTableView reloadData];
             }
-            [_addrC.dataTableView reloadData];
+            else {
+                //获取失败
+            }
+        }
+        else {
+            //请求失败
         }
     }];
 }
@@ -141,24 +151,34 @@
 - (NSMutableArray *)getChatListFromDB {
     NSLog(@"读取数据库！");
     NSMutableArray *recentArray = [NSMutableArray array];
+    __block NSMutableArray *temp = nil;
     [LHLDBTools getConversationsWithFinished:^(NSMutableArray *list, NSString *error) {
-        for (ConversationModel *conv in list) {
-            NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
-            [recentChat setValue:conv.conversationContactID forKey:@"ID"];
-            [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
-            [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
-            //查未读消息数量
-            [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
-                [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
-            }];
-            //查联系人信息
-            [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
-                [recentChat setValue:con forKey:@"Contact"];
-            }];
-            [recentArray addObject:recentChat];
-        }
+        temp = list;
     }];
+    for (ConversationModel *conv in temp) {
+        NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
+        [recentChat setValue:conv.conversationContactID forKey:@"ID"];
+        [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
+        [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
+        //查未读消息数量
+        [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
+            [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
+        }];
+        //查联系人信息
+        [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
+            [recentChat setValue:con forKey:@"Contact"];
+        }];
+        [recentArray addObject:recentChat];
+    }
+    
     return recentArray;
+}
+
+- (void)getContactsListFromDB {
+    NSMutableArray *contactArray = [NSMutableArray array];
+    [LHLDBTools getAllContactsWithFinished:^(NSArray *list, NSString *error) {
+        
+    }];
 }
 
 #pragma mark - 将接收数据转化成数据库表字段存取
@@ -202,14 +222,28 @@
     [_chatC updateChatList:[self getChatListFromDB]];
 }
 
-//将所有获取的
+//将所有获取的联系人保存到数据库
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
     NSMutableArray *arrayForDB = [NSMutableArray array];
     for (Contact *contact in contactLists) {
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;
+        model.contactIsBlocked = contact.isBlocked;
+        model.contactLastContactTime = contact.lastContactTime;
+        model.contactSex = contact.gender;
+        model.contactRelationship = contact.source;
+//        model.contactAvatar = contact.tileUrl;
+        model.contactIsProvider = contact.isProvider;
+        model.contactLisence = contact.lisence;
+        model.contactPublishClassType = contact.publishClassType;
+        model.contactSignature = contact.signature;
+        [arrayForDB addObject:model];
     }
+    //插入联系人表
+    [LHLDBTools saveContact:arrayForDB withFinished:^(BOOL finish) {
+        NSLog(@"插入联系人表%d",finish);
+    }];
 }
 
 @end
