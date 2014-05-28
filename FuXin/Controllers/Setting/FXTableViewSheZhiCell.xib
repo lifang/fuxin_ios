@@ -25,7 +25,7 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="messnum.png" translatesAutoresizingMaskIntoConstraints="NO" id="Yca-5B-Wb6">
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="messnum.png" translatesAutoresizingMaskIntoConstraints="NO" id="DD4-ZN-CIN">
                         <rect key="frame" x="140" y="12" width="20" height="20"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
@@ -38,7 +38,7 @@
                 </subviews>
             </tableViewCellContentView>
             <connections>
-                <outlet property="backimage" destination="Yca-5B-Wb6" id="vAY-TN-211"/>
+                <outlet property="backimage" destination="DD4-ZN-CIN" id="l2m-hf-g96"/>
                 <outlet property="count" destination="a1g-ap-fUs" id="hXR-Am-03d"/>
                 <outlet property="setImage" destination="RNK-XN-nYP" id="hKd-tt-d3y"/>
                 <outlet property="setName" destination="F68-8U-S1d" id="I0t-OR-dkf"/>

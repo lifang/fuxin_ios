@@ -138,7 +138,7 @@
             [cell setlabel];
             cell.count.hidden = NO;
 
-//            cell.backimage.hidden = NO;
+            cell.backimage.hidden = NO;
 //            cell.setImage.image = [UIImage imageNamed:@"6"];
 
             cell.setImage.image = [UIImage imageNamed:@"book_icon.png"];
