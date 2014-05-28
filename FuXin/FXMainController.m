@@ -146,6 +146,7 @@
             NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
             [recentChat setValue:conv.conversationContactID forKey:@"ID"];
             [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
+            [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
             //查未读消息数量
             [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
                 [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
@@ -153,10 +154,6 @@
             //查联系人信息
             [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
                 [recentChat setValue:con forKey:@"Contact"];
-            }];
-            //查最后一条消息
-            [LHLDBTools getLatestChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSArray *records, NSString *error) {
-                [recentChat setValue:records forKey:@"Record"];
             }];
             [recentArray addObject:recentChat];
         }
@@ -171,19 +168,35 @@
     for (NSString *contactID in messageDict) {
         //每一个联系人的所有消息
         NSArray *messageList = [messageDict objectForKey:contactID];
-        //保存到数据库数组
-        NSMutableArray *arrayForDB = [NSMutableArray array];
+        //保存聊天记录
+        NSMutableArray *recordsForDB = [NSMutableArray array];
+        //保存最后会话
+        NSMutableArray *lastForDB = [NSMutableArray array];
         for (Message *message in messageList) {
+            //聊天记录对象
             MessageModel *model = [[MessageModel alloc] init];
             model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
             model.messageSendTime = message.sendTime;
             model.messageContent = message.content;
             model.messageStatus = MessageStatusUnRead;
-            [arrayForDB addObject:model];
+            [recordsForDB addObject:model];
+            
+            //最后会话对象
+            ConversationModel *conModel = [[ConversationModel alloc] init];
+            conModel.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
+            conModel.conversationLastCommunicateTime = message.sendTime;
+            conModel.conversationLastChat = message.content;
+            [lastForDB addObject:conModel];
         }
-        [LHLDBTools saveChattingRecord:arrayForDB withFinished:^(BOOL finish){
-            NSLog(@"联系人id为%@的聊天信息保存",contactID);
+        //插入聊天记录表
+        [LHLDBTools saveChattingRecord:recordsForDB withFinished:^(BOOL finish) {
+            NSLog(@"联系人id为%@的聊天信息保存%d",contactID,finish);
         }];
+        //插入最后会话表
+        [LHLDBTools saveConversation:lastForDB withFinished:^(BOOL finish) {
+            NSLog(@"最后会话%@保存%d",contactID,finish);
+        }];
+        
     }
     NSLog(@"下载读取！");
     [_chatC updateChatList:[self getChatListFromDB]];

@@ -63,7 +63,7 @@ static NSString *chatCellIdentifier = @"CCI";
 #pragma mark - 更新数据
 
 - (void)updateChatList:(NSArray *)list {
-    if (list) {
+    if (list && [list count] > 0) {
         [_chatList removeAllObjects];
         [_chatList addObjectsFromArray:list];
         [_chatListTable reloadData];
