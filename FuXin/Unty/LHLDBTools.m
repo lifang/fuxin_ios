@@ -76,7 +76,7 @@ static LHLDBTools *staticDBTools;
         FMResultSet *rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'ChattingRecords'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE ChattingRecords (id INTEGER PRIMARY KEY AUTOINCREMENT , contactID INTEGER , time TEXT , content TEXT ,attachment TEXT , status NUMBERIC)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE ChattingRecords (id INTEGER PRIMARY KEY AUTOINCREMENT ,contactID INTEGER , time TEXT , content TEXT ,attachment TEXT , status NUMBERIC)"] : NO;
             //因本数据库插入数据压力较小,应多用索引提升查询效率
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX chatting_id_index ON ChattingRecords(id DESC)"] : NO; //id索引用于统计总数
@@ -104,7 +104,24 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Contacts'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT)"] : NO;
+            //联系人ID
+            //昵称
+            //头像
+            //性别
+            //身份 (福师, 福客)
+            //关系 (订购者/聊天者/关注者)
+            //备注
+            //拼音 (未知)
+            //屏蔽
+            //最后对话时间
+            //未知
+            //认证
+            //课程类别
+            //个性签名
+            //生日
+            //手机
+            //邮箱
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
             if (!everythingIsOK) {
@@ -123,7 +140,7 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Conversations'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (contactID INTEGER PRIMARY KEY NOT NULL, lastCommunicateTime TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Conversations (contactID INTEGER PRIMARY KEY NOT NULL, lastCommunicateTime TEXT, lastChat TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX conversations_contactID_index ON Conversations(contactID)"] : NO; //索引
             if (!everythingIsOK) {
@@ -184,6 +201,17 @@ static LHLDBTools *staticDBTools;
         default:
             break;
     }
+    obj.contactPinyin = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"pinyin"]];
+    obj.contactIsBlocked = [resultSet boolForColumn:@"isBlocked"];
+    obj.contactLastContactTime = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastContactTime"]];
+    obj.contactIsProvider = [resultSet boolForColumn:@"isProvider"];
+    obj.contactLisence = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lisence"]];
+    obj.contactPublishClassType = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"publishClassType"]];
+    obj.contactSignature = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"signature"]];
+    obj.contactBirthday = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"birthday"]];
+    obj.contactTelephone = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"telephone"]];
+    obj.contactEmail = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"email"]];
+    
     return obj;
 }
 
@@ -224,24 +252,45 @@ static LHLDBTools *staticDBTools;
             resultSet = [db executeQuery:@"SELECT contactID FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
             if ([resultSet next]) {
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? WHERE contactID = ?"
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
                                                              ,[NSNumber numberWithInt:contactObj.contactSex ]
                                                              ,[NSNumber numberWithInt:contactObj.contactIdentity]
                                                              ,[NSNumber numberWithInt:contactObj.contactRelationship]
                                                              ,contactObj.contactRemark
-                                                             ,contactObj.contactID] : NO;
+                                                             ,contactObj.contactPinyin
+                                                             ,[NSNumber numberWithBool:contactObj.contactIsBlocked]
+                                                             ,contactObj.contactLastContactTime
+                                                             ,[NSNumber numberWithBool:contactObj.contactIsProvider]
+                                                             ,contactObj.contactLisence
+                                                             ,contactObj.contactPublishClassType
+                                                             ,contactObj.contactSignature
+                                                             ,contactObj.contactBirthday
+                                                             ,contactObj.contactTelephone
+                                                             ,contactObj.contactEmail
+                                                             ,contactObj.contactID
+                                                             ] : NO;
             }else{
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark) VALUES (? ,? ,? ,? ,? ,? ,?)"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
                                                              ,contactObj.contactID
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
                                                              ,[NSNumber numberWithInt:contactObj.contactSex ]
                                                              ,[NSNumber numberWithInt:contactObj.contactIdentity]
                                                              ,[NSNumber numberWithInt:contactObj.contactRelationship]
-                                                             ,contactObj.contactRemark] : NO;
+                                                             ,contactObj.contactRemark
+                                                             ,contactObj.contactPinyin
+                                                             ,[NSNumber numberWithBool:contactObj.contactIsBlocked]
+                                                             ,contactObj.contactLastContactTime
+                                                             ,[NSNumber numberWithBool:contactObj.contactIsProvider]
+                                                             ,contactObj.contactLisence
+                                                             ,contactObj.contactPublishClassType
+                                                             ,contactObj.contactSignature
+                                                             ,contactObj.contactBirthday
+                                                             ,contactObj.contactTelephone
+                                                             ,contactObj.contactEmail] : NO;
                 
             }
         }
@@ -284,37 +333,6 @@ static LHLDBTools *staticDBTools;
     }];
 }
 
-//更新联系人信息
-//+ (void)updateContact:(ContactModel *)contactObj withFinished:(void (^)(BOOL flag))finished{
-//    if (!contactObj) {
-//        if (finished) {
-//            finished(NO);
-//        }
-//    }
-//    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
-//        BOOL transationSucceeded;
-//        transationSucceeded = [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? WHERE contactID = ?"
-//                                   ,contactObj.contactNickname
-//                                   ,contactObj.contactAvatar
-//                                   ,[NSNumber numberWithInt:contactObj.contactSex ]
-//                                   ,[NSNumber numberWithInt:contactObj.contactIdentity]
-//                                   ,[NSNumber numberWithInt:contactObj.contactRelationship]
-//                                   ,contactObj.contactRemark
-//                                   ,contactObj.contactID];
-//        
-//        if (!transationSucceeded){
-//            *rollback = YES;
-//            if (finished) {
-//                finished(NO);
-//            }
-//        }else{
-//            if (finished) {
-//                finished(YES);
-//            }
-//        }
-//    }];
-//}
-
 #pragma mark 最近对话
 ///保存最近对话信息 (更新 / 插入)
 + (void)saveConversation:(NSArray *)conversationArray withFinished:(void (^)(BOOL flag))finished{
@@ -331,13 +349,16 @@ static LHLDBTools *staticDBTools;
             resultSet = [db executeQuery:@"SELECT contactID FROM Conversations WHERE contactID = ?" ,conversation.conversationContactID];
             if ([resultSet next]) {  //存在
                 [resultSet close];
-                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"UPDATE Conversations SET lastCommunicateTime = ? WHERE contactID = ?",
+                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"UPDATE Conversations SET lastCommunicateTime = ? ,lastChat = ? WHERE contactID = ?",
                                                                conversation.conversationLastCommunicateTime,
+                                                               conversation.conversationLastChat,
                                                                conversation.conversationContactID] : NO;
             }else{
                 [resultSet close];
-                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"INSERT INTO Conversations (contactID ,lastCommunicateTime) VALUES (? ,?)",
-                                                               [NSNumber numberWithInteger:conversation.conversationContactID.integerValue],conversation.conversationLastCommunicateTime
+                transactionSucceeded = transactionSucceeded ? [db executeUpdate:@"INSERT INTO Conversations (contactID ,lastCommunicateTime ,lastChat) VALUES (? ,? ,?)",
+                                                               [NSNumber numberWithInteger:conversation.conversationContactID.integerValue],
+                                                               conversation.conversationLastCommunicateTime,
+                                                               conversation.conversationLastChat
                                                                ] : NO;
             }
         }
@@ -375,7 +396,8 @@ static LHLDBTools *staticDBTools;
 + (ConversationModel *)convertToConversationFromResultSet:(FMResultSet *)resultSet{
     ConversationModel *obj = [[ConversationModel alloc] init];
     obj.conversationContactID = [NSString stringWithFormat:@"%d",[resultSet intForColumn:@"contactID"]];
-    obj.conversationLastCommunicateTime = [resultSet stringForColumn:@"lastCommunicateTime"];
+    obj.conversationLastCommunicateTime = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastCommunicateTime"]];
+    obj.conversationLastChat = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastChat"]];
     return obj;
 }
 
