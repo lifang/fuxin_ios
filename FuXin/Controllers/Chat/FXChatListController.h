@@ -12,6 +12,9 @@
 
 @property (nonatomic, strong) UITableView *chatListTable;
 
-@property (nonatomic, strong) NSDictionary *messageDict;
+@property (nonatomic, strong) NSMutableArray *chatList;
+
+
+- (void)updateChatList:(NSArray *)list;
 
 @end

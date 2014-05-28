@@ -45,6 +45,7 @@
     [self initControllers];
     [self getMessageAll];
     [self getContactAll];
+    [self showFirstData];
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,6 +79,12 @@
     [FXAppDelegate setNavigationBarTinColor:_settNav];
     
     self.viewControllers = [NSArray arrayWithObjects:_chatNav, _addrNav, _settNav, nil];
+}
+
+//加载时先从数据库加载
+- (void)showFirstData {
+    //从数据库初始化对话列表
+    [_chatC updateChatList:[self getChatListFromDB]];
 }
 
 //请求消息
@@ -128,6 +135,35 @@
     }];
 }
 
+#pragma mark - 在未请求到数据时从数据库抓取数据
+
+//从数据库读取对话列表
+- (NSMutableArray *)getChatListFromDB {
+    NSLog(@"读取数据库！");
+    NSMutableArray *recentArray = [NSMutableArray array];
+    [LHLDBTools getConversationsWithFinished:^(NSMutableArray *list, NSString *error) {
+        for (ConversationModel *conv in list) {
+            NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
+            [recentChat setValue:conv.conversationContactID forKey:@"ID"];
+            [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
+            //查未读消息数量
+            [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
+                [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
+            }];
+            //查联系人信息
+            [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
+                [recentChat setValue:con forKey:@"Contact"];
+            }];
+            //查最后一条消息
+            [LHLDBTools getLatestChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSArray *records, NSString *error) {
+                [recentChat setValue:records forKey:@"Record"];
+            }];
+            [recentArray addObject:recentChat];
+        }
+    }];
+    return recentArray;
+}
+
 #pragma mark - 将接收数据转化成数据库表字段存取
 
 //将所有获取的对话数据保存到数据库
@@ -149,11 +185,18 @@
             NSLog(@"联系人id为%@的聊天信息保存",contactID);
         }];
     }
+    NSLog(@"下载读取！");
+    [_chatC updateChatList:[self getChatListFromDB]];
 }
 
 //将所有获取的
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
-    
+    NSMutableArray *arrayForDB = [NSMutableArray array];
+    for (Contact *contact in contactLists) {
+        ContactModel *model = [[ContactModel alloc] init];
+        model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
+        model.contactNickname = contact.name;
+    }
 }
 
 @end

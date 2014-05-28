@@ -18,7 +18,7 @@ static NSString *chatCellIdentifier = @"CCI";
 @implementation FXChatListController
 
 @synthesize chatListTable = _chatListTable;
-@synthesize messageDict = _messageDict;
+@synthesize chatList = _chatList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -57,6 +57,17 @@ static NSString *chatCellIdentifier = @"CCI";
     _chatListTable.dataSource = self;
     [self.view addSubview:_chatListTable];
     [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:chatCellIdentifier];
+    _chatList = [[NSMutableArray alloc] init];
+}
+
+#pragma mark - 更新数据
+
+- (void)updateChatList:(NSArray *)list {
+    if (list) {
+        [_chatList removeAllObjects];
+        [_chatList addObjectsFromArray:list];
+        [_chatListTable reloadData];
+    }
 }
 
 #pragma mark - 重写
@@ -78,7 +89,7 @@ static NSString *chatCellIdentifier = @"CCI";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (tableView == _chatListTable) {
-        return [[_messageDict allKeys] count];
+        return [_chatList count];
     }
     return 0;
 }
@@ -88,16 +99,22 @@ static NSString *chatCellIdentifier = @"CCI";
 {
     if (tableView == _chatListTable) {
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
-        NSNumber *ID = [[_messageDict allKeys] objectAtIndex:indexPath.row];
-        cell.nameLabel.text = [NSString stringWithFormat:@"%@",ID];
-        cell.numberLabel.text = [NSString stringWithFormat:@"%d",[[_messageDict objectForKey:ID] count]];
-        cell.detailLabel.text = [(Message *)[[_messageDict objectForKey:ID] objectAtIndex:0] content];
-//        cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-//        cell.nameLabel.text = @"钱学生";
-//        cell.detailLabel.text = @"好的，下周课堂见";
-//        cell.timeLabel.text = @"早上9：30";
-//        cell.numberLabel.text = @"99";
-//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
+        ContactModel *contact = [rowData objectForKey:@"Contact"];
+        NSArray *records = [rowData objectForKey:@"Record"];
+        cell.nameLabel.text = contact.contactNickname;
+        cell.numberLabel.text = [rowData objectForKey:@"Number"];
+        cell.timeLabel.text = [rowData objectForKey:@"Time"];
+        if (contact.contactAvatar) {
+            cell.photoView.image = [UIImage imageWithData:contact.contactAvatar];
+        }
+        else {
+            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        }
+        if ([records count] > 0) {
+            cell.detailLabel.text = [records objectAtIndex:0];
+        }
+        
         // Configure the cell...
         
         return cell;
