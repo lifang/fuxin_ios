@@ -42,7 +42,7 @@
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
     
-//    [self testDBMethod];
+    [self testDBMethod];
 }
 
 - (void)didReceiveMemoryWarning
@@ -211,7 +211,7 @@
 
 #pragma mark 测试方法 -----------------------------
 - (void)testDBMethod{
-    [SharedClass sharedObject].userID = @"813";
+    [FXAppDelegate shareFXAppDelegate].userID = 813;
     //测试按钮
     UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
     forgetButton.frame = CGRectMake(120, 320, 80, 20);
@@ -248,7 +248,9 @@
     [LHLDBTools shareLHLDBTools];
     NSLog(@"开始");
     [LHLDBTools saveChattingRecord:dataArray withFinished:^(BOOL flag) {
-        
+        [LHLDBTools getLatestChattingRecordsWithContactID:@"2" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+            
+        }];
     }];
     NSLog(@"11");
     [LHLDBTools deleteChattingRecordsWithContactID:@"3" withFinished:^(BOOL flag) {   //慢 一秒

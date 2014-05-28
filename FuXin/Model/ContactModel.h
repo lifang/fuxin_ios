@@ -37,6 +37,8 @@ typedef enum{
 @property (strong, nonatomic) NSString *contactNickname;
 ///头像
 @property (strong, nonatomic) NSData *contactAvatar;
+///头像URL
+@property (strong, nonatomic) NSString *contactAvatarURL;
 ///性别
 @property (assign, nonatomic) ContactSex contactSex;
 ///身份 (福师, 福客)
