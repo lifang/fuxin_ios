@@ -97,7 +97,7 @@ static NSString *Regist = @"https://118.242.18.189/api/Register";
  type:POST
  parm:validatecodeRequest
  */
-static NSString *Validate = @"https://118.242.18.189/ValidateCode";
+static NSString *Validate = @"https://118.242.18.189/api/ValidateCode";
 
 
 @interface FXNetworkInterface : NSObject

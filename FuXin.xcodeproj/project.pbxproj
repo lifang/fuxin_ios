@@ -103,6 +103,11 @@
 		7755EC8F1931CD5700ADD1A6 /* camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8B1931CD5700ADD1A6 /* camera@2x.png */; };
 		7755EC901931CD5700ADD1A6 /* pictureselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8C1931CD5700ADD1A6 /* pictureselected@2x.png */; };
 		7755EC911931CD5700ADD1A6 /* picture@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7755EC8D1931CD5700ADD1A6 /* picture@2x.png */; };
+		775BBC7F19342A98006B5155 /* Emoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BBC7619342A98006B5155 /* Emoji.m */; };
+		775BBC8019342A98006B5155 /* EmojiEmoticons.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BBC7819342A98006B5155 /* EmojiEmoticons.m */; };
+		775BBC8119342A98006B5155 /* EmojiMapSymbols.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BBC7A19342A98006B5155 /* EmojiMapSymbols.m */; };
+		775BBC8219342A98006B5155 /* EmojiPictographs.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BBC7C19342A98006B5155 /* EmojiPictographs.m */; };
+		775BBC8319342A98006B5155 /* EmojiTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = 775BBC7E19342A98006B5155 /* EmojiTransport.m */; };
 		77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7786276F192313B9009AF6E6 /* Foundation.framework */; };
 		77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862771192313B9009AF6E6 /* CoreGraphics.framework */; };
 		77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77862773192313B9009AF6E6 /* UIKit.framework */; };
@@ -153,7 +158,9 @@
 		77FC8A6C192F361A00FFFCDB /* UnknownFieldSet_Builder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A55192F361A00FFFCDB /* UnknownFieldSet_Builder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		77FC8A6D192F361A00FFFCDB /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A57192F361A00FFFCDB /* Utilities.m */; };
 		77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A59192F361A00FFFCDB /* WireFormat.m */; };
+
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
+
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
 		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
@@ -319,6 +326,16 @@
 		7755EC8B1931CD5700ADD1A6 /* camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera@2x.png"; sourceTree = "<group>"; };
 		7755EC8C1931CD5700ADD1A6 /* pictureselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pictureselected@2x.png"; sourceTree = "<group>"; };
 		7755EC8D1931CD5700ADD1A6 /* picture@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture@2x.png"; sourceTree = "<group>"; };
+		775BBC7519342A98006B5155 /* Emoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Emoji.h; sourceTree = "<group>"; };
+		775BBC7619342A98006B5155 /* Emoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Emoji.m; sourceTree = "<group>"; };
+		775BBC7719342A98006B5155 /* EmojiEmoticons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiEmoticons.h; sourceTree = "<group>"; };
+		775BBC7819342A98006B5155 /* EmojiEmoticons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiEmoticons.m; sourceTree = "<group>"; };
+		775BBC7919342A98006B5155 /* EmojiMapSymbols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiMapSymbols.h; sourceTree = "<group>"; };
+		775BBC7A19342A98006B5155 /* EmojiMapSymbols.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiMapSymbols.m; sourceTree = "<group>"; };
+		775BBC7B19342A98006B5155 /* EmojiPictographs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiPictographs.h; sourceTree = "<group>"; };
+		775BBC7C19342A98006B5155 /* EmojiPictographs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiPictographs.m; sourceTree = "<group>"; };
+		775BBC7D19342A98006B5155 /* EmojiTransport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmojiTransport.h; sourceTree = "<group>"; };
+		775BBC7E19342A98006B5155 /* EmojiTransport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmojiTransport.m; sourceTree = "<group>"; };
 		7786276C192313B9009AF6E6 /* FuXin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuXin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7786276F192313B9009AF6E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		77862771192313B9009AF6E6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -420,8 +437,10 @@
 		77FC8A57192F361A00FFFCDB /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		77FC8A58192F361A00FFFCDB /* WireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireFormat.h; sourceTree = "<group>"; };
 		77FC8A59192F361A00FFFCDB /* WireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireFormat.m; sourceTree = "<group>"; };
+
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
+
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
@@ -547,6 +566,7 @@
 				7702C7C8192B4D1D0015A178 /* KxMenu */,
 				77FC8A24192F352B00FFFCDB /* GTMBase64 */,
 				77FC8A29192F361A00FFFCDB /* ProtoBuffer */,
+				775BBC7419342A98006B5155 /* Emoji */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -683,6 +703,23 @@
 				770BC283192DF23A008104ED /* FXEmojiView.m */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		775BBC7419342A98006B5155 /* Emoji */ = {
+			isa = PBXGroup;
+			children = (
+				775BBC7519342A98006B5155 /* Emoji.h */,
+				775BBC7619342A98006B5155 /* Emoji.m */,
+				775BBC7719342A98006B5155 /* EmojiEmoticons.h */,
+				775BBC7819342A98006B5155 /* EmojiEmoticons.m */,
+				775BBC7919342A98006B5155 /* EmojiMapSymbols.h */,
+				775BBC7A19342A98006B5155 /* EmojiMapSymbols.m */,
+				775BBC7B19342A98006B5155 /* EmojiPictographs.h */,
+				775BBC7C19342A98006B5155 /* EmojiPictographs.m */,
+				775BBC7D19342A98006B5155 /* EmojiTransport.h */,
+				775BBC7E19342A98006B5155 /* EmojiTransport.m */,
+			);
+			path = Emoji;
 			sourceTree = "<group>";
 		};
 		77862763192313B9009AF6E6 = {
@@ -1070,8 +1107,10 @@
 			files = (
 				7755EC861931C40300ADD1A6 /* placeholder@2x.png in Resources */,
 				7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */,
+
 				3A1B2D8A1930CA53004D7F01 /* signal@2x.png in Resources */,
 				3A3115C719319A5C00663819 /* arrow_right@2x.png in Resources */,
+
 				7702C7B5192B03D70015A178 /* chat@2x.png in Resources */,
 				3A3115B619317FC600663819 /* FXTableViewTuichuCell.xib in Resources */,
 				770319CC192C580900798D4D /* password@2x.png in Resources */,
@@ -1080,7 +1119,9 @@
 				93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */,
 				7702C7C6192B4AF20015A178 /* back@2x.png in Resources */,
 				7755EC8F1931CD5700ADD1A6 /* camera@2x.png in Resources */,
+
 				3A3115C91931C21300663819 /* key_icon@2x.png in Resources */,
+
 				770319CD192C580900798D4D /* user@2x.png in Resources */,
 				3A13522B1933416B006C59E4 /* FXSysInfoTableViewCell.xib in Resources */,
 				770319BF192C3D5B00798D4D /* express@2x.png in Resources */,
@@ -1100,8 +1141,10 @@
 				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
 				7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */,
 				7755EC8E1931CD5700ADD1A6 /* cameraselected@2x.png in Resources */,
+
 				3A3115CF1931F64200663819 /* close_icon@2x.png in Resources */,
 				3A13521D193324D0006C59E4 /* trade@2x.png in Resources */,
+
 				3A1351F91932D3BE006C59E4 /* FXXiuGaiMiMaViewController.xib in Resources */,
 				3A3115BB1931842200663819 /* refresh@2x.png in Resources */,
 				3A3115CD1931F63800663819 /* push_icon@2x.png in Resources */,
@@ -1146,6 +1189,7 @@
 				770351AD193085A1002054EA /* FXRequestDataFormat.m in Sources */,
 				770351AA193054EA002054EA /* FXSearchViewController.m in Sources */,
 				3A3115B519317FC600663819 /* FXTableViewTuichuCell.m in Sources */,
+				775BBC8119342A98006B5155 /* EmojiMapSymbols.m in Sources */,
 				770BC26C192DA5B3008104ED /* FXChineseName.m in Sources */,
 				778627A0192313DA009AF6E6 /* FXLoginController.m in Sources */,
 				77CB6F1C192F682E00936F7F /* ASIDataCompressor.m in Sources */,
@@ -1191,6 +1235,7 @@
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
 				7717734C19330FF50099B459 /* Models.pb.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
+				775BBC8319342A98006B5155 /* EmojiTransport.m in Sources */,
 				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
 				77FC8A23192F1DFB00FFFCDB /* FXHttpRequest.m in Sources */,
 				77CB6F1D192F682E00936F7F /* ASIDataDecompressor.m in Sources */,
@@ -1206,10 +1251,13 @@
 				3A1352201933315E006C59E4 /* FXAlterView.m in Sources */,
 				77FC8A62192F361A00FFFCDB /* ExtensionRegistry.m in Sources */,
 				3A13523319335C3C006C59E4 /* FXSysDetailViewController.m in Sources */,
+				775BBC8019342A98006B5155 /* EmojiEmoticons.m in Sources */,
 				77FC8A5C192F361A00FFFCDB /* CodedInputStream.m in Sources */,
 				770BC269192DA596008104ED /* pinyin.c in Sources */,
 				770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */,
 				770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */,
+				775BBC7F19342A98006B5155 /* Emoji.m in Sources */,
+				775BBC8219342A98006B5155 /* EmojiPictographs.m in Sources */,
 				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
 				3A1351FF1932DECB006C59E4 /* FXPingBiGuanLiViewController.m in Sources */,
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,

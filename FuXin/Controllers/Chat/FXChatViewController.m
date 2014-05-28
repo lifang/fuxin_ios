@@ -15,11 +15,13 @@
 
 static NSString *MessageCellIdentifier = @"MCI";
 
-@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate>
+@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate,EmojiDelegate>
 
 @property (nonatomic, strong) FXChatInputView *inputView;
 
 @property (nonatomic, assign) BOOL showListView;
+
+@property (nonatomic, assign) BOOL showEmojiView;
 
 @property (nonatomic, assign) BOOL showKeyBoard;
 
@@ -33,8 +35,10 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize dataItems = _dataItems;
 @synthesize pictureListView = _pictureListView;
 @synthesize showListView = _showListView;
+@synthesize showEmojiView = _showEmojiView;
 @synthesize showKeyBoard = _showKeyBoard;
 @synthesize contact = _contact;
+@synthesize emojiListView = _emojiListView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -87,6 +91,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     _dataItems = [[NSMutableArray alloc] init];
     
     [self initPictureListView];
+    [self initEmojiView];
 }
 
 - (void)hiddenExtraCellLine {
@@ -100,6 +105,13 @@ static NSString *MessageCellIdentifier = @"MCI";
     _pictureListView = [[FXShowPhotoView alloc] initWithFrame:CGRectMake(0, kScreenHeight - 64, 320, 216)];
     _pictureListView.pictureDelegate = self;
     [self.view addSubview:_pictureListView];
+}
+
+//表情菜单
+- (void)initEmojiView {
+    _emojiListView = [[FXEmojiView alloc] initWithFrame:CGRectMake(0, kScreenHeight - 64, 320, 216)];
+    _emojiListView.emojiDelegate = self;
+    [self.view addSubview:_emojiListView];
 }
 
 #pragma mark - 重写父类方法
@@ -180,7 +192,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 }
 
 - (void)sendActionWithButtonTag:(PictureTags)tag {
-    [self adjustViewWithKeyboard];
+    [self adjustViewWithKeyboardWithTag:tag];
     switch (tag) {
         case PictureEmoji: {
             NSLog(@"Emoji!");
@@ -195,17 +207,52 @@ static NSString *MessageCellIdentifier = @"MCI";
     }
 }
 
-- (void)adjustViewWithKeyboard {
-    if (!_showListView) {
-        //若没有弹出表情框
-        _showListView = YES;
-        if (_showKeyBoard) {
-            [_inputView.inputView resignFirstResponder];
+- (void)adjustViewWithKeyboardWithTag:(PictureTags)tag {
+    switch (tag) {
+        case PicturePhoto: {
+            if (!_showListView) {
+                //若没有弹出表情框
+                _showListView = YES;
+                if (_showKeyBoard) {
+                    [_inputView.inputView resignFirstResponder];
+                }
+                else {
+                    if (_showEmojiView) {
+                        _showEmojiView = NO;
+                        [FXKeyboardAnimation moveView:_emojiListView withOffset:_emojiListView.bounds.size.height];
+                    }
+                    else {
+                        //若没有弹出键盘、表情框、图片框
+                        [FXKeyboardAnimation moveView:_inputView withOffset:-_pictureListView.bounds.size.height];
+                    }
+                    [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+                }
+            }
         }
-        else {
-            [FXKeyboardAnimation moveView:_inputView withOffset:-_pictureListView.bounds.size.height];
-            [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+            break;
+        case PictureEmoji: {
+            if (!_showEmojiView) {
+                //若没有弹出表情框
+                _showEmojiView = YES;
+                if (_showKeyBoard) {
+                    [_inputView.inputView resignFirstResponder];
+                }
+                else {
+                    if (_showListView) {
+                        _showListView = NO;
+                        [FXKeyboardAnimation moveView:_pictureListView withOffset:_pictureListView.bounds.size.height];
+                    }
+                    else {
+                        //若没有弹出键盘、表情框、图片框
+                        [FXKeyboardAnimation moveView:_inputView withOffset:-_emojiListView.bounds.size.height];
+                    }
+                    [FXKeyboardAnimation moveView:_emojiListView withOffset:-_emojiListView.bounds.size.height];
+                }
+            }
         }
+            break;
+        default:
+            break;
     }
 }
 
@@ -216,10 +263,17 @@ static NSString *MessageCellIdentifier = @"MCI";
     if (endRect.origin.y >= kScreenHeight) {
         //键盘收回
         _showKeyBoard = NO;
-        if (_showListView) {
-            //若弹出表情框，则计算表情框与键盘高度差
-            offset = endRect.size.height -  _pictureListView.bounds.size.height;
-            [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+        if (_showListView || _showEmojiView) {
+            if (_showListView) {
+                //若弹出图片框，则计算图片框与键盘高度差
+                offset = endRect.size.height - _pictureListView.bounds.size.height;
+                [FXKeyboardAnimation moveView:_pictureListView withOffset:-_pictureListView.bounds.size.height];
+            }
+            if (_showEmojiView) {
+                //若弹出表情框，则计算表情框与键盘高度差
+                offset = endRect.size.height - _emojiListView.bounds.size.height;
+                [FXKeyboardAnimation moveView:_emojiListView withOffset:-_emojiListView.bounds.size.height];
+            }
         }
         else {
             //键盘收回
@@ -230,11 +284,18 @@ static NSString *MessageCellIdentifier = @"MCI";
         //键盘出现
         _showKeyBoard = YES;
         if (_showListView) {
-            //若此时已经弹出表情框
+            //若此时已经弹出图片框
             offset = _pictureListView.bounds.size.height - endRect.size.height;
-            //隐藏表情框
+            //隐藏图片框
             [FXKeyboardAnimation moveView:_pictureListView withOffset:_pictureListView.bounds.size.height];
             _showListView = NO;
+        }
+        else if (_showEmojiView) {
+            //若此时已经弹出表情框
+            offset = _emojiListView.bounds.size.height - endRect.size.height;
+            //隐藏表情框
+            [FXKeyboardAnimation moveView:_emojiListView withOffset:_emojiListView.bounds.size.height];
+            _showEmojiView = NO;
         }
         else {
             //未弹出表情框
@@ -267,6 +328,12 @@ static NSString *MessageCellIdentifier = @"MCI";
         default:
             break;
     }
+}
+
+#pragma mark - EmojiDelegate
+
+- (void)touchEmojiButton:(UIButton *)sender {
+    _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:sender.titleLabel.text];
 }
 
 @end
