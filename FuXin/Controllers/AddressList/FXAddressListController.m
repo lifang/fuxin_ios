@@ -114,7 +114,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 #pragma mark - Action
 
 - (IBAction)selectedType:(id)sender {
-    NSLog(@"!!!!%d",[(UISegmentedControl *)sender selectedSegmentIndex]);
+    NSLog(@"!!!!%ld",(long)[(UISegmentedControl *)sender selectedSegmentIndex]);
 //    FXHttpRequest *request = [[FXHttpRequest alloc] init];
 //    [request setHttpRequestWithInfo:nil];
 }
@@ -206,7 +206,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     if (tableView == _dataTableView) {
         FXTableHeaderView *headerView = [[FXTableHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
         headerView.indexLabel.text = [[FXCompareCN tableViewIndexArray:_nameLists] objectAtIndex:section];
-        headerView.numberString = [NSString stringWithFormat:@"%d",[tableView numberOfRowsInSection:section]];
+        headerView.numberString = [NSString stringWithFormat:@"%ld",(long)[tableView numberOfRowsInSection:section]];
         return headerView;
     }
     return nil;

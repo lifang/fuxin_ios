@@ -13,9 +13,13 @@ typedef enum{
 } ContactIdentity;  //身份
 
 typedef enum{
-    ContactRelationshipBuyer = 1,  //订购者
-    ContactRelationshipFans = 2,  //关注着
-    ContactRelationshipNone = 3  //聊天者(无关系)
+    ContactRelationshipOrderFrom = 1,
+    ContactRelationshipOrderTo = 2,
+    ContactRelationshipSubScribeFrom = 4,
+    ContactRelationshipSubScribeTo = 8,
+    ContactRelationshipBuyer ,  //订购者
+    ContactRelationshipFans ,  //关注着
+    ContactRelationshipNone   //聊天者(无关系)
 } ContactRelationship;  //关系
 
 typedef enum{
@@ -41,4 +45,24 @@ typedef enum{
 @property (assign, nonatomic) ContactRelationship contactRelationship;
 ///备注
 @property (strong, nonatomic) NSString *contactRemark;
+///拼音 (未知)
+@property (strong, nonatomic) NSString *contactPinyin;
+///屏蔽
+@property (assign, nonatomic) BOOL contactIsBlocked;
+///最后对话时间
+@property (strong, nonatomic) NSString *contactLastContactTime;
+///未知
+@property (assign, nonatomic) BOOL contactIsProvider;
+///认证
+@property (strong, nonatomic) NSString *contactLisence;
+///课程类别
+@property (strong, nonatomic) NSString *contactPublishClassType;
+///个性签名
+@property (strong, nonatomic) NSString *contactSignature;
+///生日
+@property (strong, nonatomic) NSString *contactBirthday;
+///手机
+@property (strong, nonatomic) NSString *contactTelephone;
+///邮箱
+@property (strong, nonatomic) NSString *contactEmail;
 @end

@@ -79,7 +79,7 @@
 }
 
 - (IBAction)emojiSelected:(id)sender {
-    NSLog(@"%d",[(UIButton *)sender tag]);
+    NSLog(@"%ld",(long)[(UIButton *)sender tag]);
     if (_emojiDelegate && [_emojiDelegate respondsToSelector:@selector(touchEmojiButton:)]) {
         [_emojiDelegate touchEmojiButton:(UIButton *)sender];
     }
