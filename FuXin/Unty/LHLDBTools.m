@@ -10,12 +10,11 @@
 #define kNUMBER_OF_CHAT_PER_LOAD 20 //每次加载的聊天记录条数
 #define kDATE_FORMAT @"YYYY-MM-dd hh:mm:ss:SSS"  //时间格式 ,主要用于判断聊天记录的顺序
 #define kDB_NAME @"FuXinDB.sqlite" //数据库文件名
-#import "SharedClass.h"
 
 static LHLDBTools *staticDBTools;
 
 @interface LHLDBTools()
-@property (nonatomic,strong) NSString *userID; //数据库对应的userID
+@property (assign, nonatomic) int32_t userID; //数据库对应的userID
 @end
 
 @implementation LHLDBTools
@@ -23,10 +22,10 @@ static LHLDBTools *staticDBTools;
 ///根据公用单例中的userID返回数据库操作单例.
 + (instancetype)shareLHLDBTools{
     static LHLDBTools *dbTool = nil;
-    if ([SharedClass sharedObject].userID == nil) {
+    if ([FXAppDelegate shareFXAppDelegate].userID == 0) {  //userID必须赋值 ,数据库才有效
         return nil;
     }
-    if (!dbTool || ![dbTool.userID isEqualToString:[SharedClass sharedObject].userID]) {  //如果无对象,或者对象userID不同 ,则创建对象
+    if (!dbTool || !(dbTool.userID == [FXAppDelegate shareFXAppDelegate].userID)) {  //如果无对象,或者对象userID不同 ,则创建对象
         NSFileManager *manager = [NSFileManager defaultManager];
         BOOL isDirectory;
         if (![manager fileExistsAtPath:kUSER_FOLDER_PATH isDirectory:&isDirectory]){
@@ -37,7 +36,7 @@ static LHLDBTools *staticDBTools;
         NSString *dbPath = [kUSER_FOLDER_PATH stringByAppendingPathComponent:kDB_NAME];
         [dbTool setPath:dbPath];
         [dbTool setQueue:[FMDatabaseQueue databaseQueueWithPath:dbPath]];
-        dbTool.userID = [SharedClass sharedObject].userID;
+        dbTool.userID = [FXAppDelegate shareFXAppDelegate].userID;
         [dbTool createBaseTables];
         
         NSDateFormatter * formatter = [[NSDateFormatter alloc ] init];
@@ -105,7 +104,7 @@ static LHLDBTools *staticDBTools;
         rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'Contacts'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
             if (!everythingIsOK) {
@@ -168,7 +167,7 @@ static LHLDBTools *staticDBTools;
     obj.contactID = [NSString stringWithFormat:@"%d",[resultSet intForColumn:@"contactID"]];
     obj.contactNickname = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"nickname"]];
     obj.contactIdentity = [resultSet boolForColumn:@"identity"] ? ContactIdentityTeacher : ContactIdentityGuest;
-    obj.contactAvatar = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"avatar"]];
+    obj.contactAvatar = [NSData dataWithData:[resultSet dataForColumn:@"avatar"]];
     obj.contactRemark = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"remark"]];
     obj.contactSex = [resultSet boolForColumn:@"sex"] ? ContactSexFemale : ContactSexMale;
     int relationshipValue = [resultSet intForColumn:@"relationship"];

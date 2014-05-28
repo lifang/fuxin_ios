@@ -118,24 +118,24 @@
             cell = [[FXTableViewSheZhiCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
         }
         if (indexPath.row == 0) {
-            cell.setImage.image = [UIImage imageNamed:@"u16"];
+            cell.setImage.image = [UIImage imageNamed:@"refresh.png"];
             cell.setName.text = @"新版本检测";
         }else if (indexPath.row == 1){
-            cell.setImage.image = [UIImage imageNamed:@"u20"];
+            cell.setImage.image = [UIImage imageNamed:@"rubbish_2.png"];
             cell.setName.text = @"清除缓存";
         }else if (indexPath.row == 2){
             cell.setImage.image = [UIImage imageNamed:@"u24"];
             cell.setName.text = @"消息推送";
         }else if (indexPath.row == 3){
-            cell.setImage.image = [UIImage imageNamed:@"4"];
+            cell.setImage.image = [UIImage imageNamed:@"key_icon.png"];
             cell.setName.text = @"修改密码";
         }else if (indexPath.row == 4){
-            cell.setImage.image = [UIImage imageNamed:@"5"];
+            cell.setImage.image = [UIImage imageNamed:@"close_icon.png"];
             cell.setName.text = @"屏蔽管理";
         }else{
             [cell setlabel];
             cell.count.hidden = NO;
-            cell.setImage.image = [UIImage imageNamed:@"6"];
+            cell.setImage.image = [UIImage imageNamed:@"book_icon.png"];
             cell.setName.text = @"系统公告管理";
         }
         if (indexPath.row == 5) {
