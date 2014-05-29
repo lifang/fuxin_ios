@@ -25,6 +25,8 @@
 {
     CALayer *layer = [self.count layer];
     [layer setCornerRadius:10.0];
-    self.hidden = NO;
+    CALayer *layerimage = [self.backimage layer];
+    [layerimage setCornerRadius:10.0];
+//    self.hidden = NO;
 }
 @end

@@ -15,6 +15,8 @@
 #import "FXPingBiGuanLiViewController.h"
 #import "FXSystemInfoViewController.h"
 #import "FXMyInfoViewController.h"
+
+
 @interface FXSettingController ()<FXTableViewTuichuCellDelegate>
 
 @end
@@ -135,7 +137,12 @@
         }else{
             [cell setlabel];
             cell.count.hidden = NO;
+
+            cell.backimage.hidden = NO;
+//            cell.setImage.image = [UIImage imageNamed:@"6"];
+
             cell.setImage.image = [UIImage imageNamed:@"book_icon.png"];
+
             cell.setName.text = @"系统公告管理";
         }
         if (indexPath.row == 5) {
