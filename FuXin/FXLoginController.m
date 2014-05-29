@@ -224,6 +224,15 @@
     [forgetButton addTarget:self action:@selector(testButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetButton];
     
+    MessageModel *msg = [[MessageModel alloc] init];
+    msg.messageRecieverID = @"998";
+    msg.messageSendTime = @"1988";
+    [LHLDBTools saveChattingRecord:@[msg] withFinished:^(BOOL flag) {
+        
+    }];
+    [LHLDBTools getLatestChattingRecordsWithContactID:@"998" withFinished:^(NSArray *recordsArray, NSString *errorMessage) {
+        
+    }];
 }
 
 - (void)testButton:(id)sender{
