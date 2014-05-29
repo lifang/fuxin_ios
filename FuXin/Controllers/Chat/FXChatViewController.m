@@ -6,12 +6,16 @@
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
+//
+
 #import "FXChatViewController.h"
 #import "KxMenu.h"
 #import "FXChatInputView.h"
 #import "FXMessageBoxCell.h"
 #import "FXKeyboardAnimation.h"
 #import "FXAppDelegate.h"
+#import "LHLDBTools.h"
+#import "FXTimeFormat.h"
 
 static NSString *MessageCellIdentifier = @"MCI";
 
@@ -39,6 +43,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize showKeyBoard = _showKeyBoard;
 @synthesize contact = _contact;
 @synthesize emojiListView = _emojiListView;
+@synthesize lastShowDate = _lastShowDate;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -54,11 +59,12 @@ static NSString *MessageCellIdentifier = @"MCI";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = _contact.name;
+    self.title = _contact.contactNickname;
     self.view.backgroundColor = [UIColor whiteColor];
     [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setRightNavBarItemWithImageName:@"info.png"];
     [self initUI];
+    [self showChatMessage];
 }
 
 - (void)didReceiveMemoryWarning
@@ -89,6 +95,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self.view addSubview:_inputView];
     
     _dataItems = [[NSMutableArray alloc] init];
+    _lastShowDate = [NSDate date];
     
     [self initPictureListView];
     [self initEmojiView];
@@ -142,6 +149,48 @@ static NSString *MessageCellIdentifier = @"MCI";
     
 }
 
+#pragma mark - 数据
+
+- (void)showChatMessage {
+    [LHLDBTools clearUnreadStatusWithContactID:_contact.contactID withFinished:^(BOOL finish) {
+        
+    }];
+    [LHLDBTools getLatestChattingRecordsWithContactID:_contact.contactID withFinished:^(NSArray *list, NSString *error) {
+        [_dataItems addObjectsFromArray:list];
+        [_chatTableView reloadData];
+        int indexCount = [_chatTableView numberOfRowsInSection:0];
+        if (indexCount > 0) {
+            //滚动到最后行
+            NSIndexPath *indexpath = [NSIndexPath indexPathForRow:[_chatTableView numberOfRowsInSection:0] - 1 inSection:0];
+            [_chatTableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        }
+    }];
+}
+
+- (void)writeIntoDBWithMessage:(Message *)message {
+    MessageModel *model = [[MessageModel alloc] init];
+    model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+    model.messageSendTime = [FXTimeFormat nowDateString];
+    model.messageContent = message.content;
+    model.messageStatus = MessageStatusDidSent;
+    model.messageShowTime = [NSNumber numberWithBool:[self needShowDate]];
+    [LHLDBTools saveChattingRecord:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
+        
+    }];
+    //展示在界面中
+    [_dataItems addObject:model];
+}
+
+- (BOOL)needShowDate {
+    NSDate *now = [NSDate date];
+    double diff = [now timeIntervalSinceDate:_lastShowDate];
+    if (diff > kTimeInterval) {
+        _lastShowDate = now;
+        return YES;
+    }
+    return NO;
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -154,31 +203,45 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FXMessageBoxCell *cell = [tableView dequeueReusableCellWithIdentifier:MessageCellIdentifier forIndexPath:indexPath];
-    cell.cellStyle = indexPath.row % 2 == 0 ? MessageCellStyleSender : MessageCellStyleReceive;
-    [cell setContents:[_dataItems objectAtIndex:indexPath.row]];
+    MessageModel *message = [_dataItems objectAtIndex:indexPath.row];
+    if (message.messageStatus <=2) {
+        //发送
+        cell.cellStyle = MessageCellStyleSender;
+    }
+    else {
+        //接收
+        cell.cellStyle = MessageCellStyleReceive;
+    }
+    cell.showTime = [message.messageShowTime boolValue];
+    if (cell.showTime) {
+        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:message.messageSendTime];
+    }
+    [cell setContents:message.messageContent];
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *text = [_dataItems objectAtIndex:indexPath.row];
-    CGFloat height = [text sizeWithFont:[UIFont systemFontOfSize:14]
+    MessageModel *model = [_dataItems objectAtIndex:indexPath.row];
+    CGFloat height = [model.messageContent sizeWithFont:[UIFont systemFontOfSize:14]
                       constrainedToSize:CGSizeMake(kMessageBoxWigthMax, CGFLOAT_MAX)
                           lineBreakMode:NSLineBreakByWordWrapping].height;
-    return height < 44 ? 64 : height + 20;
+
+    return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
 }
 
 #pragma mark - 获取发送信息和键盘代理 
 #pragma mark - GetInputTextDelegate
 - (void)getInputText:(NSString *)intputText {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:_contact.contactId] setContent:intputText] setSendTime:nil] build];
+    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:[_contact.contactID intValue]] setContent:intputText] setSendTime:nil] build];
     [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:sendMessage Finished:^(BOOL success, NSData *response) {
         if (success) {
             //请求成功
             SendMessageResponse *resp = [SendMessageResponse parseFromData:response];
             if (resp.isSucceed) {
                 //成功发送
-                [_dataItems addObject:intputText];
+                //写入数据库并保存数组
+                [self writeIntoDBWithMessage:sendMessage];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_dataItems count] - 1 inSection:0];
                 NSArray *message = [NSArray arrayWithObject:indexPath];
                 [self.chatTableView insertRowsAtIndexPaths:message withRowAnimation:UITableViewRowAnimationBottom];

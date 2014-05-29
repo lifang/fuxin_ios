@@ -70,6 +70,20 @@ static NSString *AddressCellIdentifier = @"ACI";
     [self.searchBar becomeFirstResponder];
 }
 
+#pragma mark - 更新数据
+
+- (void)updateContactList:(NSArray *)list {
+    if (list) {
+        [_nameLists removeAllObjects];
+        [_contactLists removeAllObjects];
+        for (ContactModel *user in list) {
+            [_nameLists addObject:user.contactNickname];
+            [_contactLists addObject:user];
+        }
+        [_dataTableView reloadData];
+    }
+}
+
 #pragma mark - UI
 
 - (void)initUI {
@@ -100,7 +114,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     _dataTableView.delegate = self;
     [self.view addSubview:_dataTableView];
     [_dataTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:AddressCellIdentifier];
-    
+    [self hiddenExtraCellLineWithTableView:_dataTableView];
     _selectedHeaderViewIndex = -1;
 }
 
@@ -170,7 +184,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _dataTableView) {
         NSDictionary *dict = [[[FXCompareCN dataForSectionWithArray:_nameLists] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        Contact *contact = [_contactLists objectAtIndex:[[dict objectForKey:kIndex] intValue]];
+        ContactModel *contact = [_contactLists objectAtIndex:[[dict objectForKey:kIndex] intValue]];
         FXChatViewController *chatC = [[FXChatViewController alloc] init];
         chatC.contact = contact;
         chatC.hidesBottomBarWhenPushed = YES;

@@ -43,7 +43,7 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-    [self getMessageAll];
+    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(getMessageAll) userInfo:nil repeats:NO];
     [self getContactAll];
     [self showFirstData];
 }
@@ -85,18 +85,22 @@
 - (void)showFirstData {
     //从数据库初始化对话列表
     [_chatC updateChatList:[self getChatListFromDB]];
+    //从数据库初始化通信录列表
+    [_addrC updateContactList:[self getContactsListFromDB]];
 }
 
 //请求消息
 - (void)getMessageAll {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     if (delegate.token && delegate.userID >= 0) {
-        [FXRequestDataFormat getMessageWithToken:delegate.token UserID:delegate.userID TimeStamp:nil Finished:^(BOOL success, NSData *response) {
+        [FXRequestDataFormat getMessageWithToken:delegate.token UserID:delegate.userID TimeStamp:delegate.messageTimeStamp Finished:^(BOOL success, NSData *response) {
             if (success) {
                 //请求成功
                 MessageResponse *resp = [MessageResponse parseFromData:response];
                 if (resp.isSucceed) {
                     //获取消息成功
+                    //保存时间戳
+                    delegate.messageTimeStamp = resp.timeStamp;
                     NSMutableDictionary *messageDict = [NSMutableDictionary dictionary];
                     for (int i = 0; i < [resp.messageListsList count]; i++) {
                         MessageList *list = [resp.messageListsList objectAtIndex:i];
@@ -104,8 +108,6 @@
                         [messageDict setObject:messages forKey:[NSString stringWithFormat:@"%d",list.contactId]];
                     }
                     [self DBSaveMessagesWithDictionary:messageDict];
-//                    _chatC.messageDict = messageDict;
-//                    [_chatC.chatListTable reloadData];
                 }
                 else {
                     //获取消息失败
@@ -126,14 +128,7 @@
             ContactResponse *resp = [ContactResponse parseFromData:response];
             if (resp.isSucceed) {
                 //获取联系人成功
-                [_addrC.nameLists removeAllObjects];
-                [_addrC.contactLists removeAllObjects];
                 [self DBSaveMessageWithArray:resp.contactsList];
-                for (Contact *user in resp.contactsList) {
-                    [_addrC.nameLists addObject:user.name];
-                    [_addrC.contactLists addObject:user];
-                }
-                [_addrC.dataTableView reloadData];
             }
             else {
                 //获取失败
@@ -151,34 +146,34 @@
 - (NSMutableArray *)getChatListFromDB {
     NSLog(@"读取数据库！");
     NSMutableArray *recentArray = [NSMutableArray array];
-    __block NSMutableArray *temp = nil;
     [LHLDBTools getConversationsWithFinished:^(NSMutableArray *list, NSString *error) {
-        temp = list;
+        for (ConversationModel *conv in list) {
+            NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
+            [recentChat setValue:conv.conversationContactID forKey:@"ID"];
+            [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
+            [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
+            //查未读消息数量
+            [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
+                [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
+            }];
+            //查联系人信息
+            [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
+                [recentChat setValue:con forKey:@"Contact"];
+            }];
+            [recentArray addObject:recentChat];
+        }
     }];
-    for (ConversationModel *conv in temp) {
-        NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
-        [recentChat setValue:conv.conversationContactID forKey:@"ID"];
-        [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
-        [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
-        //查未读消息数量
-        [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
-            [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
-        }];
-        //查联系人信息
-        [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
-            [recentChat setValue:con forKey:@"Contact"];
-        }];
-        [recentArray addObject:recentChat];
-    }
     
     return recentArray;
 }
 
-- (void)getContactsListFromDB {
+//从数据库读取联系人列表
+- (NSMutableArray *)getContactsListFromDB {
     NSMutableArray *contactArray = [NSMutableArray array];
     [LHLDBTools getAllContactsWithFinished:^(NSArray *list, NSString *error) {
-        
+        [contactArray addObjectsFromArray:list];
     }];
+    return contactArray;
 }
 
 #pragma mark - 将接收数据转化成数据库表字段存取
@@ -229,21 +224,25 @@
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;
+        model.contactRemark = contact.customName;
         model.contactIsBlocked = contact.isBlocked;
         model.contactLastContactTime = contact.lastContactTime;
         model.contactSex = contact.gender;
         model.contactRelationship = contact.source;
-//        model.contactAvatar = contact.tileUrl;
+        model.contactAvatar = nil;
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactPublishClassType = contact.publishClassType;
         model.contactSignature = contact.signature;
+        model.contactAvatarURL = contact.tileUrl;
         [arrayForDB addObject:model];
     }
     //插入联系人表
     [LHLDBTools saveContact:arrayForDB withFinished:^(BOOL finish) {
         NSLog(@"插入联系人表%d",finish);
     }];
+    
+    [_addrC updateContactList:[self getContactsListFromDB]];
 }
 
 @end

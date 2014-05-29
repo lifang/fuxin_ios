@@ -149,9 +149,11 @@
 /*
  验证码
  phoneNumber:手机号
+ type:类型
  result:返回结果
  */
 + (void)validateCodeWithPhoneNumber:(NSString *)phoneNumber
+                               Type:(NSString *)type
                            Finished:(Result)result;
 
 @end

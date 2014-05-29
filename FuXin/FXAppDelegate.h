@@ -21,6 +21,8 @@
 @property (nonatomic, assign) int32_t userID;
 //登录返回的令牌
 @property (nonatomic, strong) NSString *token;
+//获取消息的时间戳
+@property (nonatomic, strong) NSString *messageTimeStamp;
 
 + (FXAppDelegate *)shareFXAppDelegate;
 - (FXRootViewController *)shareRootViewContorller;

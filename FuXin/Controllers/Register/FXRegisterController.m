@@ -9,6 +9,7 @@
 #import "FXRegisterController.h"
 #import "FXReviewController.h"
 #import "FXRequestDataFormat.h"
+#import "Models.pb.h"
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44
@@ -494,21 +495,21 @@
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
         NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
         [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Finished:^(BOOL success, NSData *response) {
+        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:@"Register" Finished:^(BOOL success, NSData *response) {
             if (success) {
                 //请求成功
                 ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                NSLog(@"%d,%@,%d",resp.isSucceed,resp.validateCode,resp.errorCode);
+                NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
                 if (resp.isSucceed) {
                     //获取验证码成功
-                    NSLog(@"validate = %@",resp.validateCode);
-                    _validateString = resp.validateCode;
+                    NSLog(@"validate = %d",resp.errorCode);
                     [self getValidateSuccessWithButton:sender];
                 }
                 else {
                     //获取失败
+                    NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                        message:@"验证码获取失败,请重新获取！"
+                                                                        message:errorInfo
                                                                        delegate:nil
                                                               cancelButtonTitle:@"确定"
                                                               otherButtonTitles:nil];
@@ -530,6 +531,33 @@
         self.phoneNumberTextField.enabled = YES;
         self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
     }
+}
+
+- (NSString *)showErrorInfoWithType:(int)type {
+    NSString *info = nil;
+    switch (type) {
+        case 1:
+            info = @"手机号输入不正确，请重新输入！";
+            break;
+        case 2:
+            info = @"验证码类型不正确！";
+            break;
+        case 3:
+            info = @"此用户已注册！";
+            break;
+        case 4:
+            info = @"此用户尚未注册！";
+            break;
+        case 5:
+            info = @"此用户账号已被锁住,请稍后再试！";
+            break;
+        case 6:
+            info = @"发送验证码失败，请重新发送！";
+            break;
+        default:
+            break;
+    }
+    return info;
 }
 
 //完成
@@ -591,7 +619,7 @@
     NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
-    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+//    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (usernameText == nil || usernameText.length < 3) {
         self.usernameIsOK = NO;
         self.userNameTipLabel.text = @"!";
@@ -626,20 +654,20 @@
         [self changeRewriteButtonStatus:NO];
     }
     
-    if ([identifyingCodeText isEqualToString:_validateString]) {  //验证码正确
-        self.alertIdentiyingLabel.text = @"验证码正确!";
-        self.alertIdentiyingLabel.textColor = [UIColor greenColor];
-        self.reSendButton.hidden = YES;
-        self.rewriteButton.hidden = YES;
-        self.coundDownLabel.text = @"";
-        [self.reSendTimer invalidate];
-        self.identiCodeIsOK = YES;
-        [self.identifyingCodeTextField resignFirstResponder];
-        self.identifyingCodeTextField.enabled = NO;
-    }else{
-        self.alertIdentiyingLabel.text = @"验证码错误!";
-        self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
-    }
+//    if ([identifyingCodeText isEqualToString:_validateString]) {  //验证码正确
+//        self.alertIdentiyingLabel.text = @"验证码正确!";
+//        self.alertIdentiyingLabel.textColor = [UIColor greenColor];
+//        self.reSendButton.hidden = YES;
+//        self.rewriteButton.hidden = YES;
+//        self.coundDownLabel.text = @"";
+//        [self.reSendTimer invalidate];
+//        self.identiCodeIsOK = YES;
+//        [self.identifyingCodeTextField resignFirstResponder];
+//        self.identifyingCodeTextField.enabled = NO;
+//    }else{
+//        self.alertIdentiyingLabel.text = @"验证码错误!";
+//        self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
+//    }
     [self changeDoneButtonStatus];
 
 }
@@ -705,7 +733,7 @@
 
 //改变完成按钮的状态
 - (void)changeDoneButtonStatus{
-    if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK && self.usernameIsOK) {
+    if (self.serviceTextAgreed && self.passwordIsOK && self.usernameIsOK) {
         self.doneButton.enabled = YES;
         self.doneButton.backgroundColor = kColor(209, 27, 33, 1);
     }else{

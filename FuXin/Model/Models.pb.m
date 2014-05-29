@@ -7140,7 +7140,7 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
 @interface RegisterResponse ()
 @property BOOL isSucceed;
 @property int32_t userId;
-@property int32_t errorCode;
+@property RegisterResponse_ErrorCodeType errorCode;
 @end
 
 @implementation RegisterResponse
@@ -7178,7 +7178,7 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.userId = 0;
-    self.errorCode = 0;
+    self.errorCode = RegisterResponse_ErrorCodeTypeInvalidUserName;
   }
   return self;
 }
@@ -7205,7 +7205,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
     [output writeInt32:2 value:self.userId];
   }
   if (self.hasErrorCode) {
-    [output writeInt32:3 value:self.errorCode];
+    [output writeEnum:3 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -7223,7 +7223,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
     size += computeInt32Size(2, self.userId);
   }
   if (self.hasErrorCode) {
-    size += computeInt32Size(3, self.errorCode);
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7258,6 +7258,20 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 }
 @end
 
+BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value) {
+  switch (value) {
+    case RegisterResponse_ErrorCodeTypeInvalidUserName:
+    case RegisterResponse_ErrorCodeTypeExistingUser:
+    case RegisterResponse_ErrorCodeTypeInvalidPassword:
+    case RegisterResponse_ErrorCodeTypeInvalidConfirmPassword:
+    case RegisterResponse_ErrorCodeTypeInvalidMatchPassword:
+    case RegisterResponse_ErrorCodeTypeInvalidValidateCode:
+    case RegisterResponse_ErrorCodeTypeInvalidDatabase:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface RegisterResponse_Builder()
 @property (retain) RegisterResponse* result;
 @end
@@ -7339,7 +7353,12 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
         break;
       }
       case 24: {
-        [self setErrorCode:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (RegisterResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -7380,17 +7399,17 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
-- (int32_t) errorCode {
+- (RegisterResponse_ErrorCodeType) errorCode {
   return result.errorCode;
 }
-- (RegisterResponse_Builder*) setErrorCode:(int32_t) value {
+- (RegisterResponse_Builder*) setErrorCode:(RegisterResponse_ErrorCodeType) value {
   result.hasErrorCode = YES;
   result.errorCode = value;
   return self;
 }
 - (RegisterResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = 0;
+  result.errorCode = RegisterResponse_ErrorCodeTypeInvalidUserName;
   return self;
 }
 @end
@@ -7398,6 +7417,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 @interface ChangePasswordRequest ()
 @property (retain) NSString* token;
 @property int32_t userId;
+@property (retain) NSString* validateCode;
 @property (retain) NSString* originalPassword;
 @property (retain) NSString* password;
 @property (retain) NSString* passwordConfirm;
@@ -7419,6 +7439,13 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
   hasUserId_ = !!value;
 }
 @synthesize userId;
+- (BOOL) hasValidateCode {
+  return !!hasValidateCode_;
+}
+- (void) setHasValidateCode:(BOOL) value {
+  hasValidateCode_ = !!value;
+}
+@synthesize validateCode;
 - (BOOL) hasOriginalPassword {
   return !!hasOriginalPassword_;
 }
@@ -7442,6 +7469,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 @synthesize passwordConfirm;
 - (void) dealloc {
   self.token = nil;
+  self.validateCode = nil;
   self.originalPassword = nil;
   self.password = nil;
   self.passwordConfirm = nil;
@@ -7451,6 +7479,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
   if ((self = [super init])) {
     self.token = @"";
     self.userId = 0;
+    self.validateCode = @"";
     self.originalPassword = @"";
     self.password = @"";
     self.passwordConfirm = @"";
@@ -7479,14 +7508,17 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
   if (self.hasUserId) {
     [output writeInt32:2 value:self.userId];
   }
+  if (self.hasValidateCode) {
+    [output writeString:3 value:self.validateCode];
+  }
   if (self.hasOriginalPassword) {
-    [output writeString:3 value:self.originalPassword];
+    [output writeString:4 value:self.originalPassword];
   }
   if (self.hasPassword) {
-    [output writeString:4 value:self.password];
+    [output writeString:5 value:self.password];
   }
   if (self.hasPasswordConfirm) {
-    [output writeString:5 value:self.passwordConfirm];
+    [output writeString:6 value:self.passwordConfirm];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -7503,14 +7535,17 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
   if (self.hasUserId) {
     size += computeInt32Size(2, self.userId);
   }
+  if (self.hasValidateCode) {
+    size += computeStringSize(3, self.validateCode);
+  }
   if (self.hasOriginalPassword) {
-    size += computeStringSize(3, self.originalPassword);
+    size += computeStringSize(4, self.originalPassword);
   }
   if (self.hasPassword) {
-    size += computeStringSize(4, self.password);
+    size += computeStringSize(5, self.password);
   }
   if (self.hasPasswordConfirm) {
-    size += computeStringSize(5, self.passwordConfirm);
+    size += computeStringSize(6, self.passwordConfirm);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7593,6 +7628,9 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
   if (other.hasUserId) {
     [self setUserId:other.userId];
   }
+  if (other.hasValidateCode) {
+    [self setValidateCode:other.validateCode];
+  }
   if (other.hasOriginalPassword) {
     [self setOriginalPassword:other.originalPassword];
   }
@@ -7632,14 +7670,18 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
         break;
       }
       case 26: {
-        [self setOriginalPassword:[input readString]];
+        [self setValidateCode:[input readString]];
         break;
       }
       case 34: {
-        [self setPassword:[input readString]];
+        [self setOriginalPassword:[input readString]];
         break;
       }
       case 42: {
+        [self setPassword:[input readString]];
+        break;
+      }
+      case 50: {
         [self setPasswordConfirm:[input readString]];
         break;
       }
@@ -7676,6 +7718,22 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
 - (ChangePasswordRequest_Builder*) clearUserId {
   result.hasUserId = NO;
   result.userId = 0;
+  return self;
+}
+- (BOOL) hasValidateCode {
+  return result.hasValidateCode;
+}
+- (NSString*) validateCode {
+  return result.validateCode;
+}
+- (ChangePasswordRequest_Builder*) setValidateCode:(NSString*) value {
+  result.hasValidateCode = YES;
+  result.validateCode = value;
+  return self;
+}
+- (ChangePasswordRequest_Builder*) clearValidateCode {
+  result.hasValidateCode = NO;
+  result.validateCode = @"";
   return self;
 }
 - (BOOL) hasOriginalPassword {
@@ -7730,7 +7788,7 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
 
 @interface ChangePasswordResponse ()
 @property BOOL isSucceed;
-@property int32_t errorCode;
+@property ChangePasswordResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ChangePasswordResponse
@@ -7760,7 +7818,7 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = 0;
+    self.errorCode = ChangePasswordResponse_ErrorCodeTypeExistingUserNo;
   }
   return self;
 }
@@ -7784,7 +7842,7 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
     [output writeBool:1 value:self.isSucceed];
   }
   if (self.hasErrorCode) {
-    [output writeInt32:2 value:self.errorCode];
+    [output writeEnum:2 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -7799,7 +7857,7 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
     size += computeBoolSize(1, self.isSucceed);
   }
   if (self.hasErrorCode) {
-    size += computeInt32Size(2, self.errorCode);
+    size += computeEnumSize(2, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7834,6 +7892,20 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
 }
 @end
 
+BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value) {
+  switch (value) {
+    case ChangePasswordResponse_ErrorCodeTypeExistingUserNo:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidPassword:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidDatabase:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ChangePasswordResponse_Builder()
 @property (retain) ChangePasswordResponse* result;
 @end
@@ -7908,7 +7980,12 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
         break;
       }
       case 16: {
-        [self setErrorCode:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (ChangePasswordResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
         break;
       }
     }
@@ -7933,15 +8010,568 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
-- (int32_t) errorCode {
+- (ChangePasswordResponse_ErrorCodeType) errorCode {
   return result.errorCode;
 }
-- (ChangePasswordResponse_Builder*) setErrorCode:(int32_t) value {
+- (ChangePasswordResponse_Builder*) setErrorCode:(ChangePasswordResponse_ErrorCodeType) value {
   result.hasErrorCode = YES;
   result.errorCode = value;
   return self;
 }
 - (ChangePasswordResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ChangePasswordResponse_ErrorCodeTypeExistingUserNo;
+  return self;
+}
+@end
+
+@interface ResetPasswordRequest ()
+@property (retain) NSString* token;
+@property int32_t userId;
+@property (retain) NSString* validateCode;
+@property (retain) NSString* password;
+@property (retain) NSString* passwordConfirm;
+@end
+
+@implementation ResetPasswordRequest
+
+- (BOOL) hasToken {
+  return !!hasToken_;
+}
+- (void) setHasToken:(BOOL) value {
+  hasToken_ = !!value;
+}
+@synthesize token;
+- (BOOL) hasUserId {
+  return !!hasUserId_;
+}
+- (void) setHasUserId:(BOOL) value {
+  hasUserId_ = !!value;
+}
+@synthesize userId;
+- (BOOL) hasValidateCode {
+  return !!hasValidateCode_;
+}
+- (void) setHasValidateCode:(BOOL) value {
+  hasValidateCode_ = !!value;
+}
+@synthesize validateCode;
+- (BOOL) hasPassword {
+  return !!hasPassword_;
+}
+- (void) setHasPassword:(BOOL) value {
+  hasPassword_ = !!value;
+}
+@synthesize password;
+- (BOOL) hasPasswordConfirm {
+  return !!hasPasswordConfirm_;
+}
+- (void) setHasPasswordConfirm:(BOOL) value {
+  hasPasswordConfirm_ = !!value;
+}
+@synthesize passwordConfirm;
+- (void) dealloc {
+  self.token = nil;
+  self.validateCode = nil;
+  self.password = nil;
+  self.passwordConfirm = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.token = @"";
+    self.userId = 0;
+    self.validateCode = @"";
+    self.password = @"";
+    self.passwordConfirm = @"";
+  }
+  return self;
+}
+static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
++ (void) initialize {
+  if (self == [ResetPasswordRequest class]) {
+    defaultResetPasswordRequestInstance = [[ResetPasswordRequest alloc] init];
+  }
+}
++ (ResetPasswordRequest*) defaultInstance {
+  return defaultResetPasswordRequestInstance;
+}
+- (ResetPasswordRequest*) defaultInstance {
+  return defaultResetPasswordRequestInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasToken) {
+    [output writeString:1 value:self.token];
+  }
+  if (self.hasUserId) {
+    [output writeInt32:2 value:self.userId];
+  }
+  if (self.hasValidateCode) {
+    [output writeString:3 value:self.validateCode];
+  }
+  if (self.hasPassword) {
+    [output writeString:4 value:self.password];
+  }
+  if (self.hasPasswordConfirm) {
+    [output writeString:5 value:self.passwordConfirm];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasToken) {
+    size += computeStringSize(1, self.token);
+  }
+  if (self.hasUserId) {
+    size += computeInt32Size(2, self.userId);
+  }
+  if (self.hasValidateCode) {
+    size += computeStringSize(3, self.validateCode);
+  }
+  if (self.hasPassword) {
+    size += computeStringSize(4, self.password);
+  }
+  if (self.hasPasswordConfirm) {
+    size += computeStringSize(5, self.passwordConfirm);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (ResetPasswordRequest*) parseFromData:(NSData*) data {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromData:data] build];
+}
++ (ResetPasswordRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordRequest*) parseFromInputStream:(NSInputStream*) input {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromInputStream:input] build];
+}
++ (ResetPasswordRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromCodedInputStream:input] build];
+}
++ (ResetPasswordRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordRequest*)[[[ResetPasswordRequest builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordRequest_Builder*) builder {
+  return [[[ResetPasswordRequest_Builder alloc] init] autorelease];
+}
++ (ResetPasswordRequest_Builder*) builderWithPrototype:(ResetPasswordRequest*) prototype {
+  return [[ResetPasswordRequest builder] mergeFrom:prototype];
+}
+- (ResetPasswordRequest_Builder*) builder {
+  return [ResetPasswordRequest builder];
+}
+@end
+
+@interface ResetPasswordRequest_Builder()
+@property (retain) ResetPasswordRequest* result;
+@end
+
+@implementation ResetPasswordRequest_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[ResetPasswordRequest alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (ResetPasswordRequest_Builder*) clear {
+  self.result = [[[ResetPasswordRequest alloc] init] autorelease];
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clone {
+  return [ResetPasswordRequest builderWithPrototype:result];
+}
+- (ResetPasswordRequest*) defaultInstance {
+  return [ResetPasswordRequest defaultInstance];
+}
+- (ResetPasswordRequest*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (ResetPasswordRequest*) buildPartial {
+  ResetPasswordRequest* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (ResetPasswordRequest_Builder*) mergeFrom:(ResetPasswordRequest*) other {
+  if (other == [ResetPasswordRequest defaultInstance]) {
+    return self;
+  }
+  if (other.hasToken) {
+    [self setToken:other.token];
+  }
+  if (other.hasUserId) {
+    [self setUserId:other.userId];
+  }
+  if (other.hasValidateCode) {
+    [self setValidateCode:other.validateCode];
+  }
+  if (other.hasPassword) {
+    [self setPassword:other.password];
+  }
+  if (other.hasPasswordConfirm) {
+    [self setPasswordConfirm:other.passwordConfirm];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 10: {
+        [self setToken:[input readString]];
+        break;
+      }
+      case 16: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 26: {
+        [self setValidateCode:[input readString]];
+        break;
+      }
+      case 34: {
+        [self setPassword:[input readString]];
+        break;
+      }
+      case 42: {
+        [self setPasswordConfirm:[input readString]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasToken {
+  return result.hasToken;
+}
+- (NSString*) token {
+  return result.token;
+}
+- (ResetPasswordRequest_Builder*) setToken:(NSString*) value {
+  result.hasToken = YES;
+  result.token = value;
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clearToken {
+  result.hasToken = NO;
+  result.token = @"";
+  return self;
+}
+- (BOOL) hasUserId {
+  return result.hasUserId;
+}
+- (int32_t) userId {
+  return result.userId;
+}
+- (ResetPasswordRequest_Builder*) setUserId:(int32_t) value {
+  result.hasUserId = YES;
+  result.userId = value;
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clearUserId {
+  result.hasUserId = NO;
+  result.userId = 0;
+  return self;
+}
+- (BOOL) hasValidateCode {
+  return result.hasValidateCode;
+}
+- (NSString*) validateCode {
+  return result.validateCode;
+}
+- (ResetPasswordRequest_Builder*) setValidateCode:(NSString*) value {
+  result.hasValidateCode = YES;
+  result.validateCode = value;
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clearValidateCode {
+  result.hasValidateCode = NO;
+  result.validateCode = @"";
+  return self;
+}
+- (BOOL) hasPassword {
+  return result.hasPassword;
+}
+- (NSString*) password {
+  return result.password;
+}
+- (ResetPasswordRequest_Builder*) setPassword:(NSString*) value {
+  result.hasPassword = YES;
+  result.password = value;
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clearPassword {
+  result.hasPassword = NO;
+  result.password = @"";
+  return self;
+}
+- (BOOL) hasPasswordConfirm {
+  return result.hasPasswordConfirm;
+}
+- (NSString*) passwordConfirm {
+  return result.passwordConfirm;
+}
+- (ResetPasswordRequest_Builder*) setPasswordConfirm:(NSString*) value {
+  result.hasPasswordConfirm = YES;
+  result.passwordConfirm = value;
+  return self;
+}
+- (ResetPasswordRequest_Builder*) clearPasswordConfirm {
+  result.hasPasswordConfirm = NO;
+  result.passwordConfirm = @"";
+  return self;
+}
+@end
+
+@interface ResetPasswordResponse ()
+@property BOOL isSucceed;
+@property int32_t errorCode;
+@end
+
+@implementation ResetPasswordResponse
+
+- (BOOL) hasIsSucceed {
+  return !!hasIsSucceed_;
+}
+- (void) setHasIsSucceed:(BOOL) value {
+  hasIsSucceed_ = !!value;
+}
+- (BOOL) isSucceed {
+  return !!isSucceed_;
+}
+- (void) setIsSucceed:(BOOL) value {
+  isSucceed_ = !!value;
+}
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.isSucceed = NO;
+    self.errorCode = 0;
+  }
+  return self;
+}
+static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
++ (void) initialize {
+  if (self == [ResetPasswordResponse class]) {
+    defaultResetPasswordResponseInstance = [[ResetPasswordResponse alloc] init];
+  }
+}
++ (ResetPasswordResponse*) defaultInstance {
+  return defaultResetPasswordResponseInstance;
+}
+- (ResetPasswordResponse*) defaultInstance {
+  return defaultResetPasswordResponseInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasIsSucceed) {
+    [output writeBool:1 value:self.isSucceed];
+  }
+  if (self.hasErrorCode) {
+    [output writeInt32:2 value:self.errorCode];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasIsSucceed) {
+    size += computeBoolSize(1, self.isSucceed);
+  }
+  if (self.hasErrorCode) {
+    size += computeInt32Size(2, self.errorCode);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (ResetPasswordResponse*) parseFromData:(NSData*) data {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromData:data] build];
+}
++ (ResetPasswordResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordResponse*) parseFromInputStream:(NSInputStream*) input {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromInputStream:input] build];
+}
++ (ResetPasswordResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromCodedInputStream:input] build];
+}
++ (ResetPasswordResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ResetPasswordResponse*)[[[ResetPasswordResponse builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ResetPasswordResponse_Builder*) builder {
+  return [[[ResetPasswordResponse_Builder alloc] init] autorelease];
+}
++ (ResetPasswordResponse_Builder*) builderWithPrototype:(ResetPasswordResponse*) prototype {
+  return [[ResetPasswordResponse builder] mergeFrom:prototype];
+}
+- (ResetPasswordResponse_Builder*) builder {
+  return [ResetPasswordResponse builder];
+}
+@end
+
+@interface ResetPasswordResponse_Builder()
+@property (retain) ResetPasswordResponse* result;
+@end
+
+@implementation ResetPasswordResponse_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[ResetPasswordResponse alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (ResetPasswordResponse_Builder*) clear {
+  self.result = [[[ResetPasswordResponse alloc] init] autorelease];
+  return self;
+}
+- (ResetPasswordResponse_Builder*) clone {
+  return [ResetPasswordResponse builderWithPrototype:result];
+}
+- (ResetPasswordResponse*) defaultInstance {
+  return [ResetPasswordResponse defaultInstance];
+}
+- (ResetPasswordResponse*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (ResetPasswordResponse*) buildPartial {
+  ResetPasswordResponse* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (ResetPasswordResponse_Builder*) mergeFrom:(ResetPasswordResponse*) other {
+  if (other == [ResetPasswordResponse defaultInstance]) {
+    return self;
+  }
+  if (other.hasIsSucceed) {
+    [self setIsSucceed:other.isSucceed];
+  }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (ResetPasswordResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (ResetPasswordResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setIsSucceed:[input readBool]];
+        break;
+      }
+      case 16: {
+        [self setErrorCode:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasIsSucceed {
+  return result.hasIsSucceed;
+}
+- (BOOL) isSucceed {
+  return result.isSucceed;
+}
+- (ResetPasswordResponse_Builder*) setIsSucceed:(BOOL) value {
+  result.hasIsSucceed = YES;
+  result.isSucceed = value;
+  return self;
+}
+- (ResetPasswordResponse_Builder*) clearIsSucceed {
+  result.hasIsSucceed = NO;
+  result.isSucceed = NO;
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (int32_t) errorCode {
+  return result.errorCode;
+}
+- (ResetPasswordResponse_Builder*) setErrorCode:(int32_t) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ResetPasswordResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
   result.errorCode = 0;
   return self;
@@ -7950,6 +8580,7 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
 
 @interface ValidateCodeRequest ()
 @property (retain) NSString* phoneNumber;
+@property (retain) NSString* type;
 @end
 
 @implementation ValidateCodeRequest
@@ -7961,13 +8592,22 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
   hasPhoneNumber_ = !!value;
 }
 @synthesize phoneNumber;
+- (BOOL) hasType {
+  return !!hasType_;
+}
+- (void) setHasType:(BOOL) value {
+  hasType_ = !!value;
+}
+@synthesize type;
 - (void) dealloc {
   self.phoneNumber = nil;
+  self.type = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.phoneNumber = @"";
+    self.type = @"";
   }
   return self;
 }
@@ -7990,6 +8630,9 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
   if (self.hasPhoneNumber) {
     [output writeString:1 value:self.phoneNumber];
   }
+  if (self.hasType) {
+    [output writeString:2 value:self.type];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -8001,6 +8644,9 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
   size = 0;
   if (self.hasPhoneNumber) {
     size += computeStringSize(1, self.phoneNumber);
+  }
+  if (self.hasType) {
+    size += computeStringSize(2, self.type);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -8080,6 +8726,9 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
   if (other.hasPhoneNumber) {
     [self setPhoneNumber:other.phoneNumber];
   }
+  if (other.hasType) {
+    [self setType:other.type];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -8105,6 +8754,10 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
         [self setPhoneNumber:[input readString]];
         break;
       }
+      case 18: {
+        [self setType:[input readString]];
+        break;
+      }
     }
   }
 }
@@ -8124,12 +8777,27 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
   result.phoneNumber = @"";
   return self;
 }
+- (BOOL) hasType {
+  return result.hasType;
+}
+- (NSString*) type {
+  return result.type;
+}
+- (ValidateCodeRequest_Builder*) setType:(NSString*) value {
+  result.hasType = YES;
+  result.type = value;
+  return self;
+}
+- (ValidateCodeRequest_Builder*) clearType {
+  result.hasType = NO;
+  result.type = @"";
+  return self;
+}
 @end
 
 @interface ValidateCodeResponse ()
 @property BOOL isSucceed;
-@property int32_t errorCode;
-@property (retain) NSString* validateCode;
+@property ValidateCodeResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ValidateCodeResponse
@@ -8153,22 +8821,13 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
   hasErrorCode_ = !!value;
 }
 @synthesize errorCode;
-- (BOOL) hasValidateCode {
-  return !!hasValidateCode_;
-}
-- (void) setHasValidateCode:(BOOL) value {
-  hasValidateCode_ = !!value;
-}
-@synthesize validateCode;
 - (void) dealloc {
-  self.validateCode = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = 0;
-    self.validateCode = @"";
+    self.errorCode = ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber;
   }
   return self;
 }
@@ -8192,10 +8851,7 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
     [output writeBool:1 value:self.isSucceed];
   }
   if (self.hasErrorCode) {
-    [output writeInt32:2 value:self.errorCode];
-  }
-  if (self.hasValidateCode) {
-    [output writeString:3 value:self.validateCode];
+    [output writeEnum:2 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -8210,10 +8866,7 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
     size += computeBoolSize(1, self.isSucceed);
   }
   if (self.hasErrorCode) {
-    size += computeInt32Size(2, self.errorCode);
-  }
-  if (self.hasValidateCode) {
-    size += computeStringSize(3, self.validateCode);
+    size += computeEnumSize(2, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -8248,6 +8901,19 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
 }
 @end
 
+BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value) {
+  switch (value) {
+    case ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber:
+    case ValidateCodeResponse_ErrorCodeTypeInvalidType:
+    case ValidateCodeResponse_ErrorCodeTypeExistingUserYes:
+    case ValidateCodeResponse_ErrorCodeTypeExistingUserNo:
+    case ValidateCodeResponse_ErrorCodeTypeLockTime:
+    case ValidateCodeResponse_ErrorCodeTypeSendError:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ValidateCodeResponse_Builder()
 @property (retain) ValidateCodeResponse* result;
 @end
@@ -8296,9 +8962,6 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
   if (other.hasErrorCode) {
     [self setErrorCode:other.errorCode];
   }
-  if (other.hasValidateCode) {
-    [self setValidateCode:other.validateCode];
-  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -8325,11 +8988,12 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
         break;
       }
       case 16: {
-        [self setErrorCode:[input readInt32]];
-        break;
-      }
-      case 26: {
-        [self setValidateCode:[input readString]];
+        int32_t value = [input readEnum];
+        if (ValidateCodeResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
         break;
       }
     }
@@ -8354,33 +9018,17 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
-- (int32_t) errorCode {
+- (ValidateCodeResponse_ErrorCodeType) errorCode {
   return result.errorCode;
 }
-- (ValidateCodeResponse_Builder*) setErrorCode:(int32_t) value {
+- (ValidateCodeResponse_Builder*) setErrorCode:(ValidateCodeResponse_ErrorCodeType) value {
   result.hasErrorCode = YES;
   result.errorCode = value;
   return self;
 }
 - (ValidateCodeResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = 0;
-  return self;
-}
-- (BOOL) hasValidateCode {
-  return result.hasValidateCode;
-}
-- (NSString*) validateCode {
-  return result.validateCode;
-}
-- (ValidateCodeResponse_Builder*) setValidateCode:(NSString*) value {
-  result.hasValidateCode = YES;
-  result.validateCode = value;
-  return self;
-}
-- (ValidateCodeResponse_Builder*) clearValidateCode {
-  result.hasValidateCode = NO;
-  result.validateCode = @"";
+  result.errorCode = ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber;
   return self;
 }
 @end

@@ -20,4 +20,6 @@
 
 @property (nonatomic, strong) NSMutableArray *resultArray;
 
+- (void)hiddenExtraCellLineWithTableView:(UITableView *)table;
+
 @end
