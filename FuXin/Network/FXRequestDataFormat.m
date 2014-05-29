@@ -220,9 +220,11 @@
 }
 
 + (void)validateCodeWithPhoneNumber:(NSString *)phoneNumber
+                               Type:(NSString *)type
                            Finished:(Result)result {
-    ValidateCodeRequest *PBObject = [[[ValidateCodeRequest builder]
-                                      setPhoneNumber:phoneNumber] build];
+    ValidateCodeRequest *PBObject = [[[[ValidateCodeRequest builder]
+                                      setPhoneNumber:phoneNumber]
+                                      setType:type] build];
     NSData *PBData = [PBObject data];
     //请求信息
     NSMutableDictionary *requestInfo = dictionaryForValidate();

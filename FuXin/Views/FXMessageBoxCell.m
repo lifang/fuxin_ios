@@ -12,6 +12,7 @@
 
 #define kLargeOffset        55
 #define kSmallOffset        40
+#define kTimeLabelHeight    40
 
 @implementation FXMessageBoxCell
 
@@ -52,6 +53,8 @@
     _contentLabel.font = [UIFont systemFontOfSize:14];
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.backgroundColor = [UIColor clearColor];
+    _timeLabel.font = [UIFont systemFontOfSize:12];
+    _timeLabel.textAlignment = NSTextAlignmentCenter;
     
     [self.contentView addSubview:_userPhotoView];
     [self.contentView addSubview:_backgroundView];
@@ -66,27 +69,32 @@
 - (void)setSubviewsFrame {
     CGSize size = [self getContextSizeWithString:_contentLabel.text];
     size.height = size.height > kMessageBoxHeightMin ? size.height : kMessageBoxHeightMin;
+    CGFloat timeOffset = 0;
+    if (_showTime) {
+        timeOffset = kTimeLabelHeight;
+        _timeLabel.frame = CGRectMake(2, 0, self.frame.size.width, kTimeLabelHeight - 4);
+    }
     switch (_cellStyle) {
         case MessageCellStyleReceive: {
-            _userPhotoView.frame = CGRectMake(5, 8, 34, 34);
+            _userPhotoView.frame = CGRectMake(5, kTimeLabelHeight, 34, 34);
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(kLargeOffset, 6, size.width , size.height);
+            _contentLabel.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 1, size.width , size.height);
             _contentLabel.numberOfLines = 0;
-            _backgroundView.frame = CGRectMake(kSmallOffset, 5, size.width + 20, size.height + 4);
+            _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 2, size.width + 20, size.height + 1);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
             
         }
             break;
         case MessageCellStyleSender: {
-            _userPhotoView.frame = CGRectMake(281, 5, 34, 34);
+            _userPhotoView.frame = CGRectMake(281, kTimeLabelHeight, 34, 34);
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(320 - kSmallOffset - size.width - 12, 6, size.width, size.height);
+            _contentLabel.frame = CGRectMake(320 - kSmallOffset - size.width - 12, kTimeLabelHeight - 1, size.width, size.height);
             _contentLabel.numberOfLines = 0;
-            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, 5, size.width + 20, size.height + 4);
+            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 2, size.width + 20, size.height + 1);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
         }
             break;

@@ -42,7 +42,7 @@
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
     
-    [self testDBMethod];
+//    [self testDBMethod];
 }
 
 - (void)didReceiveMemoryWarning

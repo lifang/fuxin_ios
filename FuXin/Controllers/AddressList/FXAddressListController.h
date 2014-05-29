@@ -31,4 +31,6 @@ typedef enum {
 //右侧浮动框
 @property (nonatomic, strong) FXSelectIndexView *indexView;
 
+- (void)updateContactList:(NSArray *)list;
+
 @end

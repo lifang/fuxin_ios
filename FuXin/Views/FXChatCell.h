@@ -20,4 +20,6 @@
 
 @property (nonatomic, strong) UILabel *detailLabel;
 
+- (void)setNumber:(NSString *)number;
+
 @end

@@ -15,6 +15,8 @@
 #import "FXPingBiGuanLiViewController.h"
 #import "FXSystemInfoViewController.h"
 #import "FXMyInfoViewController.h"
+
+
 @interface FXSettingController ()<FXTableViewTuichuCellDelegate>
 
 @end
@@ -124,7 +126,7 @@
             cell.setImage.image = [UIImage imageNamed:@"rubbish_2.png"];
             cell.setName.text = @"清除缓存";
         }else if (indexPath.row == 2){
-            cell.setImage.image = [UIImage imageNamed:@"u24"];
+            cell.setImage.image = [UIImage imageNamed:@"tri_arrow.png"];
             cell.setName.text = @"消息推送";
         }else if (indexPath.row == 3){
             cell.setImage.image = [UIImage imageNamed:@"key_icon.png"];
@@ -135,7 +137,12 @@
         }else{
             [cell setlabel];
             cell.count.hidden = NO;
+
+            cell.backimage.hidden = NO;
+//            cell.setImage.image = [UIImage imageNamed:@"6"];
+
             cell.setImage.image = [UIImage imageNamed:@"book_icon.png"];
+
             cell.setName.text = @"系统公告管理";
         }
         if (indexPath.row == 5) {

@@ -29,6 +29,7 @@
     self.title = @"修改密码";
     self.oldPassWord.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.oldPassWord.delegate = self;
+    
     // Do any additional setup after loading the view.
 }
 

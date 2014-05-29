@@ -11,6 +11,8 @@
 //聊天内容宽度最大值
 #define kMessageBoxWigthMax  220
 
+#define kTimeLabelHeight    40
+
 typedef enum {
     MessageCellStyleNone = 0,
     MessageCellStyleSender,    //发送样式

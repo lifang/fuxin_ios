@@ -8,6 +8,7 @@
 
 #import "FXChatListController.h"
 #import "FXChatCell.h"
+#import "FXTimeFormat.h"
 
 static NSString *chatCellIdentifier = @"CCI";
 
@@ -58,6 +59,7 @@ static NSString *chatCellIdentifier = @"CCI";
     [self.view addSubview:_chatListTable];
     [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:chatCellIdentifier];
     _chatList = [[NSMutableArray alloc] init];
+    [self hiddenExtraCellLineWithTableView:_chatListTable];
 }
 
 #pragma mark - 更新数据
@@ -94,26 +96,24 @@ static NSString *chatCellIdentifier = @"CCI";
     return 0;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == _chatListTable) {
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         ContactModel *contact = [rowData objectForKey:@"Contact"];
-        NSArray *records = [rowData objectForKey:@"Record"];
         cell.nameLabel.text = contact.contactNickname;
-        cell.numberLabel.text = [rowData objectForKey:@"Number"];
-        cell.timeLabel.text = [rowData objectForKey:@"Time"];
-        if (contact.contactAvatar) {
+        [cell setNumber:[NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]]];
+        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
+
+        cell.detailLabel.text = [rowData objectForKey:@"Record"];
+        if (contact.contactAvatar && [contact.contactAvatar length] > 0) {
             cell.photoView.image = [UIImage imageWithData:contact.contactAvatar];
         }
         else {
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
         }
-        if ([records count] > 0) {
-            cell.detailLabel.text = [records objectAtIndex:0];
-        }
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         // Configure the cell...
         
@@ -125,6 +125,8 @@ static NSString *chatCellIdentifier = @"CCI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _chatListTable) {
         FXChatViewController *chat = [[FXChatViewController alloc] init];
+        NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
+        chat.contact = [rowData objectForKey:@"Contact"];
         chat.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:chat animated:YES];
     }

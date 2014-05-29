@@ -76,13 +76,20 @@ static NSString *searchIdentifer = @"SI";
     _searchController.searchResultsTableView.delegate = self;
     _searchController.searchResultsTableView.dataSource = self;
     [_searchController.searchResultsTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:searchIdentifer];
+    [self hiddenExtraCellLineWithTableView:_searchController.searchResultsTableView];
+}
+
+- (void)hiddenExtraCellLineWithTableView:(UITableView *)table {
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    [table setTableFooterView:view];
 }
 
 - (void)searchContacts {
     NSString *search = _searchController.searchBar.text;
     [_resultArray removeAllObjects];
-    for (Contact *contact in _primaryArray) {
-        if ([[contact.name lowercaseString] rangeOfString:[search lowercaseString]].length > 0) {
+    for (ContactModel *contact in _primaryArray) {
+        if ([[contact.contactNickname lowercaseString] rangeOfString:[search lowercaseString]].length > 0) {
             [_resultArray addObject:contact];
         }
     }
@@ -127,8 +134,8 @@ static NSString *searchIdentifer = @"SI";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _searchController.searchResultsTableView) {
         FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:searchIdentifer forIndexPath:indexPath];
-        Contact *rowData = [_resultArray objectAtIndex:indexPath.row];
-        cell.nameLabel.text = rowData.name;
+        ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
+        cell.nameLabel.text = rowData.contactNickname;
         return cell;
     }
     return nil;
@@ -147,7 +154,7 @@ static NSString *searchIdentifer = @"SI";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [_searchBar resignFirstResponder];
-    Contact *rowData = [_resultArray objectAtIndex:indexPath.row];
+    ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
     FXChatViewController *chatC = [[FXChatViewController alloc] init];
     chatC.contact = rowData;
     chatC.hidesBottomBarWhenPushed = YES;
