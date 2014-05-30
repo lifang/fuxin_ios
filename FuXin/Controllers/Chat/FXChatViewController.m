@@ -45,6 +45,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize contact = _contact;
 @synthesize emojiListView = _emojiListView;
 @synthesize lastShowDate = _lastShowDate;
+@synthesize contactView = _contactView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -122,6 +123,19 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self.view addSubview:_emojiListView];
 }
 
+//联系人详细
+- (void)addDetailView {
+    if (!_contactView) {
+        _contactView = [[FXContactView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64)];
+        _contactView.contact = _contact;
+        [self.view addSubview:_contactView];
+    }
+    if (_contactView.hidden) {
+        _contactView.hidden = NO;
+        _contactView.alpha = 1.0f;
+    }
+}
+
 #pragma mark - 重写父类方法
 
 //重写导航右按钮方法
@@ -139,9 +153,41 @@ static NSString *MessageCellIdentifier = @"MCI";
     [KxMenu showMenuInView:self.view fromRect:rect menuItems:listArray];
 }
 
-- (void)addDetailView {
-    FXContactView *contactView = [[FXContactView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64)];
-    [self.view addSubview:contactView];
+#pragma mark - 修改联系人
+
+- (void)modifyContactRemark:(NSString *)remark {
+    Contact *contact = [[[[[[[[[[[[[[Contact builder]
+                                    setContactId:[_contact.contactID intValue]]
+                                   setName:_contact.contactNickname]
+                                  setCustomName:remark]
+                                 setPinyin:_contact.contactPinyin]
+                                setIsBlocked:_contact.contactIsBlocked]
+                               setLastContactTime:_contact.contactLastContactTime]
+                              setGender:_contact.contactSex]
+                             setSource:_contact.contactRelationship]
+                            setTileUrl:_contact.contactAvatarURL]
+                           setIsProvider:_contact.contactIsProvider]
+                          setLisence:_contact.contactLisence]
+                         setPublishClassType:_contact.contactPublishClassType] build];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat modifyContactDetailWithToken:delegate.token UserID:delegate.userID Contact:contact Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ChangeContactDetailResponse *resp = [ChangeContactDetailResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //修改成功
+                NSLog(@"修改联系人成功");
+                [_contactView hiddenContactView];
+            }
+            else {
+                //修改失败
+                NSLog(@"修改联系人失败");
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
 }
 
 #pragma mark - 菜单事件

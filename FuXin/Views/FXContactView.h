@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ContactModel.h"
 
 @interface FXContactView : UIView<UITextFieldDelegate>
+
+@property (nonatomic, strong) ContactModel *contact;
 
 @property (nonatomic, strong) UIView *deskView;
 
@@ -21,5 +24,7 @@
 @property (nonatomic, strong) UILabel *remarkLabel;
 
 @property (nonatomic, strong) UITextField *remarkField;
+
+- (void)hiddenContactView;
 
 @end
