@@ -8,16 +8,15 @@
 
 #import "FXSettingController.h"
 #import "FXSettingTableViewCell.h"
-#import "FXTableViewTuichuCell.h"
-#import "FXTableViewSheZhiCell.h"
 #import "FXTuiSongViewController.h"
 #import "FXXiuGaiMiMaViewController.h"
 #import "FXPingBiGuanLiViewController.h"
 #import "FXSystemInfoViewController.h"
 #import "FXMyInfoViewController.h"
+#import "FXTableViewSheZhiCell.h"
 
 
-@interface FXSettingController ()<FXTableViewTuichuCellDelegate>
+@interface FXSettingController ()
 
 @end
 
@@ -59,8 +58,10 @@
     if (section == 0) {
         cellCount = 1;
     }else if(section ==1){
-        cellCount = 6;
+        cellCount = 5;
     }else if(section == 2){
+        cellCount = 1;
+    }else if(section == 3){
         cellCount = 1;
     }
     return cellCount;
@@ -88,70 +89,45 @@
         return cell;
     }
     
-    if (2 == indexPath.section) {
-        static NSString *ID = @"idB";
-        static BOOL nibsRegister = NO;
-        if (!nibsRegister) {
-            UINib *nib = [UINib nibWithNibName:@"FXTableViewTuichuCell" bundle:nil];
-            [tableView registerNib:nib forCellReuseIdentifier:ID];
-        }
-        FXTableViewTuichuCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-        if (nil == cell) {
-            cell = [[FXTableViewTuichuCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-        }
-        [cell addCellbutton];
+    if (3 == indexPath.section) {
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell.textLabel.text = @"退出登录";
+        cell.imageView.image = [UIImage imageNamed:@"push_icon"];
         [self hiddenExtraCellLine];
-        cell.delegate = self;
         return cell;
     }
     
-
-    
-
     if (1 == indexPath.section) {
-        static NSString *ID = @"idC";
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+   if (indexPath.row == 0) {
+            cell.imageView.image = [UIImage imageNamed:@"refresh.png"];
+            cell.textLabel.text = @"新版本检测";
+        }else if (indexPath.row == 1){
+            cell.imageView.image = [UIImage imageNamed:@"rubbish_2.png"];
+            cell.textLabel.text = @"清除缓存";
+        }else if (indexPath.row == 2){
+            cell.imageView.image = [UIImage imageNamed:@"tri_arrow.png"];
+            cell.textLabel.text = @"消息推送";
+        }else if (indexPath.row == 3){
+            cell.imageView.image = [UIImage imageNamed:@"key_icon.png"];
+            cell.textLabel.text = @"修改密码";
+        }else if (indexPath.row == 4){
+            cell.imageView.image = [UIImage imageNamed:@"close_icon.png"];
+            cell.textLabel.text = @"屏蔽管理";
+        }
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        return cell;
+    }
+    if (2 == indexPath.section) {
         static BOOL nibRegister = NO;
         if (!nibRegister) {
             UINib *nib = [UINib nibWithNibName:@"FXTableViewSheZhiCell" bundle:nil];
-            [tableView registerNib:nib forCellReuseIdentifier:ID];
+            [tableView registerNib:nib forCellReuseIdentifier:nil];
         }
-        FXTableViewSheZhiCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];
-        if (cell == nil) {
-            cell = [[FXTableViewSheZhiCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
-        }
-        if (indexPath.row == 0) {
-            cell.setImage.image = [UIImage imageNamed:@"refresh.png"];
-            cell.setName.text = @"新版本检测";
-        }else if (indexPath.row == 1){
-            cell.setImage.image = [UIImage imageNamed:@"rubbish_2.png"];
-            cell.setName.text = @"清除缓存";
-        }else if (indexPath.row == 2){
-            cell.setImage.image = [UIImage imageNamed:@"tri_arrow.png"];
-            cell.setName.text = @"消息推送";
-        }else if (indexPath.row == 3){
-            cell.setImage.image = [UIImage imageNamed:@"key_icon.png"];
-            cell.setName.text = @"修改密码";
-        }else if (indexPath.row == 4){
-            cell.setImage.image = [UIImage imageNamed:@"close_icon.png"];
-            cell.setName.text = @"屏蔽管理";
-        }else{
-            [cell setlabel];
-            cell.count.hidden = NO;
-
-            cell.backimage.hidden = NO;
-//            cell.setImage.image = [UIImage imageNamed:@"6"];
-
-            cell.setImage.image = [UIImage imageNamed:@"book_icon.png"];
-
-            cell.setName.text = @"系统公告管理";
-        }
-        if (indexPath.row == 5) {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-        }else{
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-        return cell;
-        
+        FXTableViewSheZhiCell *cell = [[FXTableViewSheZhiCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        [cell setlabel];
+        cell.setName.text = @"系统公告管理";
+        cell.setImage.image = [UIImage imageNamed:@"book_icon"];
     }
     return nil;
     
