@@ -124,6 +124,9 @@ static NSString *chatCellIdentifier = @"CCI";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _chatListTable) {
+        //清空信息条数
+        FXChatCell *cell = (FXChatCell *)[tableView cellForRowAtIndexPath:indexPath];
+        [cell setNumber:@""];
         FXChatViewController *chat = [[FXChatViewController alloc] init];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         chat.contact = [rowData objectForKey:@"Contact"];

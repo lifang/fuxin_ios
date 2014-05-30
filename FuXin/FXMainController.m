@@ -9,6 +9,7 @@
 #import "FXMainController.h"
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
+#import "Models.pb.h"
 
 @interface FXMainController ()
 
@@ -233,7 +234,7 @@
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactPublishClassType = contact.publishClassType;
-        model.contactSignature = contact.signature;
+        model.contactSignature = @"";
         model.contactAvatarURL = contact.tileUrl;
         [arrayForDB addObject:model];
     }

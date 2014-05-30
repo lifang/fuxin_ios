@@ -220,7 +220,7 @@
 }
 
 + (void)validateCodeWithPhoneNumber:(NSString *)phoneNumber
-                               Type:(NSString *)type
+                               Type:(ValidateCodeRequest_ValidateType)type
                            Finished:(Result)result {
     ValidateCodeRequest *PBObject = [[[[ValidateCodeRequest builder]
                                       setPhoneNumber:phoneNumber]

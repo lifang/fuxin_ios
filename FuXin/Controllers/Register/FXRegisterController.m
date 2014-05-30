@@ -495,7 +495,7 @@
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
         NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
         [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:@"Register" Finished:^(BOOL success, NSData *response) {
+        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
             if (success) {
                 //请求成功
                 ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
@@ -563,12 +563,15 @@
 //完成
 - (void)doneButtonClicked:(UIButton *)sender{
     [(UIButton *)sender setUserInteractionEnabled:NO];
-    [FXRequestDataFormat registerWithPhoneNumber:self.phoneNumberTextField.text
+    NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
+    [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
+    [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
                                             Name:self.userNameTextField.text
                                         Password:self.passwordTextField.text
                                  PasswordConfirm:self.confirmPasswordTextField.text
                                     ValidateCode:self.identifyingCodeTextField.text
                                         Finished:^(BOOL success, NSData *response) {
+                                            NSLog(@"res = %@",response);
         [(UIButton *)sender setUserInteractionEnabled:YES];
         if (success) {
             //请求成功

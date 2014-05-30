@@ -22,6 +22,12 @@
 @class ChangeProfileRequest_Builder;
 @class ChangeProfileResponse;
 @class ChangeProfileResponse_Builder;
+@class ClientInfo;
+@class ClientInfoRequest;
+@class ClientInfoRequest_Builder;
+@class ClientInfoResponse;
+@class ClientInfoResponse_Builder;
+@class ClientInfo_Builder;
 @class Contact;
 @class ContactDetailRequest;
 @class ContactDetailRequest_Builder;
@@ -87,7 +93,7 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 
 typedef enum {
   RegisterResponse_ErrorCodeTypeInvalidUserName = 1,
-  RegisterResponse_ErrorCodeTypeExistingUser = 2,
+  RegisterResponse_ErrorCodeTypeExistingUserYes = 2,
   RegisterResponse_ErrorCodeTypeInvalidPassword = 3,
   RegisterResponse_ErrorCodeTypeInvalidConfirmPassword = 4,
   RegisterResponse_ErrorCodeTypeInvalidMatchPassword = 5,
@@ -98,16 +104,39 @@ typedef enum {
 BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value);
 
 typedef enum {
-  ChangePasswordResponse_ErrorCodeTypeExistingUserNo = 1,
-  ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword = 2,
-  ChangePasswordResponse_ErrorCodeTypeInvalidPassword = 3,
-  ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword = 4,
-  ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword = 5,
-  ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode = 6,
-  ChangePasswordResponse_ErrorCodeTypeInvalidDatabase = 7,
+  ChangePasswordResponse_ErrorCodeTypeInvalidUserId = 1,
+  ChangePasswordResponse_ErrorCodeTypeInvalidToken = 2,
+  ChangePasswordResponse_ErrorCodeTypeAuthError = 3,
+  ChangePasswordResponse_ErrorCodeTypeExistingUserNo = 4,
+  ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword = 5,
+  ChangePasswordResponse_ErrorCodeTypeInvalidPassword = 6,
+  ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword = 7,
+  ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword = 8,
+  ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode = 9,
+  ChangePasswordResponse_ErrorCodeTypeInvalidDatabase = 10,
 } ChangePasswordResponse_ErrorCodeType;
 
 BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value);
+
+typedef enum {
+  ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber = 1,
+  ResetPasswordResponse_ErrorCodeTypeInvalidPassword = 2,
+  ResetPasswordResponse_ErrorCodeTypeInvalidPasswordConfirm = 3,
+  ResetPasswordResponse_ErrorCodeTypeInvalidMatchPassword = 4,
+  ResetPasswordResponse_ErrorCodeTypeInvalidValidateCode = 5,
+  ResetPasswordResponse_ErrorCodeTypeExistingUserNo = 6,
+  ResetPasswordResponse_ErrorCodeTypeInvalidDatabase = 7,
+} ResetPasswordResponse_ErrorCodeType;
+
+BOOL ResetPasswordResponse_ErrorCodeTypeIsValidValue(ResetPasswordResponse_ErrorCodeType value);
+
+typedef enum {
+  ValidateCodeRequest_ValidateTypeRegister = 1,
+  ValidateCodeRequest_ValidateTypeChangePassword = 2,
+  ValidateCodeRequest_ValidateTypeResetPassword = 3,
+} ValidateCodeRequest_ValidateType;
+
+BOOL ValidateCodeRequest_ValidateTypeIsValidValue(ValidateCodeRequest_ValidateType value);
 
 typedef enum {
   ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber = 1,
@@ -119,6 +148,21 @@ typedef enum {
 } ValidateCodeResponse_ErrorCodeType;
 
 BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value);
+
+typedef enum {
+  ClientInfo_OSTypeIos = 1,
+  ClientInfo_OSTypeAndroid = 2,
+} ClientInfo_OSType;
+
+BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value);
+
+typedef enum {
+  ClientInfoResponse_ErrorCodeTypeInvalidUserId = 1,
+  ClientInfoResponse_ErrorCodeTypeInvalidToken = 2,
+  ClientInfoResponse_ErrorCodeTypeAuthError = 3,
+} ClientInfoResponse_ErrorCodeType;
+
+BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeType value);
 
 
 @interface ModelsRoot : NSObject {
@@ -396,7 +440,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
   BOOL hasPublishClassType_:1;
-  BOOL hasSignature_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
   int32_t contactId;
@@ -409,7 +452,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   NSString* tileUrl;
   NSString* lisence;
   NSString* publishClassType;
-  NSString* signature;
 }
 - (BOOL) hasContactId;
 - (BOOL) hasName;
@@ -423,7 +465,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
 - (BOOL) hasPublishClassType;
-- (BOOL) hasSignature;
 @property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
@@ -436,7 +477,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
 @property (readonly, retain) NSString* publishClassType;
-@property (readonly, retain) NSString* signature;
 
 + (Contact*) defaultInstance;
 - (Contact*) defaultInstance;
@@ -531,11 +571,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (NSString*) publishClassType;
 - (Contact_Builder*) setPublishClassType:(NSString*) value;
 - (Contact_Builder*) clearPublishClassType;
-
-- (BOOL) hasSignature;
-- (NSString*) signature;
-- (Contact_Builder*) setSignature:(NSString*) value;
-- (Contact_Builder*) clearSignature;
 @end
 
 @interface ContactRequest : PBGeneratedMessage {
@@ -1071,38 +1106,46 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   BOOL hasGender_:1;
   BOOL hasName_:1;
   BOOL hasNickName_:1;
+  BOOL hasMobilePhoneNum_:1;
+  BOOL hasEmail_:1;
+  BOOL hasBirthday_:1;
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
   BOOL hasPublishClassType_:1;
-  BOOL hasSignature_:1;
   BOOL isProvider_:1;
   int32_t userId;
   int32_t gender;
   NSString* name;
   NSString* nickName;
+  NSString* mobilePhoneNum;
+  NSString* email;
+  NSString* birthday;
   NSString* tileUrl;
   NSString* lisence;
   NSString* publishClassType;
-  NSString* signature;
 }
 - (BOOL) hasUserId;
 - (BOOL) hasName;
 - (BOOL) hasNickName;
 - (BOOL) hasGender;
+- (BOOL) hasMobilePhoneNum;
+- (BOOL) hasEmail;
+- (BOOL) hasBirthday;
 - (BOOL) hasTileUrl;
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
 - (BOOL) hasPublishClassType;
-- (BOOL) hasSignature;
 @property (readonly) int32_t userId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* nickName;
 @property (readonly) int32_t gender;
+@property (readonly, retain) NSString* mobilePhoneNum;
+@property (readonly, retain) NSString* email;
+@property (readonly, retain) NSString* birthday;
 @property (readonly, retain) NSString* tileUrl;
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
 @property (readonly, retain) NSString* publishClassType;
-@property (readonly, retain) NSString* signature;
 
 + (Profile*) defaultInstance;
 - (Profile*) defaultInstance;
@@ -1158,6 +1201,21 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (Profile_Builder*) setGender:(int32_t) value;
 - (Profile_Builder*) clearGender;
 
+- (BOOL) hasMobilePhoneNum;
+- (NSString*) mobilePhoneNum;
+- (Profile_Builder*) setMobilePhoneNum:(NSString*) value;
+- (Profile_Builder*) clearMobilePhoneNum;
+
+- (BOOL) hasEmail;
+- (NSString*) email;
+- (Profile_Builder*) setEmail:(NSString*) value;
+- (Profile_Builder*) clearEmail;
+
+- (BOOL) hasBirthday;
+- (NSString*) birthday;
+- (Profile_Builder*) setBirthday:(NSString*) value;
+- (Profile_Builder*) clearBirthday;
+
 - (BOOL) hasTileUrl;
 - (NSString*) tileUrl;
 - (Profile_Builder*) setTileUrl:(NSString*) value;
@@ -1177,11 +1235,6 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (NSString*) publishClassType;
 - (Profile_Builder*) setPublishClassType:(NSString*) value;
 - (Profile_Builder*) clearPublishClassType;
-
-- (BOOL) hasSignature;
-- (NSString*) signature;
-- (Profile_Builder*) setSignature:(NSString*) value;
-- (Profile_Builder*) clearSignature;
 @end
 
 @interface ProfileRequest : PBGeneratedMessage {
@@ -2120,24 +2173,20 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 
 @interface ResetPasswordRequest : PBGeneratedMessage {
 @private
-  BOOL hasUserId_:1;
-  BOOL hasToken_:1;
+  BOOL hasPhoneNumber_:1;
   BOOL hasValidateCode_:1;
   BOOL hasPassword_:1;
   BOOL hasPasswordConfirm_:1;
-  int32_t userId;
-  NSString* token;
+  NSString* phoneNumber;
   NSString* validateCode;
   NSString* password;
   NSString* passwordConfirm;
 }
-- (BOOL) hasToken;
-- (BOOL) hasUserId;
+- (BOOL) hasPhoneNumber;
 - (BOOL) hasValidateCode;
 - (BOOL) hasPassword;
 - (BOOL) hasPasswordConfirm;
-@property (readonly, retain) NSString* token;
-@property (readonly) int32_t userId;
+@property (readonly, retain) NSString* phoneNumber;
 @property (readonly, retain) NSString* validateCode;
 @property (readonly, retain) NSString* password;
 @property (readonly, retain) NSString* passwordConfirm;
@@ -2176,15 +2225,10 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
 - (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
 
-- (BOOL) hasToken;
-- (NSString*) token;
-- (ResetPasswordRequest_Builder*) setToken:(NSString*) value;
-- (ResetPasswordRequest_Builder*) clearToken;
-
-- (BOOL) hasUserId;
-- (int32_t) userId;
-- (ResetPasswordRequest_Builder*) setUserId:(int32_t) value;
-- (ResetPasswordRequest_Builder*) clearUserId;
+- (BOOL) hasPhoneNumber;
+- (NSString*) phoneNumber;
+- (ResetPasswordRequest_Builder*) setPhoneNumber:(NSString*) value;
+- (ResetPasswordRequest_Builder*) clearPhoneNumber;
 
 - (BOOL) hasValidateCode;
 - (NSString*) validateCode;
@@ -2207,12 +2251,12 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   BOOL hasIsSucceed_:1;
   BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
-  int32_t errorCode;
+  ResetPasswordResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
-@property (readonly) int32_t errorCode;
+@property (readonly) ResetPasswordResponse_ErrorCodeType errorCode;
 
 + (ResetPasswordResponse*) defaultInstance;
 - (ResetPasswordResponse*) defaultInstance;
@@ -2254,8 +2298,8 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (ResetPasswordResponse_Builder*) clearIsSucceed;
 
 - (BOOL) hasErrorCode;
-- (int32_t) errorCode;
-- (ResetPasswordResponse_Builder*) setErrorCode:(int32_t) value;
+- (ResetPasswordResponse_ErrorCodeType) errorCode;
+- (ResetPasswordResponse_Builder*) setErrorCode:(ResetPasswordResponse_ErrorCodeType) value;
 - (ResetPasswordResponse_Builder*) clearErrorCode;
 @end
 
@@ -2264,12 +2308,12 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   BOOL hasPhoneNumber_:1;
   BOOL hasType_:1;
   NSString* phoneNumber;
-  NSString* type;
+  ValidateCodeRequest_ValidateType type;
 }
 - (BOOL) hasPhoneNumber;
 - (BOOL) hasType;
 @property (readonly, retain) NSString* phoneNumber;
-@property (readonly, retain) NSString* type;
+@property (readonly) ValidateCodeRequest_ValidateType type;
 
 + (ValidateCodeRequest*) defaultInstance;
 - (ValidateCodeRequest*) defaultInstance;
@@ -2311,8 +2355,8 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (ValidateCodeRequest_Builder*) clearPhoneNumber;
 
 - (BOOL) hasType;
-- (NSString*) type;
-- (ValidateCodeRequest_Builder*) setType:(NSString*) value;
+- (ValidateCodeRequest_ValidateType) type;
+- (ValidateCodeRequest_Builder*) setType:(ValidateCodeRequest_ValidateType) value;
 - (ValidateCodeRequest_Builder*) clearType;
 @end
 
@@ -2371,5 +2415,205 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (ValidateCodeResponse_ErrorCodeType) errorCode;
 - (ValidateCodeResponse_Builder*) setErrorCode:(ValidateCodeResponse_ErrorCodeType) value;
 - (ValidateCodeResponse_Builder*) clearErrorCode;
+@end
+
+@interface ClientInfo : PBGeneratedMessage {
+@private
+  BOOL hasIsPushEnable_:1;
+  BOOL hasUserId_:1;
+  BOOL hasDeviceId_:1;
+  BOOL hasOsType_:1;
+  BOOL isPushEnable_:1;
+  int32_t userId;
+  NSString* deviceId;
+  ClientInfo_OSType osType;
+}
+- (BOOL) hasDeviceId;
+- (BOOL) hasOsType;
+- (BOOL) hasUserId;
+- (BOOL) hasIsPushEnable;
+@property (readonly, retain) NSString* deviceId;
+@property (readonly) ClientInfo_OSType osType;
+@property (readonly) int32_t userId;
+- (BOOL) isPushEnable;
+
++ (ClientInfo*) defaultInstance;
+- (ClientInfo*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ClientInfo_Builder*) builder;
++ (ClientInfo_Builder*) builder;
++ (ClientInfo_Builder*) builderWithPrototype:(ClientInfo*) prototype;
+
++ (ClientInfo*) parseFromData:(NSData*) data;
++ (ClientInfo*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfo*) parseFromInputStream:(NSInputStream*) input;
++ (ClientInfo*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ClientInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ClientInfo_Builder : PBGeneratedMessage_Builder {
+@private
+  ClientInfo* result;
+}
+
+- (ClientInfo*) defaultInstance;
+
+- (ClientInfo_Builder*) clear;
+- (ClientInfo_Builder*) clone;
+
+- (ClientInfo*) build;
+- (ClientInfo*) buildPartial;
+
+- (ClientInfo_Builder*) mergeFrom:(ClientInfo*) other;
+- (ClientInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ClientInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasDeviceId;
+- (NSString*) deviceId;
+- (ClientInfo_Builder*) setDeviceId:(NSString*) value;
+- (ClientInfo_Builder*) clearDeviceId;
+
+- (BOOL) hasOsType;
+- (ClientInfo_OSType) osType;
+- (ClientInfo_Builder*) setOsType:(ClientInfo_OSType) value;
+- (ClientInfo_Builder*) clearOsType;
+
+- (BOOL) hasUserId;
+- (int32_t) userId;
+- (ClientInfo_Builder*) setUserId:(int32_t) value;
+- (ClientInfo_Builder*) clearUserId;
+
+- (BOOL) hasIsPushEnable;
+- (BOOL) isPushEnable;
+- (ClientInfo_Builder*) setIsPushEnable:(BOOL) value;
+- (ClientInfo_Builder*) clearIsPushEnable;
+@end
+
+@interface ClientInfoRequest : PBGeneratedMessage {
+@private
+  BOOL hasUserId_:1;
+  BOOL hasToken_:1;
+  BOOL hasClientInfo_:1;
+  int32_t userId;
+  NSString* token;
+  ClientInfo* clientInfo;
+}
+- (BOOL) hasUserId;
+- (BOOL) hasToken;
+- (BOOL) hasClientInfo;
+@property (readonly) int32_t userId;
+@property (readonly, retain) NSString* token;
+@property (readonly, retain) ClientInfo* clientInfo;
+
++ (ClientInfoRequest*) defaultInstance;
+- (ClientInfoRequest*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ClientInfoRequest_Builder*) builder;
++ (ClientInfoRequest_Builder*) builder;
++ (ClientInfoRequest_Builder*) builderWithPrototype:(ClientInfoRequest*) prototype;
+
++ (ClientInfoRequest*) parseFromData:(NSData*) data;
++ (ClientInfoRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfoRequest*) parseFromInputStream:(NSInputStream*) input;
++ (ClientInfoRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ClientInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ClientInfoRequest_Builder : PBGeneratedMessage_Builder {
+@private
+  ClientInfoRequest* result;
+}
+
+- (ClientInfoRequest*) defaultInstance;
+
+- (ClientInfoRequest_Builder*) clear;
+- (ClientInfoRequest_Builder*) clone;
+
+- (ClientInfoRequest*) build;
+- (ClientInfoRequest*) buildPartial;
+
+- (ClientInfoRequest_Builder*) mergeFrom:(ClientInfoRequest*) other;
+- (ClientInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ClientInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasUserId;
+- (int32_t) userId;
+- (ClientInfoRequest_Builder*) setUserId:(int32_t) value;
+- (ClientInfoRequest_Builder*) clearUserId;
+
+- (BOOL) hasToken;
+- (NSString*) token;
+- (ClientInfoRequest_Builder*) setToken:(NSString*) value;
+- (ClientInfoRequest_Builder*) clearToken;
+
+- (BOOL) hasClientInfo;
+- (ClientInfo*) clientInfo;
+- (ClientInfoRequest_Builder*) setClientInfo:(ClientInfo*) value;
+- (ClientInfoRequest_Builder*) setClientInfoBuilder:(ClientInfo_Builder*) builderForValue;
+- (ClientInfoRequest_Builder*) mergeClientInfo:(ClientInfo*) value;
+- (ClientInfoRequest_Builder*) clearClientInfo;
+@end
+
+@interface ClientInfoResponse : PBGeneratedMessage {
+@private
+  BOOL hasIsSucceed_:1;
+  BOOL hasErrorCode_:1;
+  BOOL isSucceed_:1;
+  ClientInfoResponse_ErrorCodeType errorCode;
+}
+- (BOOL) hasIsSucceed;
+- (BOOL) hasErrorCode;
+- (BOOL) isSucceed;
+@property (readonly) ClientInfoResponse_ErrorCodeType errorCode;
+
++ (ClientInfoResponse*) defaultInstance;
+- (ClientInfoResponse*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ClientInfoResponse_Builder*) builder;
++ (ClientInfoResponse_Builder*) builder;
++ (ClientInfoResponse_Builder*) builderWithPrototype:(ClientInfoResponse*) prototype;
+
++ (ClientInfoResponse*) parseFromData:(NSData*) data;
++ (ClientInfoResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfoResponse*) parseFromInputStream:(NSInputStream*) input;
++ (ClientInfoResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ClientInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ClientInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ClientInfoResponse_Builder : PBGeneratedMessage_Builder {
+@private
+  ClientInfoResponse* result;
+}
+
+- (ClientInfoResponse*) defaultInstance;
+
+- (ClientInfoResponse_Builder*) clear;
+- (ClientInfoResponse_Builder*) clone;
+
+- (ClientInfoResponse*) build;
+- (ClientInfoResponse*) buildPartial;
+
+- (ClientInfoResponse_Builder*) mergeFrom:(ClientInfoResponse*) other;
+- (ClientInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ClientInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasIsSucceed;
+- (BOOL) isSucceed;
+- (ClientInfoResponse_Builder*) setIsSucceed:(BOOL) value;
+- (ClientInfoResponse_Builder*) clearIsSucceed;
+
+- (BOOL) hasErrorCode;
+- (ClientInfoResponse_ErrorCodeType) errorCode;
+- (ClientInfoResponse_Builder*) setErrorCode:(ClientInfoResponse_ErrorCodeType) value;
+- (ClientInfoResponse_Builder*) clearErrorCode;
 @end
 

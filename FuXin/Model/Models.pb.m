@@ -1037,7 +1037,6 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
 @property (retain) NSString* publishClassType;
-@property (retain) NSString* signature;
 @end
 
 @implementation Contact
@@ -1136,13 +1135,6 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   hasPublishClassType_ = !!value;
 }
 @synthesize publishClassType;
-- (BOOL) hasSignature {
-  return !!hasSignature_;
-}
-- (void) setHasSignature:(BOOL) value {
-  hasSignature_ = !!value;
-}
-@synthesize signature;
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1151,7 +1143,6 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   self.tileUrl = nil;
   self.lisence = nil;
   self.publishClassType = nil;
-  self.signature = nil;
   [super dealloc];
 }
 - (id) init {
@@ -1168,7 +1159,6 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
     self.isProvider = NO;
     self.lisence = @"";
     self.publishClassType = @"";
-    self.signature = @"";
   }
   return self;
 }
@@ -1224,9 +1214,6 @@ static Contact* defaultContactInstance = nil;
   if (self.hasPublishClassType) {
     [output writeString:12 value:self.publishClassType];
   }
-  if (self.hasSignature) {
-    [output writeString:13 value:self.signature];
-  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -1271,9 +1258,6 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasPublishClassType) {
     size += computeStringSize(12, self.publishClassType);
-  }
-  if (self.hasSignature) {
-    size += computeStringSize(13, self.signature);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1397,9 +1381,6 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
   if (other.hasPublishClassType) {
     [self setPublishClassType:other.publishClassType];
   }
-  if (other.hasSignature) {
-    [self setSignature:other.signature];
-  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1467,10 +1448,6 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
       }
       case 98: {
         [self setPublishClassType:[input readString]];
-        break;
-      }
-      case 106: {
-        [self setSignature:[input readString]];
         break;
       }
     }
@@ -1666,22 +1643,6 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
 - (Contact_Builder*) clearPublishClassType {
   result.hasPublishClassType = NO;
   result.publishClassType = @"";
-  return self;
-}
-- (BOOL) hasSignature {
-  return result.hasSignature;
-}
-- (NSString*) signature {
-  return result.signature;
-}
-- (Contact_Builder*) setSignature:(NSString*) value {
-  result.hasSignature = YES;
-  result.signature = value;
-  return self;
-}
-- (Contact_Builder*) clearSignature {
-  result.hasSignature = NO;
-  result.signature = @"";
   return self;
 }
 @end
@@ -3792,11 +3753,13 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 @property (retain) NSString* name;
 @property (retain) NSString* nickName;
 @property int32_t gender;
+@property (retain) NSString* mobilePhoneNum;
+@property (retain) NSString* email;
+@property (retain) NSString* birthday;
 @property (retain) NSString* tileUrl;
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
 @property (retain) NSString* publishClassType;
-@property (retain) NSString* signature;
 @end
 
 @implementation Profile
@@ -3829,6 +3792,27 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   hasGender_ = !!value;
 }
 @synthesize gender;
+- (BOOL) hasMobilePhoneNum {
+  return !!hasMobilePhoneNum_;
+}
+- (void) setHasMobilePhoneNum:(BOOL) value {
+  hasMobilePhoneNum_ = !!value;
+}
+@synthesize mobilePhoneNum;
+- (BOOL) hasEmail {
+  return !!hasEmail_;
+}
+- (void) setHasEmail:(BOOL) value {
+  hasEmail_ = !!value;
+}
+@synthesize email;
+- (BOOL) hasBirthday {
+  return !!hasBirthday_;
+}
+- (void) setHasBirthday:(BOOL) value {
+  hasBirthday_ = !!value;
+}
+@synthesize birthday;
 - (BOOL) hasTileUrl {
   return !!hasTileUrl_;
 }
@@ -3862,20 +3846,15 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   hasPublishClassType_ = !!value;
 }
 @synthesize publishClassType;
-- (BOOL) hasSignature {
-  return !!hasSignature_;
-}
-- (void) setHasSignature:(BOOL) value {
-  hasSignature_ = !!value;
-}
-@synthesize signature;
 - (void) dealloc {
   self.name = nil;
   self.nickName = nil;
+  self.mobilePhoneNum = nil;
+  self.email = nil;
+  self.birthday = nil;
   self.tileUrl = nil;
   self.lisence = nil;
   self.publishClassType = nil;
-  self.signature = nil;
   [super dealloc];
 }
 - (id) init {
@@ -3884,11 +3863,13 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
     self.name = @"";
     self.nickName = @"";
     self.gender = 0;
+    self.mobilePhoneNum = @"";
+    self.email = @"";
+    self.birthday = @"";
     self.tileUrl = @"";
     self.isProvider = NO;
     self.lisence = @"";
     self.publishClassType = @"";
-    self.signature = @"";
   }
   return self;
 }
@@ -3920,20 +3901,26 @@ static Profile* defaultProfileInstance = nil;
   if (self.hasGender) {
     [output writeInt32:4 value:self.gender];
   }
+  if (self.hasMobilePhoneNum) {
+    [output writeString:5 value:self.mobilePhoneNum];
+  }
+  if (self.hasEmail) {
+    [output writeString:6 value:self.email];
+  }
+  if (self.hasBirthday) {
+    [output writeString:7 value:self.birthday];
+  }
   if (self.hasTileUrl) {
-    [output writeString:5 value:self.tileUrl];
+    [output writeString:8 value:self.tileUrl];
   }
   if (self.hasIsProvider) {
-    [output writeBool:6 value:self.isProvider];
+    [output writeBool:9 value:self.isProvider];
   }
   if (self.hasLisence) {
-    [output writeString:7 value:self.lisence];
+    [output writeString:10 value:self.lisence];
   }
   if (self.hasPublishClassType) {
-    [output writeString:8 value:self.publishClassType];
-  }
-  if (self.hasSignature) {
-    [output writeString:9 value:self.signature];
+    [output writeString:11 value:self.publishClassType];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -3956,20 +3943,26 @@ static Profile* defaultProfileInstance = nil;
   if (self.hasGender) {
     size += computeInt32Size(4, self.gender);
   }
+  if (self.hasMobilePhoneNum) {
+    size += computeStringSize(5, self.mobilePhoneNum);
+  }
+  if (self.hasEmail) {
+    size += computeStringSize(6, self.email);
+  }
+  if (self.hasBirthday) {
+    size += computeStringSize(7, self.birthday);
+  }
   if (self.hasTileUrl) {
-    size += computeStringSize(5, self.tileUrl);
+    size += computeStringSize(8, self.tileUrl);
   }
   if (self.hasIsProvider) {
-    size += computeBoolSize(6, self.isProvider);
+    size += computeBoolSize(9, self.isProvider);
   }
   if (self.hasLisence) {
-    size += computeStringSize(7, self.lisence);
+    size += computeStringSize(10, self.lisence);
   }
   if (self.hasPublishClassType) {
-    size += computeStringSize(8, self.publishClassType);
-  }
-  if (self.hasSignature) {
-    size += computeStringSize(9, self.signature);
+    size += computeStringSize(11, self.publishClassType);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4058,6 +4051,15 @@ static Profile* defaultProfileInstance = nil;
   if (other.hasGender) {
     [self setGender:other.gender];
   }
+  if (other.hasMobilePhoneNum) {
+    [self setMobilePhoneNum:other.mobilePhoneNum];
+  }
+  if (other.hasEmail) {
+    [self setEmail:other.email];
+  }
+  if (other.hasBirthday) {
+    [self setBirthday:other.birthday];
+  }
   if (other.hasTileUrl) {
     [self setTileUrl:other.tileUrl];
   }
@@ -4069,9 +4071,6 @@ static Profile* defaultProfileInstance = nil;
   }
   if (other.hasPublishClassType) {
     [self setPublishClassType:other.publishClassType];
-  }
-  if (other.hasSignature) {
-    [self setSignature:other.signature];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -4111,23 +4110,31 @@ static Profile* defaultProfileInstance = nil;
         break;
       }
       case 42: {
-        [self setTileUrl:[input readString]];
+        [self setMobilePhoneNum:[input readString]];
         break;
       }
-      case 48: {
-        [self setIsProvider:[input readBool]];
+      case 50: {
+        [self setEmail:[input readString]];
         break;
       }
       case 58: {
-        [self setLisence:[input readString]];
+        [self setBirthday:[input readString]];
         break;
       }
       case 66: {
-        [self setPublishClassType:[input readString]];
+        [self setTileUrl:[input readString]];
         break;
       }
-      case 74: {
-        [self setSignature:[input readString]];
+      case 72: {
+        [self setIsProvider:[input readBool]];
+        break;
+      }
+      case 82: {
+        [self setLisence:[input readString]];
+        break;
+      }
+      case 90: {
+        [self setPublishClassType:[input readString]];
         break;
       }
     }
@@ -4197,6 +4204,54 @@ static Profile* defaultProfileInstance = nil;
   result.gender = 0;
   return self;
 }
+- (BOOL) hasMobilePhoneNum {
+  return result.hasMobilePhoneNum;
+}
+- (NSString*) mobilePhoneNum {
+  return result.mobilePhoneNum;
+}
+- (Profile_Builder*) setMobilePhoneNum:(NSString*) value {
+  result.hasMobilePhoneNum = YES;
+  result.mobilePhoneNum = value;
+  return self;
+}
+- (Profile_Builder*) clearMobilePhoneNum {
+  result.hasMobilePhoneNum = NO;
+  result.mobilePhoneNum = @"";
+  return self;
+}
+- (BOOL) hasEmail {
+  return result.hasEmail;
+}
+- (NSString*) email {
+  return result.email;
+}
+- (Profile_Builder*) setEmail:(NSString*) value {
+  result.hasEmail = YES;
+  result.email = value;
+  return self;
+}
+- (Profile_Builder*) clearEmail {
+  result.hasEmail = NO;
+  result.email = @"";
+  return self;
+}
+- (BOOL) hasBirthday {
+  return result.hasBirthday;
+}
+- (NSString*) birthday {
+  return result.birthday;
+}
+- (Profile_Builder*) setBirthday:(NSString*) value {
+  result.hasBirthday = YES;
+  result.birthday = value;
+  return self;
+}
+- (Profile_Builder*) clearBirthday {
+  result.hasBirthday = NO;
+  result.birthday = @"";
+  return self;
+}
 - (BOOL) hasTileUrl {
   return result.hasTileUrl;
 }
@@ -4259,22 +4314,6 @@ static Profile* defaultProfileInstance = nil;
 - (Profile_Builder*) clearPublishClassType {
   result.hasPublishClassType = NO;
   result.publishClassType = @"";
-  return self;
-}
-- (BOOL) hasSignature {
-  return result.hasSignature;
-}
-- (NSString*) signature {
-  return result.signature;
-}
-- (Profile_Builder*) setSignature:(NSString*) value {
-  result.hasSignature = YES;
-  result.signature = value;
-  return self;
-}
-- (Profile_Builder*) clearSignature {
-  result.hasSignature = NO;
-  result.signature = @"";
   return self;
 }
 @end
@@ -7261,7 +7300,7 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value) {
   switch (value) {
     case RegisterResponse_ErrorCodeTypeInvalidUserName:
-    case RegisterResponse_ErrorCodeTypeExistingUser:
+    case RegisterResponse_ErrorCodeTypeExistingUserYes:
     case RegisterResponse_ErrorCodeTypeInvalidPassword:
     case RegisterResponse_ErrorCodeTypeInvalidConfirmPassword:
     case RegisterResponse_ErrorCodeTypeInvalidMatchPassword:
@@ -7818,7 +7857,7 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = ChangePasswordResponse_ErrorCodeTypeExistingUserNo;
+    self.errorCode = ChangePasswordResponse_ErrorCodeTypeInvalidUserId;
   }
   return self;
 }
@@ -7894,6 +7933,9 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
 
 BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value) {
   switch (value) {
+    case ChangePasswordResponse_ErrorCodeTypeInvalidUserId:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidToken:
+    case ChangePasswordResponse_ErrorCodeTypeAuthError:
     case ChangePasswordResponse_ErrorCodeTypeExistingUserNo:
     case ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword:
     case ChangePasswordResponse_ErrorCodeTypeInvalidPassword:
@@ -8020,14 +8062,13 @@ BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_Err
 }
 - (ChangePasswordResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = ChangePasswordResponse_ErrorCodeTypeExistingUserNo;
+  result.errorCode = ChangePasswordResponse_ErrorCodeTypeInvalidUserId;
   return self;
 }
 @end
 
 @interface ResetPasswordRequest ()
-@property (retain) NSString* token;
-@property int32_t userId;
+@property (retain) NSString* phoneNumber;
 @property (retain) NSString* validateCode;
 @property (retain) NSString* password;
 @property (retain) NSString* passwordConfirm;
@@ -8035,20 +8076,13 @@ BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_Err
 
 @implementation ResetPasswordRequest
 
-- (BOOL) hasToken {
-  return !!hasToken_;
+- (BOOL) hasPhoneNumber {
+  return !!hasPhoneNumber_;
 }
-- (void) setHasToken:(BOOL) value {
-  hasToken_ = !!value;
+- (void) setHasPhoneNumber:(BOOL) value {
+  hasPhoneNumber_ = !!value;
 }
-@synthesize token;
-- (BOOL) hasUserId {
-  return !!hasUserId_;
-}
-- (void) setHasUserId:(BOOL) value {
-  hasUserId_ = !!value;
-}
-@synthesize userId;
+@synthesize phoneNumber;
 - (BOOL) hasValidateCode {
   return !!hasValidateCode_;
 }
@@ -8071,7 +8105,7 @@ BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_Err
 }
 @synthesize passwordConfirm;
 - (void) dealloc {
-  self.token = nil;
+  self.phoneNumber = nil;
   self.validateCode = nil;
   self.password = nil;
   self.passwordConfirm = nil;
@@ -8079,8 +8113,7 @@ BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_Err
 }
 - (id) init {
   if ((self = [super init])) {
-    self.token = @"";
-    self.userId = 0;
+    self.phoneNumber = @"";
     self.validateCode = @"";
     self.password = @"";
     self.passwordConfirm = @"";
@@ -8103,20 +8136,17 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
   return YES;
 }
 - (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
-  if (self.hasToken) {
-    [output writeString:1 value:self.token];
-  }
-  if (self.hasUserId) {
-    [output writeInt32:2 value:self.userId];
+  if (self.hasPhoneNumber) {
+    [output writeString:1 value:self.phoneNumber];
   }
   if (self.hasValidateCode) {
-    [output writeString:3 value:self.validateCode];
+    [output writeString:2 value:self.validateCode];
   }
   if (self.hasPassword) {
-    [output writeString:4 value:self.password];
+    [output writeString:3 value:self.password];
   }
   if (self.hasPasswordConfirm) {
-    [output writeString:5 value:self.passwordConfirm];
+    [output writeString:4 value:self.passwordConfirm];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -8127,20 +8157,17 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
   }
 
   size = 0;
-  if (self.hasToken) {
-    size += computeStringSize(1, self.token);
-  }
-  if (self.hasUserId) {
-    size += computeInt32Size(2, self.userId);
+  if (self.hasPhoneNumber) {
+    size += computeStringSize(1, self.phoneNumber);
   }
   if (self.hasValidateCode) {
-    size += computeStringSize(3, self.validateCode);
+    size += computeStringSize(2, self.validateCode);
   }
   if (self.hasPassword) {
-    size += computeStringSize(4, self.password);
+    size += computeStringSize(3, self.password);
   }
   if (self.hasPasswordConfirm) {
-    size += computeStringSize(5, self.passwordConfirm);
+    size += computeStringSize(4, self.passwordConfirm);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -8217,11 +8244,8 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
   if (other == [ResetPasswordRequest defaultInstance]) {
     return self;
   }
-  if (other.hasToken) {
-    [self setToken:other.token];
-  }
-  if (other.hasUserId) {
-    [self setUserId:other.userId];
+  if (other.hasPhoneNumber) {
+    [self setPhoneNumber:other.phoneNumber];
   }
   if (other.hasValidateCode) {
     [self setValidateCode:other.validateCode];
@@ -8254,58 +8278,38 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
         break;
       }
       case 10: {
-        [self setToken:[input readString]];
+        [self setPhoneNumber:[input readString]];
         break;
       }
-      case 16: {
-        [self setUserId:[input readInt32]];
-        break;
-      }
-      case 26: {
+      case 18: {
         [self setValidateCode:[input readString]];
         break;
       }
-      case 34: {
+      case 26: {
         [self setPassword:[input readString]];
         break;
       }
-      case 42: {
+      case 34: {
         [self setPasswordConfirm:[input readString]];
         break;
       }
     }
   }
 }
-- (BOOL) hasToken {
-  return result.hasToken;
+- (BOOL) hasPhoneNumber {
+  return result.hasPhoneNumber;
 }
-- (NSString*) token {
-  return result.token;
+- (NSString*) phoneNumber {
+  return result.phoneNumber;
 }
-- (ResetPasswordRequest_Builder*) setToken:(NSString*) value {
-  result.hasToken = YES;
-  result.token = value;
+- (ResetPasswordRequest_Builder*) setPhoneNumber:(NSString*) value {
+  result.hasPhoneNumber = YES;
+  result.phoneNumber = value;
   return self;
 }
-- (ResetPasswordRequest_Builder*) clearToken {
-  result.hasToken = NO;
-  result.token = @"";
-  return self;
-}
-- (BOOL) hasUserId {
-  return result.hasUserId;
-}
-- (int32_t) userId {
-  return result.userId;
-}
-- (ResetPasswordRequest_Builder*) setUserId:(int32_t) value {
-  result.hasUserId = YES;
-  result.userId = value;
-  return self;
-}
-- (ResetPasswordRequest_Builder*) clearUserId {
-  result.hasUserId = NO;
-  result.userId = 0;
+- (ResetPasswordRequest_Builder*) clearPhoneNumber {
+  result.hasPhoneNumber = NO;
+  result.phoneNumber = @"";
   return self;
 }
 - (BOOL) hasValidateCode {
@@ -8360,7 +8364,7 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
 
 @interface ResetPasswordResponse ()
 @property BOOL isSucceed;
-@property int32_t errorCode;
+@property ResetPasswordResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ResetPasswordResponse
@@ -8390,7 +8394,7 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = 0;
+    self.errorCode = ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber;
   }
   return self;
 }
@@ -8414,7 +8418,7 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
     [output writeBool:1 value:self.isSucceed];
   }
   if (self.hasErrorCode) {
-    [output writeInt32:2 value:self.errorCode];
+    [output writeEnum:2 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -8429,7 +8433,7 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
     size += computeBoolSize(1, self.isSucceed);
   }
   if (self.hasErrorCode) {
-    size += computeInt32Size(2, self.errorCode);
+    size += computeEnumSize(2, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -8464,6 +8468,20 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
 }
 @end
 
+BOOL ResetPasswordResponse_ErrorCodeTypeIsValidValue(ResetPasswordResponse_ErrorCodeType value) {
+  switch (value) {
+    case ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidPassword:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidPasswordConfirm:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidMatchPassword:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidValidateCode:
+    case ResetPasswordResponse_ErrorCodeTypeExistingUserNo:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidDatabase:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ResetPasswordResponse_Builder()
 @property (retain) ResetPasswordResponse* result;
 @end
@@ -8538,7 +8556,12 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
         break;
       }
       case 16: {
-        [self setErrorCode:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (ResetPasswordResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
         break;
       }
     }
@@ -8563,24 +8586,24 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
-- (int32_t) errorCode {
+- (ResetPasswordResponse_ErrorCodeType) errorCode {
   return result.errorCode;
 }
-- (ResetPasswordResponse_Builder*) setErrorCode:(int32_t) value {
+- (ResetPasswordResponse_Builder*) setErrorCode:(ResetPasswordResponse_ErrorCodeType) value {
   result.hasErrorCode = YES;
   result.errorCode = value;
   return self;
 }
 - (ResetPasswordResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = 0;
+  result.errorCode = ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber;
   return self;
 }
 @end
 
 @interface ValidateCodeRequest ()
 @property (retain) NSString* phoneNumber;
-@property (retain) NSString* type;
+@property ValidateCodeRequest_ValidateType type;
 @end
 
 @implementation ValidateCodeRequest
@@ -8601,13 +8624,12 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
 @synthesize type;
 - (void) dealloc {
   self.phoneNumber = nil;
-  self.type = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.phoneNumber = @"";
-    self.type = @"";
+    self.type = ValidateCodeRequest_ValidateTypeRegister;
   }
   return self;
 }
@@ -8631,7 +8653,7 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
     [output writeString:1 value:self.phoneNumber];
   }
   if (self.hasType) {
-    [output writeString:2 value:self.type];
+    [output writeEnum:2 value:self.type];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -8646,7 +8668,7 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
     size += computeStringSize(1, self.phoneNumber);
   }
   if (self.hasType) {
-    size += computeStringSize(2, self.type);
+    size += computeEnumSize(2, self.type);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -8681,6 +8703,16 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
 }
 @end
 
+BOOL ValidateCodeRequest_ValidateTypeIsValidValue(ValidateCodeRequest_ValidateType value) {
+  switch (value) {
+    case ValidateCodeRequest_ValidateTypeRegister:
+    case ValidateCodeRequest_ValidateTypeChangePassword:
+    case ValidateCodeRequest_ValidateTypeResetPassword:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ValidateCodeRequest_Builder()
 @property (retain) ValidateCodeRequest* result;
 @end
@@ -8754,8 +8786,13 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
         [self setPhoneNumber:[input readString]];
         break;
       }
-      case 18: {
-        [self setType:[input readString]];
+      case 16: {
+        int32_t value = [input readEnum];
+        if (ValidateCodeRequest_ValidateTypeIsValidValue(value)) {
+          [self setType:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
         break;
       }
     }
@@ -8780,17 +8817,17 @@ static ValidateCodeRequest* defaultValidateCodeRequestInstance = nil;
 - (BOOL) hasType {
   return result.hasType;
 }
-- (NSString*) type {
+- (ValidateCodeRequest_ValidateType) type {
   return result.type;
 }
-- (ValidateCodeRequest_Builder*) setType:(NSString*) value {
+- (ValidateCodeRequest_Builder*) setType:(ValidateCodeRequest_ValidateType) value {
   result.hasType = YES;
   result.type = value;
   return self;
 }
 - (ValidateCodeRequest_Builder*) clearType {
   result.hasType = NO;
-  result.type = @"";
+  result.type = ValidateCodeRequest_ValidateTypeRegister;
   return self;
 }
 @end
@@ -9029,6 +9066,826 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 - (ValidateCodeResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
   result.errorCode = ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber;
+  return self;
+}
+@end
+
+@interface ClientInfo ()
+@property (retain) NSString* deviceId;
+@property ClientInfo_OSType osType;
+@property int32_t userId;
+@property BOOL isPushEnable;
+@end
+
+@implementation ClientInfo
+
+- (BOOL) hasDeviceId {
+  return !!hasDeviceId_;
+}
+- (void) setHasDeviceId:(BOOL) value {
+  hasDeviceId_ = !!value;
+}
+@synthesize deviceId;
+- (BOOL) hasOsType {
+  return !!hasOsType_;
+}
+- (void) setHasOsType:(BOOL) value {
+  hasOsType_ = !!value;
+}
+@synthesize osType;
+- (BOOL) hasUserId {
+  return !!hasUserId_;
+}
+- (void) setHasUserId:(BOOL) value {
+  hasUserId_ = !!value;
+}
+@synthesize userId;
+- (BOOL) hasIsPushEnable {
+  return !!hasIsPushEnable_;
+}
+- (void) setHasIsPushEnable:(BOOL) value {
+  hasIsPushEnable_ = !!value;
+}
+- (BOOL) isPushEnable {
+  return !!isPushEnable_;
+}
+- (void) setIsPushEnable:(BOOL) value {
+  isPushEnable_ = !!value;
+}
+- (void) dealloc {
+  self.deviceId = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.deviceId = @"";
+    self.osType = ClientInfo_OSTypeIos;
+    self.userId = 0;
+    self.isPushEnable = NO;
+  }
+  return self;
+}
+static ClientInfo* defaultClientInfoInstance = nil;
++ (void) initialize {
+  if (self == [ClientInfo class]) {
+    defaultClientInfoInstance = [[ClientInfo alloc] init];
+  }
+}
++ (ClientInfo*) defaultInstance {
+  return defaultClientInfoInstance;
+}
+- (ClientInfo*) defaultInstance {
+  return defaultClientInfoInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasDeviceId) {
+    [output writeString:1 value:self.deviceId];
+  }
+  if (self.hasOsType) {
+    [output writeEnum:2 value:self.osType];
+  }
+  if (self.hasUserId) {
+    [output writeInt32:3 value:self.userId];
+  }
+  if (self.hasIsPushEnable) {
+    [output writeBool:4 value:self.isPushEnable];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasDeviceId) {
+    size += computeStringSize(1, self.deviceId);
+  }
+  if (self.hasOsType) {
+    size += computeEnumSize(2, self.osType);
+  }
+  if (self.hasUserId) {
+    size += computeInt32Size(3, self.userId);
+  }
+  if (self.hasIsPushEnable) {
+    size += computeBoolSize(4, self.isPushEnable);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (ClientInfo*) parseFromData:(NSData*) data {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromData:data] build];
+}
++ (ClientInfo*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfo*) parseFromInputStream:(NSInputStream*) input {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromInputStream:input] build];
+}
++ (ClientInfo*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromCodedInputStream:input] build];
+}
++ (ClientInfo*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfo*)[[[ClientInfo builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfo_Builder*) builder {
+  return [[[ClientInfo_Builder alloc] init] autorelease];
+}
++ (ClientInfo_Builder*) builderWithPrototype:(ClientInfo*) prototype {
+  return [[ClientInfo builder] mergeFrom:prototype];
+}
+- (ClientInfo_Builder*) builder {
+  return [ClientInfo builder];
+}
+@end
+
+BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
+  switch (value) {
+    case ClientInfo_OSTypeIos:
+    case ClientInfo_OSTypeAndroid:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface ClientInfo_Builder()
+@property (retain) ClientInfo* result;
+@end
+
+@implementation ClientInfo_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[ClientInfo alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (ClientInfo_Builder*) clear {
+  self.result = [[[ClientInfo alloc] init] autorelease];
+  return self;
+}
+- (ClientInfo_Builder*) clone {
+  return [ClientInfo builderWithPrototype:result];
+}
+- (ClientInfo*) defaultInstance {
+  return [ClientInfo defaultInstance];
+}
+- (ClientInfo*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (ClientInfo*) buildPartial {
+  ClientInfo* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (ClientInfo_Builder*) mergeFrom:(ClientInfo*) other {
+  if (other == [ClientInfo defaultInstance]) {
+    return self;
+  }
+  if (other.hasDeviceId) {
+    [self setDeviceId:other.deviceId];
+  }
+  if (other.hasOsType) {
+    [self setOsType:other.osType];
+  }
+  if (other.hasUserId) {
+    [self setUserId:other.userId];
+  }
+  if (other.hasIsPushEnable) {
+    [self setIsPushEnable:other.isPushEnable];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (ClientInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (ClientInfo_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 10: {
+        [self setDeviceId:[input readString]];
+        break;
+      }
+      case 16: {
+        int32_t value = [input readEnum];
+        if (ClientInfo_OSTypeIsValidValue(value)) {
+          [self setOsType:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
+        break;
+      }
+      case 24: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 32: {
+        [self setIsPushEnable:[input readBool]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasDeviceId {
+  return result.hasDeviceId;
+}
+- (NSString*) deviceId {
+  return result.deviceId;
+}
+- (ClientInfo_Builder*) setDeviceId:(NSString*) value {
+  result.hasDeviceId = YES;
+  result.deviceId = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearDeviceId {
+  result.hasDeviceId = NO;
+  result.deviceId = @"";
+  return self;
+}
+- (BOOL) hasOsType {
+  return result.hasOsType;
+}
+- (ClientInfo_OSType) osType {
+  return result.osType;
+}
+- (ClientInfo_Builder*) setOsType:(ClientInfo_OSType) value {
+  result.hasOsType = YES;
+  result.osType = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearOsType {
+  result.hasOsType = NO;
+  result.osType = ClientInfo_OSTypeIos;
+  return self;
+}
+- (BOOL) hasUserId {
+  return result.hasUserId;
+}
+- (int32_t) userId {
+  return result.userId;
+}
+- (ClientInfo_Builder*) setUserId:(int32_t) value {
+  result.hasUserId = YES;
+  result.userId = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearUserId {
+  result.hasUserId = NO;
+  result.userId = 0;
+  return self;
+}
+- (BOOL) hasIsPushEnable {
+  return result.hasIsPushEnable;
+}
+- (BOOL) isPushEnable {
+  return result.isPushEnable;
+}
+- (ClientInfo_Builder*) setIsPushEnable:(BOOL) value {
+  result.hasIsPushEnable = YES;
+  result.isPushEnable = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearIsPushEnable {
+  result.hasIsPushEnable = NO;
+  result.isPushEnable = NO;
+  return self;
+}
+@end
+
+@interface ClientInfoRequest ()
+@property int32_t userId;
+@property (retain) NSString* token;
+@property (retain) ClientInfo* clientInfo;
+@end
+
+@implementation ClientInfoRequest
+
+- (BOOL) hasUserId {
+  return !!hasUserId_;
+}
+- (void) setHasUserId:(BOOL) value {
+  hasUserId_ = !!value;
+}
+@synthesize userId;
+- (BOOL) hasToken {
+  return !!hasToken_;
+}
+- (void) setHasToken:(BOOL) value {
+  hasToken_ = !!value;
+}
+@synthesize token;
+- (BOOL) hasClientInfo {
+  return !!hasClientInfo_;
+}
+- (void) setHasClientInfo:(BOOL) value {
+  hasClientInfo_ = !!value;
+}
+@synthesize clientInfo;
+- (void) dealloc {
+  self.token = nil;
+  self.clientInfo = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.userId = 0;
+    self.token = @"";
+    self.clientInfo = [ClientInfo defaultInstance];
+  }
+  return self;
+}
+static ClientInfoRequest* defaultClientInfoRequestInstance = nil;
++ (void) initialize {
+  if (self == [ClientInfoRequest class]) {
+    defaultClientInfoRequestInstance = [[ClientInfoRequest alloc] init];
+  }
+}
++ (ClientInfoRequest*) defaultInstance {
+  return defaultClientInfoRequestInstance;
+}
+- (ClientInfoRequest*) defaultInstance {
+  return defaultClientInfoRequestInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasUserId) {
+    [output writeInt32:1 value:self.userId];
+  }
+  if (self.hasToken) {
+    [output writeString:2 value:self.token];
+  }
+  if (self.hasClientInfo) {
+    [output writeMessage:3 value:self.clientInfo];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasUserId) {
+    size += computeInt32Size(1, self.userId);
+  }
+  if (self.hasToken) {
+    size += computeStringSize(2, self.token);
+  }
+  if (self.hasClientInfo) {
+    size += computeMessageSize(3, self.clientInfo);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (ClientInfoRequest*) parseFromData:(NSData*) data {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromData:data] build];
+}
++ (ClientInfoRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoRequest*) parseFromInputStream:(NSInputStream*) input {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromInputStream:input] build];
+}
++ (ClientInfoRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromCodedInputStream:input] build];
+}
++ (ClientInfoRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoRequest*)[[[ClientInfoRequest builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoRequest_Builder*) builder {
+  return [[[ClientInfoRequest_Builder alloc] init] autorelease];
+}
++ (ClientInfoRequest_Builder*) builderWithPrototype:(ClientInfoRequest*) prototype {
+  return [[ClientInfoRequest builder] mergeFrom:prototype];
+}
+- (ClientInfoRequest_Builder*) builder {
+  return [ClientInfoRequest builder];
+}
+@end
+
+@interface ClientInfoRequest_Builder()
+@property (retain) ClientInfoRequest* result;
+@end
+
+@implementation ClientInfoRequest_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[ClientInfoRequest alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (ClientInfoRequest_Builder*) clear {
+  self.result = [[[ClientInfoRequest alloc] init] autorelease];
+  return self;
+}
+- (ClientInfoRequest_Builder*) clone {
+  return [ClientInfoRequest builderWithPrototype:result];
+}
+- (ClientInfoRequest*) defaultInstance {
+  return [ClientInfoRequest defaultInstance];
+}
+- (ClientInfoRequest*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (ClientInfoRequest*) buildPartial {
+  ClientInfoRequest* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (ClientInfoRequest_Builder*) mergeFrom:(ClientInfoRequest*) other {
+  if (other == [ClientInfoRequest defaultInstance]) {
+    return self;
+  }
+  if (other.hasUserId) {
+    [self setUserId:other.userId];
+  }
+  if (other.hasToken) {
+    [self setToken:other.token];
+  }
+  if (other.hasClientInfo) {
+    [self mergeClientInfo:other.clientInfo];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (ClientInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (ClientInfoRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 18: {
+        [self setToken:[input readString]];
+        break;
+      }
+      case 26: {
+        ClientInfo_Builder* subBuilder = [ClientInfo builder];
+        if (self.hasClientInfo) {
+          [subBuilder mergeFrom:self.clientInfo];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setClientInfo:[subBuilder buildPartial]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasUserId {
+  return result.hasUserId;
+}
+- (int32_t) userId {
+  return result.userId;
+}
+- (ClientInfoRequest_Builder*) setUserId:(int32_t) value {
+  result.hasUserId = YES;
+  result.userId = value;
+  return self;
+}
+- (ClientInfoRequest_Builder*) clearUserId {
+  result.hasUserId = NO;
+  result.userId = 0;
+  return self;
+}
+- (BOOL) hasToken {
+  return result.hasToken;
+}
+- (NSString*) token {
+  return result.token;
+}
+- (ClientInfoRequest_Builder*) setToken:(NSString*) value {
+  result.hasToken = YES;
+  result.token = value;
+  return self;
+}
+- (ClientInfoRequest_Builder*) clearToken {
+  result.hasToken = NO;
+  result.token = @"";
+  return self;
+}
+- (BOOL) hasClientInfo {
+  return result.hasClientInfo;
+}
+- (ClientInfo*) clientInfo {
+  return result.clientInfo;
+}
+- (ClientInfoRequest_Builder*) setClientInfo:(ClientInfo*) value {
+  result.hasClientInfo = YES;
+  result.clientInfo = value;
+  return self;
+}
+- (ClientInfoRequest_Builder*) setClientInfoBuilder:(ClientInfo_Builder*) builderForValue {
+  return [self setClientInfo:[builderForValue build]];
+}
+- (ClientInfoRequest_Builder*) mergeClientInfo:(ClientInfo*) value {
+  if (result.hasClientInfo &&
+      result.clientInfo != [ClientInfo defaultInstance]) {
+    result.clientInfo =
+      [[[ClientInfo builderWithPrototype:result.clientInfo] mergeFrom:value] buildPartial];
+  } else {
+    result.clientInfo = value;
+  }
+  result.hasClientInfo = YES;
+  return self;
+}
+- (ClientInfoRequest_Builder*) clearClientInfo {
+  result.hasClientInfo = NO;
+  result.clientInfo = [ClientInfo defaultInstance];
+  return self;
+}
+@end
+
+@interface ClientInfoResponse ()
+@property BOOL isSucceed;
+@property ClientInfoResponse_ErrorCodeType errorCode;
+@end
+
+@implementation ClientInfoResponse
+
+- (BOOL) hasIsSucceed {
+  return !!hasIsSucceed_;
+}
+- (void) setHasIsSucceed:(BOOL) value {
+  hasIsSucceed_ = !!value;
+}
+- (BOOL) isSucceed {
+  return !!isSucceed_;
+}
+- (void) setIsSucceed:(BOOL) value {
+  isSucceed_ = !!value;
+}
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.isSucceed = NO;
+    self.errorCode = ClientInfoResponse_ErrorCodeTypeInvalidUserId;
+  }
+  return self;
+}
+static ClientInfoResponse* defaultClientInfoResponseInstance = nil;
++ (void) initialize {
+  if (self == [ClientInfoResponse class]) {
+    defaultClientInfoResponseInstance = [[ClientInfoResponse alloc] init];
+  }
+}
++ (ClientInfoResponse*) defaultInstance {
+  return defaultClientInfoResponseInstance;
+}
+- (ClientInfoResponse*) defaultInstance {
+  return defaultClientInfoResponseInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasIsSucceed) {
+    [output writeBool:1 value:self.isSucceed];
+  }
+  if (self.hasErrorCode) {
+    [output writeEnum:2 value:self.errorCode];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasIsSucceed) {
+    size += computeBoolSize(1, self.isSucceed);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(2, self.errorCode);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (ClientInfoResponse*) parseFromData:(NSData*) data {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromData:data] build];
+}
++ (ClientInfoResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoResponse*) parseFromInputStream:(NSInputStream*) input {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromInputStream:input] build];
+}
++ (ClientInfoResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromCodedInputStream:input] build];
+}
++ (ClientInfoResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (ClientInfoResponse*)[[[ClientInfoResponse builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (ClientInfoResponse_Builder*) builder {
+  return [[[ClientInfoResponse_Builder alloc] init] autorelease];
+}
++ (ClientInfoResponse_Builder*) builderWithPrototype:(ClientInfoResponse*) prototype {
+  return [[ClientInfoResponse builder] mergeFrom:prototype];
+}
+- (ClientInfoResponse_Builder*) builder {
+  return [ClientInfoResponse builder];
+}
+@end
+
+BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeType value) {
+  switch (value) {
+    case ClientInfoResponse_ErrorCodeTypeInvalidUserId:
+    case ClientInfoResponse_ErrorCodeTypeInvalidToken:
+    case ClientInfoResponse_ErrorCodeTypeAuthError:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface ClientInfoResponse_Builder()
+@property (retain) ClientInfoResponse* result;
+@end
+
+@implementation ClientInfoResponse_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[ClientInfoResponse alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (ClientInfoResponse_Builder*) clear {
+  self.result = [[[ClientInfoResponse alloc] init] autorelease];
+  return self;
+}
+- (ClientInfoResponse_Builder*) clone {
+  return [ClientInfoResponse builderWithPrototype:result];
+}
+- (ClientInfoResponse*) defaultInstance {
+  return [ClientInfoResponse defaultInstance];
+}
+- (ClientInfoResponse*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (ClientInfoResponse*) buildPartial {
+  ClientInfoResponse* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (ClientInfoResponse_Builder*) mergeFrom:(ClientInfoResponse*) other {
+  if (other == [ClientInfoResponse defaultInstance]) {
+    return self;
+  }
+  if (other.hasIsSucceed) {
+    [self setIsSucceed:other.isSucceed];
+  }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (ClientInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (ClientInfoResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setIsSucceed:[input readBool]];
+        break;
+      }
+      case 16: {
+        int32_t value = [input readEnum];
+        if (ClientInfoResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasIsSucceed {
+  return result.hasIsSucceed;
+}
+- (BOOL) isSucceed {
+  return result.isSucceed;
+}
+- (ClientInfoResponse_Builder*) setIsSucceed:(BOOL) value {
+  result.hasIsSucceed = YES;
+  result.isSucceed = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearIsSucceed {
+  result.hasIsSucceed = NO;
+  result.isSucceed = NO;
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ClientInfoResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ClientInfoResponse_Builder*) setErrorCode:(ClientInfoResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ClientInfoResponse_ErrorCodeTypeInvalidUserId;
   return self;
 }
 @end

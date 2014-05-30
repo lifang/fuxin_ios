@@ -15,6 +15,7 @@
 @synthesize nameLabel = _nameLabel;
 @synthesize timeLabel = _timeLabel;
 @synthesize detailLabel = _detailLabel;
+@synthesize backView = _backView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -64,9 +65,9 @@
     [self.contentView addSubview:_detailLabel];
     
     
-    UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 6, 18, 18)];
-    backView.image = [UIImage imageNamed:@"messnum.png"];
-    [self.contentView addSubview:backView];
+    _backView = [[UIImageView alloc] initWithFrame:CGRectMake(30, 6, 18, 18)];
+    _backView.image = [UIImage imageNamed:@"messnum.png"];
+    [self.contentView addSubview:_backView];
     
     _numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 2, 14, 14)];
     _numberLabel.backgroundColor = [UIColor clearColor];
@@ -74,10 +75,11 @@
     _numberLabel.textColor = [UIColor whiteColor];
     _numberLabel.textAlignment = NSTextAlignmentCenter;
     _numberLabel.layer.masksToBounds = YES;
-    [backView addSubview:_numberLabel];
+    [_backView addSubview:_numberLabel];
 }
 
 - (void)setNumber:(NSString *)number {
+    _backView.hidden = NO;
     if (number.length >= 3) {
         _numberLabel.font = [UIFont systemFontOfSize:7];
         _numberLabel.text = @"99+";
@@ -85,6 +87,9 @@
     else {
         _numberLabel.font = [UIFont systemFontOfSize:10];
         _numberLabel.text = number;
+        if (number == nil || [number isEqualToString:@""]) {
+            _backView.hidden = YES;
+        }
     }
 }
 

@@ -153,7 +153,7 @@
  result:返回结果
  */
 + (void)validateCodeWithPhoneNumber:(NSString *)phoneNumber
-                               Type:(NSString *)type
+                               Type:(ValidateCodeRequest_ValidateType)type
                            Finished:(Result)result;
 
 @end

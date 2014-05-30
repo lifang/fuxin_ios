@@ -38,6 +38,7 @@
     NSMutableData *postData = [[self class] encodePostdataWithData:PBData];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    NSLog(@"url = %@",url);
     [request setRequestMethod:methodType];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setPostBody:postData];
@@ -47,7 +48,7 @@
 
     __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
-        NSLog(@"success");
+        NSLog(@"success = %@",[wRequest responseString]);
         NSString *UTF8String = [wRequest responseString];
         NSData *PBData = [[self class] decodeResponseDataWithString:UTF8String];
         result(YES, PBData);
