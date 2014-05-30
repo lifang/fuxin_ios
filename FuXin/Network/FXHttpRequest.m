@@ -48,7 +48,7 @@
 
     __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
-        NSLog(@"success = %@",[wRequest responseString]);
+//        NSLog(@"success = %@",[wRequest responseString]);
         NSString *UTF8String = [wRequest responseString];
         NSData *PBData = [[self class] decodeResponseDataWithString:UTF8String];
         result(YES, PBData);

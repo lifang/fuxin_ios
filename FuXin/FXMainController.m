@@ -227,6 +227,7 @@
         model.contactNickname = contact.name;
         model.contactRemark = contact.customName;
         model.contactIsBlocked = contact.isBlocked;
+        model.contactPinyin = contact.pinyin;
         model.contactLastContactTime = contact.lastContactTime;
         model.contactSex = contact.gender;
         model.contactRelationship = contact.source;

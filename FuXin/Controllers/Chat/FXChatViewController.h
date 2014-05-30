@@ -13,7 +13,7 @@
 #import "FXContactView.h"
 
 //时间间隔 用于显示时间
-#define kTimeInterval  300
+#define kTimeInterval  3
 
 @interface FXChatViewController : FXAdjustViewController<UITableViewDelegate,UITableViewDataSource>
 
@@ -31,6 +31,13 @@
 //上次显示timelabel的时间
 @property (nonatomic, strong) NSDate *lastShowDate;
 
+//联系人详细界面
+@property (nonatomic, strong) FXContactView *contactView;
+
+//添加联系人详细界面
 - (void)addDetailView;
+
+//修改联系人备注
+- (void)modifyContactRemark:(NSString *)remark;
 
 @end

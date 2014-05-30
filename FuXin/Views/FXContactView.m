@@ -7,9 +7,11 @@
 //
 
 #import "FXContactView.h"
+#import "FXChatViewController.h"
 
 @implementation FXContactView
 
+@synthesize contact = _contact;
 @synthesize deskView = _deskView;
 @synthesize photoView = _photoView;
 @synthesize nameLabel = _nameLabel;
@@ -32,12 +34,15 @@
     backView.backgroundColor = kColor(120, 120, 120, 0.4);
     [self addSubview:backView];
     
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenSelf:)];
+    [backView addGestureRecognizer:tap];
+    
     _deskView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, 240)];
     _deskView.backgroundColor = [UIColor whiteColor];
     _deskView.layer.cornerRadius = 6;
     [backView addSubview:_deskView];
     
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 34, 34)];
+    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 10, 34, 34)];
     _photoView.layer.cornerRadius = _photoView.bounds.size.height / 2;
     _photoView.layer.masksToBounds = YES;
     _photoView.image = [UIImage imageNamed:@"placeholder.png"];
@@ -80,8 +85,8 @@
     _remarkField.delegate = self;
     [_deskView addSubview:_remarkField];
     
-    UIView *lineBottom = [[UIView alloc] initWithFrame:CGRectMake(10, 89, 280, 1)];
-    lineBottom.backgroundColor = kColor(200, 200, 200, 1);
+    UIView *lineBottom = [[UIView alloc] initWithFrame:CGRectMake(85, 89, 140, 1)];
+    lineBottom.backgroundColor = [UIColor blackColor];
     [_deskView addSubview:lineBottom];
     
     UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -131,11 +136,53 @@
     }
 }
 
-- (IBAction)modifyContactInfo:(id)sender {
-    
+- (void)setContact:(ContactModel *)contact {
+    _contact = contact;
+    [self setValueForUI];
 }
 
-#pragma mark - 
+- (void)setValueForUI {
+    if (_contact.contactAvatar && [_contact.contactAvatar length] > 0) {
+        _photoView.image = [UIImage imageWithData:_contact.contactAvatar];
+    }
+    _nameLabel.text = _contact.contactNickname;
+    _remarkLabel.text = _contact.contactRemark;
+    _remarkField.placeholder = _contact.contactRemark;
+    
+    UILabel *professsion = (UILabel *)[self viewWithTag:2];
+    professsion.text = _contact.contactLisence;
+    
+    UILabel *class = (UILabel *)[self viewWithTag:3];
+    class.text = _contact.contactPublishClassType;
+    
+    UILabel *sign = (UILabel *)[self viewWithTag:4];
+    sign.text = _contact.contactSignature;
+}
+
+- (IBAction)modifyContactInfo:(id)sender {
+    [_remarkField resignFirstResponder];
+    FXChatViewController *chatC = (FXChatViewController *)self.superview.nextResponder;
+    [chatC modifyContactRemark:_remarkField.text];
+}
+
+- (void)hiddenSelf:(UITapGestureRecognizer *)tap {
+    [_remarkField resignFirstResponder];
+    CGPoint touchPoint = [tap locationInView:tap.view];
+    if (!CGRectContainsPoint(_deskView.frame, touchPoint)) {
+        [self hiddenContactView];
+    }
+}
+
+- (void)hiddenContactView {
+    [_remarkField resignFirstResponder];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.alpha = 0;
+    }completion:^(BOOL finish){
+        self.hidden = YES;
+    }];
+}
+
+#pragma mark -
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
