@@ -38,6 +38,7 @@
     self.title = @"设置";
     NSLog(@"%@",self.title);
     self.setTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStylePlain];
+    self.setTable.frame = CGRectMake(20, 0, self.view.frame.size.width-40, self.view.frame.size.height);
     [self.view addSubview:self.setTable];
     self.setTable.delegate = self;
     self.setTable.dataSource = self;
@@ -50,7 +51,7 @@
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -68,8 +69,9 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
+    if ([UIDevice currentDevice].systemVersion.intValue>=7.0) {
+        tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
     if (0 == indexPath.section) {
         static BOOL nibsRegister = NO;
         static NSString *ID = @"id";
@@ -83,17 +85,8 @@
             cell = [[FXSettingTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ID];
         }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
         [cell initCellImage];
         [cell setNeedsLayout];
-        return cell;
-    }
-    
-    if (3 == indexPath.section) {
-        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-        cell.textLabel.text = @"退出登录";
-        cell.imageView.image = [UIImage imageNamed:@"push_icon"];
-        [self hiddenExtraCellLine];
         return cell;
     }
     
@@ -115,19 +108,38 @@
             cell.imageView.image = [UIImage imageNamed:@"close_icon.png"];
             cell.textLabel.text = @"屏蔽管理";
         }
+        [cell.textLabel setFont:[UIFont fontWithName:nil size:15.0]];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         return cell;
     }
     if (2 == indexPath.section) {
+        static NSString *CellInditifion = @"Inditifion";
         static BOOL nibRegister = NO;
         if (!nibRegister) {
             UINib *nib = [UINib nibWithNibName:@"FXTableViewSheZhiCell" bundle:nil];
-            [tableView registerNib:nib forCellReuseIdentifier:nil];
+            [tableView registerNib:nib forCellReuseIdentifier:CellInditifion];
+            nibRegister = YES;
         }
-        FXTableViewSheZhiCell *cell = [[FXTableViewSheZhiCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        FXTableViewSheZhiCell *cell = [tableView dequeueReusableCellWithIdentifier:CellInditifion];
+        if (cell == nil) {
+            cell =[[FXTableViewSheZhiCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        }
         [cell setlabel];
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, 40, 280, 1)];
+        UIColor *color = [UIColor colorWithRed:221/255.0 green:221/255.0 blue:221/255.0 alpha:1];
+        line.backgroundColor = color;
+        [cell.contentView addSubview:line];
         cell.setName.text = @"系统公告管理";
         cell.setImage.image = [UIImage imageNamed:@"book_icon"];
+        return cell;
+    }
+    if (3 == indexPath.section) {
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        cell.textLabel.text = @"退出登录";
+        cell.imageView.image = [UIImage imageNamed:@"push_icon"];
+        [cell.textLabel setFont:[UIFont fontWithName:nil size:15.0]];
+        [self hiddenExtraCellLine];
+        return cell;
     }
     return nil;
     
@@ -145,28 +157,9 @@
         return 40;
     
 }
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    CGFloat height;
-    if (section==0) {
-        height = 5;
-    }else if(section == 1){
-        height = 0;
-    }else if(section == 2){
-        height = 0;
-    }
-    return height;
-}
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    CGFloat height;
-//    if (section==2) {
-//        height = 150;
-//    }else{
-//        height =0;
-//    }
-    height = 0;
-    return height;
+    return 0;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -186,16 +179,17 @@
         }else if (indexPath.row == 4){
             FXPingBiGuanLiViewController *pingbi = [[FXPingBiGuanLiViewController alloc]init];
             [self.navigationController pushViewController:pingbi animated:YES];
-        }else
-        {
-            FXSystemInfoViewController *sysinfo = [[FXSystemInfoViewController alloc]init];
-            [self.navigationController pushViewController:sysinfo animated:YES];
         }
-    }else if (indexPath.section == 2){
+    }else if (indexPath.section == 3){
         NSLog(@"用户退出");
-    }else{
+    }else if(indexPath.section == 0){
         FXMyInfoViewController *myInfo = [[FXMyInfoViewController alloc]init];
         [self.navigationController pushViewController:myInfo animated:YES];
+    }else
+    {
+        FXSystemInfoViewController *sysinfo = [[FXSystemInfoViewController alloc]init];
+        [self.navigationController pushViewController:sysinfo animated:YES];
+
     }
         
 }
