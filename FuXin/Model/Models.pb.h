@@ -50,6 +50,10 @@
 @class RegisterRequest_Builder;
 @class RegisterResponse;
 @class RegisterResponse_Builder;
+@class ResetPasswordRequest;
+@class ResetPasswordRequest_Builder;
+@class ResetPasswordResponse;
+@class ResetPasswordResponse_Builder;
 @class SendMessageRequest;
 @class SendMessageRequest_Builder;
 @class SendMessageResponse;
@@ -80,6 +84,41 @@ typedef enum {
 } Contact_ContactSourceType;
 
 BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
+
+typedef enum {
+  RegisterResponse_ErrorCodeTypeInvalidUserName = 1,
+  RegisterResponse_ErrorCodeTypeExistingUser = 2,
+  RegisterResponse_ErrorCodeTypeInvalidPassword = 3,
+  RegisterResponse_ErrorCodeTypeInvalidConfirmPassword = 4,
+  RegisterResponse_ErrorCodeTypeInvalidMatchPassword = 5,
+  RegisterResponse_ErrorCodeTypeInvalidValidateCode = 6,
+  RegisterResponse_ErrorCodeTypeInvalidDatabase = 7,
+} RegisterResponse_ErrorCodeType;
+
+BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value);
+
+typedef enum {
+  ChangePasswordResponse_ErrorCodeTypeExistingUserNo = 1,
+  ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword = 2,
+  ChangePasswordResponse_ErrorCodeTypeInvalidPassword = 3,
+  ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword = 4,
+  ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword = 5,
+  ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode = 6,
+  ChangePasswordResponse_ErrorCodeTypeInvalidDatabase = 7,
+} ChangePasswordResponse_ErrorCodeType;
+
+BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value);
+
+typedef enum {
+  ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber = 1,
+  ValidateCodeResponse_ErrorCodeTypeInvalidType = 2,
+  ValidateCodeResponse_ErrorCodeTypeExistingUserYes = 3,
+  ValidateCodeResponse_ErrorCodeTypeExistingUserNo = 4,
+  ValidateCodeResponse_ErrorCodeTypeLockTime = 5,
+  ValidateCodeResponse_ErrorCodeTypeSendError = 6,
+} ValidateCodeResponse_ErrorCodeType;
+
+BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value);
 
 
 @interface ModelsRoot : NSObject {
@@ -1870,14 +1909,14 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
   BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
   int32_t userId;
-  int32_t errorCode;
+  RegisterResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasUserId;
 - (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
 @property (readonly) int32_t userId;
-@property (readonly) int32_t errorCode;
+@property (readonly) RegisterResponse_ErrorCodeType errorCode;
 
 + (RegisterResponse*) defaultInstance;
 - (RegisterResponse*) defaultInstance;
@@ -1924,8 +1963,8 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 - (RegisterResponse_Builder*) clearUserId;
 
 - (BOOL) hasErrorCode;
-- (int32_t) errorCode;
-- (RegisterResponse_Builder*) setErrorCode:(int32_t) value;
+- (RegisterResponse_ErrorCodeType) errorCode;
+- (RegisterResponse_Builder*) setErrorCode:(RegisterResponse_ErrorCodeType) value;
 - (RegisterResponse_Builder*) clearErrorCode;
 @end
 
@@ -1933,22 +1972,26 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 @private
   BOOL hasUserId_:1;
   BOOL hasToken_:1;
+  BOOL hasValidateCode_:1;
   BOOL hasOriginalPassword_:1;
   BOOL hasPassword_:1;
   BOOL hasPasswordConfirm_:1;
   int32_t userId;
   NSString* token;
+  NSString* validateCode;
   NSString* originalPassword;
   NSString* password;
   NSString* passwordConfirm;
 }
 - (BOOL) hasToken;
 - (BOOL) hasUserId;
+- (BOOL) hasValidateCode;
 - (BOOL) hasOriginalPassword;
 - (BOOL) hasPassword;
 - (BOOL) hasPasswordConfirm;
 @property (readonly, retain) NSString* token;
 @property (readonly) int32_t userId;
+@property (readonly, retain) NSString* validateCode;
 @property (readonly, retain) NSString* originalPassword;
 @property (readonly, retain) NSString* password;
 @property (readonly, retain) NSString* passwordConfirm;
@@ -1997,6 +2040,11 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 - (ChangePasswordRequest_Builder*) setUserId:(int32_t) value;
 - (ChangePasswordRequest_Builder*) clearUserId;
 
+- (BOOL) hasValidateCode;
+- (NSString*) validateCode;
+- (ChangePasswordRequest_Builder*) setValidateCode:(NSString*) value;
+- (ChangePasswordRequest_Builder*) clearValidateCode;
+
 - (BOOL) hasOriginalPassword;
 - (NSString*) originalPassword;
 - (ChangePasswordRequest_Builder*) setOriginalPassword:(NSString*) value;
@@ -2018,12 +2066,12 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
   BOOL hasIsSucceed_:1;
   BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
-  int32_t errorCode;
+  ChangePasswordResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
-@property (readonly) int32_t errorCode;
+@property (readonly) ChangePasswordResponse_ErrorCodeType errorCode;
 
 + (ChangePasswordResponse*) defaultInstance;
 - (ChangePasswordResponse*) defaultInstance;
@@ -2065,18 +2113,163 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 - (ChangePasswordResponse_Builder*) clearIsSucceed;
 
 - (BOOL) hasErrorCode;
-- (int32_t) errorCode;
-- (ChangePasswordResponse_Builder*) setErrorCode:(int32_t) value;
+- (ChangePasswordResponse_ErrorCodeType) errorCode;
+- (ChangePasswordResponse_Builder*) setErrorCode:(ChangePasswordResponse_ErrorCodeType) value;
 - (ChangePasswordResponse_Builder*) clearErrorCode;
+@end
+
+@interface ResetPasswordRequest : PBGeneratedMessage {
+@private
+  BOOL hasUserId_:1;
+  BOOL hasToken_:1;
+  BOOL hasValidateCode_:1;
+  BOOL hasPassword_:1;
+  BOOL hasPasswordConfirm_:1;
+  int32_t userId;
+  NSString* token;
+  NSString* validateCode;
+  NSString* password;
+  NSString* passwordConfirm;
+}
+- (BOOL) hasToken;
+- (BOOL) hasUserId;
+- (BOOL) hasValidateCode;
+- (BOOL) hasPassword;
+- (BOOL) hasPasswordConfirm;
+@property (readonly, retain) NSString* token;
+@property (readonly) int32_t userId;
+@property (readonly, retain) NSString* validateCode;
+@property (readonly, retain) NSString* password;
+@property (readonly, retain) NSString* passwordConfirm;
+
++ (ResetPasswordRequest*) defaultInstance;
+- (ResetPasswordRequest*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ResetPasswordRequest_Builder*) builder;
++ (ResetPasswordRequest_Builder*) builder;
++ (ResetPasswordRequest_Builder*) builderWithPrototype:(ResetPasswordRequest*) prototype;
+
++ (ResetPasswordRequest*) parseFromData:(NSData*) data;
++ (ResetPasswordRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ResetPasswordRequest*) parseFromInputStream:(NSInputStream*) input;
++ (ResetPasswordRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ResetPasswordRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ResetPasswordRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ResetPasswordRequest_Builder : PBGeneratedMessage_Builder {
+@private
+  ResetPasswordRequest* result;
+}
+
+- (ResetPasswordRequest*) defaultInstance;
+
+- (ResetPasswordRequest_Builder*) clear;
+- (ResetPasswordRequest_Builder*) clone;
+
+- (ResetPasswordRequest*) build;
+- (ResetPasswordRequest*) buildPartial;
+
+- (ResetPasswordRequest_Builder*) mergeFrom:(ResetPasswordRequest*) other;
+- (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ResetPasswordRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasToken;
+- (NSString*) token;
+- (ResetPasswordRequest_Builder*) setToken:(NSString*) value;
+- (ResetPasswordRequest_Builder*) clearToken;
+
+- (BOOL) hasUserId;
+- (int32_t) userId;
+- (ResetPasswordRequest_Builder*) setUserId:(int32_t) value;
+- (ResetPasswordRequest_Builder*) clearUserId;
+
+- (BOOL) hasValidateCode;
+- (NSString*) validateCode;
+- (ResetPasswordRequest_Builder*) setValidateCode:(NSString*) value;
+- (ResetPasswordRequest_Builder*) clearValidateCode;
+
+- (BOOL) hasPassword;
+- (NSString*) password;
+- (ResetPasswordRequest_Builder*) setPassword:(NSString*) value;
+- (ResetPasswordRequest_Builder*) clearPassword;
+
+- (BOOL) hasPasswordConfirm;
+- (NSString*) passwordConfirm;
+- (ResetPasswordRequest_Builder*) setPasswordConfirm:(NSString*) value;
+- (ResetPasswordRequest_Builder*) clearPasswordConfirm;
+@end
+
+@interface ResetPasswordResponse : PBGeneratedMessage {
+@private
+  BOOL hasIsSucceed_:1;
+  BOOL hasErrorCode_:1;
+  BOOL isSucceed_:1;
+  int32_t errorCode;
+}
+- (BOOL) hasIsSucceed;
+- (BOOL) hasErrorCode;
+- (BOOL) isSucceed;
+@property (readonly) int32_t errorCode;
+
++ (ResetPasswordResponse*) defaultInstance;
+- (ResetPasswordResponse*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (ResetPasswordResponse_Builder*) builder;
++ (ResetPasswordResponse_Builder*) builder;
++ (ResetPasswordResponse_Builder*) builderWithPrototype:(ResetPasswordResponse*) prototype;
+
++ (ResetPasswordResponse*) parseFromData:(NSData*) data;
++ (ResetPasswordResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ResetPasswordResponse*) parseFromInputStream:(NSInputStream*) input;
++ (ResetPasswordResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (ResetPasswordResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (ResetPasswordResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface ResetPasswordResponse_Builder : PBGeneratedMessage_Builder {
+@private
+  ResetPasswordResponse* result;
+}
+
+- (ResetPasswordResponse*) defaultInstance;
+
+- (ResetPasswordResponse_Builder*) clear;
+- (ResetPasswordResponse_Builder*) clone;
+
+- (ResetPasswordResponse*) build;
+- (ResetPasswordResponse*) buildPartial;
+
+- (ResetPasswordResponse_Builder*) mergeFrom:(ResetPasswordResponse*) other;
+- (ResetPasswordResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (ResetPasswordResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasIsSucceed;
+- (BOOL) isSucceed;
+- (ResetPasswordResponse_Builder*) setIsSucceed:(BOOL) value;
+- (ResetPasswordResponse_Builder*) clearIsSucceed;
+
+- (BOOL) hasErrorCode;
+- (int32_t) errorCode;
+- (ResetPasswordResponse_Builder*) setErrorCode:(int32_t) value;
+- (ResetPasswordResponse_Builder*) clearErrorCode;
 @end
 
 @interface ValidateCodeRequest : PBGeneratedMessage {
 @private
   BOOL hasPhoneNumber_:1;
+  BOOL hasType_:1;
   NSString* phoneNumber;
+  NSString* type;
 }
 - (BOOL) hasPhoneNumber;
+- (BOOL) hasType;
 @property (readonly, retain) NSString* phoneNumber;
+@property (readonly, retain) NSString* type;
 
 + (ValidateCodeRequest*) defaultInstance;
 - (ValidateCodeRequest*) defaultInstance;
@@ -2116,23 +2309,24 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 - (NSString*) phoneNumber;
 - (ValidateCodeRequest_Builder*) setPhoneNumber:(NSString*) value;
 - (ValidateCodeRequest_Builder*) clearPhoneNumber;
+
+- (BOOL) hasType;
+- (NSString*) type;
+- (ValidateCodeRequest_Builder*) setType:(NSString*) value;
+- (ValidateCodeRequest_Builder*) clearType;
 @end
 
 @interface ValidateCodeResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasErrorCode_:1;
-  BOOL hasValidateCode_:1;
   BOOL isSucceed_:1;
-  int32_t errorCode;
-  NSString* validateCode;
+  ValidateCodeResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasErrorCode;
-- (BOOL) hasValidateCode;
 - (BOOL) isSucceed;
-@property (readonly) int32_t errorCode;
-@property (readonly, retain) NSString* validateCode;
+@property (readonly) ValidateCodeResponse_ErrorCodeType errorCode;
 
 + (ValidateCodeResponse*) defaultInstance;
 - (ValidateCodeResponse*) defaultInstance;
@@ -2174,13 +2368,8 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
 - (ValidateCodeResponse_Builder*) clearIsSucceed;
 
 - (BOOL) hasErrorCode;
-- (int32_t) errorCode;
-- (ValidateCodeResponse_Builder*) setErrorCode:(int32_t) value;
+- (ValidateCodeResponse_ErrorCodeType) errorCode;
+- (ValidateCodeResponse_Builder*) setErrorCode:(ValidateCodeResponse_ErrorCodeType) value;
 - (ValidateCodeResponse_Builder*) clearErrorCode;
-
-- (BOOL) hasValidateCode;
-- (NSString*) validateCode;
-- (ValidateCodeResponse_Builder*) setValidateCode:(NSString*) value;
-- (ValidateCodeResponse_Builder*) clearValidateCode;
 @end
 

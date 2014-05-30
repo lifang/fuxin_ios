@@ -46,10 +46,12 @@
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 150, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:14];
+    _nameLabel.adjustsFontSizeToFitWidth = YES;
+    _nameLabel.minimumScaleFactor = 0.7f;
     _nameLabel.textColor = kColor(70, 154, 211, 1);
     [self.contentView addSubview:_nameLabel];
     
-    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 5, 50, 20)];
+    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(220, 5, 60, 20)];
     _timeLabel.backgroundColor = [UIColor clearColor];
     _timeLabel.font = [UIFont systemFontOfSize:10];
     _timeLabel.textColor = [UIColor lightGrayColor];
@@ -73,6 +75,17 @@
     _numberLabel.textAlignment = NSTextAlignmentCenter;
     _numberLabel.layer.masksToBounds = YES;
     [backView addSubview:_numberLabel];
+}
+
+- (void)setNumber:(NSString *)number {
+    if (number.length >= 3) {
+        _numberLabel.font = [UIFont systemFontOfSize:7];
+        _numberLabel.text = @"99+";
+    }
+    else {
+        _numberLabel.font = [UIFont systemFontOfSize:10];
+        _numberLabel.text = number;
+    }
 }
 
 @end

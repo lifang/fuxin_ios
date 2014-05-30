@@ -27,8 +27,10 @@ typedef enum{
 @property (nonatomic, strong) NSString *messageSendTime;
 ///内容
 @property (nonatomic, strong) NSString *messageContent;
-///附件
+///附件()
 @property (nonatomic, strong) NSString *messageAttachment;
 ///状态
 @property (nonatomic, assign) MessageStatus messageStatus;
+//是否显示时间
+@property (nonatomic, strong) NSNumber *messageShowTime;
 @end

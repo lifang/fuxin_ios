@@ -54,7 +54,7 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     NSLog(@"结束编辑");
-    NSMutableString *tempUrl = nil;//接口
+//    NSMutableString *tempUrl = nil;//接口
     
 }
 
