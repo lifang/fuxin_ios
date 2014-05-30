@@ -16,22 +16,22 @@
 
 @interface FXForgotPasswordController ()
 //控件区
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UITextField *passwordTextField;   //密码
-@property (weak, nonatomic) IBOutlet UILabel *passwordTipLabel;  //密码输入提示
-@property (weak, nonatomic) IBOutlet UITextField *confirmPasswordTextField;  //确认密码
-@property (weak, nonatomic) IBOutlet UILabel *tipLabel;   //提示信息
-@property (weak, nonatomic) IBOutlet UILabel *coundDownLabel;   //验证码倒计时
-@property (weak, nonatomic) IBOutlet UITextField *phoneNumberTextField;  //电话号码
-@property (weak, nonatomic) IBOutlet UITextField *identifyingCodeTextField;  //验证码
-@property (weak, nonatomic) IBOutlet UILabel *alertLabel;   //电话号码错误警示
-@property (weak, nonatomic) IBOutlet UILabel *alertIdentiyingLabel;   //验证码错误警示
-@property (weak, nonatomic) IBOutlet UIButton *rewriteButton;   //重填电话号码
-@property (weak, nonatomic) IBOutlet UIButton *reSendButton;    //重发验证码
-@property (weak, nonatomic) IBOutlet UIButton *checkButton;    //选中同意
-@property (weak, nonatomic) IBOutlet UIButton *serviceTextButton;   //服务协议
-@property (weak, nonatomic) IBOutlet UILabel *agreeLabel;   //酱油
-@property (weak, nonatomic) IBOutlet UIButton *doneButton;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;   //密码
+@property (strong, nonatomic) IBOutlet UILabel *passwordTipLabel;  //密码输入提示
+@property (strong, nonatomic) IBOutlet UITextField *confirmPasswordTextField;  //确认密码
+@property (strong, nonatomic) IBOutlet UILabel *tipLabel;   //提示信息
+@property (strong, nonatomic) IBOutlet UILabel *coundDownLabel;   //验证码倒计时
+@property (strong, nonatomic) IBOutlet UITextField *phoneNumberTextField;  //电话号码
+@property (strong, nonatomic) IBOutlet UITextField *identifyingCodeTextField;  //验证码
+@property (strong, nonatomic) IBOutlet UILabel *alertLabel;   //电话号码错误警示
+@property (strong, nonatomic) IBOutlet UILabel *alertIdentiyingLabel;   //验证码错误警示
+@property (strong, nonatomic) IBOutlet UIButton *rewriteButton;   //重填电话号码
+@property (strong, nonatomic) IBOutlet UIButton *reSendButton;    //重发验证码
+@property (strong, nonatomic) IBOutlet UIButton *checkButton;    //选中同意
+@property (strong, nonatomic) IBOutlet UIButton *serviceTextButton;   //服务协议
+@property (strong, nonatomic) IBOutlet UILabel *agreeLabel;   //酱油
+@property (strong, nonatomic) IBOutlet UIButton *doneButton;
 
 - (IBAction)spaceAreaClicked:(id)sender;
 
@@ -185,6 +185,7 @@
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.backgroundColor = [UIColor clearColor];
+    cell.contentView.backgroundColor = [UIColor clearColor];
     switch (indexPath.row) {
         case 0:  //密码
             if ([self cell:cell isNotSuperOfView:self.passwordTextField]) {

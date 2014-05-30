@@ -74,6 +74,7 @@
     _usernameField.text = @"MockUserName";
     _usernameField.borderStyle = UITextBorderStyleNone;
     _usernameField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
     _usernameField.delegate = self;
@@ -94,6 +95,7 @@
     _passwordField.secureTextEntry = YES;
     _passwordField.text = @"12";
     _passwordField.borderStyle = UITextBorderStyleNone;
+    _passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
     _passwordField.leftView = psdBackView;

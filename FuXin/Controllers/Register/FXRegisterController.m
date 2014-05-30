@@ -99,12 +99,15 @@
     nameTextField.textColor = kColor(51, 51, 51, 1);
     nameTextField.font = [UIFont systemFontOfSize:14.];
     nameTextField.delegate = self;
+    nameTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    nameTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.userNameTextField = nameTextField;
     
     UILabel *nameTip = [[UILabel alloc] init];
     nameTip.font = [UIFont systemFontOfSize:12.];
     nameTip.textColor = kColor(255, 0, 9, 1);
     nameTip.textAlignment = NSTextAlignmentRight;
+    nameTip.backgroundColor = [UIColor clearColor];
     self.userNameTipLabel = nameTip;
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(kBlank_Size, 0, 290, 300) style:UITableViewStylePlain];
@@ -114,13 +117,16 @@
     self.tableView.delegate = self;
     [self.view addSubview:self.tableView];
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    if (kDeviceVersion >= 7.0) {
+        self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
     self.tableView.separatorColor = kColor(191, 191, 191, 1);
 //    self.tableView.scrollEnabled = NO;
     
     self.passwordTipLabel = [[UILabel alloc] init];
     self.passwordTipLabel.font = [UIFont systemFontOfSize:12.];
     self.passwordTipLabel.textAlignment = NSTextAlignmentRight;
+    _passwordTipLabel.backgroundColor = [UIColor clearColor];
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
     
     self.alertLabel = [[UILabel alloc] init];
@@ -128,10 +134,12 @@
     self.alertLabel.textAlignment = NSTextAlignmentRight;
     self.alertLabel.font = [UIFont systemFontOfSize:12.];
     self.alertLabel.textColor = kColor(255, 0, 9, 1);
+    _alertLabel.backgroundColor = [UIColor clearColor];
     
     self.alertIdentiyingLabel = [[UILabel alloc] init];
     self.alertIdentiyingLabel.font = [UIFont systemFontOfSize:12.];
     self.alertIdentiyingLabel.textAlignment = NSTextAlignmentRight;
+    _alertIdentiyingLabel.backgroundColor = [UIColor clearColor];
     self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
     
     self.passwordTextField = [[UITextField alloc] init];
@@ -140,6 +148,8 @@
     self.passwordTextField.keyboardType = UIKeyboardTypeASCIICapable;
     self.passwordTextField.returnKeyType = UIReturnKeyNext;
     self.passwordTextField.textColor = kColor(51, 51, 51, 1);
+    _passwordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _passwordTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.passwordTextField.font = [UIFont systemFontOfSize:14.];
     self.passwordTextField.delegate = self;
     
@@ -148,6 +158,8 @@
     self.confirmPasswordTextField.placeholder = @"确认密码";
     self.confirmPasswordTextField.keyboardType = UIKeyboardTypeASCIICapable;
     self.confirmPasswordTextField.returnKeyType = UIReturnKeyNext;
+    _confirmPasswordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _confirmPasswordTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.confirmPasswordTextField.textColor = kColor(51, 51, 51, 1);
     self.confirmPasswordTextField.font = [UIFont systemFontOfSize:14.];
     self.confirmPasswordTextField.delegate = self;
@@ -158,6 +170,8 @@
     self.phoneNumberTextField.delegate = self;
     self.phoneNumberTextField.font = [UIFont systemFontOfSize:14.];
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    _phoneNumberTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _phoneNumberTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
     self.rewriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -173,6 +187,8 @@
     self.identifyingCodeTextField.font = [UIFont systemFontOfSize:14.];
     self.identifyingCodeTextField.placeholder = @"输入验证码";
     self.identifyingCodeTextField.delegate = self;
+    _identifyingCodeTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    _identifyingCodeTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.identifyingCodeTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
     
@@ -183,16 +199,19 @@
     self.tipLabel = [[UILabel alloc] init];
     self.tipLabel.font = [UIFont systemFontOfSize:12.];
     self.tipLabel.text = @"确认手机号码之后发送验证码";
+    _tipLabel.backgroundColor = [UIColor clearColor];
     self.tipLabel.textColor = kColor(191, 191, 191, 1);
     
     self.coundDownLabel = [[UILabel alloc] init];
     self.coundDownLabel.font = [UIFont systemFontOfSize:12.];
+    _coundDownLabel.backgroundColor = [UIColor clearColor];
     self.coundDownLabel.textColor = kColor(191, 191, 191, 1);
     
     
     self.agreeLabel = [[UILabel alloc] init];
     self.agreeLabel.text = @"我已经阅读并同意";
     self.agreeLabel.font = [UIFont systemFontOfSize:12.];
+    _agreeLabel.backgroundColor = [UIColor clearColor];
     self.agreeLabel.textColor = kColor(51, 51, 51, 1);
     
     self.serviceTextButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -246,12 +265,12 @@
 
 #pragma mark UITableView Datasource && delegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 6;
+    return 7;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
-    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
+    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,7 * kCell_Height - 1};
 
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
 
