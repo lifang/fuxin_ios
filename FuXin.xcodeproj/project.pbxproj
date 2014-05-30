@@ -89,7 +89,8 @@
 		770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC26E192DA65B008104ED /* FXCompareCN.m */; };
 		770BC284192DF23A008104ED /* FXEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC283192DF23A008104ED /* FXEmojiView.m */; };
 		770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC29B192E0B42008104ED /* FXTableHeaderView.m */; };
-		771E1D4F1936C2DF0054BFC9 /* Models.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 771E1D4E1936C2DF0054BFC9 /* Models.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		77125273193820FB005419BE /* Models.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 77125272193820FB005419BE /* Models.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		771E1D5519371FDC0054BFC9 /* FXContactView.m in Sources */ = {isa = PBXBuildFile; fileRef = 771E1D5419371FDC0054BFC9 /* FXContactView.m */; };
 		7720F3D419309627001F20F4 /* FXNetworkInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7720F3D319309627001F20F4 /* FXNetworkInterface.m */; };
 		7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7720F3D81930BBD8001F20F4 /* search@2x.png */; };
 		7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7720F3DA1930BC1D001F20F4 /* index@2x.png */; };
@@ -305,8 +306,10 @@
 		770BC288192DF30B008104ED /* FXEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXEmoji.h; sourceTree = "<group>"; };
 		770BC29A192E0B42008104ED /* FXTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXTableHeaderView.h; sourceTree = "<group>"; };
 		770BC29B192E0B42008104ED /* FXTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTableHeaderView.m; sourceTree = "<group>"; };
-		771E1D4D1936C2DF0054BFC9 /* Models.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.pb.h; sourceTree = "<group>"; };
-		771E1D4E1936C2DF0054BFC9 /* Models.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Models.pb.m; sourceTree = "<group>"; };
+		77125271193820FB005419BE /* Models.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.pb.h; sourceTree = "<group>"; };
+		77125272193820FB005419BE /* Models.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Models.pb.m; sourceTree = "<group>"; };
+		771E1D5319371FDC0054BFC9 /* FXContactView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXContactView.h; sourceTree = "<group>"; };
+		771E1D5419371FDC0054BFC9 /* FXContactView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXContactView.m; sourceTree = "<group>"; };
 		7720F3D219309627001F20F4 /* FXNetworkInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNetworkInterface.h; sourceTree = "<group>"; };
 		7720F3D319309627001F20F4 /* FXNetworkInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNetworkInterface.m; sourceTree = "<group>"; };
 		7720F3D81930BBD8001F20F4 /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
@@ -707,6 +710,8 @@
 				7755EC881931CAD600ADD1A6 /* FXShowPhotoView.m */,
 				770BC282192DF23A008104ED /* FXEmojiView.h */,
 				770BC283192DF23A008104ED /* FXEmojiView.m */,
+				771E1D5319371FDC0054BFC9 /* FXContactView.h */,
+				771E1D5419371FDC0054BFC9 /* FXContactView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -992,8 +997,8 @@
 		93EC3324192EFD2A00D0DE49 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				771E1D4D1936C2DF0054BFC9 /* Models.pb.h */,
-				771E1D4E1936C2DF0054BFC9 /* Models.pb.m */,
+				77125271193820FB005419BE /* Models.pb.h */,
+				77125272193820FB005419BE /* Models.pb.m */,
 				93EC3325192EFD3000D0DE49 /* ContactModel.h */,
 				93EC3326192EFD3000D0DE49 /* ContactModel.m */,
 				93EC3327192EFD3000D0DE49 /* ConversationModel.h */,
@@ -1227,6 +1232,7 @@
 				7702C7C0192B47290015A178 /* FXChatViewController.m in Sources */,
 				93EC335D192EFD7800D0DE49 /* SharedClass.m in Sources */,
 				7720F3D419309627001F20F4 /* FXNetworkInterface.m in Sources */,
+				771E1D5519371FDC0054BFC9 /* FXContactView.m in Sources */,
 				7702C7BB192B27950015A178 /* FXChatCell.m in Sources */,
 				93EC3359192EFD7800D0DE49 /* FMDatabasePool.m in Sources */,
 				7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */,
@@ -1243,11 +1249,11 @@
 				7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */,
 				77CB6F23192F682E00936F7F /* Reachability.m in Sources */,
 				93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */,
+				77125273193820FB005419BE /* Models.pb.m in Sources */,
 				93EC335C192EFD7800D0DE49 /* LHLDBTools.m in Sources */,
 				3A13522A1933416B006C59E4 /* FXSysInfoTableViewCell.m in Sources */,
 				7706BD56192A0FF400C3E0E5 /* FXMainController.m in Sources */,
 				7790A0BD1926708600498659 /* FXRootViewController.m in Sources */,
-				771E1D4F1936C2DF0054BFC9 /* Models.pb.m in Sources */,
 				3A1352201933315E006C59E4 /* FXAlterView.m in Sources */,
 				77FC8A62192F361A00FFFCDB /* ExtensionRegistry.m in Sources */,
 				3A13523319335C3C006C59E4 /* FXSysDetailViewController.m in Sources */,

@@ -18,7 +18,6 @@ typedef enum{
 
 /**
  一条消息 ,  聊天的最小数据单元
- 发送者和接收者ID决定消息的发送/接收方向
  */
 @interface MessageModel : NSObject
 ///联系人ID

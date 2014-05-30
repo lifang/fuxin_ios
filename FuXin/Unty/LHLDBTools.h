@@ -67,10 +67,10 @@
 ///保存聊天记录
 + (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished;
 
-///查询与某个联系人的最后N条聊天记录  (目前按时间倒序排列)
+///查询与某个联系人的最后N条聊天记录  (目前按时间顺序排列)
 + (void)getLatestChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSArray *recordsArray,NSString *errorMessage))finished;
 
-///按index查询之前若干条聊天记录   (目前按时间倒序排列) (使用: index为已有数据数组的count ,直接add在数组后面即可)
+///按index查询之前若干条聊天记录   (目前按时间顺序排列) (使用: index为已有数据数组的count ,直接add在数组后面即可)
 + (void)getChattingRecordsWithContactID:(NSString *)contactID beforeIndex:(NSInteger)index withFinished:(void (^)(NSArray *recordsArray,NSString *errorMessage))finished;
 
 ///查询某个时间点之前的N条聊天记录 (暂时弃用)

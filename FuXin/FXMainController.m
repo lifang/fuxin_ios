@@ -9,6 +9,7 @@
 #import "FXMainController.h"
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
+#import "Models.pb.h"
 
 @interface FXMainController ()
 
@@ -154,7 +155,7 @@
             [recentChat setValue:conv.conversationLastChat forKey:@"Record"];
             //查未读消息数量
             [LHLDBTools numberOfUnreadChattingRecordsWithContactID:conv.conversationContactID withFinished:^(NSInteger number, NSString *error) {
-                [recentChat setValue:[NSNumber numberWithInt:number] forKey:@"Number"];
+                [recentChat setValue:[NSNumber numberWithInteger:number] forKey:@"Number"];
             }];
             //查联系人信息
             [LHLDBTools findContactWithContactID:conv.conversationContactID withFinished:^(ContactModel *con, NSString *error) {
@@ -233,7 +234,7 @@
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactPublishClassType = contact.publishClassType;
-        model.contactSignature = contact.signature;
+        model.contactSignature = @"";
         model.contactAvatarURL = contact.tileUrl;
         [arrayForDB addObject:model];
     }

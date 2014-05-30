@@ -179,36 +179,37 @@ static LHLDBTools *staticDBTools;
 + (ContactModel *)convertToContactModelFromResultSet:(FMResultSet *)resultSet{
     ContactModel *obj = [[ContactModel alloc] init];
     obj.contactID = [NSString stringWithFormat:@"%d",[resultSet intForColumn:@"contactID"]];
-    obj.contactNickname = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"nickname"]];
+    obj.contactNickname = [resultSet stringForColumn:@"nickname"];
     obj.contactIdentity = [resultSet boolForColumn:@"identity"] ? ContactIdentityTeacher : ContactIdentityGuest;
     obj.contactAvatar = [NSData dataWithData:[resultSet dataForColumn:@"avatar"]];
-    obj.contactAvatarURL = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"avatarURL"]];
-    obj.contactRemark = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"remark"]];
+    obj.contactAvatarURL = [resultSet stringForColumn:@"avatarURL"];
+    obj.contactRemark = [resultSet stringForColumn:@"remark"];
     obj.contactSex = [resultSet boolForColumn:@"sex"] ? ContactSexFemale : ContactSexMale;
-    int relationshipValue = [resultSet intForColumn:@"relationship"];
-    switch (relationshipValue) {
-        case 1:
-            obj.contactRelationship = ContactRelationshipBuyer;
-            break;
-        case 2:
-            obj.contactRelationship = ContactRelationshipFans;
-            break;
-        case 3:
-            obj.contactRelationship = ContactRelationshipNone;
-            break;
-        default:
-            break;
-    }
-    obj.contactPinyin = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"pinyin"]];
+//    int relationshipValue = [resultSet intForColumn:@"relationship"];
+//    switch (relationshipValue) {
+//        case 1:
+//            obj.contactRelationship = ContactRelationshipBuyer;
+//            break;
+//        case 2:
+//            obj.contactRelationship = ContactRelationshipFans;
+//            break;
+//        case 3:
+//            obj.contactRelationship = ContactRelationshipNone;
+//            break;
+//        default:
+//            break;
+//    }
+    obj.contactRelationship = (ContactRelationship)[resultSet intForColumn:@"relationship"];
+    obj.contactPinyin = [resultSet stringForColumn:@"pinyin"];
     obj.contactIsBlocked = [resultSet boolForColumn:@"isBlocked"];
-    obj.contactLastContactTime = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastContactTime"]];
+    obj.contactLastContactTime = [resultSet stringForColumn:@"lastContactTime"];
     obj.contactIsProvider = [resultSet boolForColumn:@"isProvider"];
-    obj.contactLisence = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lisence"]];
-    obj.contactPublishClassType = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"publishClassType"]];
-    obj.contactSignature = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"signature"]];
-    obj.contactBirthday = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"birthday"]];
-    obj.contactTelephone = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"telephone"]];
-    obj.contactEmail = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"email"]];
+    obj.contactLisence = [resultSet stringForColumn:@"lisence"];
+    obj.contactPublishClassType = [resultSet stringForColumn:@"publishClassType"];
+    obj.contactSignature = [resultSet stringForColumn:@"signature"];
+    obj.contactBirthday = [resultSet stringForColumn:@"birthday"];
+    obj.contactTelephone = [resultSet stringForColumn:@"telephone"];
+    obj.contactEmail = [resultSet stringForColumn:@"email"];
     
     return obj;
 }
@@ -244,6 +245,7 @@ static LHLDBTools *staticDBTools;
         if (finished) {
             finished(NO);
         }
+        return;
     }
     __block BOOL transationSucceeded = YES;
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -274,7 +276,7 @@ static LHLDBTools *staticDBTools;
                                                              ] : NO;
             }else{
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?,?)"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
                                                              ,contactObj.contactID
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
@@ -386,8 +388,8 @@ static LHLDBTools *staticDBTools;
 + (ConversationModel *)convertToConversationFromResultSet:(FMResultSet *)resultSet{
     ConversationModel *obj = [[ConversationModel alloc] init];
     obj.conversationContactID = [NSString stringWithFormat:@"%d",[resultSet intForColumn:@"contactID"]];
-    obj.conversationLastCommunicateTime = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastCommunicateTime"]];
-    obj.conversationLastChat = [NSString stringWithFormat:@"%@",[resultSet stringForColumn:@"lastChat"]];
+    obj.conversationLastCommunicateTime = [resultSet stringForColumn:@"lastCommunicateTime"];
+    obj.conversationLastChat = [resultSet stringForColumn:@"lastChat"];
     return obj;
 }
 
@@ -462,7 +464,7 @@ static LHLDBTools *staticDBTools;
     }];
     if (records.count > 0) {
         if (finished) {
-            finished([NSArray arrayWithArray:records],nil);
+            finished([NSArray arrayWithArray:[[records reverseObjectEnumerator] allObjects]],nil);
         }
     }else{
         if (finished) {
@@ -490,7 +492,7 @@ static LHLDBTools *staticDBTools;
     }];
     if (records.count > 0) {
         if (finished) {
-            finished([NSArray arrayWithArray:records],nil);
+            finished([NSArray arrayWithArray:[[records reverseObjectEnumerator] allObjects]],nil);
         }
     }else{
         if (finished) {
@@ -569,10 +571,9 @@ static LHLDBTools *staticDBTools;
 + (MessageModel *)convertToMessageFromResultSet:(FMResultSet *)resultSet{
     MessageModel *message = [[MessageModel alloc] init];
     message.messageRecieverID = [NSString stringWithFormat:@"%d",[resultSet intForColumn:@"contactID"]];
-    message.messageSendTime = [NSString stringWithString:[resultSet stringForColumn:@"time"]];
-    message.messageContent = [NSString stringWithString:[resultSet stringForColumn:@"content"]];
-    message.messageAttachment = @"";
-    message.messageShowTime = [NSNumber numberWithBool:[resultSet boolForColumn:@"showTime"]];
+    message.messageSendTime = [resultSet stringForColumn:@"time"];
+    message.messageContent = [resultSet stringForColumn:@"content"];
+    message.messageAttachment = [resultSet stringForColumn:@"attachment"];
     message.messageStatus = (MessageStatus)[resultSet intForColumn:@"status"];
     return message;
 }
