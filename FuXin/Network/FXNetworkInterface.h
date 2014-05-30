@@ -16,13 +16,13 @@
  type:POST
  pram:authenticationRequest
  */
-static NSString *AuthenticationIn = @"https://118.242.18.189/IMApi/api/Authentication";
+static NSString *AuthenticationIn = @"https://118.242.18.189/IMApiMock/api/Authentication";
 /*
  info:登出
  type:PUT
  parm:unAuthenticationRequest
  */
-static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authentication";
+static NSString *AuthenticationOut = @"https://118.242.18.189/IMApiMock/api/Authentication";
 
 //Password
 /*
@@ -30,7 +30,7 @@ static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authenti
  type:PUT
  parm:changePasswordRequest
  */
-static NSString *ChangePassword = @"https://118.242.18.189/IMApi/api/Password";
+static NSString *ChangePassword = @"https://118.242.18.189/IMApiMock/api/Password";
 
 //Contact
 /*
@@ -38,13 +38,13 @@ static NSString *ChangePassword = @"https://118.242.18.189/IMApi/api/Password";
  type:POST
  parm:contactRequest
  */
-static NSString *GetContactList = @"https://118.242.18.189/IMApi/api/Contact";
+static NSString *GetContactList = @"https://118.242.18.189/IMApiMock/api/Contact";
 /*
  info:屏蔽联系人
  type:PUT
  parm:blockContactRequest
  */
-static NSString *BlockContact = @"https://118.242.18.189/IMApi/api/Contact";
+static NSString *BlockContact = @"https://118.242.18.189/IMApiMock/api/Contact";
 
 //Message
 /*
@@ -52,13 +52,13 @@ static NSString *BlockContact = @"https://118.242.18.189/IMApi/api/Contact";
  type:POST
  parm:messageRequest
  */
-static NSString *GetMessage = @"https://118.242.18.189/IMApi/api/Message";
+static NSString *GetMessage = @"https://118.242.18.189/IMApiMock/api/Message";
 /*
  info:发送聊天消息
  type:PUT
  parm:sendMessageRequest
  */
-static NSString *SendMessage = @"https://118.242.18.189/IMApi/api/Message";
+static NSString *SendMessage = @"https://118.242.18.189/IMApiMock/api/Message";
 
 //Profile
 /*
@@ -66,7 +66,7 @@ static NSString *SendMessage = @"https://118.242.18.189/IMApi/api/Message";
  type:POST
  parm:profileRequest
  */
-static NSString *GetProfile = @"https://118.242.18.189/IMApi/api/Profile";
+static NSString *GetProfile = @"https://118.242.18.189/IMApiMock/api/Profile";
 
 //ContactDetail
 /*
@@ -75,13 +75,13 @@ static NSString *GetProfile = @"https://118.242.18.189/IMApi/api/Profile";
  parm:contactDetailRequest
  id
  */
-static NSString *GetContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail/{id}";
+static NSString *GetContactDetail = @"https://118.242.18.189/IMApiMock/api/ContactDetail/{id}";
 /*
  info:修改联系人备注
  type:PUT
  parm:changeContactDetailRequest
  */
-static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail";
+static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApiMock/api/ContactDetail";
 
 //Register
 /*
@@ -89,7 +89,7 @@ static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApi/api/Contac
  type:POST
  parm:registerRequest
  */
-static NSString *Regist = @"https://118.242.18.189/IMApi/api/Register/";
+static NSString *Regist = @"https://118.242.18.189/IMApiMock/api/Register/";
 
 //ValidateCode
 /*
@@ -97,7 +97,7 @@ static NSString *Regist = @"https://118.242.18.189/IMApi/api/Register/";
  type:POST
  parm:validatecodeRequest
  */
-static NSString *Validate = @"https://118.242.18.189/IMApi/api/ValidateCode";
+static NSString *Validate = @"https://118.242.18.189/IMApiMock/api/ValidateCode";
 
 
 @interface FXNetworkInterface : NSObject
