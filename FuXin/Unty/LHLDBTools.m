@@ -245,6 +245,7 @@ static LHLDBTools *staticDBTools;
         if (finished) {
             finished(NO);
         }
+        return;
     }
     __block BOOL transationSucceeded = YES;
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -463,7 +464,7 @@ static LHLDBTools *staticDBTools;
     }];
     if (records.count > 0) {
         if (finished) {
-            finished([NSArray arrayWithArray:records],nil);
+            finished([NSArray arrayWithArray:[[records reverseObjectEnumerator] allObjects]],nil);
         }
     }else{
         if (finished) {
@@ -491,7 +492,7 @@ static LHLDBTools *staticDBTools;
     }];
     if (records.count > 0) {
         if (finished) {
-            finished([NSArray arrayWithArray:records],nil);
+            finished([NSArray arrayWithArray:[[records reverseObjectEnumerator] allObjects]],nil);
         }
     }else{
         if (finished) {

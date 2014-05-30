@@ -16,6 +16,7 @@
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
 #import "FXTimeFormat.h"
+#import "Models.pb.h"
 
 static NSString *MessageCellIdentifier = @"MCI";
 
@@ -136,6 +137,11 @@ static NSString *MessageCellIdentifier = @"MCI";
                           nil];
     CGRect rect = CGRectMake(280, 0, 20, 0);
     [KxMenu showMenuInView:self.view fromRect:rect menuItems:listArray];
+}
+
+- (void)addDetailView {
+    FXContactView *contactView = [[FXContactView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64)];
+    [self.view addSubview:contactView];
 }
 
 #pragma mark - 菜单事件

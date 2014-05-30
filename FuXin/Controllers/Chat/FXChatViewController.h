@@ -10,6 +10,7 @@
 #import "FXShowPhotoView.h"
 #import "FXRequestDataFormat.h"
 #import "FXEmojiView.h"
+#import "FXContactView.h"
 
 //时间间隔 用于显示时间
 #define kTimeInterval  300
@@ -29,5 +30,7 @@
 
 //上次显示timelabel的时间
 @property (nonatomic, strong) NSDate *lastShowDate;
+
+- (void)addDetailView;
 
 @end

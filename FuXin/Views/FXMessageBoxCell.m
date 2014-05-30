@@ -7,6 +7,7 @@
 //
 
 #import "FXMessageBoxCell.h"
+#import "FXChatViewController.h"
 
 #define kMessageBoxHeightMin  36
 
@@ -47,6 +48,7 @@
 
 - (void)initUI {
     _userPhotoView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    _userPhotoView.userInteractionEnabled = YES;
     _backgroundView = [[UIImageView alloc] initWithFrame:CGRectZero];
     _contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _contentLabel.backgroundColor = [UIColor clearColor];
@@ -64,6 +66,9 @@
     UIView *backView = [[UIView alloc] initWithFrame:self.frame];
     backView.backgroundColor = [UIColor clearColor];
     self.selectedBackgroundView = backView;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showContactDetail:)];
+    [_userPhotoView addGestureRecognizer:tap];
 }
 
 - (void)setSubviewsFrame {
@@ -123,6 +128,15 @@
     return [string sizeWithFont:_contentLabel.font
               constrainedToSize:CGSizeMake(kMessageBoxWigthMax, CGFLOAT_MAX)
                   lineBreakMode:NSLineBreakByWordWrapping];
+}
+
+#pragma mark - 手势
+
+- (void)showContactDetail:(UITapGestureRecognizer *)tap {
+    if (self.cellStyle == MessageCellStyleReceive) {
+        FXChatViewController *chatC = (FXChatViewController *)self.superview.superview.superview.nextResponder;
+        [chatC addDetailView];
+    }
 }
 
 @end

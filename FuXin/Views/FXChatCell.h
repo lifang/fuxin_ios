@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong) UILabel *detailLabel;
 
+@property (nonatomic, strong) UIImageView *backView;
+
 - (void)setNumber:(NSString *)number;
 
 @end
