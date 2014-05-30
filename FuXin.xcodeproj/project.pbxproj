@@ -158,9 +158,7 @@
 		77FC8A6C192F361A00FFFCDB /* UnknownFieldSet_Builder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A55192F361A00FFFCDB /* UnknownFieldSet_Builder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		77FC8A6D192F361A00FFFCDB /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A57192F361A00FFFCDB /* Utilities.m */; };
 		77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A59192F361A00FFFCDB /* WireFormat.m */; };
-
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
-
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
 		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
@@ -437,10 +435,8 @@
 		77FC8A57192F361A00FFFCDB /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		77FC8A58192F361A00FFFCDB /* WireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireFormat.h; sourceTree = "<group>"; };
 		77FC8A59192F361A00FFFCDB /* WireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireFormat.m; sourceTree = "<group>"; };
-
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
-
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
@@ -1107,10 +1103,8 @@
 			files = (
 				7755EC861931C40300ADD1A6 /* placeholder@2x.png in Resources */,
 				7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */,
-
 				3A1B2D8A1930CA53004D7F01 /* signal@2x.png in Resources */,
 				3A3115C719319A5C00663819 /* arrow_right@2x.png in Resources */,
-
 				7702C7B5192B03D70015A178 /* chat@2x.png in Resources */,
 				3A3115B619317FC600663819 /* FXTableViewTuichuCell.xib in Resources */,
 				770319CC192C580900798D4D /* password@2x.png in Resources */,
@@ -1119,9 +1113,7 @@
 				93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */,
 				7702C7C6192B4AF20015A178 /* back@2x.png in Resources */,
 				7755EC8F1931CD5700ADD1A6 /* camera@2x.png in Resources */,
-
 				3A3115C91931C21300663819 /* key_icon@2x.png in Resources */,
-
 				770319CD192C580900798D4D /* user@2x.png in Resources */,
 				3A13522B1933416B006C59E4 /* FXSysInfoTableViewCell.xib in Resources */,
 				770319BF192C3D5B00798D4D /* express@2x.png in Resources */,
@@ -1141,10 +1133,8 @@
 				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
 				7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */,
 				7755EC8E1931CD5700ADD1A6 /* cameraselected@2x.png in Resources */,
-
 				3A3115CF1931F64200663819 /* close_icon@2x.png in Resources */,
 				3A13521D193324D0006C59E4 /* trade@2x.png in Resources */,
-
 				3A1351F91932D3BE006C59E4 /* FXXiuGaiMiMaViewController.xib in Resources */,
 				3A3115BB1931842200663819 /* refresh@2x.png in Resources */,
 				3A3115CD1931F63800663819 /* push_icon@2x.png in Resources */,
