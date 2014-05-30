@@ -13,6 +13,11 @@ static UINavigationController *s_loginNavController = nil;
 
 static FXMainController       *s_mainController = nil;
 
+@interface FXAppDelegate ()
+@property (nonatomic ,strong)UIAlertView *alertView;
+@end
+
+
 @implementation FXAppDelegate
 
 @synthesize rootController = _rootController;
@@ -100,6 +105,20 @@ static FXMainController       *s_mainController = nil;
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark --
++ (void)errorAlert:(NSString *)message {
+    if (!message || [message isEqualToString:@""]) {
+        return;
+    }
+    if ([FXAppDelegate shareFXAppDelegate].alertView != nil) {
+        UIAlertView *alert = [FXAppDelegate shareFXAppDelegate].alertView;
+        [alert dismissWithClickedButtonIndex:0 animated:NO];
+    }
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示" message:message delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
+    [[FXAppDelegate shareFXAppDelegate] setAlertView:alert];
+    [alert show];
 }
 
 @end

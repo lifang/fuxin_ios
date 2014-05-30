@@ -72,6 +72,7 @@
     _usernameField = [[UITextField alloc] initWithFrame:CGRectMake(30, 115, 260, 36)];
     _usernameField.returnKeyType = UIReturnKeyDone;
     _usernameField.borderStyle = UITextBorderStyleNone;
+    _usernameField.text = @"18551239661";
     _usernameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
@@ -92,6 +93,7 @@
     _passwordField = [[UITextField alloc] initWithFrame:CGRectMake(30, 175, 260, 36)];
     _passwordField.returnKeyType = UIReturnKeyDone;
     _passwordField.secureTextEntry = YES;
+    _passwordField.text = @"111111";
     _passwordField.borderStyle = UITextBorderStyleNone;
     _passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
