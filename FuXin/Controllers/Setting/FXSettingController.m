@@ -84,6 +84,7 @@
         cell.nameLabel.text = @"黄菡";
         cell.sexView.image = [UIImage imageNamed:@"male.png"];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
         return cell;
     }
     else if (indexPath.row <= 5) {
