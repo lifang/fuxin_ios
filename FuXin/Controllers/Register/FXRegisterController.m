@@ -584,7 +584,6 @@
     NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
     [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
     [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
-                                            Name:self.userNameTextField.text
                                         Password:self.passwordTextField.text
                                  PasswordConfirm:self.confirmPasswordTextField.text
                                     ValidateCode:self.identifyingCodeTextField.text

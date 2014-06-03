@@ -10,17 +10,21 @@
 #import "FXSettingUserCell.h"
 #import "FXUserSettingController.h"
 #import "FXModifyPasswordController.h"
+#import "FXRequestDataFormat.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
 
 @interface FXSettingController ()
 
+@property (nonatomic, strong) Profile *userInfo;
+
 @end
 
 @implementation FXSettingController
 
 @synthesize settingTableView = _settingTableView;
+@synthesize userInfo = _userInfo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,6 +41,7 @@
     // Do any additional setup after loading the view.
     self.title = @"设置";
     [self initUI];
+    [self getUserInfo];
 }
 
 - (void)didReceiveMemoryWarning
@@ -64,6 +69,41 @@
     [table setTableFooterView:view];
 }
 
+#pragma mark - 请求
+
+- (void)getUserInfo {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat getProfileWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ProfileResponse *resp = [ProfileResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //获取成功
+                _userInfo = resp.profile;
+                NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+                [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+                NSLog(@"name = %@,nickName = %@,gender = %d,mob = %@,email = %@,birth = %@,tile = %@,is = %d,li = %@,type = %@",resp.profile.name,resp.profile.nickName,resp.profile.gender,resp.profile.mobilePhoneNum,resp.profile.email,resp.profile.birthday,resp.profile.tileUrl,resp.profile.isProvider,resp.profile.lisence,resp.profile.publishClassType);
+            }
+            else {
+                //获取失败
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
+}
+
+- (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
+    cell.nameLabel.text = _userInfo.name;
+    if (_userInfo.gender == 0) {
+        cell.sexView.image = [UIImage imageNamed:@"male.png"];
+    }
+    else {
+        cell.sexView.image = [UIImage imageNamed:@"female.png"];
+    }
+}
+
 #pragma mark - TableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -82,8 +122,7 @@
             cell = [[FXSettingUserCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:firstIdentifier];
         }
         cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-        cell.nameLabel.text = @"黄菡";
-        cell.sexView.image = [UIImage imageNamed:@"male.png"];
+        [self showUserInfoWithCell:cell];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
         return cell;
@@ -199,6 +238,7 @@
     switch (indexPath.row) {
         case 0: {
             FXUserSettingController *user = [[FXUserSettingController alloc] init];
+            user.userInfo = _userInfo;
             user.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:user animated:YES];
         }

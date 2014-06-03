@@ -42,10 +42,10 @@
  */
 + (void)changePasswordWithToken:(NSString *)token
                          UserID:(int32_t)userID
+                   ValidateCode:(NSString *)validateCode
                OriginalPassword:(NSString *)original
                        Password:(NSString *)password
                 PasswordConfirm:(NSString *)confirm
-                   ValidateCode:(NSString *)validate
                        Finished:(Result)result;
 
 /*
@@ -134,14 +134,12 @@
 /*
  注册
  phoneNumber:手机号
- name:用户名
  password:密码
  passwordConfirm:密码
  validataCode:验证码
  result:返回结果
  */
 + (void)registerWithPhoneNumber:(NSString *)phoneNumber
-                           Name:(NSString *)name
                        Password:(NSString *)password
                 PasswordConfirm:(NSString *)passwordConfirm
                    ValidateCode:(NSString *)validateCode

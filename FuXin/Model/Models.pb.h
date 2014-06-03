@@ -73,59 +73,71 @@
 @class ValidateCodeResponse;
 @class ValidateCodeResponse_Builder;
 typedef enum {
-  AuthenticationResponse_ErrorCodeTypeInvalidUserName = 1,
-  AuthenticationResponse_ErrorCodeTypeInvalidPassword = 2,
-  AuthenticationResponse_ErrorCodeTypeInvalidPasswordExceedCount = 3,
-  AuthenticationResponse_ErrorCodeTypeNotActivate = 4,
-  AuthenticationResponse_ErrorCodeTypeSucceed = 5,
+  AuthenticationResponse_ErrorCodeTypeBadRequest = 1,
+  AuthenticationResponse_ErrorCodeTypeInvalidUserName = 2,
+  AuthenticationResponse_ErrorCodeTypeInvalidPassword = 3,
+  AuthenticationResponse_ErrorCodeTypeInvalidPasswordExceedCount = 4,
+  AuthenticationResponse_ErrorCodeTypeNotActivate = 5,
 } AuthenticationResponse_ErrorCodeType;
 
 BOOL AuthenticationResponse_ErrorCodeTypeIsValidValue(AuthenticationResponse_ErrorCodeType value);
 
 typedef enum {
-  Contact_ContactSourceTypeOrderFrom = 1,
-  Contact_ContactSourceTypeOrderTo = 2,
-  Contact_ContactSourceTypeSubscribeFrom = 4,
-  Contact_ContactSourceTypeSubscribeTo = 8,
-} Contact_ContactSourceType;
+  UnAuthenticationResponse_ErrorCodeTypeBadRequest = 1,
+  UnAuthenticationResponse_ErrorCodeTypeInvalidUserId = 2,
+  UnAuthenticationResponse_ErrorCodeTypeInvalidToken = 3,
+  UnAuthenticationResponse_ErrorCodeTypeInvalidUser = 4,
+  UnAuthenticationResponse_ErrorCodeTypeInvalidDatabase = 5,
+} UnAuthenticationResponse_ErrorCodeType;
 
-BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value);
+BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse_ErrorCodeType value);
 
 typedef enum {
-  RegisterResponse_ErrorCodeTypeInvalidUserName = 1,
-  RegisterResponse_ErrorCodeTypeExistingUserYes = 2,
-  RegisterResponse_ErrorCodeTypeInvalidPassword = 3,
-  RegisterResponse_ErrorCodeTypeInvalidConfirmPassword = 4,
-  RegisterResponse_ErrorCodeTypeInvalidMatchPassword = 5,
-  RegisterResponse_ErrorCodeTypeInvalidValidateCode = 6,
-  RegisterResponse_ErrorCodeTypeInvalidDatabase = 7,
+  Contact_GenderTypeMale = 1,
+  Contact_GenderTypeFemale = 2,
+  Contact_GenderTypePrivacy = 3,
+} Contact_GenderType;
+
+BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value);
+
+typedef enum {
+  RegisterResponse_ErrorCodeTypeBadRequest = 1,
+  RegisterResponse_ErrorCodeTypeInvalidDatabase = 2,
+  RegisterResponse_ErrorCodeTypeInvalidMobilePhoneNumber = 3,
+  RegisterResponse_ErrorCodeTypeExistingUserYes = 4,
+  RegisterResponse_ErrorCodeTypeInvalidPassword = 5,
+  RegisterResponse_ErrorCodeTypeInvalidConfirmPassword = 6,
+  RegisterResponse_ErrorCodeTypeInvalidMatchPassword = 7,
+  RegisterResponse_ErrorCodeTypeInvalidValidateCode = 8,
 } RegisterResponse_ErrorCodeType;
 
 BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value);
 
 typedef enum {
-  ChangePasswordResponse_ErrorCodeTypeInvalidUserId = 1,
-  ChangePasswordResponse_ErrorCodeTypeInvalidToken = 2,
-  ChangePasswordResponse_ErrorCodeTypeAuthError = 3,
-  ChangePasswordResponse_ErrorCodeTypeExistingUserNo = 4,
-  ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword = 5,
-  ChangePasswordResponse_ErrorCodeTypeInvalidPassword = 6,
-  ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword = 7,
-  ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword = 8,
-  ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode = 9,
-  ChangePasswordResponse_ErrorCodeTypeInvalidDatabase = 10,
+  ChangePasswordResponse_ErrorCodeTypeBadRequest = 1,
+  ChangePasswordResponse_ErrorCodeTypeInvalidUserId = 2,
+  ChangePasswordResponse_ErrorCodeTypeInvalidToken = 3,
+  ChangePasswordResponse_ErrorCodeTypeInvalidUser = 4,
+  ChangePasswordResponse_ErrorCodeTypeInvalidDatabase = 5,
+  ChangePasswordResponse_ErrorCodeTypeExistingUserNo = 6,
+  ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword = 7,
+  ChangePasswordResponse_ErrorCodeTypeInvalidPassword = 8,
+  ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword = 9,
+  ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword = 10,
+  ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode = 11,
 } ChangePasswordResponse_ErrorCodeType;
 
 BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value);
 
 typedef enum {
-  ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber = 1,
-  ResetPasswordResponse_ErrorCodeTypeInvalidPassword = 2,
-  ResetPasswordResponse_ErrorCodeTypeInvalidPasswordConfirm = 3,
-  ResetPasswordResponse_ErrorCodeTypeInvalidMatchPassword = 4,
-  ResetPasswordResponse_ErrorCodeTypeInvalidValidateCode = 5,
-  ResetPasswordResponse_ErrorCodeTypeExistingUserNo = 6,
-  ResetPasswordResponse_ErrorCodeTypeInvalidDatabase = 7,
+  ResetPasswordResponse_ErrorCodeTypeBadRequest = 1,
+  ResetPasswordResponse_ErrorCodeTypeInvalidDatabase = 2,
+  ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber = 3,
+  ResetPasswordResponse_ErrorCodeTypeInvalidPassword = 4,
+  ResetPasswordResponse_ErrorCodeTypeInvalidPasswordConfirm = 5,
+  ResetPasswordResponse_ErrorCodeTypeInvalidMatchPassword = 6,
+  ResetPasswordResponse_ErrorCodeTypeInvalidValidateCode = 7,
+  ResetPasswordResponse_ErrorCodeTypeExistingUserNo = 8,
 } ResetPasswordResponse_ErrorCodeType;
 
 BOOL ResetPasswordResponse_ErrorCodeTypeIsValidValue(ResetPasswordResponse_ErrorCodeType value);
@@ -139,12 +151,13 @@ typedef enum {
 BOOL ValidateCodeRequest_ValidateTypeIsValidValue(ValidateCodeRequest_ValidateType value);
 
 typedef enum {
-  ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber = 1,
-  ValidateCodeResponse_ErrorCodeTypeInvalidType = 2,
-  ValidateCodeResponse_ErrorCodeTypeExistingUserYes = 3,
-  ValidateCodeResponse_ErrorCodeTypeExistingUserNo = 4,
-  ValidateCodeResponse_ErrorCodeTypeLockTime = 5,
-  ValidateCodeResponse_ErrorCodeTypeSendError = 6,
+  ValidateCodeResponse_ErrorCodeTypeBadRequest = 1,
+  ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber = 2,
+  ValidateCodeResponse_ErrorCodeTypeInvalidType = 3,
+  ValidateCodeResponse_ErrorCodeTypeExistingUserYes = 4,
+  ValidateCodeResponse_ErrorCodeTypeExistingUserNo = 5,
+  ValidateCodeResponse_ErrorCodeTypeLockTime = 6,
+  ValidateCodeResponse_ErrorCodeTypeSendError = 7,
 } ValidateCodeResponse_ErrorCodeType;
 
 BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value);
@@ -373,13 +386,17 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasUserId_:1;
+  BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
   int32_t userId;
+  UnAuthenticationResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasUserId;
+- (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
 @property (readonly) int32_t userId;
+@property (readonly) UnAuthenticationResponse_ErrorCodeType errorCode;
 
 + (UnAuthenticationResponse*) defaultInstance;
 - (UnAuthenticationResponse*) defaultInstance;
@@ -424,6 +441,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (int32_t) userId;
 - (UnAuthenticationResponse_Builder*) setUserId:(int32_t) value;
 - (UnAuthenticationResponse_Builder*) clearUserId;
+
+- (BOOL) hasErrorCode;
+- (UnAuthenticationResponse_ErrorCodeType) errorCode;
+- (UnAuthenticationResponse_Builder*) setErrorCode:(UnAuthenticationResponse_ErrorCodeType) value;
+- (UnAuthenticationResponse_Builder*) clearErrorCode;
 @end
 
 @interface Contact : PBGeneratedMessage {
@@ -431,7 +453,6 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   BOOL hasIsBlocked_:1;
   BOOL hasIsProvider_:1;
   BOOL hasContactId_:1;
-  BOOL hasGender_:1;
   BOOL hasSource_:1;
   BOOL hasName_:1;
   BOOL hasCustomName_:1;
@@ -439,11 +460,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   BOOL hasLastContactTime_:1;
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
-  BOOL hasPublishClassType_:1;
+  BOOL hasIndividualResume_:1;
+  BOOL hasGender_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
   int32_t contactId;
-  int32_t gender;
   int32_t source;
   NSString* name;
   NSString* customName;
@@ -451,7 +472,8 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   NSString* lastContactTime;
   NSString* tileUrl;
   NSString* lisence;
-  NSString* publishClassType;
+  NSString* individualResume;
+  Contact_GenderType gender;
 }
 - (BOOL) hasContactId;
 - (BOOL) hasName;
@@ -464,19 +486,19 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (BOOL) hasTileUrl;
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
-- (BOOL) hasPublishClassType;
+- (BOOL) hasIndividualResume;
 @property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
 @property (readonly, retain) NSString* pinyin;
 - (BOOL) isBlocked;
 @property (readonly, retain) NSString* lastContactTime;
-@property (readonly) int32_t gender;
+@property (readonly) Contact_GenderType gender;
 @property (readonly) int32_t source;
 @property (readonly, retain) NSString* tileUrl;
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
-@property (readonly, retain) NSString* publishClassType;
+@property (readonly, retain) NSString* individualResume;
 
 + (Contact*) defaultInstance;
 - (Contact*) defaultInstance;
@@ -543,8 +565,8 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (Contact_Builder*) clearLastContactTime;
 
 - (BOOL) hasGender;
-- (int32_t) gender;
-- (Contact_Builder*) setGender:(int32_t) value;
+- (Contact_GenderType) gender;
+- (Contact_Builder*) setGender:(Contact_GenderType) value;
 - (Contact_Builder*) clearGender;
 
 - (BOOL) hasSource;
@@ -567,10 +589,10 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (Contact_Builder*) setLisence:(NSString*) value;
 - (Contact_Builder*) clearLisence;
 
-- (BOOL) hasPublishClassType;
-- (NSString*) publishClassType;
-- (Contact_Builder*) setPublishClassType:(NSString*) value;
-- (Contact_Builder*) clearPublishClassType;
+- (BOOL) hasIndividualResume;
+- (NSString*) individualResume;
+- (Contact_Builder*) setIndividualResume:(NSString*) value;
+- (Contact_Builder*) clearIndividualResume;
 @end
 
 @interface ContactRequest : PBGeneratedMessage {
@@ -1818,12 +1840,16 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasErrorCode_:1;
+  BOOL hasSendTime_:1;
   BOOL isSucceed_:1;
   int32_t errorCode;
+  NSString* sendTime;
 }
 - (BOOL) hasIsSucceed;
+- (BOOL) hasSendTime;
 - (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
+@property (readonly, retain) NSString* sendTime;
 @property (readonly) int32_t errorCode;
 
 + (SendMessageResponse*) defaultInstance;
@@ -1865,6 +1891,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (SendMessageResponse_Builder*) setIsSucceed:(BOOL) value;
 - (SendMessageResponse_Builder*) clearIsSucceed;
 
+- (BOOL) hasSendTime;
+- (NSString*) sendTime;
+- (SendMessageResponse_Builder*) setSendTime:(NSString*) value;
+- (SendMessageResponse_Builder*) clearSendTime;
+
 - (BOOL) hasErrorCode;
 - (int32_t) errorCode;
 - (SendMessageResponse_Builder*) setErrorCode:(int32_t) value;
@@ -1874,23 +1905,19 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @interface RegisterRequest : PBGeneratedMessage {
 @private
   BOOL hasMobilePhoneNumber_:1;
-  BOOL hasName_:1;
   BOOL hasPassword_:1;
   BOOL hasPasswordConfirm_:1;
   BOOL hasValidateCode_:1;
   NSString* mobilePhoneNumber;
-  NSString* name;
   NSString* password;
   NSString* passwordConfirm;
   NSString* validateCode;
 }
 - (BOOL) hasMobilePhoneNumber;
-- (BOOL) hasName;
 - (BOOL) hasPassword;
 - (BOOL) hasPasswordConfirm;
 - (BOOL) hasValidateCode;
 @property (readonly, retain) NSString* mobilePhoneNumber;
-@property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* password;
 @property (readonly, retain) NSString* passwordConfirm;
 @property (readonly, retain) NSString* validateCode;
@@ -1933,11 +1960,6 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (NSString*) mobilePhoneNumber;
 - (RegisterRequest_Builder*) setMobilePhoneNumber:(NSString*) value;
 - (RegisterRequest_Builder*) clearMobilePhoneNumber;
-
-- (BOOL) hasName;
-- (NSString*) name;
-- (RegisterRequest_Builder*) setName:(NSString*) value;
-- (RegisterRequest_Builder*) clearName;
 
 - (BOOL) hasPassword;
 - (NSString*) password;

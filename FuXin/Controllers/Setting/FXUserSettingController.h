@@ -7,9 +7,12 @@
 //
 
 #import "FXAdjustViewController.h"
+#import "Models.pb.h"
 
 @interface FXUserSettingController : FXAdjustViewController<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) UITableView *userTableView;
+
+@property (nonatomic, strong) Profile *userInfo;
 
 @end

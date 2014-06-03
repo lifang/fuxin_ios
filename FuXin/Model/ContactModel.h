@@ -23,8 +23,9 @@ typedef enum{
 } ContactRelationship;  //关系
 
 typedef enum{
-    ContactSexMale = 0,
-    ContactSexFemale = 1
+    ContactSexMale = 1,
+    ContactSexFemale,
+    ContactSexSecret,
 } ContactSex; //性别
 
 /*

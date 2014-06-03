@@ -537,35 +537,66 @@
     [(UIButton *)sender setUserInteractionEnabled:NO];
     NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
     [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-    [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
-                                            Name:self.originPasswordTextField.text
+//    [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
+//                                            Name:self.originPasswordTextField.text
+//                                        Password:self.passwordTextField.text
+//                                 PasswordConfirm:self.confirmPasswordTextField.text
+//                                    ValidateCode:self.identifyingCodeTextField.text
+//                                        Finished:^(BOOL success, NSData *response) {
+//                                            NSLog(@"res = %@",response);
+//                                            [(UIButton *)sender setUserInteractionEnabled:YES];
+//                                            if (success) {
+//                                                //请求成功
+//                                                RegisterResponse *resp = [RegisterResponse parseFromData:response];
+//                                                if (resp.isSucceed) {
+//                                                    //注册成功
+//                                                    NSLog(@"register succeed");
+//                                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+//                                                                                                        message:@"账号注册成功！"
+//                                                                                                       delegate:self
+//                                                                                              cancelButtonTitle:@"确定"
+//                                                                                              otherButtonTitles:nil];
+//                                                    [alertView show];
+//                                                }
+//                                                else {
+//                                                    //注册失败
+//                                                    NSLog(@"register errorCode = %d",resp.errorCode);
+//                                                }
+//                                            }
+//                                            else {
+//                                                //请求失败
+//                                                NSLog(@"request fail");
+//                                            }
+//                                        }];
+    [FXRequestDataFormat changePasswordWithToken:[FXAppDelegate shareFXAppDelegate].token
+                                          UserID:[FXAppDelegate shareFXAppDelegate].userID
+                                    ValidateCode:self.identifyingCodeTextField.text
+                                OriginalPassword:self.originPasswordTextField.text
                                         Password:self.passwordTextField.text
                                  PasswordConfirm:self.confirmPasswordTextField.text
-                                    ValidateCode:self.identifyingCodeTextField.text
                                         Finished:^(BOOL success, NSData *response) {
                                             NSLog(@"res = %@",response);
                                             [(UIButton *)sender setUserInteractionEnabled:YES];
                                             if (success) {
                                                 //请求成功
-                                                RegisterResponse *resp = [RegisterResponse parseFromData:response];
+                                                ChangePasswordResponse *resp = [ChangePasswordResponse parseFromData:response];
                                                 if (resp.isSucceed) {
-                                                    //注册成功
-                                                    NSLog(@"register succeed");
-                                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                                                        message:@"账号注册成功！"
-                                                                                                       delegate:self
-                                                                                              cancelButtonTitle:@"确定"
-                                                                                              otherButtonTitles:nil];
-                                                    [alertView show];
+                                                    //修改成功
+                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                    message:@"修改成功"
+                                                                                                   delegate:self
+                                                                                          cancelButtonTitle:@"确定"
+                                                                                          otherButtonTitles:nil];
+                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                        [alert show];
+                                                    });
+                                                }else{
+                                                    //修改失败
+                                                    [FXAppDelegate errorAlert:[NSString stringWithFormat:@"errorCode : %d" ,resp.errorCode]];
                                                 }
-                                                else {
-                                                    //注册失败
-                                                    NSLog(@"register errorCode = %d",resp.errorCode);
-                                                }
-                                            }
-                                            else {
+                                            }else{
                                                 //请求失败
-                                                NSLog(@"request fail");
+                                                NSLog(@"request failed");
                                             }
                                         }];
 }

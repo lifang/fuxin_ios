@@ -163,12 +163,12 @@ static NSString *MessageCellIdentifier = @"MCI";
                                  setPinyin:_contact.contactPinyin]
                                 setIsBlocked:_contact.contactIsBlocked]
                                setLastContactTime:_contact.contactLastContactTime]
-                              setGender:_contact.contactSex]
+                              setGender:(Contact_GenderType)_contact.contactSex]
                              setSource:_contact.contactRelationship]
                             setTileUrl:_contact.contactAvatarURL]
                            setIsProvider:_contact.contactIsProvider]
                           setLisence:_contact.contactLisence]
-                         setPublishClassType:_contact.contactPublishClassType] build];
+                         setIndividualResume:_contact.contactSignature] build];
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     [FXRequestDataFormat modifyContactDetailWithToken:delegate.token UserID:delegate.userID Contact:contact Finished:^(BOOL success, NSData *response) {
         if (success) {
