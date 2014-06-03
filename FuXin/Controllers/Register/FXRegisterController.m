@@ -36,6 +36,7 @@
 @property (strong, nonatomic) UIButton *doneButton;   //完成按钮
 @property (strong, nonatomic) UITextField *userNameTextField;  //用户名
 @property (strong, nonatomic) UILabel *userNameTipLabel; //用户名提示
+@property (strong, nonatomic) UIView *lineView; //一条线
 
 - (IBAction)spaceAreaClicked:(id)sender;
 
@@ -129,7 +130,6 @@
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
     
     self.alertLabel = [[UILabel alloc] init];
-//    self.alertLabel.text = @"格式不正确!";
     self.alertLabel.textAlignment = NSTextAlignmentRight;
     self.alertLabel.font = [UIFont systemFontOfSize:12.];
     self.alertLabel.textColor = kColor(255, 0, 9, 1);
@@ -173,6 +173,9 @@
     _phoneNumberTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
+    self.lineView = [[UIView alloc] init];
+    self.lineView.backgroundColor = kColor(191, 191, 191, 1);
+    
     self.rewriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self changeRewriteButtonStatus:NO];
     [self.rewriteButton setTitle:@"确认" forState:UIControlStateNormal];
@@ -210,10 +213,13 @@
     self.agreeLabel = [[UILabel alloc] init];
     self.agreeLabel.text = @"我已经阅读并同意";
     self.agreeLabel.font = [UIFont systemFontOfSize:12.];
+    _agreeLabel.textAlignment = NSTextAlignmentLeft;
     _agreeLabel.backgroundColor = [UIColor clearColor];
     self.agreeLabel.textColor = kColor(51, 51, 51, 1);
     
     self.serviceTextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.serviceTextButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    self.serviceTextButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"服务协议"];
     [buttonString addAttribute:NSForegroundColorAttributeName value:kColor(255, 0, 9, 1) range:NSMakeRange(0, buttonString.length)];
     [buttonString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, buttonString.length)];
@@ -322,6 +328,10 @@
                 self.alertLabel.frame = (CGRect){CGRectGetMinX(self.rewriteButton.frame) - 5 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.alertLabel];
             }
+            if ([self cell:cell isNotSuperOfView:self.lineView]) {
+                self.lineView.frame = (CGRect){0 ,0 ,cellSize.width ,2};
+                [cell.contentView addSubview:self.lineView];
+            }
             break;
         case 4:    //验证码
             if ([self cell:cell isNotSuperOfView:self.identifyingCodeTextField]) {
@@ -354,11 +364,11 @@
                 [cell.contentView addSubview:self.checkButton];
             }
             if ([self cell:cell isNotSuperOfView:self.agreeLabel]) {
-                self.agreeLabel.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
+                self.agreeLabel.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.agreeLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.serviceTextButton]) { //服务协议
-                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 94 ,0 ,cellSize.width / 4 ,cellSize.height - 1};
+                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 95 ,1 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.serviceTextButton];
             }
             break;

@@ -11,6 +11,7 @@
 #import "FXUserSettingController.h"
 #import "FXModifyPasswordController.h"
 #import "FXRequestDataFormat.h"
+#import "FXBlockedContactsController.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -247,6 +248,11 @@
         case 4: {
             FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
             [self.navigationController pushViewController:modifyPassword animated:YES];
+        }
+            break;
+        case 5:{
+            FXBlockedContactsController *blockedContacts = [[FXBlockedContactsController alloc] init];
+            [self.navigationController pushViewController:blockedContacts animated:YES];
         }
             break;
         default:

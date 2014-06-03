@@ -140,6 +140,8 @@
 		77FC8A6D192F361A00FFFCDB /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A57192F361A00FFFCDB /* Utilities.m */; };
 		77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A59192F361A00FFFCDB /* WireFormat.m */; };
 		9341571C193D995F00289EE4 /* FXModifyPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571B193D995F00289EE4 /* FXModifyPasswordController.m */; };
+		9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */; };
+		93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93415721193DC64100289EE4 /* FXBlockedContactsController.m */; };
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
@@ -392,6 +394,10 @@
 		77FC8A59192F361A00FFFCDB /* WireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireFormat.m; sourceTree = "<group>"; };
 		9341571A193D995F00289EE4 /* FXModifyPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXModifyPasswordController.h; sourceTree = "<group>"; };
 		9341571B193D995F00289EE4 /* FXModifyPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXModifyPasswordController.m; sourceTree = "<group>"; };
+		9341571D193DBE1700289EE4 /* FXBlockedContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlockedContactCell.h; sourceTree = "<group>"; };
+		9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlockedContactCell.m; sourceTree = "<group>"; };
+		93415720193DC64100289EE4 /* FXBlockedContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlockedContactsController.h; sourceTree = "<group>"; };
+		93415721193DC64100289EE4 /* FXBlockedContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlockedContactsController.m; sourceTree = "<group>"; };
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
@@ -542,6 +548,8 @@
 				770351A9193054EA002054EA /* FXSearchViewController.m */,
 				7706BD51192A0CE800C3E0E5 /* FXAddressListController.h */,
 				7706BD52192A0CE800C3E0E5 /* FXAddressListController.m */,
+				93415720193DC64100289EE4 /* FXBlockedContactsController.h */,
+				93415721193DC64100289EE4 /* FXBlockedContactsController.m */,
 			);
 			path = AddressList;
 			sourceTree = "<group>";
@@ -588,6 +596,8 @@
 				771E1D5419371FDC0054BFC9 /* FXContactView.m */,
 				77025CDA193C2895007F9F0D /* FXSettingUserCell.h */,
 				77025CDB193C2895007F9F0D /* FXSettingUserCell.m */,
+				9341571D193DBE1700289EE4 /* FXBlockedContactCell.h */,
+				9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1102,6 +1112,7 @@
 				93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */,
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
+				9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */,
 				775BBC8319342A98006B5155 /* EmojiTransport.m in Sources */,
 				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
 				77FC8A23192F1DFB00FFFCDB /* FXHttpRequest.m in Sources */,
@@ -1127,6 +1138,7 @@
 				775BBC8219342A98006B5155 /* EmojiPictographs.m in Sources */,
 				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,
+				93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */,
 				770319DC192C7F0300798D4D /* FXKeyboardAnimation.m in Sources */,
 				7718BD83193D6B0900F7532C /* FXUserSettingController.m in Sources */,
 				7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */,
