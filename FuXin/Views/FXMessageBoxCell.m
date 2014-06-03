@@ -42,7 +42,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-    
+    _timeLabel.backgroundColor = kColor(185, 185, 185, 1);
     // Configure the view for the selected state
 }
 

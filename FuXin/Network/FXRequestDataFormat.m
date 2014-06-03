@@ -50,6 +50,7 @@
                OriginalPassword:(NSString *)original
                        Password:(NSString *)password
                 PasswordConfirm:(NSString *)confirm
+                   ValidateCode:(NSString *)validate
                        Finished:(Result)result {
     ChangePasswordRequest *PBObject = [[[[[[[ChangePasswordRequest builder]
                                             setToken:token] setUserId:userID]

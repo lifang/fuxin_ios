@@ -72,7 +72,7 @@
     _usernameField = [[UITextField alloc] initWithFrame:CGRectMake(30, 115, 260, 36)];
     _usernameField.returnKeyType = UIReturnKeyDone;
     _usernameField.borderStyle = UITextBorderStyleNone;
-    _usernameField.text = @"18551239661";
+    _usernameField.text = @"MockUserName";
     _usernameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;

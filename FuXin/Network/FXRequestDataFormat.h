@@ -45,6 +45,7 @@
                OriginalPassword:(NSString *)original
                        Password:(NSString *)password
                 PasswordConfirm:(NSString *)confirm
+                   ValidateCode:(NSString *)validate
                        Finished:(Result)result;
 
 /*
