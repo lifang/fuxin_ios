@@ -121,7 +121,6 @@
         self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }
     self.tableView.separatorColor = kColor(191, 191, 191, 1);
-//    self.tableView.scrollEnabled = NO;
     
     self.passwordTipLabel = [[UILabel alloc] init];
     self.passwordTipLabel.font = [UIFont systemFontOfSize:12.];
@@ -130,7 +129,7 @@
     self.passwordTipLabel.textColor = kColor(255, 0, 9, 1);
     
     self.alertLabel = [[UILabel alloc] init];
-    self.alertLabel.text = @"格式不正确!";
+//    self.alertLabel.text = @"格式不正确!";
     self.alertLabel.textAlignment = NSTextAlignmentRight;
     self.alertLabel.font = [UIFont systemFontOfSize:12.];
     self.alertLabel.textColor = kColor(255, 0, 9, 1);

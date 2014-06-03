@@ -77,7 +77,6 @@
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
-    _usernameField.text = @"MockUserName";
     _usernameField.delegate = self;
     [self.view addSubview:_usernameField];
     //划线
@@ -100,7 +99,6 @@
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
     _passwordField.leftView = psdBackView;
-    _passwordField.text = @"123";
     _passwordField.delegate = self;
     [self.view addSubview:_passwordField];
     //划线
