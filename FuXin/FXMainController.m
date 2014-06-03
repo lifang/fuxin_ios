@@ -229,13 +229,12 @@
         model.contactIsBlocked = contact.isBlocked;
         model.contactPinyin = contact.pinyin;
         model.contactLastContactTime = contact.lastContactTime;
-        model.contactSex = contact.gender;
+        model.contactSex = (ContactSex)contact.gender;
         model.contactRelationship = contact.source;
         model.contactAvatar = nil;
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
-        model.contactPublishClassType = contact.publishClassType;
-        model.contactSignature = @"";
+        model.contactSignature = contact.individualResume;
         model.contactAvatarURL = contact.tileUrl;
         [arrayForDB addObject:model];
     }

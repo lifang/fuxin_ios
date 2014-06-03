@@ -20,6 +20,7 @@
 
 @implementation FXUserSettingController
 
+@synthesize userInfo = _userInfo;
 @synthesize photoView = _photoView;
 @synthesize nameField = _nameField;
 @synthesize userTableView = _userTableView;
@@ -99,7 +100,7 @@
     _nameField.font = [UIFont systemFontOfSize:14];
     _nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _nameField.textAlignment = NSTextAlignmentRight;
-    _nameField.text = @"昵称";
+    _nameField.text = _userInfo.name;
     _nameField.returnKeyType = UIReturnKeyDone;
     _nameField.delegate = self;
     [headerView addSubview:_nameField];
@@ -160,33 +161,33 @@
     switch (indexPath.row) {
         case 0: {
             title.text = @"行业认证：";
-            content.text = @"教育咨询";
+            content.text = _userInfo.lisence;
         }
             break;
         case 1: {
             title.text = @"课程类别：";
-            content.text = @"数学";
+            content.text = _userInfo.publishClassType;
         }
             break;
         case 2: {
             title.text = @"手机号码：";
-            content.text = @"132***5677";
+            content.text = _userInfo.mobilePhoneNum;
         }
             break;
         case 3: {
             title.text = @"邮箱：";
-            content.text = @"132**********@126.com";
+            content.text = _userInfo.email;
         }
             break;
         case 4: {
             title.text = @"生日：";
-            content.text = @"1982-10-10";
+            content.text = _userInfo.birthday;
             
         }
             break;
         case 5: {
             title.text = @"性别：";
-            content.text = @"女";
+            content.text = @"男";
         }
             break;
         default:

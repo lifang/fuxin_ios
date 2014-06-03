@@ -296,7 +296,7 @@ static AuthenticationRequest* defaultAuthenticationRequestInstance = nil;
     self.userId = 0;
     self.token = @"";
     self.passwordFailCount = 0;
-    self.errorCode = AuthenticationResponse_ErrorCodeTypeInvalidUserName;
+    self.errorCode = AuthenticationResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -390,11 +390,11 @@ static AuthenticationResponse* defaultAuthenticationResponseInstance = nil;
 
 BOOL AuthenticationResponse_ErrorCodeTypeIsValidValue(AuthenticationResponse_ErrorCodeType value) {
   switch (value) {
+    case AuthenticationResponse_ErrorCodeTypeBadRequest:
     case AuthenticationResponse_ErrorCodeTypeInvalidUserName:
     case AuthenticationResponse_ErrorCodeTypeInvalidPassword:
     case AuthenticationResponse_ErrorCodeTypeInvalidPasswordExceedCount:
     case AuthenticationResponse_ErrorCodeTypeNotActivate:
-    case AuthenticationResponse_ErrorCodeTypeSucceed:
       return YES;
     default:
       return NO;
@@ -583,7 +583,7 @@ BOOL AuthenticationResponse_ErrorCodeTypeIsValidValue(AuthenticationResponse_Err
 }
 - (AuthenticationResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = AuthenticationResponse_ErrorCodeTypeInvalidUserName;
+  result.errorCode = AuthenticationResponse_ErrorCodeTypeBadRequest;
   return self;
 }
 @end
@@ -807,6 +807,7 @@ static UnAuthenticationRequest* defaultUnAuthenticationRequestInstance = nil;
 @interface UnAuthenticationResponse ()
 @property BOOL isSucceed;
 @property int32_t userId;
+@property UnAuthenticationResponse_ErrorCodeType errorCode;
 @end
 
 @implementation UnAuthenticationResponse
@@ -830,6 +831,13 @@ static UnAuthenticationRequest* defaultUnAuthenticationRequestInstance = nil;
   hasUserId_ = !!value;
 }
 @synthesize userId;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   [super dealloc];
 }
@@ -837,6 +845,7 @@ static UnAuthenticationRequest* defaultUnAuthenticationRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.userId = 0;
+    self.errorCode = UnAuthenticationResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -862,6 +871,9 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   if (self.hasUserId) {
     [output writeInt32:2 value:self.userId];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:3 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -876,6 +888,9 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   }
   if (self.hasUserId) {
     size += computeInt32Size(2, self.userId);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -910,6 +925,18 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
 }
 @end
 
+BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse_ErrorCodeType value) {
+  switch (value) {
+    case UnAuthenticationResponse_ErrorCodeTypeBadRequest:
+    case UnAuthenticationResponse_ErrorCodeTypeInvalidUserId:
+    case UnAuthenticationResponse_ErrorCodeTypeInvalidToken:
+    case UnAuthenticationResponse_ErrorCodeTypeInvalidUser:
+    case UnAuthenticationResponse_ErrorCodeTypeInvalidDatabase:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface UnAuthenticationResponse_Builder()
 @property (retain) UnAuthenticationResponse* result;
 @end
@@ -958,6 +985,9 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   if (other.hasUserId) {
     [self setUserId:other.userId];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -985,6 +1015,15 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
       }
       case 16: {
         [self setUserId:[input readInt32]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (UnAuthenticationResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -1022,6 +1061,22 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   result.userId = 0;
   return self;
 }
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (UnAuthenticationResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (UnAuthenticationResponse_Builder*) setErrorCode:(UnAuthenticationResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (UnAuthenticationResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = UnAuthenticationResponse_ErrorCodeTypeBadRequest;
+  return self;
+}
 @end
 
 @interface Contact ()
@@ -1031,12 +1086,12 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
 @property (retain) NSString* pinyin;
 @property BOOL isBlocked;
 @property (retain) NSString* lastContactTime;
-@property int32_t gender;
+@property Contact_GenderType gender;
 @property int32_t source;
 @property (retain) NSString* tileUrl;
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
-@property (retain) NSString* publishClassType;
+@property (retain) NSString* individualResume;
 @end
 
 @implementation Contact
@@ -1128,13 +1183,13 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   hasLisence_ = !!value;
 }
 @synthesize lisence;
-- (BOOL) hasPublishClassType {
-  return !!hasPublishClassType_;
+- (BOOL) hasIndividualResume {
+  return !!hasIndividualResume_;
 }
-- (void) setHasPublishClassType:(BOOL) value {
-  hasPublishClassType_ = !!value;
+- (void) setHasIndividualResume:(BOOL) value {
+  hasIndividualResume_ = !!value;
 }
-@synthesize publishClassType;
+@synthesize individualResume;
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1142,7 +1197,7 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
   self.lastContactTime = nil;
   self.tileUrl = nil;
   self.lisence = nil;
-  self.publishClassType = nil;
+  self.individualResume = nil;
   [super dealloc];
 }
 - (id) init {
@@ -1153,12 +1208,12 @@ static UnAuthenticationResponse* defaultUnAuthenticationResponseInstance = nil;
     self.pinyin = @"";
     self.isBlocked = NO;
     self.lastContactTime = @"";
-    self.gender = 0;
+    self.gender = Contact_GenderTypeMale;
     self.source = 0;
     self.tileUrl = @"";
     self.isProvider = NO;
     self.lisence = @"";
-    self.publishClassType = @"";
+    self.individualResume = @"";
   }
   return self;
 }
@@ -1197,7 +1252,7 @@ static Contact* defaultContactInstance = nil;
     [output writeString:6 value:self.lastContactTime];
   }
   if (self.hasGender) {
-    [output writeInt32:7 value:self.gender];
+    [output writeEnum:7 value:self.gender];
   }
   if (self.hasSource) {
     [output writeInt32:8 value:self.source];
@@ -1211,8 +1266,8 @@ static Contact* defaultContactInstance = nil;
   if (self.hasLisence) {
     [output writeString:11 value:self.lisence];
   }
-  if (self.hasPublishClassType) {
-    [output writeString:12 value:self.publishClassType];
+  if (self.hasIndividualResume) {
+    [output writeString:12 value:self.individualResume];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -1242,7 +1297,7 @@ static Contact* defaultContactInstance = nil;
     size += computeStringSize(6, self.lastContactTime);
   }
   if (self.hasGender) {
-    size += computeInt32Size(7, self.gender);
+    size += computeEnumSize(7, self.gender);
   }
   if (self.hasSource) {
     size += computeInt32Size(8, self.source);
@@ -1256,8 +1311,8 @@ static Contact* defaultContactInstance = nil;
   if (self.hasLisence) {
     size += computeStringSize(11, self.lisence);
   }
-  if (self.hasPublishClassType) {
-    size += computeStringSize(12, self.publishClassType);
+  if (self.hasIndividualResume) {
+    size += computeStringSize(12, self.individualResume);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1292,12 +1347,11 @@ static Contact* defaultContactInstance = nil;
 }
 @end
 
-BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
+BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
   switch (value) {
-    case Contact_ContactSourceTypeOrderFrom:
-    case Contact_ContactSourceTypeOrderTo:
-    case Contact_ContactSourceTypeSubscribeFrom:
-    case Contact_ContactSourceTypeSubscribeTo:
+    case Contact_GenderTypeMale:
+    case Contact_GenderTypeFemale:
+    case Contact_GenderTypePrivacy:
       return YES;
     default:
       return NO;
@@ -1378,8 +1432,8 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
   if (other.hasLisence) {
     [self setLisence:other.lisence];
   }
-  if (other.hasPublishClassType) {
-    [self setPublishClassType:other.publishClassType];
+  if (other.hasIndividualResume) {
+    [self setIndividualResume:other.individualResume];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -1427,7 +1481,12 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
         break;
       }
       case 56: {
-        [self setGender:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (Contact_GenderTypeIsValidValue(value)) {
+          [self setGender:value];
+        } else {
+          [unknownFields mergeVarintField:7 value:value];
+        }
         break;
       }
       case 64: {
@@ -1447,7 +1506,7 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
         break;
       }
       case 98: {
-        [self setPublishClassType:[input readString]];
+        [self setIndividualResume:[input readString]];
         break;
       }
     }
@@ -1552,17 +1611,17 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
 - (BOOL) hasGender {
   return result.hasGender;
 }
-- (int32_t) gender {
+- (Contact_GenderType) gender {
   return result.gender;
 }
-- (Contact_Builder*) setGender:(int32_t) value {
+- (Contact_Builder*) setGender:(Contact_GenderType) value {
   result.hasGender = YES;
   result.gender = value;
   return self;
 }
 - (Contact_Builder*) clearGender {
   result.hasGender = NO;
-  result.gender = 0;
+  result.gender = Contact_GenderTypeMale;
   return self;
 }
 - (BOOL) hasSource {
@@ -1629,20 +1688,20 @@ BOOL Contact_ContactSourceTypeIsValidValue(Contact_ContactSourceType value) {
   result.lisence = @"";
   return self;
 }
-- (BOOL) hasPublishClassType {
-  return result.hasPublishClassType;
+- (BOOL) hasIndividualResume {
+  return result.hasIndividualResume;
 }
-- (NSString*) publishClassType {
-  return result.publishClassType;
+- (NSString*) individualResume {
+  return result.individualResume;
 }
-- (Contact_Builder*) setPublishClassType:(NSString*) value {
-  result.hasPublishClassType = YES;
-  result.publishClassType = value;
+- (Contact_Builder*) setIndividualResume:(NSString*) value {
+  result.hasIndividualResume = YES;
+  result.individualResume = value;
   return self;
 }
-- (Contact_Builder*) clearPublishClassType {
-  result.hasPublishClassType = NO;
-  result.publishClassType = @"";
+- (Contact_Builder*) clearIndividualResume {
+  result.hasIndividualResume = NO;
+  result.individualResume = @"";
   return self;
 }
 @end
@@ -6624,6 +6683,7 @@ static SendMessageRequest* defaultSendMessageRequestInstance = nil;
 
 @interface SendMessageResponse ()
 @property BOOL isSucceed;
+@property (retain) NSString* sendTime;
 @property int32_t errorCode;
 @end
 
@@ -6641,6 +6701,13 @@ static SendMessageRequest* defaultSendMessageRequestInstance = nil;
 - (void) setIsSucceed:(BOOL) value {
   isSucceed_ = !!value;
 }
+- (BOOL) hasSendTime {
+  return !!hasSendTime_;
+}
+- (void) setHasSendTime:(BOOL) value {
+  hasSendTime_ = !!value;
+}
+@synthesize sendTime;
 - (BOOL) hasErrorCode {
   return !!hasErrorCode_;
 }
@@ -6649,11 +6716,13 @@ static SendMessageRequest* defaultSendMessageRequestInstance = nil;
 }
 @synthesize errorCode;
 - (void) dealloc {
+  self.sendTime = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
+    self.sendTime = @"";
     self.errorCode = 0;
   }
   return self;
@@ -6677,8 +6746,11 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
   if (self.hasIsSucceed) {
     [output writeBool:1 value:self.isSucceed];
   }
+  if (self.hasSendTime) {
+    [output writeString:2 value:self.sendTime];
+  }
   if (self.hasErrorCode) {
-    [output writeInt32:2 value:self.errorCode];
+    [output writeInt32:3 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -6692,8 +6764,11 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
   if (self.hasIsSucceed) {
     size += computeBoolSize(1, self.isSucceed);
   }
+  if (self.hasSendTime) {
+    size += computeStringSize(2, self.sendTime);
+  }
   if (self.hasErrorCode) {
-    size += computeInt32Size(2, self.errorCode);
+    size += computeInt32Size(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -6773,6 +6848,9 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
   if (other.hasIsSucceed) {
     [self setIsSucceed:other.isSucceed];
   }
+  if (other.hasSendTime) {
+    [self setSendTime:other.sendTime];
+  }
   if (other.hasErrorCode) {
     [self setErrorCode:other.errorCode];
   }
@@ -6801,7 +6879,11 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
         [self setIsSucceed:[input readBool]];
         break;
       }
-      case 16: {
+      case 18: {
+        [self setSendTime:[input readString]];
+        break;
+      }
+      case 24: {
         [self setErrorCode:[input readInt32]];
         break;
       }
@@ -6824,6 +6906,22 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
   result.isSucceed = NO;
   return self;
 }
+- (BOOL) hasSendTime {
+  return result.hasSendTime;
+}
+- (NSString*) sendTime {
+  return result.sendTime;
+}
+- (SendMessageResponse_Builder*) setSendTime:(NSString*) value {
+  result.hasSendTime = YES;
+  result.sendTime = value;
+  return self;
+}
+- (SendMessageResponse_Builder*) clearSendTime {
+  result.hasSendTime = NO;
+  result.sendTime = @"";
+  return self;
+}
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
@@ -6844,7 +6942,6 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
 
 @interface RegisterRequest ()
 @property (retain) NSString* mobilePhoneNumber;
-@property (retain) NSString* name;
 @property (retain) NSString* password;
 @property (retain) NSString* passwordConfirm;
 @property (retain) NSString* validateCode;
@@ -6859,13 +6956,6 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
   hasMobilePhoneNumber_ = !!value;
 }
 @synthesize mobilePhoneNumber;
-- (BOOL) hasName {
-  return !!hasName_;
-}
-- (void) setHasName:(BOOL) value {
-  hasName_ = !!value;
-}
-@synthesize name;
 - (BOOL) hasPassword {
   return !!hasPassword_;
 }
@@ -6889,7 +6979,6 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
 @synthesize validateCode;
 - (void) dealloc {
   self.mobilePhoneNumber = nil;
-  self.name = nil;
   self.password = nil;
   self.passwordConfirm = nil;
   self.validateCode = nil;
@@ -6898,7 +6987,6 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.mobilePhoneNumber = @"";
-    self.name = @"";
     self.password = @"";
     self.passwordConfirm = @"";
     self.validateCode = @"";
@@ -6924,17 +7012,14 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   if (self.hasMobilePhoneNumber) {
     [output writeString:1 value:self.mobilePhoneNumber];
   }
-  if (self.hasName) {
-    [output writeString:2 value:self.name];
-  }
   if (self.hasPassword) {
-    [output writeString:3 value:self.password];
+    [output writeString:2 value:self.password];
   }
   if (self.hasPasswordConfirm) {
-    [output writeString:4 value:self.passwordConfirm];
+    [output writeString:3 value:self.passwordConfirm];
   }
   if (self.hasValidateCode) {
-    [output writeString:5 value:self.validateCode];
+    [output writeString:4 value:self.validateCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -6948,17 +7033,14 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   if (self.hasMobilePhoneNumber) {
     size += computeStringSize(1, self.mobilePhoneNumber);
   }
-  if (self.hasName) {
-    size += computeStringSize(2, self.name);
-  }
   if (self.hasPassword) {
-    size += computeStringSize(3, self.password);
+    size += computeStringSize(2, self.password);
   }
   if (self.hasPasswordConfirm) {
-    size += computeStringSize(4, self.passwordConfirm);
+    size += computeStringSize(3, self.passwordConfirm);
   }
   if (self.hasValidateCode) {
-    size += computeStringSize(5, self.validateCode);
+    size += computeStringSize(4, self.validateCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7038,9 +7120,6 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   if (other.hasMobilePhoneNumber) {
     [self setMobilePhoneNumber:other.mobilePhoneNumber];
   }
-  if (other.hasName) {
-    [self setName:other.name];
-  }
   if (other.hasPassword) {
     [self setPassword:other.password];
   }
@@ -7076,18 +7155,14 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
         break;
       }
       case 18: {
-        [self setName:[input readString]];
-        break;
-      }
-      case 26: {
         [self setPassword:[input readString]];
         break;
       }
-      case 34: {
+      case 26: {
         [self setPasswordConfirm:[input readString]];
         break;
       }
-      case 42: {
+      case 34: {
         [self setValidateCode:[input readString]];
         break;
       }
@@ -7108,22 +7183,6 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
 - (RegisterRequest_Builder*) clearMobilePhoneNumber {
   result.hasMobilePhoneNumber = NO;
   result.mobilePhoneNumber = @"";
-  return self;
-}
-- (BOOL) hasName {
-  return result.hasName;
-}
-- (NSString*) name {
-  return result.name;
-}
-- (RegisterRequest_Builder*) setName:(NSString*) value {
-  result.hasName = YES;
-  result.name = value;
-  return self;
-}
-- (RegisterRequest_Builder*) clearName {
-  result.hasName = NO;
-  result.name = @"";
   return self;
 }
 - (BOOL) hasPassword {
@@ -7217,7 +7276,7 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.userId = 0;
-    self.errorCode = RegisterResponse_ErrorCodeTypeInvalidUserName;
+    self.errorCode = RegisterResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -7299,13 +7358,14 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
 
 BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType value) {
   switch (value) {
-    case RegisterResponse_ErrorCodeTypeInvalidUserName:
+    case RegisterResponse_ErrorCodeTypeBadRequest:
+    case RegisterResponse_ErrorCodeTypeInvalidDatabase:
+    case RegisterResponse_ErrorCodeTypeInvalidMobilePhoneNumber:
     case RegisterResponse_ErrorCodeTypeExistingUserYes:
     case RegisterResponse_ErrorCodeTypeInvalidPassword:
     case RegisterResponse_ErrorCodeTypeInvalidConfirmPassword:
     case RegisterResponse_ErrorCodeTypeInvalidMatchPassword:
     case RegisterResponse_ErrorCodeTypeInvalidValidateCode:
-    case RegisterResponse_ErrorCodeTypeInvalidDatabase:
       return YES;
     default:
       return NO;
@@ -7448,7 +7508,7 @@ BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType v
 }
 - (RegisterResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = RegisterResponse_ErrorCodeTypeInvalidUserName;
+  result.errorCode = RegisterResponse_ErrorCodeTypeBadRequest;
   return self;
 }
 @end
@@ -7857,7 +7917,7 @@ static ChangePasswordRequest* defaultChangePasswordRequestInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = ChangePasswordResponse_ErrorCodeTypeInvalidUserId;
+    self.errorCode = ChangePasswordResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -7933,16 +7993,17 @@ static ChangePasswordResponse* defaultChangePasswordResponseInstance = nil;
 
 BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_ErrorCodeType value) {
   switch (value) {
+    case ChangePasswordResponse_ErrorCodeTypeBadRequest:
     case ChangePasswordResponse_ErrorCodeTypeInvalidUserId:
     case ChangePasswordResponse_ErrorCodeTypeInvalidToken:
-    case ChangePasswordResponse_ErrorCodeTypeAuthError:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidUser:
+    case ChangePasswordResponse_ErrorCodeTypeInvalidDatabase:
     case ChangePasswordResponse_ErrorCodeTypeExistingUserNo:
     case ChangePasswordResponse_ErrorCodeTypeInvalidOriginalPassword:
     case ChangePasswordResponse_ErrorCodeTypeInvalidPassword:
     case ChangePasswordResponse_ErrorCodeTypeInvalidConfirmPassword:
     case ChangePasswordResponse_ErrorCodeTypeInvalidMatchPassword:
     case ChangePasswordResponse_ErrorCodeTypeInvalidValidateCode:
-    case ChangePasswordResponse_ErrorCodeTypeInvalidDatabase:
       return YES;
     default:
       return NO;
@@ -8062,7 +8123,7 @@ BOOL ChangePasswordResponse_ErrorCodeTypeIsValidValue(ChangePasswordResponse_Err
 }
 - (ChangePasswordResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = ChangePasswordResponse_ErrorCodeTypeInvalidUserId;
+  result.errorCode = ChangePasswordResponse_ErrorCodeTypeBadRequest;
   return self;
 }
 @end
@@ -8394,7 +8455,7 @@ static ResetPasswordRequest* defaultResetPasswordRequestInstance = nil;
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber;
+    self.errorCode = ResetPasswordResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -8470,13 +8531,14 @@ static ResetPasswordResponse* defaultResetPasswordResponseInstance = nil;
 
 BOOL ResetPasswordResponse_ErrorCodeTypeIsValidValue(ResetPasswordResponse_ErrorCodeType value) {
   switch (value) {
+    case ResetPasswordResponse_ErrorCodeTypeBadRequest:
+    case ResetPasswordResponse_ErrorCodeTypeInvalidDatabase:
     case ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber:
     case ResetPasswordResponse_ErrorCodeTypeInvalidPassword:
     case ResetPasswordResponse_ErrorCodeTypeInvalidPasswordConfirm:
     case ResetPasswordResponse_ErrorCodeTypeInvalidMatchPassword:
     case ResetPasswordResponse_ErrorCodeTypeInvalidValidateCode:
     case ResetPasswordResponse_ErrorCodeTypeExistingUserNo:
-    case ResetPasswordResponse_ErrorCodeTypeInvalidDatabase:
       return YES;
     default:
       return NO;
@@ -8596,7 +8658,7 @@ BOOL ResetPasswordResponse_ErrorCodeTypeIsValidValue(ResetPasswordResponse_Error
 }
 - (ResetPasswordResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = ResetPasswordResponse_ErrorCodeTypeInvalidPhoneNumber;
+  result.errorCode = ResetPasswordResponse_ErrorCodeTypeBadRequest;
   return self;
 }
 @end
@@ -8864,7 +8926,7 @@ BOOL ValidateCodeRequest_ValidateTypeIsValidValue(ValidateCodeRequest_ValidateTy
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
-    self.errorCode = ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber;
+    self.errorCode = ValidateCodeResponse_ErrorCodeTypeBadRequest;
   }
   return self;
 }
@@ -8940,6 +9002,7 @@ static ValidateCodeResponse* defaultValidateCodeResponseInstance = nil;
 
 BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value) {
   switch (value) {
+    case ValidateCodeResponse_ErrorCodeTypeBadRequest:
     case ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber:
     case ValidateCodeResponse_ErrorCodeTypeInvalidType:
     case ValidateCodeResponse_ErrorCodeTypeExistingUserYes:
@@ -9065,7 +9128,7 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 }
 - (ValidateCodeResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = ValidateCodeResponse_ErrorCodeTypeInvalidPhoneNumber;
+  result.errorCode = ValidateCodeResponse_ErrorCodeTypeBadRequest;
   return self;
 }
 @end

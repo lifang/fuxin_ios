@@ -47,12 +47,14 @@
 
 + (void)changePasswordWithToken:(NSString *)token
                          UserID:(int32_t)userID
+                   ValidateCode:(NSString *)validateCode
                OriginalPassword:(NSString *)original
                        Password:(NSString *)password
                 PasswordConfirm:(NSString *)confirm
                        Finished:(Result)result {
-    ChangePasswordRequest *PBObject = [[[[[[[ChangePasswordRequest builder]
+    ChangePasswordRequest *PBObject = [[[[[[[[ChangePasswordRequest builder]
                                             setToken:token] setUserId:userID]
+                                           setValidateCode:validateCode]
                                           setOriginalPassword:original]
                                          setPassword:password]
                                         setPasswordConfirm:confirm] build];
@@ -197,14 +199,12 @@
 }
 
 + (void)registerWithPhoneNumber:(NSString *)phoneNumber
-                           Name:(NSString *)name
-                       Password:(NSString *)password
+                       Password:(NSString *)password 
                 PasswordConfirm:(NSString *)passwordConfirm
                    ValidateCode:(NSString *)validateCode
                        Finished:(Result)result {
-    RegisterRequest *PBObject = [[[[[[[RegisterRequest builder]
+    RegisterRequest *PBObject = [[[[[[RegisterRequest builder]
                                       setMobilePhoneNumber:phoneNumber]
-                                     setName:name]
                                     setPassword:password]
                                    setPasswordConfirm:passwordConfirm]
                                   setValidateCode:validateCode] build];

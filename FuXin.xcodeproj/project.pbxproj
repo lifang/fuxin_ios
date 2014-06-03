@@ -67,6 +67,7 @@
 		7718BD7E193D69D700F7532C /* setting2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7718BD80193D69D700F7532C /* setting2@2x.png */; };
 		7718BD83193D6B0900F7532C /* FXUserSettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7718BD82193D6B0900F7532C /* FXUserSettingController.m */; };
 		7718BD87193D774F00F7532C /* save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7718BD86193D774F00F7532C /* save@2x.png */; };
+		7718BD89193DAA7000F7532C /* female@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7718BD88193DAA7000F7532C /* female@2x.png */; };
 		771E1D5519371FDC0054BFC9 /* FXContactView.m in Sources */ = {isa = PBXBuildFile; fileRef = 771E1D5419371FDC0054BFC9 /* FXContactView.m */; };
 		7720F3D419309627001F20F4 /* FXNetworkInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 7720F3D319309627001F20F4 /* FXNetworkInterface.m */; };
 		7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7720F3D81930BBD8001F20F4 /* search@2x.png */; };
@@ -251,6 +252,7 @@
 		7718BD81193D6B0900F7532C /* FXUserSettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserSettingController.h; sourceTree = "<group>"; };
 		7718BD82193D6B0900F7532C /* FXUserSettingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUserSettingController.m; sourceTree = "<group>"; };
 		7718BD86193D774F00F7532C /* save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "save@2x.png"; sourceTree = "<group>"; };
+		7718BD88193DAA7000F7532C /* female@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "female@2x.png"; sourceTree = "<group>"; };
 		771E1D5319371FDC0054BFC9 /* FXContactView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXContactView.h; sourceTree = "<group>"; };
 		771E1D5419371FDC0054BFC9 /* FXContactView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXContactView.m; sourceTree = "<group>"; };
 		7720F3D219309627001F20F4 /* FXNetworkInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNetworkInterface.h; sourceTree = "<group>"; };
@@ -716,6 +718,7 @@
 				3A1B2D881930CA53004D7F01 /* text_msg@2x.png */,
 				3A1B2D891930CA53004D7F01 /* phone_icon@2x.png */,
 				3A1B2D851930C981004D7F01 /* male@2x.png */,
+				7718BD88193DAA7000F7532C /* female@2x.png */,
 				770319CA192C580900798D4D /* user@2x.png */,
 				770319CB192C580900798D4D /* username@2x.png */,
 				770319C9192C580900798D4D /* password@2x.png */,
@@ -1011,6 +1014,7 @@
 				77862782192313B9009AF6E6 /* Images.xcassets in Resources */,
 				3A3115C5193199AA00663819 /* line_horizon@2x.png in Resources */,
 				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
+				7718BD89193DAA7000F7532C /* female@2x.png in Resources */,
 				7720F3D91930BBD8001F20F4 /* search@2x.png in Resources */,
 				7755EC8E1931CD5700ADD1A6 /* cameraselected@2x.png in Resources */,
 				7718BD87193D774F00F7532C /* save@2x.png in Resources */,
