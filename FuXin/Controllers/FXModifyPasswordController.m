@@ -601,11 +601,6 @@
                                         }];
 }
 
-//服务协议按钮
-- (void)serviceTextButtonClicked:(UIButton *)sender{
-    
-}
-
 //数字键盘上额外的完成键
 - (void)keyboardDoneButtonClicked:(UIButton *)sender{
     

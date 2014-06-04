@@ -8,6 +8,7 @@
 
 #import "FXForgotPasswordController.h"
 #import "FXRequestDataFormat.h"
+#import "FXServiceAgreementViewController.h"
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
@@ -422,7 +423,8 @@
 
 //服务协议按钮
 - (void)serviceTextButtonClicked:(UIButton *)sender{
-    
+    FXServiceAgreementViewController *agreement = [[FXServiceAgreementViewController alloc] init];
+    [self.navigationController pushViewController:agreement animated:YES];
 }
 
 //数字键盘上额外的完成键

@@ -12,6 +12,7 @@
 #import "FXModifyPasswordController.h"
 #import "FXRequestDataFormat.h"
 #import "FXBlockedContactsController.h"
+#import "FXNotificationManageViewController.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -253,6 +254,11 @@
         case 5:{
             FXBlockedContactsController *blockedContacts = [[FXBlockedContactsController alloc] init];
             [self.navigationController pushViewController:blockedContacts animated:YES];
+        }
+            break;
+        case 6:{
+            FXNotificationManageViewController *notificationManage = [[FXNotificationManageViewController alloc] init];
+            [self.navigationController pushViewController:notificationManage animated:YES];
         }
             break;
         default:
