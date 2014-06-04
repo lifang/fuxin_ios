@@ -14,7 +14,7 @@
 #define kTopViewHeight   40
 
 @interface FXBlockedContactsController ()
-
+@property (strong ,nonatomic) FXBlockedContactInfoView *contactInfoView;
 @end
 
 static NSString *cellIdentifier = @"cell";
@@ -79,6 +79,18 @@ static NSString *cellIdentifier = @"cell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //点击cell ,弹出联系人信息
+    ContactModel *contact = self.dataArray[indexPath.row];
+    if (!_contactInfoView) {
+        _contactInfoView = [[FXBlockedContactInfoView alloc] initWithFrame:(CGRect){0 ,0 ,self.view.frame.size}];
+        [self.view addSubview:_contactInfoView];
+        _contactInfoView.delegate = self;
+    }
+    _contactInfoView.alpha = 0;
+    _contactInfoView.hidden = NO;
+    [_contactInfoView setContact:contact];
+    [UIView animateWithDuration:.4 animations:^{
+        _contactInfoView.alpha = 1;
+    }];
 }
 
 #pragma mark BlockedContactCell delegate
@@ -111,4 +123,8 @@ static NSString *cellIdentifier = @"cell";
                                       }];
 }
 
+#pragma mark BlockedContactInfoView delegate
+- (void)blockedContactInfoViewRecover:(FXBlockedContactInfoView *)infoView{
+    [self blockedContactCell:nil recoverContact:infoView.contact];
+}
 @end

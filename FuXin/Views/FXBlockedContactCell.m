@@ -42,15 +42,15 @@
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 12, 100, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.textColor = [UIColor blackColor];
-    _nameLabel.font = [UIFont boldSystemFontOfSize:14];
+    _nameLabel.font = [UIFont systemFontOfSize:14];
     [self.contentView addSubview:_nameLabel];
     
     _recoverButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _recoverButton.frame = CGRectMake(290 - 64 - 19, (self.frame.size.height - 31 ) / 2, 64, 31);
     _recoverButton.layer.borderColor = kColor(51, 51, 51, 1).CGColor;
-    _recoverButton.layer.borderWidth = .7;
+    _recoverButton.layer.borderWidth = .6;
     _recoverButton.titleLabel.font = [UIFont systemFontOfSize:13.];
-    _recoverButton.layer.cornerRadius = 5.;
+    _recoverButton.layer.cornerRadius = 6.;
     _recoverButton.backgroundColor = [UIColor clearColor];
     [_recoverButton setTitleColor:kColor(51, 51, 51, 1) forState:UIControlStateNormal];
     [_recoverButton setTitle:@"恢复" forState:UIControlStateNormal];
@@ -63,8 +63,10 @@
         return;
     }
     _contactModel = contactModel;
-    UIImage *avatarImg = [UIImage imageWithData:contactModel.contactAvatar];
-    [_photoView setImage:avatarImg];
+    if (contactModel.contactAvatar.length > 0) {
+        UIImage *avatarImg = [UIImage imageWithData:contactModel.contactAvatar];
+        [_photoView setImage:avatarImg];
+    }
     _nameLabel.text = contactModel.contactNickname;
 }
 

@@ -145,6 +145,7 @@
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
+		93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */; };
 		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
 		93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3326192EFD3000D0DE49 /* ContactModel.m */; };
 		93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3328192EFD3000D0DE49 /* ConversationModel.m */; };
@@ -403,6 +404,8 @@
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
+		93C8C5B7193EB5290059812C /* FXBlockedContactInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlockedContactInfoView.h; sourceTree = "<group>"; };
+		93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlockedContactInfoView.m; sourceTree = "<group>"; };
 		93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		93EC3325192EFD3000D0DE49 /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
 		93EC3326192EFD3000D0DE49 /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactModel.m; sourceTree = "<group>"; };
@@ -598,6 +601,8 @@
 				77025CDB193C2895007F9F0D /* FXSettingUserCell.m */,
 				9341571D193DBE1700289EE4 /* FXBlockedContactCell.h */,
 				9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */,
+				93C8C5B7193EB5290059812C /* FXBlockedContactInfoView.h */,
+				93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1110,6 +1115,7 @@
 				7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */,
 				77CB6F22192F682E00936F7F /* ASINetworkQueue.m in Sources */,
 				93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */,
+				93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */,
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
 				9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */,
