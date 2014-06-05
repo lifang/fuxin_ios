@@ -34,6 +34,8 @@
 //联系人详细界面
 @property (nonatomic, strong) FXContactView *contactView;
 
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
+
 //添加联系人详细界面
 - (void)addDetailView;
 

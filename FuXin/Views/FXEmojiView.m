@@ -9,10 +9,11 @@
 #import "FXEmojiView.h"
 
 #define kRow    4
-#define kNumber 7
+#define kNumber 6
 
-#define kBtnSide  30
-#define kSpace    15
+#define kFirstSpace  20
+#define kBtnSide     30
+#define kSpace       15
 
 @implementation FXEmojiView
 
@@ -27,7 +28,8 @@
     if (self) {
         // Initialization code
 
-        _emojiArray = [Emoji allEmoji];
+//        _emojiArray = [Emoji allEmoji];
+        [self addImage];
         [self initUI];
         [self loadEmoji];
     }
@@ -52,6 +54,14 @@
     [self addSubview:_pageControl];
 }
 
+- (void)addImage {
+    _emojiArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <= 40; i++) {
+        UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.png",i]];
+        [_emojiArray addObject:image];
+    }
+}
+
 - (void)loadEmoji {
     int page = [_emojiArray count] / (kRow * kNumber) + 1;
     _emojiScrollView.contentSize = CGSizeMake(page * self.bounds.size.width, self.bounds.size.height);
@@ -65,12 +75,13 @@
         //列
         int number = indexInPage % kNumber;
         
-        CGFloat offsetX = pageOffsetX + number * (kSpace + kBtnSide) + 10;
-        CGFloat offsetY = row * (kSpace + kBtnSide) + 10;
+        CGFloat offsetX = pageOffsetX + number * (kSpace + kBtnSide) + kFirstSpace;
+        CGFloat offsetY = row * (kSpace + kBtnSide) + kFirstSpace;
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(offsetX, offsetY, kBtnSide, kBtnSide);
         button.tag = i;
-        [button setTitle:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
+//        [button setTitle:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
+        [button setImage:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
         [button addTarget:self action:@selector(emojiSelected:) forControlEvents:UIControlEventTouchUpInside];
         [_emojiScrollView addSubview:button];
     }
@@ -79,7 +90,6 @@
 }
 
 - (IBAction)emojiSelected:(id)sender {
-    NSLog(@"%ld",(long)[(UIButton *)sender tag]);
     if (_emojiDelegate && [_emojiDelegate respondsToSelector:@selector(touchEmojiButton:)]) {
         [_emojiDelegate touchEmojiButton:(UIButton *)sender];
     }

@@ -11,8 +11,6 @@
 static FXLoginController      *s_loginController = nil;
 static UINavigationController *s_loginNavController = nil;
 
-static FXMainController       *s_mainController = nil;
-
 @interface FXAppDelegate ()
 @property (nonatomic ,strong)UIAlertView *alertView;
 @end
@@ -41,14 +39,6 @@ static FXMainController       *s_mainController = nil;
         [[self class] setNavigationBarTinColor:s_loginNavController];
     });
     return s_loginNavController;
-}
-
-+ (FXMainController *)shareMainViewController {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        s_mainController = [[FXMainController alloc] init];
-    });
-    return s_mainController;
 }
 
 //设置导航栏颜色

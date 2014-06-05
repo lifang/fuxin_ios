@@ -75,6 +75,14 @@ NSMutableDictionary* dictionaryForGetProfile() {
             nil];
 }
 
+NSMutableDictionary* dictionaryForModifyProfile() {
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            ModifyProfile,kRequestURL,
+            @"PUT",kRequestType,
+            @"profileRequest",kRequestPostData,
+            nil];
+}
+
 NSMutableDictionary* dictionaryForGetContactDetail() {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             GetContactDetail,kRequestURL,

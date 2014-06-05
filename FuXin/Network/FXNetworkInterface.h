@@ -16,13 +16,13 @@
  type:POST
  pram:authenticationRequest
  */
-static NSString *AuthenticationIn = @"https://118.242.18.189/IMApiMock/api/Authentication";
+static NSString *AuthenticationIn = @"https://118.242.18.189/IMApi/api/Authentication";
 /*
  info:登出
  type:PUT
  parm:unAuthenticationRequest
  */
-static NSString *AuthenticationOut = @"https://118.242.18.189/IMApiMock/api/Authentication";
+static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authentication";
 
 //Password
 /*
@@ -30,7 +30,7 @@ static NSString *AuthenticationOut = @"https://118.242.18.189/IMApiMock/api/Auth
  type:PUT
  parm:changePasswordRequest
  */
-static NSString *ChangePassword = @"https://118.242.18.189/IMApiMock/api/Password";
+static NSString *ChangePassword = @"https://118.242.18.189/IMApi/api/Password";
 
 //Contact
 /*
@@ -38,13 +38,13 @@ static NSString *ChangePassword = @"https://118.242.18.189/IMApiMock/api/Passwor
  type:POST
  parm:contactRequest
  */
-static NSString *GetContactList = @"https://118.242.18.189/IMApiMock/api/Contact";
+static NSString *GetContactList = @"https://118.242.18.189/IMApi/api/Contact";
 /*
  info:屏蔽联系人
  type:PUT
  parm:blockContactRequest
  */
-static NSString *BlockContact = @"https://118.242.18.189/IMApiMock/api/Contact";
+static NSString *BlockContact = @"https://118.242.18.189/IMApi/api/Contact";
 
 //Message
 /*
@@ -52,13 +52,13 @@ static NSString *BlockContact = @"https://118.242.18.189/IMApiMock/api/Contact";
  type:POST
  parm:messageRequest
  */
-static NSString *GetMessage = @"https://118.242.18.189/IMApiMock/api/Message";
+static NSString *GetMessage = @"https://118.242.18.189/IMApi/api/Message";
 /*
  info:发送聊天消息
  type:PUT
  parm:sendMessageRequest
  */
-static NSString *SendMessage = @"https://118.242.18.189/IMApiMock/api/Message";
+static NSString *SendMessage = @"https://118.242.18.189/IMApi/api/Message";
 
 //Profile
 /*
@@ -66,7 +66,13 @@ static NSString *SendMessage = @"https://118.242.18.189/IMApiMock/api/Message";
  type:POST
  parm:profileRequest
  */
-static NSString *GetProfile = @"https://118.242.18.189/IMApiMock/api/Profile";
+static NSString *GetProfile = @"https://118.242.18.189/IMApi/api/Profile";
+/*
+ info:获取个人信息
+ type:PUT
+ parm:profileRequest
+ */
+static NSString *ModifyProfile = @"https://118.242.18.189/IMApi/api/Profile";
 
 //ContactDetail
 /*
@@ -75,13 +81,13 @@ static NSString *GetProfile = @"https://118.242.18.189/IMApiMock/api/Profile";
  parm:contactDetailRequest
  id
  */
-static NSString *GetContactDetail = @"https://118.242.18.189/IMApiMock/api/ContactDetail/{id}";
+static NSString *GetContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail/{id}";
 /*
  info:修改联系人备注
  type:PUT
  parm:changeContactDetailRequest
  */
-static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApiMock/api/ContactDetail";
+static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail";
 
 //Register
 /*
@@ -89,7 +95,7 @@ static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApiMock/api/Co
  type:POST
  parm:registerRequest
  */
-static NSString *Regist = @"https://118.242.18.189/IMApiMock/api/Register/";
+static NSString *Regist = @"https://118.242.18.189/IMApi/api/Register/";
 
 //ValidateCode
 /*
@@ -97,7 +103,7 @@ static NSString *Regist = @"https://118.242.18.189/IMApiMock/api/Register/";
  type:POST
  parm:validatecodeRequest
  */
-static NSString *Validate = @"https://118.242.18.189/IMApiMock/api/ValidateCode";
+static NSString *Validate = @"https://118.242.18.189/IMApi/api/ValidateCode";
 
 
 @interface FXNetworkInterface : NSObject
@@ -111,6 +117,7 @@ NSMutableDictionary* dictionaryForBlockContact();        //屏蔽联系人
 NSMutableDictionary* dictionaryForGetMessage();          //接收消息
 NSMutableDictionary* dictionaryForSendMessage();         //发送消息
 NSMutableDictionary* dictionaryForGetProfile();          //获取个人信息
+NSMutableDictionary* dictionaryForModifyProfile();       //修改个人消息
 NSMutableDictionary* dictionaryForGetContactDetail();    //获取某一联系人详情
 NSMutableDictionary* dictionaryForModifyContactDetail(); //修改联系人备注
 NSMutableDictionary* dictionaryForRegist();              //注册

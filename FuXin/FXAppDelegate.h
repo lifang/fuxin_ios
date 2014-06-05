@@ -29,7 +29,6 @@
 + (FXAppDelegate *)shareFXAppDelegate;
 - (FXRootViewController *)shareRootViewContorller;
 + (UINavigationController *)shareLoginViewController;
-+ (FXMainController *)shareMainViewController;
 
 + (void)setNavigationBarTinColor:(UINavigationController *)nav;
 

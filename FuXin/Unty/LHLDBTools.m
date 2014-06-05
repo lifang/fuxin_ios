@@ -603,6 +603,7 @@ static LHLDBTools *staticDBTools;
     message.messageContent = [resultSet stringForColumn:@"content"];
     message.messageAttachment = [resultSet stringForColumn:@"attachment"];
     message.messageStatus = (MessageStatus)[resultSet intForColumn:@"status"];
+    message.messageShowTime = [resultSet objectForColumnName:@"showTime"];
     return message;
 }
 

@@ -7,9 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-//聊天内容宽度最大值
-#define kMessageBoxWigthMax  220
+#import "FXTextFormat.h"
 
 #define kTimeLabelHeight    40
 
@@ -31,7 +29,8 @@ typedef enum {
 @property (nonatomic, strong) UIImageView *backgroundView;
 
 //内容框
-@property (nonatomic, strong) UILabel *contentLabel;
+//@property (nonatomic, strong) UILabel *contentLabel;
+@property (nonatomic, strong) UIView *messageView;
 
 //时间框
 @property (nonatomic, strong) UILabel *timeLabel;
@@ -39,6 +38,7 @@ typedef enum {
 //是否显示时间框
 @property (nonatomic, assign, setter = setShowTime:) BOOL showTime;
 
-- (void)setContents:(NSString *)content;
+//包含图片编码的字符串
+@property (nonatomic, strong, setter = setContents:) NSString *contents;
 
 @end

@@ -164,6 +164,25 @@
     }];
 }
 
++ (void)changeProfileWithToken:(NSString *)token
+                        UserID:(int32_t)userID
+                       Profile:(Profile *)profile
+                      Finished:(Result)result {
+    ChangeProfileRequest *PBObject = [[[[[ChangeProfileRequest builder]
+                                         setToken:token]
+                                        setUserId:userID]
+                                       setProfile:profile] build];
+    NSData *PBData = [PBObject data];
+    //请求信息
+    NSMutableDictionary *requestInfo = dictionaryForModifyProfile();
+    //修改postdata内容
+    [requestInfo setObject:PBData forKey:kRequestPostData];
+    //发送请求
+    [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success, NSData *response) {
+        result(success, response);
+    }];
+}
+
 + (void)getContactDetailWithToken:(NSString *)token
                            UserID:(int32_t)userID
                         ContactID:(int32_t)contactID
