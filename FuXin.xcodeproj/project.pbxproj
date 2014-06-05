@@ -180,9 +180,20 @@
 		77FC8A6C192F361A00FFFCDB /* UnknownFieldSet_Builder.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A55192F361A00FFFCDB /* UnknownFieldSet_Builder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		77FC8A6D192F361A00FFFCDB /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A57192F361A00FFFCDB /* Utilities.m */; };
 		77FC8A6E192F361A00FFFCDB /* WireFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 77FC8A59192F361A00FFFCDB /* WireFormat.m */; };
+		9341571C193D995F00289EE4 /* FXModifyPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571B193D995F00289EE4 /* FXModifyPasswordController.m */; };
+		9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */; };
+		93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93415721193DC64100289EE4 /* FXBlockedContactsController.m */; };
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
+		93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */; };
+		93C8C5BC193EE0FF0059812C /* FXServiceAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5BB193EE0FF0059812C /* FXServiceAgreementViewController.m */; };
+		93C8C5BE193EEA530059812C /* haha.txt in Resources */ = {isa = PBXBuildFile; fileRef = 93C8C5BD193EEA530059812C /* haha.txt */; };
+		93C8C5C1193EF0F90059812C /* FXNotificationManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5C0193EF0F90059812C /* FXNotificationManageViewController.m */; };
+		93C8C5C3193EF3740059812C /* rubbish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 93C8C5C2193EF3740059812C /* rubbish@2x.png */; };
+		93C8C5C6193F010E0059812C /* FXNotificationManageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5C5193F010E0059812C /* FXNotificationManageTableViewCell.m */; };
+		93C8C5C9193F09950059812C /* FXNotificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5C8193F09950059812C /* FXNotificationModel.m */; };
+		93C8C5CC193F0DAA0059812C /* FXNotificationContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5CB193F0DAA0059812C /* FXNotificationContentViewController.m */; };
 		93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */; };
 		93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3326192EFD3000D0DE49 /* ContactModel.m */; };
 		93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93EC3328192EFD3000D0DE49 /* ConversationModel.m */; };
@@ -472,11 +483,31 @@
 		77FC8A57192F361A00FFFCDB /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
 		77FC8A58192F361A00FFFCDB /* WireFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireFormat.h; sourceTree = "<group>"; };
 		77FC8A59192F361A00FFFCDB /* WireFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WireFormat.m; sourceTree = "<group>"; };
+		9341571A193D995F00289EE4 /* FXModifyPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FXModifyPasswordController.h; path = ../FXModifyPasswordController.h; sourceTree = "<group>"; };
+		9341571B193D995F00289EE4 /* FXModifyPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FXModifyPasswordController.m; path = ../FXModifyPasswordController.m; sourceTree = "<group>"; };
+		9341571D193DBE1700289EE4 /* FXBlockedContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlockedContactCell.h; sourceTree = "<group>"; };
+		9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlockedContactCell.m; sourceTree = "<group>"; };
+		93415720193DC64100289EE4 /* FXBlockedContactsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FXBlockedContactsController.h; path = ../AddressList/FXBlockedContactsController.h; sourceTree = "<group>"; };
+		93415721193DC64100289EE4 /* FXBlockedContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FXBlockedContactsController.m; path = ../AddressList/FXBlockedContactsController.m; sourceTree = "<group>"; };
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
+		93C8C5B7193EB5290059812C /* FXBlockedContactInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlockedContactInfoView.h; sourceTree = "<group>"; };
+		93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlockedContactInfoView.m; sourceTree = "<group>"; };
+		93C8C5BA193EE0FF0059812C /* FXServiceAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXServiceAgreementViewController.h; sourceTree = "<group>"; };
+		93C8C5BB193EE0FF0059812C /* FXServiceAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXServiceAgreementViewController.m; sourceTree = "<group>"; };
+		93C8C5BD193EEA530059812C /* haha.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = haha.txt; sourceTree = "<group>"; };
+		93C8C5BF193EF0F90059812C /* FXNotificationManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNotificationManageViewController.h; sourceTree = "<group>"; };
+		93C8C5C0193EF0F90059812C /* FXNotificationManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNotificationManageViewController.m; sourceTree = "<group>"; };
+		93C8C5C2193EF3740059812C /* rubbish@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rubbish@2x.png"; sourceTree = "<group>"; };
+		93C8C5C4193F010E0059812C /* FXNotificationManageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNotificationManageTableViewCell.h; sourceTree = "<group>"; };
+		93C8C5C5193F010E0059812C /* FXNotificationManageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNotificationManageTableViewCell.m; sourceTree = "<group>"; };
+		93C8C5C7193F09950059812C /* FXNotificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNotificationModel.h; sourceTree = "<group>"; };
+		93C8C5C8193F09950059812C /* FXNotificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNotificationModel.m; sourceTree = "<group>"; };
+		93C8C5CA193F0DAA0059812C /* FXNotificationContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXNotificationContentViewController.h; sourceTree = "<group>"; };
+		93C8C5CB193F0DAA0059812C /* FXNotificationContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXNotificationContentViewController.m; sourceTree = "<group>"; };
 		93EC32E7192EFBDC00D0DE49 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		93EC3325192EFD3000D0DE49 /* ContactModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactModel.h; sourceTree = "<group>"; };
 		93EC3326192EFD3000D0DE49 /* ContactModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactModel.m; sourceTree = "<group>"; };
@@ -537,6 +568,14 @@
 				77025CD8193C25F0007F9F0D /* FXSettingController.m */,
 				7718BD81193D6B0900F7532C /* FXUserSettingController.h */,
 				7718BD82193D6B0900F7532C /* FXUserSettingController.m */,
+				9341571A193D995F00289EE4 /* FXModifyPasswordController.h */,
+				9341571B193D995F00289EE4 /* FXModifyPasswordController.m */,
+				93415720193DC64100289EE4 /* FXBlockedContactsController.h */,
+				93415721193DC64100289EE4 /* FXBlockedContactsController.m */,
+				93C8C5BF193EF0F90059812C /* FXNotificationManageViewController.h */,
+				93C8C5C0193EF0F90059812C /* FXNotificationManageViewController.m */,
+				93C8C5CA193F0DAA0059812C /* FXNotificationContentViewController.h */,
+				93C8C5CB193F0DAA0059812C /* FXNotificationContentViewController.m */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -717,6 +756,12 @@
 				771E1D5419371FDC0054BFC9 /* FXContactView.m */,
 				77025CDA193C2895007F9F0D /* FXSettingUserCell.h */,
 				77025CDB193C2895007F9F0D /* FXSettingUserCell.m */,
+				9341571D193DBE1700289EE4 /* FXBlockedContactCell.h */,
+				9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */,
+				93C8C5B7193EB5290059812C /* FXBlockedContactInfoView.h */,
+				93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */,
+				93C8C5C4193F010E0059812C /* FXNotificationManageTableViewCell.h */,
+				93C8C5C5193F010E0059812C /* FXNotificationManageTableViewCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -833,7 +878,11 @@
 		77C0863E19267E69000C4532 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+
 				7724B754193F0C5300C3304F /* Face */,
+				93C8C5BD193EEA530059812C /* haha.txt */,
+				93C8C5C2193EF3740059812C /* rubbish@2x.png */,
+
 				3A3115B71931842200663819 /* setting1@2x.png */,
 				7718BD80193D69D700F7532C /* setting2@2x.png */,
 				7718BD7C193D5E4200F7532C /* setting3@2x.png */,
@@ -995,6 +1044,8 @@
 				93AA53ED193078F00029E608 /* FXForgotPasswordController.h */,
 				93AA53EE193078F00029E608 /* FXForgotPasswordController.m */,
 				93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */,
+				93C8C5BA193EE0FF0059812C /* FXServiceAgreementViewController.h */,
+				93C8C5BB193EE0FF0059812C /* FXServiceAgreementViewController.m */,
 			);
 			name = ForgotPassword;
 			sourceTree = "<group>";
@@ -1010,6 +1061,8 @@
 				93EC3328192EFD3000D0DE49 /* ConversationModel.m */,
 				93EC3329192EFD3000D0DE49 /* MessageModel.h */,
 				93EC332A192EFD3000D0DE49 /* MessageModel.m */,
+				93C8C5C7193F09950059812C /* FXNotificationModel.h */,
+				93C8C5C8193F09950059812C /* FXNotificationModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1141,6 +1194,9 @@
 				77179604193FFDB800424BB3 /* 19@2x.png in Resources */,
 				7786277A192313B9009AF6E6 /* InfoPlist.strings in Resources */,
 				771795FB193FFDB800424BB3 /* 10@2x.png in Resources */,
+
+				93C8C5C3193EF3740059812C /* rubbish@2x.png in Resources */,
+
 				7702C7B3192B03D70015A178 /* addr@2x.png in Resources */,
 				7718BD7E193D69D700F7532C /* setting2@2x.png in Resources */,
 				770319CE192C580900798D4D /* username@2x.png in Resources */,
@@ -1153,6 +1209,7 @@
 				770319E0192C9C2100798D4D /* sender@2x.png in Resources */,
 				7702C7BD192B45DF0015A178 /* messnum@2x.png in Resources */,
 				77862782192313B9009AF6E6 /* Images.xcassets in Resources */,
+				93C8C5BE193EEA530059812C /* haha.txt in Resources */,
 				3A3115C5193199AA00663819 /* line_horizon@2x.png in Resources */,
 				771795F8193FFDB800424BB3 /* 7@2x.png in Resources */,
 				770319D3192C5A0600798D4D /* uncheck@2x.png in Resources */,
@@ -1245,6 +1302,7 @@
 				77FC8A61192F361A00FFFCDB /* ExtendableMessage_Builder.m in Sources */,
 				77862780192313B9009AF6E6 /* FXAppDelegate.m in Sources */,
 				93EC335A192EFD7800D0DE49 /* FMDatabaseQueue.m in Sources */,
+				93C8C5C1193EF0F90059812C /* FXNotificationManageViewController.m in Sources */,
 				9354A3CB193470E30032D92D /* FXUtility.m in Sources */,
 				77CB6F1F192F682E00936F7F /* ASIFormDataRequest.m in Sources */,
 				7755EC891931CAD600ADD1A6 /* FXShowPhotoView.m in Sources */,
@@ -1255,6 +1313,7 @@
 				77FC8A69192F361A00FFFCDB /* RingBuffer.m in Sources */,
 				77CB6F21192F682E00936F7F /* ASIInputStream.m in Sources */,
 				77FC8A5F192F361A00FFFCDB /* Descriptor.pb.m in Sources */,
+				93C8C5CC193F0DAA0059812C /* FXNotificationContentViewController.m in Sources */,
 				93EC332C192EFD3000D0DE49 /* ConversationModel.m in Sources */,
 				77CB6F1E192F682E00936F7F /* ASIDownloadCache.m in Sources */,
 				77FC8A63192F361A00FFFCDB /* Field.m in Sources */,
@@ -1268,8 +1327,11 @@
 				7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */,
 				77CB6F22192F682E00936F7F /* ASINetworkQueue.m in Sources */,
 				93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */,
+				93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */,
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
+				9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */,
+				93C8C5C9193F09950059812C /* FXNotificationModel.m in Sources */,
 				775BBC8319342A98006B5155 /* EmojiTransport.m in Sources */,
 				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
 				77FC8A23192F1DFB00FFFCDB /* FXHttpRequest.m in Sources */,
@@ -1277,6 +1339,7 @@
 				7706BD3E1929A7F700C3E0E5 /* FXRegisterController.m in Sources */,
 				77FC8A65192F361A00FFFCDB /* GeneratedMessage_Builder.m in Sources */,
 				7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */,
+				9341571C193D995F00289EE4 /* FXModifyPasswordController.m in Sources */,
 				77CB6F23192F682E00936F7F /* Reachability.m in Sources */,
 				93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */,
 				77125273193820FB005419BE /* Models.pb.m in Sources */,
@@ -1285,6 +1348,7 @@
 				7790A0BD1926708600498659 /* FXRootViewController.m in Sources */,
 				77FC8A62192F361A00FFFCDB /* ExtensionRegistry.m in Sources */,
 				775BBC8019342A98006B5155 /* EmojiEmoticons.m in Sources */,
+				93C8C5BC193EE0FF0059812C /* FXServiceAgreementViewController.m in Sources */,
 				77FC8A5C192F361A00FFFCDB /* CodedInputStream.m in Sources */,
 				770BC269192DA596008104ED /* pinyin.c in Sources */,
 				7731EDF11935FC1500AA6976 /* FXMessageHelper.m in Sources */,
@@ -1294,6 +1358,8 @@
 				775BBC8219342A98006B5155 /* EmojiPictographs.m in Sources */,
 				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,
+				93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */,
+				93C8C5C6193F010E0059812C /* FXNotificationManageTableViewCell.m in Sources */,
 				770319DC192C7F0300798D4D /* FXKeyboardAnimation.m in Sources */,
 				7718BD83193D6B0900F7532C /* FXUserSettingController.m in Sources */,
 				7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */,

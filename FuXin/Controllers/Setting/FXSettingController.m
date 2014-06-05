@@ -9,7 +9,10 @@
 #import "FXSettingController.h"
 #import "FXSettingUserCell.h"
 #import "FXUserSettingController.h"
+#import "FXModifyPasswordController.h"
 #import "FXRequestDataFormat.h"
+#import "FXBlockedContactsController.h"
+#import "FXNotificationManageViewController.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -241,6 +244,21 @@
             user.userInfo = _userInfo;
             user.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:user animated:YES];
+        }
+            break;
+        case 4: {
+            FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
+            [self.navigationController pushViewController:modifyPassword animated:YES];
+        }
+            break;
+        case 5:{
+            FXBlockedContactsController *blockedContacts = [[FXBlockedContactsController alloc] init];
+            [self.navigationController pushViewController:blockedContacts animated:YES];
+        }
+            break;
+        case 6:{
+            FXNotificationManageViewController *notificationManage = [[FXNotificationManageViewController alloc] init];
+            [self.navigationController pushViewController:notificationManage animated:YES];
         }
             break;
         case 7: {

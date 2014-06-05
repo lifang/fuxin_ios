@@ -30,5 +30,5 @@
 
 + (void)setNavigationBarTinColor:(UINavigationController *)nav;
 
-+ (void)errorAlert:(NSString *)message ;
++ (void)errorAlert:(NSString *)message;
 @end

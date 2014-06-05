@@ -8,6 +8,7 @@
 
 #import "FXForgotPasswordController.h"
 #import "FXRequestDataFormat.h"
+#import "FXServiceAgreementViewController.h"
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
@@ -32,6 +33,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *serviceTextButton;   //服务协议
 @property (strong, nonatomic) IBOutlet UILabel *agreeLabel;   //酱油
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
+@property (strong, nonatomic) UIView *lineView; //一条线
 
 - (IBAction)spaceAreaClicked:(id)sender;
 
@@ -112,6 +114,9 @@
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
+    self.lineView = [[UIView alloc] init];
+    self.lineView.backgroundColor = kColor(191, 191, 191, 1);
+    
     [self changeRewriteButtonStatus:NO];
     [self.rewriteButton setTitle:@"确认" forState:UIControlStateNormal];
     self.rewriteButton.layer.cornerRadius = 6.;
@@ -186,87 +191,78 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
+    CGSize cellSize = cell.frame.size;
     switch (indexPath.row) {
         case 0:  //密码
             if ([self cell:cell isNotSuperOfView:self.passwordTextField]) {
-                CGSize cellSize = cell.frame.size;
                 self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTextField];
             }
             break;
         case 1:   //确认密码
             if ([self cell:cell isNotSuperOfView:self.confirmPasswordTextField]) {
-                CGSize cellSize = cell.frame.size;
                 self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
                 [cell.contentView addSubview:self.confirmPasswordTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.passwordTipLabel]) { //密码输入提示
-                CGSize cellSize = cell.frame.size;
                 self.passwordTipLabel.frame = (CGRect){cellSize.width - 10 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTipLabel];
             }
             break;
         case 2:    //电话号码
             if ([self cell:cell isNotSuperOfView:self.phoneNumberTextField]) {
-                CGSize cellSize = cell.frame.size;
                 self.phoneNumberTextField.frame = (CGRect){10 ,0 ,cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.phoneNumberTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.rewriteButton]) {   //重填电话号码
-                CGSize cellSize = cell.frame.size;
                 CGFloat buttonWidth = 60;
                 self.rewriteButton.frame = (CGRect){cellSize.width - 10 - buttonWidth ,7 ,buttonWidth ,cellSize.height - 14};
                 [cell.contentView addSubview:self.rewriteButton];
             }
             if ([self cell:cell isNotSuperOfView:self.alertLabel]) {        //电话号码错误警示
-                CGSize cellSize = cell.frame.size;
                 self.alertLabel.frame = (CGRect){CGRectGetMinX(self.rewriteButton.frame) - 5 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.alertLabel];
+            }
+            if ([self cell:cell isNotSuperOfView:self.lineView]) {
+                self.lineView.frame = (CGRect){0 ,0 ,cellSize.width ,2};
+                [cell.contentView addSubview:self.lineView];
             }
             break;
         case 3:    //验证码
             if ([self cell:cell isNotSuperOfView:self.identifyingCodeTextField]) {
-                CGSize cellSize = cell.frame.size;
                 self.identifyingCodeTextField.frame = (CGRect){10 ,0 ,cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.identifyingCodeTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.reSendButton]) {  //重发验证码
-                CGSize cellSize = cell.frame.size;
                 CGFloat buttonWidth = 60;
                 self.reSendButton.frame = (CGRect){cellSize.width - 10 - buttonWidth ,7 ,buttonWidth ,cellSize.height - 14};
                 [cell.contentView addSubview:self.reSendButton];
             }
             if ([self cell:cell isNotSuperOfView:self.alertIdentiyingLabel]) {      //验证码错误警示
-                CGSize cellSize = cell.frame.size;
                 self.alertIdentiyingLabel.frame = (CGRect){CGRectGetMinX(self.reSendButton.frame) - 5 - cellSize.width / 4 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.alertIdentiyingLabel];
             }
             break;
         case 4:    //提示信息
             if ([self cell:cell isNotSuperOfView:self.tipLabel]) {
-                CGSize cellSize = cell.frame.size;
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-                CGSize cellSize = cell.frame.size;
                 self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.coundDownLabel];
             }
             break;
         case 5:
             if ([self cell:cell isNotSuperOfView:self.checkButton]) {   //选中同意
-                CGSize cellSize = cell.frame.size;
-                self.checkButton.frame = (CGRect){10 ,(cellSize.height - 19) / 2 ,19 ,19};
+                self.checkButton.frame = (CGRect){5 ,(cellSize.height - 19) / 2 ,19 ,19};
                 [cell.contentView addSubview:self.checkButton];
             }
             if ([self cell:cell isNotSuperOfView:self.agreeLabel]) {
-                CGSize cellSize = cell.frame.size;
                 self.agreeLabel.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.agreeLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.serviceTextButton]) { //服务协议
-                CGSize cellSize = cell.frame.size;
                 self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 94 ,0 ,cellSize.width / 4 ,cellSize.height - 1};
                 [cell.contentView addSubview:self.serviceTextButton];
             }
@@ -427,7 +423,8 @@
 
 //服务协议按钮
 - (void)serviceTextButtonClicked:(UIButton *)sender{
-    
+    FXServiceAgreementViewController *agreement = [[FXServiceAgreementViewController alloc] init];
+    [self.navigationController pushViewController:agreement animated:YES];
 }
 
 //数字键盘上额外的完成键
