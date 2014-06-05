@@ -54,8 +54,10 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     CGRect frame = self.view.frame;
     self.tableView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, frame.size.height - kBlankSize);
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
 }
 
 - (void)didReceiveMemoryWarning

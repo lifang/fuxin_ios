@@ -23,6 +23,8 @@
 @property (nonatomic, strong) NSString *token;
 //获取消息的时间戳
 @property (nonatomic, strong) NSString *messageTimeStamp;
+//公用的titleLabel
+@property (nonatomic, strong) UILabel *attributedTitleLabel;
 //获取联系人的时间戳
 @property (nonatomic, strong) NSString *contactTimeStamp;
 //是否在聊天界面，用于接收消息
@@ -35,4 +37,7 @@
 + (void)setNavigationBarTinColor:(UINavigationController *)nav;
 
 + (void)errorAlert:(NSString *)message;
+
+///要显示"服务网v1.0"的页面可以调用.  要自定义的直接设置title = xx
++ (void)showFuWuTitle;
 @end

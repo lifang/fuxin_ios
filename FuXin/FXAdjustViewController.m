@@ -9,7 +9,6 @@
 #import "FXAdjustViewController.h"
 
 @interface FXAdjustViewController ()
-
 @end
 
 @implementation FXAdjustViewController
@@ -35,6 +34,11 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar addSubview:[FXAppDelegate shareFXAppDelegate].attributedTitleLabel];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -58,11 +62,6 @@
 }
 
 - (void)setRightNavBarItemWithImageName:(NSString *)name {
-//    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"]
-//                                                              style:UIBarButtonItemStyleBordered
-//                                                             target:self
-//                                                             action:@selector(rightBarTouched:)];
-//    self.navigationItem.rightBarButtonItem = right;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rightButton.frame = CGRectMake(0, 0, 32, 32);
     [rightButton setBackgroundImage:[UIImage imageNamed:name] forState:UIControlStateNormal];

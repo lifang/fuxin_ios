@@ -42,7 +42,11 @@ static NSString *chatCellIdentifier = @"CCI";
 {
     [super viewDidLoad];
     
-    self.title = @"对话";
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

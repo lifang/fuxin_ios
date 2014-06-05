@@ -62,6 +62,8 @@
 ///删除最近对话信息
 + (void)deleteConversationWithID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 
+///删除所有最近对话
++ (void)deleteAllConversationsWithFinished:(void (^)(BOOL flag))finished;
 
 #pragma mark 聊天记录
 ///保存聊天记录
@@ -85,4 +87,6 @@
 ///删除某个联系人的聊天记录
 + (void)deleteChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 
+///删除本用户所有聊天记录
++ (void)deleteAllChattingRecordWithFinished:(void (^)(BOOL flag))finished;
 @end

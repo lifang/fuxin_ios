@@ -42,9 +42,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"设置";
     [self initUI];
     [self getUserInfo];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

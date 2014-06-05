@@ -38,11 +38,15 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"福务网";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
     
 //    [self testDBMethod];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

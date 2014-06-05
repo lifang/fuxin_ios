@@ -78,11 +78,12 @@
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spaceAreaClicked:)];
     [self.view addGestureRecognizer:tapGestureRecognizer];
+    
+    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
 }
 
 //各种控件初始化
 - (void)initViews{
-    self.title = @"修改密码";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     
     UITextField *originPasswordField = [[UITextField alloc] init];
@@ -218,15 +219,22 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
     self.doneButton.frame = (CGRect){kBlank_Size ,self.view.frame.size.height - 40 - kCell_Height ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
     
     //table边缘有30像素的白边
     self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
+    
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"修改密码";
 }
 
-- (void)viewDidAppear:(BOOL)animated{
-    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+- (void)back:(id)sender{
+    [self.inputAlertTimer invalidate];
+    [self.reSendTimer invalidate];
+    [self.timingTimer invalidate];
+    [self.identtifyingCodeTimer invalidate];
+    [self.tableView removeObserver:self forKeyPath:@"contentOffset"];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)dealloc{
