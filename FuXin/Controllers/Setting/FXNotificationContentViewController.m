@@ -28,7 +28,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"系统公告";
     [self setRightNavBarItemWithImageName:@"rubbish.png"];
 }
 
@@ -38,6 +37,8 @@
     webView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, self.view.frame.size.height - kBlankSize);
     [self.view addSubview:webView];
     self.webView = webView;
+    
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
 }
 
 - (void)didReceiveMemoryWarning

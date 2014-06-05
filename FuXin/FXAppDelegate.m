@@ -62,7 +62,7 @@ static FXMainController       *s_mainController = nil;
         nav.navigationBar.tintColor = color;
     }
     NSMutableDictionary *barAttrs = [NSMutableDictionary dictionary];
-    [barAttrs setObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
+    [barAttrs setObject:[UIColor clearColor] forKey:UITextAttributeTextColor];
     [[UINavigationBar appearance] setTitleTextAttributes:barAttrs];
 }
 
@@ -119,6 +119,22 @@ static FXMainController       *s_mainController = nil;
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"提示" message:message delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil];
     [[FXAppDelegate shareFXAppDelegate] setAlertView:alert];
     [alert show];
+}
+
++ (void)showFuWuTitle{
+    //福务网标题
+    NSString *versionString = [NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+    NSString *fullTitleString = [NSString stringWithFormat:@"福务网%@",versionString];
+    NSRange versionRange = [fullTitleString rangeOfString:versionString];
+    NSRange otherRange = NSMakeRange(0, versionRange.location);
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:fullTitleString];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17] range:otherRange];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:9] range:versionRange];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.attributedText = attributedString;
+    });
+    
 }
 
 @end

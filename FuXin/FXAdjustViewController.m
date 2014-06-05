@@ -9,7 +9,6 @@
 #import "FXAdjustViewController.h"
 
 @interface FXAdjustViewController ()
-
 @end
 
 @implementation FXAdjustViewController
@@ -33,6 +32,21 @@
         self.extendedLayoutIncludesOpaqueBars = NO;
         self.modalPresentationCapturesStatusBarAppearance = NO;
     }
+    if (![FXAppDelegate shareFXAppDelegate].attributedTitleLabel) {
+        UILabel *attributedTitleLabel = [[UILabel alloc] init];
+        [FXAppDelegate shareFXAppDelegate].attributedTitleLabel = attributedTitleLabel;
+        attributedTitleLabel.text = @"hihi";
+        attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
+        attributedTitleLabel.backgroundColor = [UIColor clearColor];
+        attributedTitleLabel.textColor = [UIColor whiteColor];
+        attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    for (UIView *view in self.navigationController.navigationBar.subviews){
+        if ([FXAppDelegate shareFXAppDelegate].attributedTitleLabel == view) {
+            [view removeFromSuperview];
+        }
+    }
+    [self.navigationController.navigationBar addSubview:[FXAppDelegate shareFXAppDelegate].attributedTitleLabel];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,11 +72,6 @@
 }
 
 - (void)setRightNavBarItemWithImageName:(NSString *)name {
-//    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"]
-//                                                              style:UIBarButtonItemStyleBordered
-//                                                             target:self
-//                                                             action:@selector(rightBarTouched:)];
-//    self.navigationItem.rightBarButtonItem = right;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rightButton.frame = CGRectMake(0, 0, 32, 32);
     [rightButton setBackgroundImage:[UIImage imageNamed:name] forState:UIControlStateNormal];

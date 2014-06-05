@@ -71,7 +71,7 @@
         
         //line
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 66, 290, 1)];
-        line.backgroundColor = kColor(200, 200, 200, 1);
+        line.backgroundColor = kColor(204, 204, 204, 1);
         [_contentBgView addSubview:line];
         
         UIButton *recoverButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -79,7 +79,7 @@
         [recoverButton setTitleColor:kColor(51, 51, 51, 1) forState:UIControlStateNormal];
         [recoverButton setTitle:@"恢复收听此人" forState:UIControlStateNormal];
         recoverButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        recoverButton.backgroundColor = kColor(233, 233, 233, 1);
+        recoverButton.backgroundColor = kColor(229, 229, 229, 1);
         [recoverButton addTarget:self action:@selector(recoverButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_contentBgView addSubview:recoverButton];
     }

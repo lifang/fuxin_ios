@@ -413,6 +413,20 @@ static LHLDBTools *staticDBTools;
     }
 }
 
+///删除所有最近对话
++ (void)deleteAllConversationsWithFinished:(void (^)(BOOL flag))finished{
+    __block BOOL executeSucceeded;
+    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        executeSucceeded = [db executeUpdate:@"DELETE FROM Conversations"];
+        if (!executeSucceeded) {
+            *rollback = YES;
+        }
+    }];
+    if (finished) {
+        finished(executeSucceeded);
+    }
+}
+
 #pragma mark 聊天记录
 ///保存一条聊天记录
 + (void)saveChattingRecord:(NSArray *)chattingRecordArray withFinished:(void (^)(BOOL flag))finished{
@@ -558,6 +572,20 @@ static LHLDBTools *staticDBTools;
     __block BOOL executeSucceeded;
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         executeSucceeded = [db executeUpdate:@"DELETE FROM ChattingRecords WHERE contactID = ?",contactID];
+        if (!executeSucceeded) {
+            *rollback = YES;
+        }
+    }];
+    if (finished) {
+        finished(executeSucceeded);
+    }
+}
+
+///删除本用户所有聊天记录
++ (void)deleteAllChattingRecordWithFinished:(void (^)(BOOL flag))finished{
+    __block BOOL executeSucceeded;
+    [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        executeSucceeded = [db executeUpdate:@"DELETE FROM ChattingRecords"];
         if (!executeSucceeded) {
             *rollback = YES;
         }

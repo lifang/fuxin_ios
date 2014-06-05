@@ -31,10 +31,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"注册";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     
     [self initUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"注册";
 }
 
 - (void)didReceiveMemoryWarning

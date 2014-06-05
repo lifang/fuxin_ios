@@ -61,7 +61,6 @@ static NSString *MessageCellIdentifier = @"MCI";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = _contact.contactNickname;
     self.view.backgroundColor = [UIColor whiteColor];
     [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setRightNavBarItemWithImageName:@"info.png"];
@@ -73,6 +72,10 @@ static NSString *MessageCellIdentifier = @"MCI";
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = _contact.contactNickname;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

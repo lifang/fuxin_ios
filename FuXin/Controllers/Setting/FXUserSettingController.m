@@ -38,10 +38,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的信息";
     [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setRightNavBarItemWithImageName:@"save.png"];
     [self initUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"我的信息";
 }
 
 - (void)didReceiveMemoryWarning

@@ -91,7 +91,6 @@
 
 //各种控件初始化
 - (void)initViews{
-    self.title = @"注册";
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     
     UITextField *nameTextField = [[UITextField alloc] init];
@@ -253,13 +252,21 @@
     
     //table边缘有30像素的白边
     self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
+    
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"注册";
 }
 
 - (void)viewDidAppear:(BOOL)animated{
     [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)dealloc{
+- (void)back:(id)sender{
+    [self.inputAlertTimer invalidate];
+    [self.reSendTimer invalidate];
+    [self.timingTimer invalidate];
+    [self.identtifyingCodeTimer invalidate];
+    [self.tableView removeObserver:self forKeyPath:@"contentOffset"];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -774,7 +781,6 @@
     }
 }
 
-#pragma mark Notifications
 
 #pragma mark KVO
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
@@ -786,9 +792,7 @@
         [oldOffset getValue:&oldCoordinate];
         [newOffset getValue:&newCoordinate];
         CGFloat distance = newCoordinate.y -  oldCoordinate.y;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
-        });
+        self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
     }
 }
 
