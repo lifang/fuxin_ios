@@ -22,6 +22,8 @@ static UINavigationController *s_loginNavController = nil;
 @synthesize userID = _userID;
 @synthesize token = _token;
 @synthesize messageTimeStamp = _messageTimeStamp;
+@synthesize contactTimeStamp = _contactTimeStamp;
+@synthesize isChatting = _isChatting;
 
 + (FXAppDelegate *)shareFXAppDelegate {
     return [[UIApplication sharedApplication] delegate];
@@ -125,6 +127,19 @@ static UINavigationController *s_loginNavController = nil;
         [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.attributedText = attributedString;
     });
     
+}
+
+- (UILabel *)attributedTitleLabel{
+    if (!_attributedTitleLabel) {
+        UILabel *attributedTitleLabel = [[UILabel alloc] init];
+        _attributedTitleLabel = attributedTitleLabel;
+        attributedTitleLabel.text = @"福务网";
+        attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
+        attributedTitleLabel.backgroundColor = [UIColor clearColor];
+        attributedTitleLabel.textColor = [UIColor whiteColor];
+        attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _attributedTitleLabel;
 }
 
 @end

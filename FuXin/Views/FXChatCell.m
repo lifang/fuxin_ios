@@ -80,6 +80,7 @@
 
 - (void)setNumber:(NSString *)number {
     _backView.hidden = NO;
+    _numberLabel.hidden = NO;
     if (number.length >= 3) {
         _numberLabel.font = [UIFont systemFontOfSize:7];
         _numberLabel.text = @"99+";
@@ -87,8 +88,9 @@
     else {
         _numberLabel.font = [UIFont systemFontOfSize:10];
         _numberLabel.text = number;
-        if (number == nil || [number isEqualToString:@""]) {
+        if (number == nil || [number isEqualToString:@""] || [number isEqualToString:@"0"]) {
             _backView.hidden = YES;
+            _numberLabel.hidden = YES;
         }
     }
 }

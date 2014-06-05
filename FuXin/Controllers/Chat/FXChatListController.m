@@ -9,6 +9,7 @@
 #import "FXChatListController.h"
 #import "FXChatCell.h"
 #import "FXTimeFormat.h"
+#import "LHLDBTools.h"
 
 static NSString *chatCellIdentifier = @"CCI";
 
@@ -44,6 +45,7 @@ static NSString *chatCellIdentifier = @"CCI";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [FXAppDelegate showFuWuTitle];
 }
 
@@ -68,7 +70,7 @@ static NSString *chatCellIdentifier = @"CCI";
 #pragma mark - 更新数据
 
 - (void)updateChatList:(NSArray *)list {
-    if (list && [list count] > 0) {
+    if (list) {
         [_chatList removeAllObjects];
         [_chatList addObjectsFromArray:list];
         [_chatListTable reloadData];
@@ -107,7 +109,7 @@ static NSString *chatCellIdentifier = @"CCI";
         ContactModel *contact = [rowData objectForKey:@"Contact"];
         cell.nameLabel.text = contact.contactNickname;
         [cell setNumber:[NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]]];
-        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
+//        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
 
         cell.detailLabel.text = [rowData objectForKey:@"Record"];
         if (contact.contactAvatar && [contact.contactAvatar length] > 0) {
@@ -133,6 +135,7 @@ static NSString *chatCellIdentifier = @"CCI";
         FXChatViewController *chat = [[FXChatViewController alloc] init];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         chat.contact = [rowData objectForKey:@"Contact"];
+        chat.ID = [rowData objectForKey:@"ID"];
         chat.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:chat animated:YES];
     }
@@ -173,10 +176,15 @@ static NSString *chatCellIdentifier = @"CCI";
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        NSString *userID = [[_chatList objectAtIndex:indexPath.row] objectForKey:@"ID"];
+        //数组中删除
+        [_chatList removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+        //最近对话中删除
+        [LHLDBTools deleteConversationWithID:userID withFinished:^(BOOL finish) {
+            
+        }];
+    }
 }
 
 @end

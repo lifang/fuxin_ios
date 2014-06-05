@@ -13,11 +13,12 @@
 #import "FXRequestDataFormat.h"
 #import "FXBlockedContactsController.h"
 #import "FXNotificationManageViewController.h"
+#import "LHLDBTools.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
 
-@interface FXSettingController ()
+@interface FXSettingController ()<UIAlertViewDelegate>
 
 @property (nonatomic, strong) Profile *userInfo;
 
@@ -46,6 +47,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [FXAppDelegate showFuWuTitle];
 }
 
@@ -249,6 +251,15 @@
             [self.navigationController pushViewController:user animated:YES];
         }
             break;
+        case 2: {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                            message:@"确定要清空本地的所有聊天记录？"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"取消"
+                                                  otherButtonTitles:@"确定", nil];
+            [alert show];
+        }
+            break;
         case 4: {
             FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
             [self.navigationController pushViewController:modifyPassword animated:YES];
@@ -291,6 +302,12 @@
             break;
         default:
             break;
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
     }
 }
 

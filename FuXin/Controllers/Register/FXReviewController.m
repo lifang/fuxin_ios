@@ -40,6 +40,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"注册";
 }
 

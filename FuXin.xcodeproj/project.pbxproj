@@ -103,6 +103,7 @@
 		77179617193FFDB800424BB3 /* 38@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795EF193FFDB800424BB3 /* 38@2x.png */; };
 		77179618193FFDB800424BB3 /* 39@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795F0193FFDB800424BB3 /* 39@2x.png */; };
 		77179619193FFDB800424BB3 /* 40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795F1193FFDB800424BB3 /* 40@2x.png */; };
+		7717961B194006E500424BB3 /* gray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7717961A194006E500424BB3 /* gray@2x.png */; };
 		7718BD7D193D5E4200F7532C /* setting3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7718BD7C193D5E4200F7532C /* setting3@2x.png */; };
 		7718BD7E193D69D700F7532C /* setting2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7718BD80193D69D700F7532C /* setting2@2x.png */; };
 		7718BD83193D6B0900F7532C /* FXUserSettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7718BD82193D6B0900F7532C /* FXUserSettingController.m */; };
@@ -339,6 +340,7 @@
 		771795EF193FFDB800424BB3 /* 38@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "38@2x.png"; sourceTree = "<group>"; };
 		771795F0193FFDB800424BB3 /* 39@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "39@2x.png"; sourceTree = "<group>"; };
 		771795F1193FFDB800424BB3 /* 40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "40@2x.png"; sourceTree = "<group>"; };
+		7717961A194006E500424BB3 /* gray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gray@2x.png"; sourceTree = "<group>"; };
 		7718BD7C193D5E4200F7532C /* setting3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting3@2x.png"; sourceTree = "<group>"; };
 		7718BD7F193D69D700F7532C /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "en.lproj/setting2@2x.png"; sourceTree = "<group>"; };
 		7718BD81193D6B0900F7532C /* FXUserSettingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserSettingController.h; sourceTree = "<group>"; };
@@ -878,11 +880,9 @@
 		77C0863E19267E69000C4532 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-
 				7724B754193F0C5300C3304F /* Face */,
 				93C8C5BD193EEA530059812C /* haha.txt */,
 				93C8C5C2193EF3740059812C /* rubbish@2x.png */,
-
 				3A3115B71931842200663819 /* setting1@2x.png */,
 				7718BD80193D69D700F7532C /* setting2@2x.png */,
 				7718BD7C193D5E4200F7532C /* setting3@2x.png */,
@@ -918,6 +918,7 @@
 				770319DE192C9C2100798D4D /* sender@2x.png */,
 				770BC262192D8F18008104ED /* add@2x.png */,
 				770BC263192D8F18008104ED /* addselected@2x.png */,
+				7717961A194006E500424BB3 /* gray@2x.png */,
 				770351A6193050F6002054EA /* red@2x.png */,
 				7720F3D81930BBD8001F20F4 /* search@2x.png */,
 				7720F3DA1930BC1D001F20F4 /* index@2x.png */,
@@ -1194,9 +1195,7 @@
 				77179604193FFDB800424BB3 /* 19@2x.png in Resources */,
 				7786277A192313B9009AF6E6 /* InfoPlist.strings in Resources */,
 				771795FB193FFDB800424BB3 /* 10@2x.png in Resources */,
-
 				93C8C5C3193EF3740059812C /* rubbish@2x.png in Resources */,
-
 				7702C7B3192B03D70015A178 /* addr@2x.png in Resources */,
 				7718BD7E193D69D700F7532C /* setting2@2x.png in Resources */,
 				770319CE192C580900798D4D /* username@2x.png in Resources */,
@@ -1250,6 +1249,7 @@
 				771795F3193FFDB800424BB3 /* 2@2x.png in Resources */,
 				77179606193FFDB800424BB3 /* 21@2x.png in Resources */,
 				770319DF192C9C2100798D4D /* receive@2x.png in Resources */,
+				7717961B194006E500424BB3 /* gray@2x.png in Resources */,
 				77179601193FFDB800424BB3 /* 16@2x.png in Resources */,
 				3A3115CC1931F63800663819 /* setting6@2x.png in Resources */,
 				771795FF193FFDB800424BB3 /* 14@2x.png in Resources */,

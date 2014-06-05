@@ -58,6 +58,10 @@ static NSString *cellIdentifier = @"cell";
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"屏蔽管理";
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

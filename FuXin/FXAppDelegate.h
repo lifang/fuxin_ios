@@ -25,6 +25,10 @@
 @property (nonatomic, strong) NSString *messageTimeStamp;
 //公用的titleLabel
 @property (nonatomic, strong) UILabel *attributedTitleLabel;
+//获取联系人的时间戳
+@property (nonatomic, strong) NSString *contactTimeStamp;
+//是否在聊天界面，用于接收消息
+@property (nonatomic, assign) BOOL isChatting;
 
 + (FXAppDelegate *)shareFXAppDelegate;
 - (FXRootViewController *)shareRootViewContorller;

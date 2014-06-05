@@ -44,15 +44,23 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(getMessageAll) userInfo:nil repeats:NO];
+//    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(getMessageAll) userInfo:nil repeats:NO];
+    [self getMessageAll];
     [self getContactAll];
     [self showFirstData];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshChatList:) name:ChatNeedRefreshListNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+//清空
+- (void)cancelSource {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Controllers
@@ -81,6 +89,15 @@
     
     self.viewControllers = [NSArray arrayWithObjects:_chatNav, _addrNav, _settNav, nil];
 }
+
+#pragma mark - Notification
+//界面更新通知
+
+- (void)refreshChatList:(NSNotification *)notification {
+    [_chatC updateChatList:[self getChatListFromDB]];
+}
+
+#pragma mark - 请求消息和联系人接口
 
 //加载时先从数据库加载
 - (void)showFirstData {
@@ -112,6 +129,7 @@
                 }
                 else {
                     //获取消息失败
+                    NSLog(@"message fail");
                 }
             }
             else {
@@ -133,6 +151,7 @@
             }
             else {
                 //获取失败
+                NSLog(@"contact fail");
             }
         }
         else {
@@ -195,6 +214,7 @@
             model.messageSendTime = message.sendTime;
             model.messageContent = message.content;
             model.messageStatus = MessageStatusUnRead;
+            model.messageShowTime = [NSNumber numberWithBool:YES];
             [recordsForDB addObject:model];
             
             //最后会话对象
@@ -222,7 +242,7 @@
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
     NSMutableArray *arrayForDB = [NSMutableArray array];
     for (Contact *contact in contactLists) {
-        NSLog(@"%@,%@,%d,%d,%@",contact.name,contact.customName,contact.gender,contact.source,contact.tileUrl);
+        NSLog(@"!!!%@,%@,%d",contact.name,contact.customName,contact.contactId);
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;

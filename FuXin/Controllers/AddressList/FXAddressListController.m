@@ -56,6 +56,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [FXAppDelegate showFuWuTitle];
 }
 
@@ -190,6 +191,7 @@ static NSString *AddressCellIdentifier = @"ACI";
         ContactModel *contact = [_contactLists objectAtIndex:[[dict objectForKey:kIndex] intValue]];
         FXChatViewController *chatC = [[FXChatViewController alloc] init];
         chatC.contact = contact;
+        chatC.ID = contact.contactID;
         chatC.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:chatC animated:YES];
     }

@@ -32,20 +32,10 @@
         self.extendedLayoutIncludesOpaqueBars = NO;
         self.modalPresentationCapturesStatusBarAppearance = NO;
     }
-    if (![FXAppDelegate shareFXAppDelegate].attributedTitleLabel) {
-        UILabel *attributedTitleLabel = [[UILabel alloc] init];
-        [FXAppDelegate shareFXAppDelegate].attributedTitleLabel = attributedTitleLabel;
-        attributedTitleLabel.text = @"hihi";
-        attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
-        attributedTitleLabel.backgroundColor = [UIColor clearColor];
-        attributedTitleLabel.textColor = [UIColor whiteColor];
-        attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    for (UIView *view in self.navigationController.navigationBar.subviews){
-        if ([FXAppDelegate shareFXAppDelegate].attributedTitleLabel == view) {
-            [view removeFromSuperview];
-        }
-    }
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     [self.navigationController.navigationBar addSubview:[FXAppDelegate shareFXAppDelegate].attributedTitleLabel];
 }
 

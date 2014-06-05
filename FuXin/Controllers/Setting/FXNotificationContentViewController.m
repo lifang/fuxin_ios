@@ -32,6 +32,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
     UIWebView *webView = [[UIWebView alloc] init];
     webView.backgroundColor = [UIColor clearColor];
     webView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, self.view.frame.size.height - kBlankSize);
