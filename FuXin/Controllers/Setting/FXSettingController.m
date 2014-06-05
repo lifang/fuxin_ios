@@ -85,6 +85,7 @@
             }
             else {
                 //获取失败
+                NSLog(@"获取个人%d",resp.isSucceed);
             }
         }
         else {
@@ -242,7 +243,31 @@
             [self.navigationController pushViewController:user animated:YES];
         }
             break;
-            
+        case 7: {
+            //退出
+            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+            [FXRequestDataFormat authenticationOutWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {
+                if (success) {
+                    //请求成功
+                    UnAuthenticationResponse *resp = [UnAuthenticationResponse parseFromData:response];
+                    NSLog(@"退出%d",resp.isSucceed);
+                    if (resp.isSucceed) {
+                        //返回成功
+                        delegate.token = nil;
+                        delegate.userID = -1;
+                        [[delegate shareRootViewContorller] showLoginViewController];
+                        [[delegate shareRootViewContorller] removeMainController];
+                    }
+                    else {
+                        //返回失败
+                    }
+                }
+                else {
+                    //请求失败
+                }
+            }];
+        }
+            break;
         default:
             break;
     }

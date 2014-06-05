@@ -15,7 +15,7 @@
 
 @property (nonatomic, assign) id<EmojiDelegate> emojiDelegate;
 
-@property (nonatomic, strong) NSArray *emojiArray;
+@property (nonatomic, strong) NSMutableArray *emojiArray;
 
 @property (nonatomic, strong) UIScrollView *emojiScrollView;
 

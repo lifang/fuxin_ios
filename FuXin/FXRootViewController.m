@@ -7,13 +7,16 @@
 //
 
 #import "FXRootViewController.h"
-#import "FXAppDelegate.h"
 
 @interface FXRootViewController ()
+
+@property (nonatomic, strong) FXMainController *mainController;
 
 @end
 
 @implementation FXRootViewController
+
+@synthesize mainController = _mainController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,15 +55,21 @@
 //主界面
 - (void)showMainViewController {
     UINavigationController *loginNav = [FXAppDelegate shareLoginViewController];
-    FXMainController *mainNav = [FXAppDelegate shareMainViewController];
-    if (mainNav.parentViewController == nil) {
-        mainNav.view.frame = self.view.bounds;
-        [self addChildViewController:mainNav];
-        [self.view addSubview:mainNav.view];
+    _mainController = [[FXMainController alloc] init];
+    if (_mainController.parentViewController == nil) {
+        _mainController.view.frame = self.view.bounds;
+        [self addChildViewController:_mainController];
+        [self.view addSubview:_mainController.view];
     }
     loginNav.view.hidden = YES;
-    mainNav.view.hidden = NO;
-    [self.view bringSubviewToFront:mainNav.view];
+    _mainController.view.hidden = NO;
+    [self.view bringSubviewToFront:_mainController.view];
+}
+
+- (void)removeMainController {
+    [_mainController removeFromParentViewController];
+    [_mainController.view removeFromSuperview];
+    _mainController = nil;
 }
 
 @end

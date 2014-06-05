@@ -108,6 +108,18 @@
                    Finished:(Result)result;
 
 /*
+ 修改个人信息
+ token: 成功登入返回的令牌
+ userID:成功登入返回的userID
+ profile:个人信息对象
+ result:返回结果
+ */
++ (void)changeProfileWithToken:(NSString *)token
+                        UserID:(int32_t)userID
+                       Profile:(Profile *)profile
+                      Finished:(Result)result;
+
+/*
  获取联系人详情
  token: 成功登入返回的令牌
  userID:成功登入返回的userID

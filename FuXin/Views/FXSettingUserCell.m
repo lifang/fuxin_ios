@@ -45,12 +45,12 @@
     _photoView.layer.masksToBounds = YES;
     [self addSubview:_photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(65, 20, 60, 20)];
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(65, 20, 100, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:16];
     [self addSubview:_nameLabel];
     
-    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(140, 24, 12, 12)];
+    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(170, 24, 12, 12)];
     [self addSubview:_sexView];
     
     //按钮

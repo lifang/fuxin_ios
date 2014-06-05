@@ -222,6 +222,7 @@
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
     NSMutableArray *arrayForDB = [NSMutableArray array];
     for (Contact *contact in contactLists) {
+        NSLog(@"%@,%@,%d,%d,%@",contact.name,contact.customName,contact.gender,contact.source,contact.tileUrl);
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;

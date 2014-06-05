@@ -20,9 +20,10 @@
 @synthesize cellStyle = _cellStyle;
 @synthesize userPhotoView = _userPhotoView;
 @synthesize backgroundView = _backgroundView;
-@synthesize contentLabel = _contentLabel;
+@synthesize messageView = _messageView;
 @synthesize timeLabel = _timeLabel;
 @synthesize showTime = _showTime;
+@synthesize contents = _contents;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -50,9 +51,7 @@
     _userPhotoView = [[UIImageView alloc] initWithFrame:CGRectZero];
     _userPhotoView.userInteractionEnabled = YES;
     _backgroundView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    _contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _contentLabel.backgroundColor = [UIColor clearColor];
-    _contentLabel.font = [UIFont systemFontOfSize:14];
+    
     _timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     _timeLabel.backgroundColor = [UIColor clearColor];
     _timeLabel.font = [UIFont systemFontOfSize:12];
@@ -60,7 +59,6 @@
     
     [self.contentView addSubview:_userPhotoView];
     [self.contentView addSubview:_backgroundView];
-    [self.contentView addSubview:_contentLabel];
     [self.contentView addSubview:_timeLabel];
     
     UIView *backView = [[UIView alloc] initWithFrame:self.frame];
@@ -72,8 +70,16 @@
 }
 
 - (void)setSubviewsFrame {
-    CGSize size = [self getContextSizeWithString:_contentLabel.text];
-    size.height = size.height > kMessageBoxHeightMin ? size.height : kMessageBoxHeightMin;
+    if (_messageView) {
+        [_messageView removeFromSuperview];
+    }
+    _messageView = [FXTextFormat getContentViewWithMessage:_contents];
+    CGSize size = _messageView.frame.size;
+    CGFloat adjustHeight = 0;
+    if (size.height < kMessageBoxHeightMin) {
+        adjustHeight = kMessageBoxHeightMin - size.height;
+        size.height = kMessageBoxHeightMin;
+    }
     CGFloat timeOffset = 0;
     if (_showTime) {
         timeOffset = kTimeLabelHeight;
@@ -89,9 +95,8 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, size.width , size.height);
-            _contentLabel.numberOfLines = 0;
-            _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 6, size.width + 20, size.height + 1);
+            _messageView.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, size.width, size.height);
+            _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 7, size.width + 20, size.height + 3);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
             
         }
@@ -101,20 +106,26 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _contentLabel.frame = CGRectMake(320 - kSmallOffset - size.width - 12, kTimeLabelHeight - 5, size.width, size.height);
-            _contentLabel.numberOfLines = 0;
-            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 6, size.width + 20, size.height + 1);
+            _messageView.frame = CGRectMake(320 - kSmallOffset - size.width - 14, kTimeLabelHeight - 5, size.width, size.height);
+
+            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 7, size.width + 20, size.height + 3);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
         }
             break;
         default:
             break;
     }
+    if (adjustHeight > 0) {
+        CGRect rect = _messageView.frame;
+        rect.origin.y += adjustHeight / 2;
+        _messageView.frame = rect;
+    }
+    [self.contentView addSubview:_messageView];
     _userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
 }
 
 - (void)setContents:(NSString *)content {
-    _contentLabel.text = content;
+    _contents = content;
     [self setSubviewsFrame];
 }
 
@@ -126,12 +137,6 @@
     else {
         _timeLabel.hidden = YES;
     }
-}
-
-- (CGSize)getContextSizeWithString:(NSString *)string {
-    return [string sizeWithFont:_contentLabel.font
-              constrainedToSize:CGSizeMake(kMessageBoxWigthMax, CGFLOAT_MAX)
-                  lineBreakMode:NSLineBreakByWordWrapping];
 }
 
 #pragma mark - 手势

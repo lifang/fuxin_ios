@@ -7,6 +7,7 @@
 //
 
 #import "FXUserSettingController.h"
+#import "FXRequestDataFormat.h"
 
 #define kTitleTag       200
 #define kContentTag     201
@@ -48,6 +49,41 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - 重写
+
+- (void)rightBarTouched:(id)sender {
+    Profile *modify = [[[[[[[[[[[[[Profile builder]
+                                  setUserId:_userInfo.userId]
+                                 setName:_userInfo.name]
+                                setNickName:_nameField.text]
+                               setGender:_userInfo.gender]
+                              setMobilePhoneNum:_userInfo.mobilePhoneNum]
+                             setEmail:_userInfo.email]
+                            setBirthday:_userInfo.birthday]
+                           setTileUrl:_userInfo.tileUrl]
+                          setIsProvider:_userInfo.isProvider]
+                         setLisence:_userInfo.lisence]
+                        setPublishClassType:_userInfo.publishClassType] build];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat changeProfileWithToken:delegate.token UserID:delegate.userID Profile:modify Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ChangeProfileResponse *resp = [ChangeProfileResponse parseFromData:response];
+            NSLog(@"修改个人信息 =%d %@",resp.isSucceed,resp.profile.nickName);
+            if (resp.isSucceed) {
+                //修改成功
+            
+            }
+            else {
+                //修改失败
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
 }
 
 #pragma mark - UI

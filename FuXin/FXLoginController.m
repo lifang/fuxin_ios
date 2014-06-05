@@ -72,12 +72,11 @@
     _usernameField = [[UITextField alloc] initWithFrame:CGRectMake(30, 115, 260, 36)];
     _usernameField.returnKeyType = UIReturnKeyDone;
     _usernameField.borderStyle = UITextBorderStyleNone;
-    _usernameField.text = @"18551239661";
     _usernameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
-    _usernameField.text = @"MockUserName";
+    _usernameField.text = @"18913536561";
     _usernameField.delegate = self;
     [self.view addSubview:_usernameField];
     //划线
@@ -94,13 +93,12 @@
     _passwordField = [[UITextField alloc] initWithFrame:CGRectMake(30, 175, 260, 36)];
     _passwordField.returnKeyType = UIReturnKeyDone;
     _passwordField.secureTextEntry = YES;
-    _passwordField.text = @"111111";
     _passwordField.borderStyle = UITextBorderStyleNone;
     _passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
     _passwordField.leftView = psdBackView;
-    _passwordField.text = @"123";
+    _passwordField.text = @"123456";
     _passwordField.delegate = self;
     [self.view addSubview:_passwordField];
     //划线

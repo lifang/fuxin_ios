@@ -46,7 +46,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize emojiListView = _emojiListView;
 @synthesize lastShowDate = _lastShowDate;
 @synthesize contactView = _contactView;
-
+@synthesize refreshControl = _refreshControl;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,10 +83,13 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - UI
 
 - (void)initUI {
+    _refreshControl = [[UIRefreshControl alloc] init];
+    [_refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
     _chatTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64 - kInputViewHeight) style:UITableViewStylePlain];
     _chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _chatTableView.delegate = self;
     _chatTableView.dataSource = self;
+    [_chatTableView addSubview:_refreshControl];
     [_chatTableView registerClass:[FXMessageBoxCell class] forCellReuseIdentifier:MessageCellIdentifier];
     [self.view addSubview:_chatTableView];
     //清除多余划线
@@ -134,6 +137,26 @@ static NSString *MessageCellIdentifier = @"MCI";
         _contactView.hidden = NO;
         _contactView.alpha = 1.0f;
     }
+}
+
+#pragma mark - 下拉刷新
+
+- (void)refresh {
+    if (_refreshControl.refreshing) {
+        [LHLDBTools getChattingRecordsWithContactID:_contact.contactID beforeIndex:[_dataItems count] withFinished:^(NSArray *records, NSString *error) {
+            //插入数组
+            NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [records count])];
+            [_dataItems insertObjects:records atIndexes:indexSet];
+
+            [_chatTableView reloadData];
+            //停止刷新
+            [self stopRefresh];
+        }];
+    }
+}
+
+- (void)stopRefresh {
+    [_refreshControl endRefreshing];
 }
 
 #pragma mark - 重写父类方法
@@ -274,10 +297,8 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     MessageModel *model = [_dataItems objectAtIndex:indexPath.row];
-    CGFloat height = [model.messageContent sizeWithFont:[UIFont systemFontOfSize:14]
-                      constrainedToSize:CGSizeMake(kMessageBoxWigthMax, CGFLOAT_MAX)
-                          lineBreakMode:NSLineBreakByWordWrapping].height;
-
+    UIView *view = [FXTextFormat getContentViewWithMessage:model.messageContent];
+    CGFloat height = view.frame.size.height;
     return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
 }
 
@@ -448,7 +469,8 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - EmojiDelegate
 
 - (void)touchEmojiButton:(UIButton *)sender {
-    _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:sender.titleLabel.text];
+    NSString *emoji = [NSString stringWithFormat:@"[#%d]",sender.tag + 1];
+    _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:emoji];
 }
 
 @end
