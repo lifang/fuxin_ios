@@ -11,10 +11,15 @@
 #import "FXAddressListController.h"
 #import "FXSettingController.h"
 
+//更新对话界面通知
+static NSString *ChatNeedRefreshListNotification = @"ChatNeedRefreshListNotification";
+
 @interface FXMainController : UITabBarController
 
 @property (nonatomic, strong) UINavigationController *chatNav;
 @property (nonatomic, strong) UINavigationController *addrNav;
 @property (nonatomic, strong) UINavigationController *settNav;
+
+- (void)cancelSource;
 
 @end

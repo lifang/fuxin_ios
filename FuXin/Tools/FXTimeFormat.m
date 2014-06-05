@@ -19,7 +19,6 @@
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSUInteger flag = NSMinuteCalendarUnit | NSHourCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit| NSMonthCalendarUnit | NSYearCalendarUnit;
     NSDateComponents *sendC = [calendar components:flag fromDate:sendDate];
-//    NSDateComponents *nowC = [calendar components:flag fromDate:now];
     NSDateComponents *diffC = [calendar components:flag fromDate:sendDate toDate:now options:0];
     NSString *result = nil;
     

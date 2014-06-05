@@ -22,6 +22,8 @@ static UINavigationController *s_loginNavController = nil;
 @synthesize userID = _userID;
 @synthesize token = _token;
 @synthesize messageTimeStamp = _messageTimeStamp;
+@synthesize contactTimeStamp = _contactTimeStamp;
+@synthesize isChatting = _isChatting;
 
 + (FXAppDelegate *)shareFXAppDelegate {
     return [[UIApplication sharedApplication] delegate];

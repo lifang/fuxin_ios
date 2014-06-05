@@ -62,11 +62,11 @@
         [self.view addSubview:_mainController.view];
     }
     loginNav.view.hidden = YES;
-    _mainController.view.hidden = NO;
     [self.view bringSubviewToFront:_mainController.view];
 }
 
 - (void)removeMainController {
+    [_mainController cancelSource];
     [_mainController removeFromParentViewController];
     [_mainController.view removeFromSuperview];
     _mainController = nil;

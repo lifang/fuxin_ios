@@ -41,4 +41,7 @@ typedef enum {
 //包含图片编码的字符串
 @property (nonatomic, strong, setter = setContents:) NSString *contents;
 
+//时间背景框
+@property (nonatomic, strong) UIImageView *timeBackView;
+
 @end

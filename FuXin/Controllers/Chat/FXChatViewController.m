@@ -43,6 +43,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize showEmojiView = _showEmojiView;
 @synthesize showKeyBoard = _showKeyBoard;
 @synthesize contact = _contact;
+@synthesize ID = _ID;
 @synthesize emojiListView = _emojiListView;
 @synthesize lastShowDate = _lastShowDate;
 @synthesize contactView = _contactView;
@@ -143,12 +144,16 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 - (void)refresh {
     if (_refreshControl.refreshing) {
-        [LHLDBTools getChattingRecordsWithContactID:_contact.contactID beforeIndex:[_dataItems count] withFinished:^(NSArray *records, NSString *error) {
+        [LHLDBTools getChattingRecordsWithContactID:_ID beforeIndex:[_dataItems count] withFinished:^(NSArray *records, NSString *error) {
             //插入数组
             NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [records count])];
             [_dataItems insertObjects:records atIndexes:indexSet];
-
+        
             [_chatTableView reloadData];
+            if ([records count] > 0) {
+                NSIndexPath *path = [NSIndexPath indexPathForRow:[records count] inSection:0];
+                [_chatTableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
             //停止刷新
             [self stopRefresh];
         }];
@@ -216,7 +221,20 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - 菜单事件
 //清除此人聊天记录  进行操作
 - (IBAction)cleanUp:(id)sender {
-    
+    [LHLDBTools deleteChattingRecordsWithContactID:_ID withFinished:^(BOOL finish) {
+        if (finish) {
+            //从对话列表中删除
+            [LHLDBTools deleteConversationWithID:_ID withFinished:^(BOOL finish) {
+                if (finish) {
+                    //更新对话界面
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+                }
+            }];
+            //界面删除
+            [_dataItems removeAllObjects];
+            [_chatTableView reloadData];
+        }
+    }];
 }
 
 //屏蔽联系人 进行操作
@@ -227,10 +245,10 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - 数据
 
 - (void)showChatMessage {
-    [LHLDBTools clearUnreadStatusWithContactID:_contact.contactID withFinished:^(BOOL finish) {
+    [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:^(BOOL finish) {
         
     }];
-    [LHLDBTools getLatestChattingRecordsWithContactID:_contact.contactID withFinished:^(NSArray *list, NSString *error) {
+    [LHLDBTools getLatestChattingRecordsWithContactID:_ID withFinished:^(NSArray *list, NSString *error) {
         [_dataItems addObjectsFromArray:list];
         [_chatTableView reloadData];
         int indexCount = [_chatTableView numberOfRowsInSection:0];
@@ -252,8 +270,18 @@ static NSString *MessageCellIdentifier = @"MCI";
     [LHLDBTools saveChattingRecord:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
         
     }];
+    //最近对话表中加入此联系人
+    ConversationModel *conv = [[ConversationModel alloc] init];
+    conv.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
+    conv.conversationLastCommunicateTime = [FXTimeFormat nowDateString];
+    conv.conversationLastChat = message.content;
+    [LHLDBTools saveConversation:[NSArray arrayWithObject:conv] withFinished:^(BOOL finish) {
+        
+    }];
     //展示在界面中
     [_dataItems addObject:model];
+    //对话列表更新界面
+    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
 }
 
 - (BOOL)needShowDate {
@@ -306,7 +334,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - GetInputTextDelegate
 - (void)getInputText:(NSString *)intputText {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:[_contact.contactID intValue]] setContent:intputText] setSendTime:nil] build];
+    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:[_ID intValue]] setContent:intputText] setSendTime:nil] build];
     [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:sendMessage Finished:^(BOOL success, NSData *response) {
         if (success) {
             //请求成功

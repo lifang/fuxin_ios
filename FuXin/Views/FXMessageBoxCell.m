@@ -10,6 +10,7 @@
 #import "FXChatViewController.h"
 
 #define kMessageBoxHeightMin  36
+#define kMessageBoxWithMin    40
 
 #define kLargeOffset        55
 #define kSmallOffset        40
@@ -24,6 +25,7 @@
 @synthesize timeLabel = _timeLabel;
 @synthesize showTime = _showTime;
 @synthesize contents = _contents;
+@synthesize timeBackView = _timeBackView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -43,7 +45,6 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-    _timeLabel.backgroundColor = kColor(185, 185, 185, 1);
     // Configure the view for the selected state
 }
 
@@ -56,9 +57,12 @@
     _timeLabel.backgroundColor = [UIColor clearColor];
     _timeLabel.font = [UIFont systemFontOfSize:12];
     _timeLabel.textAlignment = NSTextAlignmentCenter;
-    
+
+    _timeBackView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    _timeBackView.image = [UIImage imageNamed:@"gray.png"];
     [self.contentView addSubview:_userPhotoView];
     [self.contentView addSubview:_backgroundView];
+    [self.contentView addSubview:_timeBackView];
     [self.contentView addSubview:_timeLabel];
     
     UIView *backView = [[UIView alloc] initWithFrame:self.frame];
@@ -80,14 +84,21 @@
         adjustHeight = kMessageBoxHeightMin - size.height;
         size.height = kMessageBoxHeightMin;
     }
+    size.width = size.width < kMessageBoxWithMin ? kMessageBoxWithMin : size.width;
     CGFloat timeOffset = 0;
     if (_showTime) {
         timeOffset = kTimeLabelHeight;
-        _timeLabel.frame = CGRectMake(100, 2, 120, kTimeLabelHeight - 22);
-        _timeLabel.backgroundColor = kColor(185, 185, 185, 1);
+        _timeLabel.hidden = NO;
+        _timeBackView.hidden = NO;
+        _timeLabel.frame = CGRectMake(110, 2, 100, kTimeLabelHeight - 22);
         _timeLabel.textColor = [UIColor whiteColor];
-        _timeLabel.layer.cornerRadius = 9;
-        _timeLabel.layer.masksToBounds = YES;
+        _timeBackView.frame = _timeLabel.frame;
+        _timeBackView.layer.cornerRadius = 9;
+        _timeBackView.layer.masksToBounds = YES;
+    }
+    else {
+        _timeBackView.hidden = YES;
+        _timeLabel.hidden = YES;
     }
     switch (_cellStyle) {
         case MessageCellStyleReceive: {
@@ -117,7 +128,7 @@
     }
     if (adjustHeight > 0) {
         CGRect rect = _messageView.frame;
-        rect.origin.y += adjustHeight / 2;
+        rect.origin.y += adjustHeight / 2 + 3;
         _messageView.frame = rect;
     }
     [self.contentView addSubview:_messageView];
