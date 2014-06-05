@@ -90,6 +90,9 @@ static NSString *MessageCellIdentifier = @"MCI";
     _chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _chatTableView.delegate = self;
     _chatTableView.dataSource = self;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    view.backgroundColor = _chatTableView.backgroundColor;
+    _chatTableView.tableHeaderView = view;
     [_chatTableView addSubview:_refreshControl];
     [_chatTableView registerClass:[FXMessageBoxCell class] forCellReuseIdentifier:MessageCellIdentifier];
     [self.view addSubview:_chatTableView];
@@ -239,7 +242,22 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 //屏蔽联系人 进行操作
 - (IBAction)hiddenUser:(id)sender {
-    
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat blockContactWithToken:delegate.token UserID:delegate.userID ContactID:[_ID intValue] IsBlocked:YES Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //屏蔽成功
+            }
+            else {
+                //屏蔽失败
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
 }
 
 #pragma mark - 数据
