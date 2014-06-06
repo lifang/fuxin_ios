@@ -127,7 +127,7 @@
     UIButton *registerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     registerButton.frame = CGRectMake(40, 320, 80, 20);
     registerButton.titleLabel.font = [UIFont systemFontOfSize:13];
-    registerButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    registerButton.titleLabel.textAlignment = NSTextAlignmentLeft;
     [registerButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [registerButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     [registerButton setTitle:@"立即注册" forState:UIControlStateNormal];
@@ -137,7 +137,7 @@
     UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
     forgetButton.frame = CGRectMake(200, 320, 80, 20);
     forgetButton.titleLabel.font = [UIFont systemFontOfSize:13];
-    forgetButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    forgetButton.titleLabel.textAlignment = NSTextAlignmentRight;
     [forgetButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [forgetButton setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
     [forgetButton setTitle:@"忘记密码？" forState:UIControlStateNormal];

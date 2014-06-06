@@ -69,6 +69,27 @@
     }];
 }
 
++ (void)resetPasswordWithPhoneNumber:(NSString *)phoneNumber
+                        ValidateCode:(NSString *)validateCode
+                            Password:(NSString *)password
+                     PasswordConfirm:(NSString *)passwordConfirm
+                            Finished:(Result)result {
+    ResetPasswordRequest *PBObject = [[[[[[ResetPasswordRequest builder]
+                                          setPhoneNumber:phoneNumber]
+                                         setValidateCode:validateCode]
+                                        setPassword:password]
+                                       setPasswordConfirm:passwordConfirm] build];
+    NSData *PBData = [PBObject data];
+    //获取重置密码请求信息
+    NSMutableDictionary *requestInfo = dictionaryForResetPassword();
+    //修改postdata内容
+    [requestInfo setObject:PBData forKey:kRequestPostData];
+    //发送请求
+    [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success,NSData *response){
+        result(success,response);
+    }];
+}
+
 + (void)getContactListWithToken:(NSString *)token
                          UserId:(int32_t)userID
                       TimeStamp:(NSString *)timeStamp

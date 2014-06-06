@@ -35,6 +35,14 @@ NSMutableDictionary* dictionaryForChangePassword() {
             nil];
 }
 
+NSMutableDictionary* dictionaryForResetPassword() {
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            ResetPassword,kRequestURL,
+            @"PUT",kRequestType,
+            @"resetPasswordRequest",kRequestPostData,
+            nil];
+}
+
 NSMutableDictionary* dictionaryForGetContactList() {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
             GetContactList,kRequestURL,

@@ -49,6 +49,20 @@
                        Finished:(Result)result;
 
 /*
+ 重置密码
+ phoneNumber:手机号
+ validataCode:验证码
+ password:密码
+ passwordConfirm:密码
+ result:返回结果
+ */
++ (void)resetPasswordWithPhoneNumber:(NSString *)phoneNumber
+                        ValidateCode:(NSString *)validateCode
+                            Password:(NSString *)password
+                     PasswordConfirm:(NSString *)passwordConfirm
+                            Finished:(Result)result;
+
+/*
  获取联系人
  token: 成功登入返回的令牌
  userID:成功登入返回的userID

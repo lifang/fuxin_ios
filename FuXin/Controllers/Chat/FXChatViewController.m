@@ -67,6 +67,9 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self setRightNavBarItemWithImageName:@"info.png"];
     [self initUI];
     [self showChatMessage];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    delegate.isChatting = YES;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addMessagesWhileChatting:) name:ChatUpdateMessageNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -94,6 +97,9 @@ static NSString *MessageCellIdentifier = @"MCI";
     _chatTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _chatTableView.delegate = self;
     _chatTableView.dataSource = self;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    view.backgroundColor = _chatTableView.backgroundColor;
+    _chatTableView.tableHeaderView = view;
     [_chatTableView addSubview:_refreshControl];
     [_chatTableView registerClass:[FXMessageBoxCell class] forCellReuseIdentifier:MessageCellIdentifier];
     [self.view addSubview:_chatTableView];
@@ -170,6 +176,13 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 #pragma mark - 重写父类方法
 
+- (void)back:(id)sender {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    delegate.isChatting = NO;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super back:sender];
+}
+
 //重写导航右按钮方法
 - (IBAction)rightBarTouched:(id)sender {
     NSArray *listArray = [NSArray arrayWithObjects:
@@ -243,7 +256,32 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 //屏蔽联系人 进行操作
 - (IBAction)hiddenUser:(id)sender {
-    
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat blockContactWithToken:delegate.token UserID:delegate.userID ContactID:[_ID intValue] IsBlocked:YES Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
+            NSLog(@"屏蔽 %d",resp.isSucceed);
+            NSString *info = @"";
+            if (resp.isSucceed) {
+                //屏蔽成功
+                info = @"成功屏蔽此联系人，你可以在设置中取消屏蔽此人！";
+            }
+            else {
+                //屏蔽失败
+                info = @"屏蔽联系人失败！";
+            }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                            message:info
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+        else {
+            //请求失败
+        }
+    }];
 }
 
 #pragma mark - 数据
@@ -262,6 +300,38 @@ static NSString *MessageCellIdentifier = @"MCI";
             [_chatTableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         }
     }];
+}
+
+#pragma mark - 通知
+//正在聊天时获取数据加在数组最后
+- (void)addMessagesWhileChatting:(NSNotification *)notification {
+    NSDictionary *dict = notification.userInfo;
+    for (NSString *key in dict) {
+        if ([key isEqualToString:_ID]) {
+            //找到属于这个人得聊天记录
+            NSArray *messages = [dict objectForKey:key];
+            NSMutableArray *recordsForDB = [NSMutableArray array];
+            for (Message *message in messages) {
+                //聊天记录对象
+                MessageModel *model = [[MessageModel alloc] init];
+                model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+                model.messageSendTime = message.sendTime;
+                model.messageContent = message.content;
+                model.messageStatus = MessageStatusUnRead;
+                model.messageShowTime = [NSNumber numberWithBool:YES];
+                [recordsForDB addObject:model];
+            }
+            [_dataItems addObjectsFromArray:recordsForDB];
+            break;
+        }
+    }
+    [_chatTableView reloadData];
+    int indexCount = [_chatTableView numberOfRowsInSection:0];
+    if (indexCount > 0) {
+        //滚动到最后行
+        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:[_chatTableView numberOfRowsInSection:0] - 1 inSection:0];
+        [_chatTableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
 }
 
 - (void)writeIntoDBWithMessage:(Message *)message {
@@ -354,6 +424,12 @@ static NSString *MessageCellIdentifier = @"MCI";
             }
             else {
                 NSLog(@"errorCode = %d",resp.errorCode);
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                    message:@"消息发送失败"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
             }
         }
     }];

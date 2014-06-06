@@ -126,6 +126,10 @@
                         [messageDict setObject:messages forKey:[NSString stringWithFormat:@"%d",list.contactId]];
                     }
                     [self DBSaveMessagesWithDictionary:messageDict];
+                    if (delegate.isChatting) {
+                        //正在聊天
+                        [[NSNotificationCenter defaultCenter] postNotificationName:ChatUpdateMessageNotification object:nil userInfo:messageDict];
+                    }
                 }
                 else {
                     //获取消息失败
@@ -242,7 +246,7 @@
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
     NSMutableArray *arrayForDB = [NSMutableArray array];
     for (Contact *contact in contactLists) {
-        NSLog(@"!!!%@,%@,%d",contact.name,contact.customName,contact.contactId);
+        NSLog(@"!!!%@,%@,%d,%d",contact.name,contact.customName,contact.contactId,contact.isBlocked);
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;
