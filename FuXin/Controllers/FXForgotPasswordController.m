@@ -353,6 +353,12 @@
     return YES;
 }
 
+#pragma mark - UIAlertView
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark 控件响应
 - (IBAction)spaceAreaClicked:(id)sender {
     [self.passwordTextField resignFirstResponder];
@@ -417,9 +423,11 @@
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
         NSString *phoneNumber = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
         //发送验证码
+        [FXAppDelegate addHUDForView:self.view animate:YES];
         [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber
                                                     Type:ValidateCodeRequest_ValidateTypeResetPassword
                                                 Finished:^(BOOL success, NSData *response) {
+                                                    [FXAppDelegate hideHUDForView:self.view animate:YES];
                                                     if (success) {
                                                         //请求成功
                                                         ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
@@ -485,12 +493,74 @@
     return info;
 }
 
+///转换请求错误文本
+- (NSString *)showErrorInfoWithResetPasswordErrorType:(int)type {
+    NSString *info;
+    switch (type) {
+        case 1:
+            info = @"序列化参数出错";
+            break;
+        case 2:
+            info = @"数据库连接错误";
+            break;
+        case 3:
+            info = @"手机号码有误,请重新输入!";
+            break;
+        case 4:
+            info = @"密码不符合要求,请重新设置!";
+            break;
+        case 5:
+            info = @"确认密码有误!";
+            break;
+        case 6:
+            info = @"确认密码不一致!";
+            break;
+        case 7:
+            info = @"验证码不正确!";
+            break;
+        case 8:
+            info = @"该用户不存在!";
+            break;
+        default:
+            break;
+    }
+    return info;
+}
+
 //完成
 - (void)doneButtonClicked:(UIButton *)sender{
     [(UIButton *)sender setUserInteractionEnabled:NO];
     NSString *phoneNumberString = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     //待请求
-    
+    [FXAppDelegate addHUDForView:self.view animate:YES];
+    [FXRequestDataFormat resetPasswordWithPhoneNumber:phoneNumberString
+                                         ValidateCode:self.identifyingCodeTextField.text
+                                             Password:self.passwordTextField.text
+                                      PasswordConfirm:self.confirmPasswordTextField.text
+                                             Finished:^(BOOL success, NSData *response) {
+                                                 [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                 if (success) {
+                                                     //请求成功
+                                                     ResetPasswordResponse *resp = [ResetPasswordResponse parseFromData:response];
+                                                     if (resp.isSucceed) {
+                                                         //找回密码成功
+                                                         NSLog(@"reset succeed");
+                                                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                             message:@"密码修改成功！点击登录"
+                                                                                                            delegate:self
+                                                                                                   cancelButtonTitle:@"确定"
+                                                                                                   otherButtonTitles:nil];
+                                                         [alertView show];
+                                                     }else{
+                                                         //找回密码失败
+                                                         NSLog(@"reset failed");
+                                                         [FXAppDelegate errorAlert:[self showErrorInfoWithResetPasswordErrorType:resp.errorCode]];
+                                                     }
+                                                 }else{
+                                                     //请求失败
+                                                     [FXAppDelegate errorAlert:@"请求失败,请稍后再试!"];
+                                                 }
+                                             }];
 }
 
 //服务协议按钮

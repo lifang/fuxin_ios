@@ -41,4 +41,9 @@
 
 ///要显示"服务网v1.0"的页面可以调用.
 + (void)showFuWuTitle;
+
+///显示菊花 (只能同时存在一朵)
++ (void)addHUDForView:(UIView *)view animate:(BOOL)animate;
+///隐藏菊花
++ (void)hideHUDForView:(UIView *)view animate:(BOOL)animate;
 @end
