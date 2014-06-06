@@ -313,7 +313,14 @@
             
         }];
         [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
-            
+            if (finish) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                message:@"清除聊天记录完毕"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles: nil];
+                [alert show];
+            }
         }];
     }
 }

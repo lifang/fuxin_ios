@@ -32,6 +32,13 @@ static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authenti
  */
 static NSString *ChangePassword = @"https://118.242.18.189/IMApi/api/Password";
 
+/*
+ info:重置密码
+ type:PUT
+ parm:resetPasswordRequest
+ */
+static NSString *ResetPassword = @"https://118.242.18.189/IMApi/api/ResetPassword";
+
 //Contact
 /*
  info:获取联系人列表
@@ -112,6 +119,7 @@ static NSString *Validate = @"https://118.242.18.189/IMApi/api/ValidateCode";
 NSMutableDictionary* dictionaryForAuthenticationIn();    //登入
 NSMutableDictionary* dictionaryForAuthenticationOut();   //登出
 NSMutableDictionary* dictionaryForChangePassword();      //修改密码
+NSMutableDictionary* dictionaryForResetPassword();       //重置密码
 NSMutableDictionary* dictionaryForGetContactList();      //获取联系人列表
 NSMutableDictionary* dictionaryForBlockContact();        //屏蔽联系人
 NSMutableDictionary* dictionaryForGetMessage();          //接收消息
