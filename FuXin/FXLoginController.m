@@ -41,6 +41,8 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
+    self.view.layer.borderWidth = 1.;
+    self.view.layer.borderColor = [UIColor blackColor].CGColor;
     
 //    [self testDBMethod];
 }
@@ -164,10 +166,12 @@
         return;
     }
     else {
+        [FXAppDelegate addHUDForView:self.view animate:YES];
         [FXRequestDataFormat
          authenticationInWithUsername:_usernameField.text
          Password:_passwordField.text
          Finished:^(BOOL success, NSData *response) {
+             [FXAppDelegate hideHUDForView:self.view animate:YES];
              [(UIButton *)sender setUserInteractionEnabled:YES];
              if (success) {
                  AuthenticationResponse *resp = [AuthenticationResponse parseFromData:response];

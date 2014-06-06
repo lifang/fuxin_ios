@@ -38,6 +38,8 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)initView{
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     UITableView *table = [[UITableView alloc] initWithFrame:(CGRect){kBlankSize , kBlankSize ,320 - 2 * kBlankSize ,560} style:UITableViewStylePlain];
     table.dataSource = self;
     table.delegate = self;
@@ -58,6 +60,7 @@ static NSString *cellIdentifier = @"cell";
     CGRect frame = self.view.frame;
     self.tableView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, frame.size.height - kBlankSize);
     [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
+    [self setLeftNavBarItemWithImageName:@"back.png"];
 }
 
 - (void)didReceiveMemoryWarning

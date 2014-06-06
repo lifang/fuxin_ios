@@ -542,6 +542,11 @@ static LHLDBTools *staticDBTools;
     }
 }
 
+///查询某联系人所有未读消息
++ (void)getUnreadChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSArray *recordsArray ,NSString *errorMessage))finished{
+    
+}
+
 ///清除某联系人的未读状态
 + (void)clearUnreadStatusWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished{
     if (!contactID || contactID.length < 1) {

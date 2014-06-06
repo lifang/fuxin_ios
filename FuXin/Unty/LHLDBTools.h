@@ -81,6 +81,9 @@
 ///查询某联系人未读信息的数量
 + (void)numberOfUnreadChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSInteger quantity,NSString *errorMessage))finished;
 
+///查询某联系人所有未读消息
++ (void)getUnreadChattingRecordsWithContactID:(NSString *)contactID withFinished:(void (^)(NSArray *recordsArray ,NSString *errorMessage))finished;
+
 ///清除某联系人的未读状态
 + (void)clearUnreadStatusWithContactID:(NSString *)contactID withFinished:(void (^)(BOOL flag))finished;
 

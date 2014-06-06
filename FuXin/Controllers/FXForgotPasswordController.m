@@ -88,7 +88,7 @@
         }
         [subview removeFromSuperview];
     }
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = self.view.backgroundColor;
     
 //    self.tableView.scrollEnabled = NO;
     
@@ -156,7 +156,7 @@
     self.doneButton.frame = (CGRect){kBlank_Size ,self.view.frame.size.height - 40 - kCell_Height ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
     
     //table边缘有30像素的白边
-    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
+//    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
     
     [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"找回密码";
 }
@@ -195,8 +195,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    cell.backgroundColor = [UIColor clearColor];
-    cell.contentView.backgroundColor = [UIColor clearColor];
+    cell.backgroundColor = tableView.backgroundColor;
+    cell.contentView.backgroundColor = cell.backgroundColor;
     CGSize cellSize = cell.frame.size;
     switch (indexPath.row) {
         case 0:  //密码
@@ -353,12 +353,41 @@
     return YES;
 }
 
+#pragma mark - UIAlertView
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 #pragma mark 控件响应
 - (IBAction)spaceAreaClicked:(id)sender {
     [self.passwordTextField resignFirstResponder];
     [self.confirmPasswordTextField resignFirstResponder];
     [self.phoneNumberTextField resignFirstResponder];
     [self.identifyingCodeTextField resignFirstResponder];
+}
+
+//验证码获取成功
+- (void)getValidateSuccessWithButton:(UIButton *)sender {
+    UIView *superView = [sender superview];
+    //开始计时
+    [self changeReSendButtonStatus:NO];
+    if (self.reSendTimer) {
+        [self.reSendTimer invalidate];
+    }
+    self.reSendTimer = [NSTimer scheduledTimerWithTimeInterval:kReSendTime target:self selector:@selector(reSendTimerFired:) userInfo:nil repeats:NO];
+    if (self.identtifyingCodeTimer) {
+        [self.identtifyingCodeTimer invalidate];
+    }
+    self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
+    
+    //修改界面
+    [sender setTitle:@"重填" forState:UIControlStateNormal];
+    self.tipLabel.text = @"验证码已发送至您的手机";
+    superView.backgroundColor = kColor(241, 241, 241, 1);
+    self.phoneNumberTextField.enabled = NO;
+    self.phoneNumberTextField.textColor = kColor(135, 135, 135, 1);
+    [self.identifyingCodeTextField becomeFirstResponder];
 }
 
 - (void)checkButtonClicked:(id)sender{ //复选框
@@ -392,28 +421,40 @@
 - (void)rewriteButtonClicked:(UIButton *)sender{
     UIView *superView = [sender superview];
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
-        //1,发送验证码
-        [self changeReSendButtonStatus:NO];
-        if (self.reSendTimer) {
-            [self.reSendTimer invalidate];
-        }
-        self.reSendTimer = [NSTimer scheduledTimerWithTimeInterval:kReSendTime target:self selector:@selector(reSendTimerFired:) userInfo:nil repeats:NO];
-        if (self.identtifyingCodeTimer) {
-            [self.identtifyingCodeTimer invalidate];
-        }
-        self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
+        NSString *phoneNumber = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+        //发送验证码
+        [FXAppDelegate addHUDForView:self.view animate:YES];
+        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber
+                                                    Type:ValidateCodeRequest_ValidateTypeResetPassword
+                                                Finished:^(BOOL success, NSData *response) {
+                                                    [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                    if (success) {
+                                                        //请求成功
+                                                        ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+                                                        if (resp.isSucceed) {
+                                                            //获取验证码成功
+                                                            [self getValidateSuccessWithButton:sender];
+                                                        }else{
+                                                            //获取验证码失败
+                                                            NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                                                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                                message:errorInfo
+                                                                                                               delegate:nil
+                                                                                                      cancelButtonTitle:@"确定"
+                                                                                                      otherButtonTitles:nil];
+                                                            [alertView show];
+                                                        }
+                                                    }else{
+                                                        //请求失败
+                                                        [FXAppDelegate errorAlert:@"请求失败!"];
+                                                    }
+                                                }];
         
-        //2
-        [sender setTitle:@"重填" forState:UIControlStateNormal];
-        self.tipLabel.text = @"验证码已发送至您的手机";
-        superView.backgroundColor = kColor(241, 241, 241, 1);
-        self.phoneNumberTextField.enabled = NO;
-        self.phoneNumberTextField.textColor = kColor(135, 135, 135, 1);
-        [self.identifyingCodeTextField becomeFirstResponder];
     }else if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"重填"]){
         self.phoneNumberTextField.text = @"";
         [self.reSendTimer invalidate];
         [self.identtifyingCodeTimer invalidate];
+        [self changeRewriteButtonStatus:NO];
         
         [sender setTitle:@"确认" forState:UIControlStateNormal];
         superView.backgroundColor = [UIColor clearColor];
@@ -422,9 +463,104 @@
     }
 }
 
+- (NSString *)showErrorInfoWithType:(int)type {
+    NSString *info = nil;
+    switch (type) {
+        case 1:
+            info = @"序列化参数出错！";
+            break;
+        case 2:
+            info = @"手机号码有误,请重新输入！";
+            break;
+        case 3:
+            info = @"发送类型有误！";
+            break;
+        case 4:
+            info = @"用户已存在！";
+            break;
+        case 5:
+            info = @"用户不存在！";
+            break;
+        case 6:
+            info = @"暂不能重复发送验证码,请稍后再试！";
+            break;
+        case 7:
+            info = @"短信服务出错,发送失败!";
+            break;
+        default:
+            break;
+    }
+    return info;
+}
+
+///转换请求错误文本
+- (NSString *)showErrorInfoWithResetPasswordErrorType:(int)type {
+    NSString *info;
+    switch (type) {
+        case 1:
+            info = @"序列化参数出错";
+            break;
+        case 2:
+            info = @"数据库连接错误";
+            break;
+        case 3:
+            info = @"手机号码有误,请重新输入!";
+            break;
+        case 4:
+            info = @"密码不符合要求,请重新设置!";
+            break;
+        case 5:
+            info = @"确认密码有误!";
+            break;
+        case 6:
+            info = @"确认密码不一致!";
+            break;
+        case 7:
+            info = @"验证码不正确!";
+            break;
+        case 8:
+            info = @"该用户不存在!";
+            break;
+        default:
+            break;
+    }
+    return info;
+}
+
 //完成
 - (void)doneButtonClicked:(UIButton *)sender{
-    
+    [(UIButton *)sender setUserInteractionEnabled:NO];
+    NSString *phoneNumberString = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //待请求
+    [FXAppDelegate addHUDForView:self.view animate:YES];
+    [FXRequestDataFormat resetPasswordWithPhoneNumber:phoneNumberString
+                                         ValidateCode:self.identifyingCodeTextField.text
+                                             Password:self.passwordTextField.text
+                                      PasswordConfirm:self.confirmPasswordTextField.text
+                                             Finished:^(BOOL success, NSData *response) {
+                                                 [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                 if (success) {
+                                                     //请求成功
+                                                     ResetPasswordResponse *resp = [ResetPasswordResponse parseFromData:response];
+                                                     if (resp.isSucceed) {
+                                                         //找回密码成功
+                                                         NSLog(@"reset succeed");
+                                                         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                             message:@"密码修改成功！点击登录"
+                                                                                                            delegate:self
+                                                                                                   cancelButtonTitle:@"确定"
+                                                                                                   otherButtonTitles:nil];
+                                                         [alertView show];
+                                                     }else{
+                                                         //找回密码失败
+                                                         NSLog(@"reset failed");
+                                                         [FXAppDelegate errorAlert:[self showErrorInfoWithResetPasswordErrorType:resp.errorCode]];
+                                                     }
+                                                 }else{
+                                                     //请求失败
+                                                     [FXAppDelegate errorAlert:@"请求失败,请稍后再试!"];
+                                                 }
+                                             }];
 }
 
 //服务协议按钮

@@ -28,6 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     [self setRightNavBarItemWithImageName:@"rubbish.png"];
 }
 
@@ -40,6 +41,7 @@
     self.webView = webView;
     
     [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
+    [self setLeftNavBarItemWithImageName:@"back.png"];
 }
 
 - (void)didReceiveMemoryWarning

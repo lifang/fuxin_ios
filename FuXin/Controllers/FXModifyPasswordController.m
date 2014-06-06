@@ -436,7 +436,7 @@
 //验证码获取成功
 - (void)getValidateSuccessWithButton:(UIButton *)sender {
     UIView *superView = [sender superview];
-    //1,发送验证码
+    //1,开始计时
     [self changeReSendButtonStatus:NO];
     if (self.reSendTimer) {
         [self.reSendTimer invalidate];
@@ -447,7 +447,7 @@
     }
     self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
     
-    //2
+    //2 ,修改界面
     [sender setTitle:@"重填" forState:UIControlStateNormal];
     self.tipLabel.text = @"验证码已发送至您的手机";
     superView.backgroundColor = kColor(241, 241, 241, 1);
@@ -475,7 +475,9 @@
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
         NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
         [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
+        [FXAppDelegate addHUDForView:self.view animate:YES];
         [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
+            [FXAppDelegate hideHUDForView:self.view animate:YES];
             if (success) {
                 //请求成功
                 ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
@@ -517,22 +519,68 @@
     NSString *info = nil;
     switch (type) {
         case 1:
-            info = @"手机号输入不正确，请重新输入！";
+            info = @"序列化参数出错！";
             break;
         case 2:
-            info = @"验证码类型不正确！";
+            info = @"手机号码有误,请重新输入！";
             break;
         case 3:
-            info = @"此用户已注册！";
+            info = @"发送类型有误！";
             break;
         case 4:
-            info = @"此用户尚未注册！";
+            info = @"用户已存在！";
             break;
         case 5:
-            info = @"此用户账号已被锁住,请稍后再试！";
+            info = @"用户不存在！";
             break;
         case 6:
-            info = @"发送验证码失败，请重新发送！";
+            info = @"暂不能重复发送验证码,请稍后再试！";
+            break;
+        case 7:
+            info = @"短信服务出错,发送失败!";
+            break;
+        default:
+            break;
+    }
+    return info;
+}
+
+///转换请求错误文本
+- (NSString *)showErrorInfoWithResetPasswordErrorType:(int)type {
+    NSString *info;
+    switch (type) {
+        case 1:
+            info = @"序列化参数出错";
+            break;
+        case 2:
+            info = @"用户账户有误!";
+            break;
+        case 3:
+            info = @"Token参数有误!";
+            break;
+        case 4:
+            info = @"身份验证失败!";
+            break;
+        case 5:
+            info = @"数据库连接错误!";
+            break;
+        case 6:
+            info = @"用户不存在!";
+            break;
+        case 7:
+            info = @"旧密码有误!";
+            break;
+        case 8:
+            info = @"新密码有误!";
+            break;
+        case 9:
+            info = @"确认密码有误!";
+            break;
+        case 10:
+            info = @"确认密码不一致!";
+            break;
+        case 11:
+            info = @"验证码有误!";
             break;
         default:
             break;
@@ -545,37 +593,7 @@
     [(UIButton *)sender setUserInteractionEnabled:NO];
     NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
     [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-//    [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
-//                                            Name:self.originPasswordTextField.text
-//                                        Password:self.passwordTextField.text
-//                                 PasswordConfirm:self.confirmPasswordTextField.text
-//                                    ValidateCode:self.identifyingCodeTextField.text
-//                                        Finished:^(BOOL success, NSData *response) {
-//                                            NSLog(@"res = %@",response);
-//                                            [(UIButton *)sender setUserInteractionEnabled:YES];
-//                                            if (success) {
-//                                                //请求成功
-//                                                RegisterResponse *resp = [RegisterResponse parseFromData:response];
-//                                                if (resp.isSucceed) {
-//                                                    //注册成功
-//                                                    NSLog(@"register succeed");
-//                                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-//                                                                                                        message:@"账号注册成功！"
-//                                                                                                       delegate:self
-//                                                                                              cancelButtonTitle:@"确定"
-//                                                                                              otherButtonTitles:nil];
-//                                                    [alertView show];
-//                                                }
-//                                                else {
-//                                                    //注册失败
-//                                                    NSLog(@"register errorCode = %d",resp.errorCode);
-//                                                }
-//                                            }
-//                                            else {
-//                                                //请求失败
-//                                                NSLog(@"request fail");
-//                                            }
-//                                        }];
+    [FXAppDelegate addHUDForView:self.view animate:YES];
     [FXRequestDataFormat changePasswordWithToken:[FXAppDelegate shareFXAppDelegate].token
                                           UserID:[FXAppDelegate shareFXAppDelegate].userID
                                     ValidateCode:self.identifyingCodeTextField.text
@@ -583,6 +601,7 @@
                                         Password:self.passwordTextField.text
                                  PasswordConfirm:self.confirmPasswordTextField.text
                                         Finished:^(BOOL success, NSData *response) {
+                                            [FXAppDelegate hideHUDForView:self.view animate:YES];
                                             NSLog(@"res = %@",response);
                                             [(UIButton *)sender setUserInteractionEnabled:YES];
                                             if (success) {
@@ -600,7 +619,7 @@
                                                     });
                                                 }else{
                                                     //修改失败
-                                                    [FXAppDelegate errorAlert:[NSString stringWithFormat:@"errorCode : %d" ,resp.errorCode]];
+                                                    [FXAppDelegate errorAlert:[self showErrorInfoWithResetPasswordErrorType:resp.errorCode]];
                                                 }
                                             }else{
                                                 //请求失败

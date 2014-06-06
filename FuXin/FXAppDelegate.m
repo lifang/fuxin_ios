@@ -12,7 +12,8 @@ static FXLoginController      *s_loginController = nil;
 static UINavigationController *s_loginNavController = nil;
 
 @interface FXAppDelegate ()
-@property (nonatomic ,strong)UIAlertView *alertView;
+@property (nonatomic ,strong) UIAlertView *alertView;
+@property (nonatomic ,strong) UIView *progressHUDView;  //菊花view
 @end
 
 
@@ -141,6 +142,57 @@ static UINavigationController *s_loginNavController = nil;
         attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
     }
     return _attributedTitleLabel;
+}
+
+///显示菊花 (只能同时存在一朵)
++ (void)addHUDForView:(UIView *)view animate:(BOOL)animate {
+    UIView *HUDView = [FXAppDelegate shareFXAppDelegate].progressHUDView;
+    [view addSubview:HUDView];
+    HUDView.center = CGPointMake(view.frame.size.width / 2, view.frame.size.height / 3);
+    view.userInteractionEnabled = NO;
+    if (animate) {
+        HUDView.alpha = 0;
+        [UIView animateWithDuration:1 animations:^{
+            HUDView.alpha = 1;
+        }];
+    }
+}
+
+///隐藏菊花
++ (void)hideHUDForView:(UIView *)view animate:(BOOL)animate {
+    view.userInteractionEnabled = YES;
+    if (animate) {
+        [UIView animateWithDuration:1 animations:^{
+            [FXAppDelegate shareFXAppDelegate].progressHUDView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [[FXAppDelegate shareFXAppDelegate].progressHUDView removeFromSuperview];
+        }];
+    }
+}
+
+- (UIView *)progressHUDView{
+    if (!_progressHUDView) {
+        _progressHUDView = [[UIView alloc] init];
+        _progressHUDView.frame = CGRectMake(0, 0, 60, 70);
+        _progressHUDView.backgroundColor = kColor(51, 51, 51, .5);
+        _progressHUDView.layer.cornerRadius = 6.;
+        _progressHUDView.layer.borderColor = kColor(0, 0, 0, .5).CGColor;
+        _progressHUDView.layer.borderWidth = .5;
+        
+        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        indicator.frame = CGRectMake(0, 0, 60, 60);
+        [indicator startAnimating];
+        [_progressHUDView addSubview:indicator];
+        
+        UILabel *label = [[UILabel alloc] init];
+        label.frame = CGRectMake(2, 52, 56, 18);
+        label.text = @"加载中..";
+        label.textColor = [UIColor whiteColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textAlignment = NSTextAlignmentCenter;
+        [_progressHUDView addSubview:label];
+    }
+    return _progressHUDView;
 }
 
 @end
