@@ -103,6 +103,7 @@
 }
 
 - (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     cell.nameLabel.text = _userInfo.name;
     if (_userInfo.gender == 0) {
         cell.sexView.image = [UIImage imageNamed:@"male.png"];
@@ -296,6 +297,7 @@
             }];
             delegate.token = nil;
             delegate.userID = -1;
+            delegate.user = nil;
             [[delegate shareRootViewContorller] showLoginViewController];
             [[delegate shareRootViewContorller] removeMainController];
             

@@ -10,6 +10,7 @@
 #import "FXRootViewController.h"
 #import "FXLoginController.h"
 #import "FXMainController.h"
+#import "FXUserModel.h"
 
 @interface FXAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -27,6 +28,9 @@
 @property (nonatomic, strong) NSString *contactTimeStamp;
 //是否在聊天界面，用于接收消息
 @property (nonatomic, assign) BOOL isChatting;
+
+//登录用户信息 初始时从本地读取
+@property (nonatomic, strong) FXUserModel *user;
 
 //公用的titleLabel
 @property (nonatomic, strong) UILabel *attributedTitleLabel;

@@ -14,6 +14,7 @@
 #import "FXUtility.h"
 #import "SharedClass.h"
 #import "FXRequestDataFormat.h"
+#import "FXArchiverHelper.h"
 
 @interface FXLoginController ()<UITextFieldDelegate>
 //@property (assign ,nonatomic) NSTimeInterval seconds;
@@ -82,6 +83,7 @@
     _usernameField.leftView = userBackView;
     _usernameField.text = @"18913536561";
     _usernameField.delegate = self;
+    [_usernameField addTarget:self action:@selector(getUserInfo) forControlEvents:UIControlEventEditingDidEnd];
     [self.view addSubview:_usernameField];
     //划线
     CGRect rect = _usernameField.frame;
@@ -206,6 +208,15 @@
 - (IBAction)forgetPassword:(id)sender {
     FXForgotPasswordController *forgotPWDController = [[FXForgotPasswordController alloc] initWithNibName:@"FXForgotPasswordController" bundle:nil];
     [self.navigationController pushViewController:forgotPWDController animated:YES];
+}
+
+//从本地读取此用户是否曾登录过
+- (void)getUserInfo {
+    FXUserModel *user = [FXArchiverHelper getUserInfoWithLoginName:_usernameField.text];
+    if (user) {
+        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+        delegate.user = user;
+    }
 }
 
 #pragma mark - UITextFieldDelegate 

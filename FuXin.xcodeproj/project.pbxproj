@@ -63,6 +63,9 @@
 		770BC284192DF23A008104ED /* FXEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC283192DF23A008104ED /* FXEmojiView.m */; };
 		770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC29B192E0B42008104ED /* FXTableHeaderView.m */; };
 		77125273193820FB005419BE /* Models.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 77125272193820FB005419BE /* Models.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		771572661941A36900195604 /* FXResizeImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 771572651941A36900195604 /* FXResizeImage.m */; };
+		771572691941B10E00195604 /* FXArchiverHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 771572681941B10E00195604 /* FXArchiverHelper.m */; };
+		7715726C1941B12E00195604 /* FXUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7715726B1941B12E00195604 /* FXUserModel.m */; };
 		771795F2193FFDB800424BB3 /* 1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795CA193FFDB800424BB3 /* 1@2x.png */; };
 		771795F3193FFDB800424BB3 /* 2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795CB193FFDB800424BB3 /* 2@2x.png */; };
 		771795F4193FFDB800424BB3 /* 3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 771795CC193FFDB800424BB3 /* 3@2x.png */; };
@@ -116,7 +119,6 @@
 		7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7720F3DD1930BD9E001F20F4 /* FXSelectIndexView.m */; };
 		7724B753193F01D800C3304F /* FXTextFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 7724B752193F01D800C3304F /* FXTextFormat.m */; };
 		7731EDEE1935D4DF00AA6976 /* FXTimeFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 7731EDED1935D4DF00AA6976 /* FXTimeFormat.m */; };
-		7731EDF11935FC1500AA6976 /* FXMessageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7731EDF01935FC1500AA6976 /* FXMessageHelper.m */; };
 		773ECB541926151000C57DDC /* FXUserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB531926151000C57DDC /* FXUserView.m */; };
 		773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 773ECB56192615FF00C57DDC /* FXShadowView.m */; };
 		7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7755EC7F19319A7500ADD1A6 /* FXAddressListCell.m */; };
@@ -300,6 +302,12 @@
 		770BC29B192E0B42008104ED /* FXTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTableHeaderView.m; sourceTree = "<group>"; };
 		77125271193820FB005419BE /* Models.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.pb.h; sourceTree = "<group>"; };
 		77125272193820FB005419BE /* Models.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Models.pb.m; sourceTree = "<group>"; };
+		771572641941A36900195604 /* FXResizeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXResizeImage.h; sourceTree = "<group>"; };
+		771572651941A36900195604 /* FXResizeImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXResizeImage.m; sourceTree = "<group>"; };
+		771572671941B10E00195604 /* FXArchiverHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXArchiverHelper.h; sourceTree = "<group>"; };
+		771572681941B10E00195604 /* FXArchiverHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXArchiverHelper.m; sourceTree = "<group>"; };
+		7715726A1941B12E00195604 /* FXUserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserModel.h; sourceTree = "<group>"; };
+		7715726B1941B12E00195604 /* FXUserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUserModel.m; sourceTree = "<group>"; };
 		771795CA193FFDB800424BB3 /* 1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "1@2x.png"; sourceTree = "<group>"; };
 		771795CB193FFDB800424BB3 /* 2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "2@2x.png"; sourceTree = "<group>"; };
 		771795CC193FFDB800424BB3 /* 3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "3@2x.png"; sourceTree = "<group>"; };
@@ -359,8 +367,6 @@
 		7724B752193F01D800C3304F /* FXTextFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTextFormat.m; sourceTree = "<group>"; };
 		7731EDEC1935D4DF00AA6976 /* FXTimeFormat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXTimeFormat.h; sourceTree = "<group>"; };
 		7731EDED1935D4DF00AA6976 /* FXTimeFormat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTimeFormat.m; sourceTree = "<group>"; };
-		7731EDEF1935FC1500AA6976 /* FXMessageHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXMessageHelper.h; sourceTree = "<group>"; };
-		7731EDF01935FC1500AA6976 /* FXMessageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXMessageHelper.m; sourceTree = "<group>"; };
 		773ECB521926151000C57DDC /* FXUserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUserView.h; sourceTree = "<group>"; };
 		773ECB531926151000C57DDC /* FXUserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUserView.m; sourceTree = "<group>"; };
 		773ECB55192615FF00C57DDC /* FXShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXShadowView.h; sourceTree = "<group>"; };
@@ -610,11 +616,13 @@
 				770319DB192C7F0300798D4D /* FXKeyboardAnimation.m */,
 				7731EDEC1935D4DF00AA6976 /* FXTimeFormat.h */,
 				7731EDED1935D4DF00AA6976 /* FXTimeFormat.m */,
-				7731EDEF1935FC1500AA6976 /* FXMessageHelper.h */,
-				7731EDF01935FC1500AA6976 /* FXMessageHelper.m */,
 				770BC288192DF30B008104ED /* FXEmoji.h */,
 				7724B751193F01D800C3304F /* FXTextFormat.h */,
 				7724B752193F01D800C3304F /* FXTextFormat.m */,
+				771572641941A36900195604 /* FXResizeImage.h */,
+				771572651941A36900195604 /* FXResizeImage.m */,
+				771572671941B10E00195604 /* FXArchiverHelper.h */,
+				771572681941B10E00195604 /* FXArchiverHelper.m */,
 				770BC266192DA551008104ED /* CNCompare */,
 				9354A3C9193470E30032D92D /* FXUtility.h */,
 				9354A3CA193470E30032D92D /* FXUtility.m */,
@@ -1056,6 +1064,8 @@
 			children = (
 				77125271193820FB005419BE /* Models.pb.h */,
 				77125272193820FB005419BE /* Models.pb.m */,
+				7715726A1941B12E00195604 /* FXUserModel.h */,
+				7715726B1941B12E00195604 /* FXUserModel.m */,
 				93EC3325192EFD3000D0DE49 /* ContactModel.h */,
 				93EC3326192EFD3000D0DE49 /* ContactModel.m */,
 				93EC3327192EFD3000D0DE49 /* ConversationModel.h */,
@@ -1331,6 +1341,7 @@
 				77FC8A5A192F361A00FFFCDB /* AbstractMessage.m in Sources */,
 				770BC284192DF23A008104ED /* FXEmojiView.m in Sources */,
 				9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */,
+				771572691941B10E00195604 /* FXArchiverHelper.m in Sources */,
 				93C8C5C9193F09950059812C /* FXNotificationModel.m in Sources */,
 				775BBC8319342A98006B5155 /* EmojiTransport.m in Sources */,
 				770319BB192C351E00798D4D /* FXMessageBoxCell.m in Sources */,
@@ -1351,7 +1362,6 @@
 				93C8C5BC193EE0FF0059812C /* FXServiceAgreementViewController.m in Sources */,
 				77FC8A5C192F361A00FFFCDB /* CodedInputStream.m in Sources */,
 				770BC269192DA596008104ED /* pinyin.c in Sources */,
-				7731EDF11935FC1500AA6976 /* FXMessageHelper.m in Sources */,
 				770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */,
 				770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */,
 				775BBC7F19342A98006B5155 /* Emoji.m in Sources */,
@@ -1360,8 +1370,10 @@
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,
 				93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */,
 				93C8C5C6193F010E0059812C /* FXNotificationManageTableViewCell.m in Sources */,
+				771572661941A36900195604 /* FXResizeImage.m in Sources */,
 				770319DC192C7F0300798D4D /* FXKeyboardAnimation.m in Sources */,
 				7718BD83193D6B0900F7532C /* FXUserSettingController.m in Sources */,
+				7715726C1941B12E00195604 /* FXUserModel.m in Sources */,
 				7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */,
 				77FC8A6A192F361A00FFFCDB /* TextFormat.m in Sources */,
 				7702C7CB192B4D370015A178 /* KxMenu.m in Sources */,

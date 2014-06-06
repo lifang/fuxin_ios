@@ -8,11 +8,12 @@
 
 #import "FXUserSettingController.h"
 #import "FXRequestDataFormat.h"
+#import "FXResizeImage.h"
 
 #define kTitleTag       200
 #define kContentTag     201
 
-@interface FXUserSettingController ()<UITextFieldDelegate,UIActionSheetDelegate>
+@interface FXUserSettingController ()<UITextFieldDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UIImageView *photoView;
 @property (nonatomic, strong) UITextField *nameField;
@@ -114,7 +115,7 @@
     lab1.text = @"头像：";
     [headerView addSubview:lab1];
     
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(266, 20, 34, 34)];
+    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(260, 10, 40, 40)];
     _photoView.layer.cornerRadius = _photoView.frame.size.height / 2;
     _photoView.layer.masksToBounds = YES;
     _photoView.image = [UIImage imageNamed:@"placeholder.png"];
@@ -255,20 +256,39 @@
 #pragma mark - UIActionSheet 
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSLog(@"%d",buttonIndex);
+    NSInteger sourceType = UIImagePickerControllerSourceTypeCamera;
     switch (buttonIndex) {
         case 0: {
             //拍照
-            
+            sourceType = UIImagePickerControllerSourceTypeCamera;
         }
             break;
         case 1: {
             //相册
+            sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
             break;
         default:
             break;
     }
+    
+    if ([UIImagePickerController isSourceTypeAvailable:sourceType] &&
+        buttonIndex != actionSheet.cancelButtonIndex) {
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.delegate = self;
+        imagePickerController.allowsEditing = YES;
+        imagePickerController.sourceType = sourceType;
+        [self presentViewController:imagePickerController animated:YES completion:nil];
+    }
+}
+
+#pragma mark - UIImagePickerDelegate 
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *editImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage *resizeImage = [FXResizeImage scaleImage:editImage];
+    _photoView.image = resizeImage;
 }
 
 @end
