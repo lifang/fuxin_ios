@@ -285,10 +285,6 @@
                     NSLog(@"退出%d",resp.isSucceed);
                     if (resp.isSucceed) {
                         //返回成功
-                        delegate.token = nil;
-                        delegate.userID = -1;
-                        [[delegate shareRootViewContorller] showLoginViewController];
-                        [[delegate shareRootViewContorller] removeMainController];
                     }
                     else {
                         //返回失败
@@ -298,6 +294,11 @@
                     //请求失败
                 }
             }];
+            delegate.token = nil;
+            delegate.userID = -1;
+            [[delegate shareRootViewContorller] showLoginViewController];
+            [[delegate shareRootViewContorller] removeMainController];
+            
         }
             break;
         default:
@@ -308,6 +309,12 @@
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
+        [LHLDBTools deleteAllConversationsWithFinished:^(BOOL finish) {
+            
+        }];
+        [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
+            
+        }];
     }
 }
 

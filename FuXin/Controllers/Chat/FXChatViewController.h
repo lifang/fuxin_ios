@@ -44,5 +44,7 @@
 
 //修改联系人备注
 - (void)modifyContactRemark:(NSString *)remark;
+//正在聊天时获取数据加在数组最后
+- (void)addMessagesWhileChatting:(NSDictionary *)dict;
 
 @end

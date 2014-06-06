@@ -13,6 +13,8 @@
 
 //更新对话界面通知
 static NSString *ChatNeedRefreshListNotification = @"ChatNeedRefreshListNotification";
+//聊天界面添加消息
+static NSString *ChatUpdateMessageNotification = @"ChatUpdateMessageNotification";
 
 @interface FXMainController : UITabBarController
 
