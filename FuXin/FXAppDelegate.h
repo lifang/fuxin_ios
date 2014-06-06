@@ -38,6 +38,6 @@
 
 + (void)errorAlert:(NSString *)message;
 
-///要显示"服务网v1.0"的页面可以调用.  要自定义的直接设置title = xx
+///要显示"服务网v1.0"的页面可以调用.
 + (void)showFuWuTitle;
 @end

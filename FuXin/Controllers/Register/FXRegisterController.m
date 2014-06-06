@@ -477,7 +477,7 @@
 //验证码获取成功
 - (void)getValidateSuccessWithButton:(UIButton *)sender {
     UIView *superView = [sender superview];
-    //1,发送验证码
+    //开始计时
     [self changeReSendButtonStatus:NO];
     if (self.reSendTimer) {
         [self.reSendTimer invalidate];
@@ -488,7 +488,7 @@
     }
     self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
     
-    //2
+    //修改界面
     [sender setTitle:@"重填" forState:UIControlStateNormal];
     self.tipLabel.text = @"验证码已发送至您的手机";
     superView.backgroundColor = kColor(241, 241, 241, 1);
@@ -560,6 +560,7 @@
         self.phoneNumberTextField.text = @"";
         [self.reSendTimer invalidate];
         [self.identtifyingCodeTimer invalidate];
+        [self changeRewriteButtonStatus:NO];
         
         [sender setTitle:@"确认" forState:UIControlStateNormal];
         superView.backgroundColor = [UIColor clearColor];
@@ -572,22 +573,25 @@
     NSString *info = nil;
     switch (type) {
         case 1:
-            info = @"手机号输入不正确，请重新输入！";
+            info = @"序列化参数出错！";
             break;
         case 2:
-            info = @"验证码类型不正确！";
+            info = @"手机号码有误,请重新输入！";
             break;
         case 3:
-            info = @"此用户已注册！";
+            info = @"发送类型有误！";
             break;
         case 4:
-            info = @"此用户尚未注册！";
+            info = @"用户已存在！";
             break;
         case 5:
-            info = @"此用户账号已被锁住,请稍后再试！";
+            info = @"用户不存在！";
             break;
         case 6:
-            info = @"发送验证码失败，请重新发送！";
+            info = @"暂不能重复发送验证码,请稍后再试！";
+            break;
+        case 7:
+            info = @"短信服务出错,发送失败!";
             break;
         default:
             break;

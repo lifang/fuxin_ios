@@ -30,6 +30,8 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)initUI{
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(kBlank_Size, 0, 320 - 2 * kBlank_Size, kScreenHeight - 64 - 49) style:UITableViewStylePlain];
     _tableView.backgroundColor = [UIColor clearColor];
     if (kDeviceVersion >= 7.) {
@@ -60,6 +62,7 @@ static NSString *cellIdentifier = @"cell";
 
 - (void)viewWillAppear:(BOOL)animated{
     [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"屏蔽管理";
+    [self setLeftNavBarItemWithImageName:@"back.png"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -122,7 +125,6 @@ static NSString *cellIdentifier = @"cell";
                                               }
                                           }else{
                                               //请求失败
-                                              
                                           }
                                       }];
 }
