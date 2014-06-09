@@ -187,6 +187,21 @@
 		9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */; };
 		93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93415721193DC64100289EE4 /* FXBlockedContactsController.m */; };
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
+		937EDC0A1945B494008C5623 /* libBaiduMobStat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC091945B494008C5623 /* libBaiduMobStat.a */; };
+		937EDC251945B4BF008C5623 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC0E1945B4BE008C5623 /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC261945B4BF008C5623 /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC111945B4BE008C5623 /* CFilteringJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC271945B4BF008C5623 /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC131945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC281945B4BF008C5623 /* CJSONSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC151945B4BE008C5623 /* CJSONSerialization.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC291945B4BF008C5623 /* CJSONSerializedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC171945B4BE008C5623 /* CJSONSerializedData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC2A1945B4BF008C5623 /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC1A1945B4BE008C5623 /* CDataScanner_Extensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC2B1945B4BF008C5623 /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC1C1945B4BF008C5623 /* NSDictionary_JSONExtensions.m */; };
+		937EDC2C1945B4BF008C5623 /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC1F1945B4BF008C5623 /* CJSONDeserializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC2D1945B4BF008C5623 /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC211945B4BF008C5623 /* CJSONScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC2E1945B4BF008C5623 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC231945B4BF008C5623 /* CJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		937EDC301945B5E3008C5623 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC2F1945B5E3008C5623 /* Security.framework */; };
+		937EDC321945B5EF008C5623 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC311945B5EF008C5623 /* CoreLocation.framework */; };
+		937EDC341945B60A008C5623 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC331945B60A008C5623 /* libstdc++.dylib */; };
+		937EDC361945B623008C5623 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC351945B623008C5623 /* CoreTelephony.framework */; };
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
 		93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */; };
@@ -499,6 +514,33 @@
 		93415721193DC64100289EE4 /* FXBlockedContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FXBlockedContactsController.m; path = ../AddressList/FXBlockedContactsController.m; sourceTree = "<group>"; };
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
+		937EDC091945B494008C5623 /* libBaiduMobStat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduMobStat.a; sourceTree = "<group>"; };
+		937EDC0B1945B4A4008C5623 /* BaiduMobStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobStat.h; sourceTree = "<group>"; };
+		937EDC0D1945B4BE008C5623 /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
+		937EDC0E1945B4BE008C5623 /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
+		937EDC101945B4BE008C5623 /* CFilteringJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CFilteringJSONSerializer.h; sourceTree = "<group>"; };
+		937EDC111945B4BE008C5623 /* CFilteringJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CFilteringJSONSerializer.m; sourceTree = "<group>"; };
+		937EDC121945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer_BlocksExtensions.h; sourceTree = "<group>"; };
+		937EDC131945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer_BlocksExtensions.m; sourceTree = "<group>"; };
+		937EDC141945B4BE008C5623 /* CJSONSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerialization.h; sourceTree = "<group>"; };
+		937EDC151945B4BE008C5623 /* CJSONSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerialization.m; sourceTree = "<group>"; };
+		937EDC161945B4BE008C5623 /* CJSONSerializedData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializedData.h; sourceTree = "<group>"; };
+		937EDC171945B4BE008C5623 /* CJSONSerializedData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializedData.m; sourceTree = "<group>"; };
+		937EDC191945B4BE008C5623 /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
+		937EDC1A1945B4BE008C5623 /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
+		937EDC1B1945B4BF008C5623 /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
+		937EDC1C1945B4BF008C5623 /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
+		937EDC1E1945B4BF008C5623 /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
+		937EDC1F1945B4BF008C5623 /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
+		937EDC201945B4BF008C5623 /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
+		937EDC211945B4BF008C5623 /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
+		937EDC221945B4BF008C5623 /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
+		937EDC231945B4BF008C5623 /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
+		937EDC241945B4BF008C5623 /* JSONRepresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONRepresentation.h; sourceTree = "<group>"; };
+		937EDC2F1945B5E3008C5623 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		937EDC311945B5EF008C5623 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		937EDC331945B60A008C5623 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		937EDC351945B623008C5623 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
@@ -545,6 +587,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				937EDC361945B623008C5623 /* CoreTelephony.framework in Frameworks */,
+				937EDC341945B60A008C5623 /* libstdc++.dylib in Frameworks */,
+				937EDC321945B5EF008C5623 /* CoreLocation.framework in Frameworks */,
+				937EDC301945B5E3008C5623 /* Security.framework in Frameworks */,
 				77FC8A1C192F194200FFFCDB /* SystemConfiguration.framework in Frameworks */,
 				77FC8A1A192F192200FFFCDB /* libz.1.2.5.dylib in Frameworks */,
 				77FC8A18192F191A00FFFCDB /* CFNetwork.framework in Frameworks */,
@@ -552,6 +598,7 @@
 				93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */,
 				77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */,
 				77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */,
+				937EDC0A1945B494008C5623 /* libBaiduMobStat.a in Frameworks */,
 				77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -591,6 +638,8 @@
 		7702C7C7192B4CC50015A178 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				937EDC0C1945B4BE008C5623 /* TouchJSON */,
+				937EDC0B1945B4A4008C5623 /* BaiduMobStat.h */,
 				77CB6F03192F682E00936F7F /* ASIHTTPRequest */,
 				7702C7C8192B4D1D0015A178 /* KxMenu */,
 				77FC8A24192F352B00FFFCDB /* GTMBase64 */,
@@ -815,6 +864,11 @@
 		7786276E192313B9009AF6E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				937EDC351945B623008C5623 /* CoreTelephony.framework */,
+				937EDC331945B60A008C5623 /* libstdc++.dylib */,
+				937EDC311945B5EF008C5623 /* CoreLocation.framework */,
+				937EDC2F1945B5E3008C5623 /* Security.framework */,
+				937EDC091945B494008C5623 /* libBaiduMobStat.a */,
 				77FC8A1B192F194200FFFCDB /* SystemConfiguration.framework */,
 				77FC8A19192F192200FFFCDB /* libz.1.2.5.dylib */,
 				77FC8A17192F191A00FFFCDB /* CFNetwork.framework */,
@@ -1045,6 +1099,58 @@
 				77FC8A59192F361A00FFFCDB /* WireFormat.m */,
 			);
 			path = ProtoBuffer;
+			sourceTree = "<group>";
+		};
+		937EDC0C1945B4BE008C5623 /* TouchJSON */ = {
+			isa = PBXGroup;
+			children = (
+				937EDC0D1945B4BE008C5623 /* CDataScanner.h */,
+				937EDC0E1945B4BE008C5623 /* CDataScanner.m */,
+				937EDC0F1945B4BE008C5623 /* Experimental */,
+				937EDC181945B4BE008C5623 /* Extensions */,
+				937EDC1D1945B4BF008C5623 /* JSON */,
+			);
+			path = TouchJSON;
+			sourceTree = "<group>";
+		};
+		937EDC0F1945B4BE008C5623 /* Experimental */ = {
+			isa = PBXGroup;
+			children = (
+				937EDC101945B4BE008C5623 /* CFilteringJSONSerializer.h */,
+				937EDC111945B4BE008C5623 /* CFilteringJSONSerializer.m */,
+				937EDC121945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.h */,
+				937EDC131945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.m */,
+				937EDC141945B4BE008C5623 /* CJSONSerialization.h */,
+				937EDC151945B4BE008C5623 /* CJSONSerialization.m */,
+				937EDC161945B4BE008C5623 /* CJSONSerializedData.h */,
+				937EDC171945B4BE008C5623 /* CJSONSerializedData.m */,
+			);
+			path = Experimental;
+			sourceTree = "<group>";
+		};
+		937EDC181945B4BE008C5623 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				937EDC191945B4BE008C5623 /* CDataScanner_Extensions.h */,
+				937EDC1A1945B4BE008C5623 /* CDataScanner_Extensions.m */,
+				937EDC1B1945B4BF008C5623 /* NSDictionary_JSONExtensions.h */,
+				937EDC1C1945B4BF008C5623 /* NSDictionary_JSONExtensions.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		937EDC1D1945B4BF008C5623 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				937EDC1E1945B4BF008C5623 /* CJSONDeserializer.h */,
+				937EDC1F1945B4BF008C5623 /* CJSONDeserializer.m */,
+				937EDC201945B4BF008C5623 /* CJSONScanner.h */,
+				937EDC211945B4BF008C5623 /* CJSONScanner.m */,
+				937EDC221945B4BF008C5623 /* CJSONSerializer.h */,
+				937EDC231945B4BF008C5623 /* CJSONSerializer.m */,
+				937EDC241945B4BF008C5623 /* JSONRepresentation.h */,
+			);
+			path = JSON;
 			sourceTree = "<group>";
 		};
 		93AA53EC1930784F0029E608 /* ForgotPassword */ = {
@@ -1302,6 +1408,7 @@
 				77FC8A67192F361A00FFFCDB /* MutableField.m in Sources */,
 				77CB6F20192F682E00936F7F /* ASIHTTPRequest.m in Sources */,
 				93EC3357192EFD7800D0DE49 /* FMDatabase.m in Sources */,
+				937EDC2E1945B4BF008C5623 /* CJSONSerializer.m in Sources */,
 				77FC8A66192F361A00FFFCDB /* MutableExtensionRegistry.m in Sources */,
 				7706BD53192A0CE800C3E0E5 /* FXAddressListController.m in Sources */,
 				93EC3358192EFD7800D0DE49 /* FMDatabaseAdditions.m in Sources */,
@@ -1312,6 +1419,7 @@
 				77FC8A61192F361A00FFFCDB /* ExtendableMessage_Builder.m in Sources */,
 				77862780192313B9009AF6E6 /* FXAppDelegate.m in Sources */,
 				93EC335A192EFD7800D0DE49 /* FMDatabaseQueue.m in Sources */,
+				937EDC271945B4BF008C5623 /* CJSONDeserializer_BlocksExtensions.m in Sources */,
 				93C8C5C1193EF0F90059812C /* FXNotificationManageViewController.m in Sources */,
 				9354A3CB193470E30032D92D /* FXUtility.m in Sources */,
 				77CB6F1F192F682E00936F7F /* ASIFormDataRequest.m in Sources */,
@@ -1334,6 +1442,7 @@
 				771E1D5519371FDC0054BFC9 /* FXContactView.m in Sources */,
 				7702C7BB192B27950015A178 /* FXChatCell.m in Sources */,
 				93EC3359192EFD7800D0DE49 /* FMDatabasePool.m in Sources */,
+				937EDC291945B4BF008C5623 /* CJSONSerializedData.m in Sources */,
 				7720F3DE1930BD9E001F20F4 /* FXSelectIndexView.m in Sources */,
 				77CB6F22192F682E00936F7F /* ASINetworkQueue.m in Sources */,
 				93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */,
@@ -1352,6 +1461,7 @@
 				7755EC8019319A7500ADD1A6 /* FXAddressListCell.m in Sources */,
 				9341571C193D995F00289EE4 /* FXModifyPasswordController.m in Sources */,
 				77CB6F23192F682E00936F7F /* Reachability.m in Sources */,
+				937EDC2B1945B4BF008C5623 /* NSDictionary_JSONExtensions.m in Sources */,
 				93EC332B192EFD3000D0DE49 /* ContactModel.m in Sources */,
 				77125273193820FB005419BE /* Models.pb.m in Sources */,
 				93EC335C192EFD7800D0DE49 /* LHLDBTools.m in Sources */,
@@ -1365,6 +1475,9 @@
 				770BC26F192DA65B008104ED /* FXCompareCN.m in Sources */,
 				770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */,
 				775BBC7F19342A98006B5155 /* Emoji.m in Sources */,
+				937EDC2D1945B4BF008C5623 /* CJSONScanner.m in Sources */,
+				937EDC2C1945B4BF008C5623 /* CJSONDeserializer.m in Sources */,
+				937EDC281945B4BF008C5623 /* CJSONSerialization.m in Sources */,
 				775BBC8219342A98006B5155 /* EmojiPictographs.m in Sources */,
 				7706BD441929D4E000C3E0E5 /* FXReviewController.m in Sources */,
 				773ECB57192615FF00C57DDC /* FXShadowView.m in Sources */,
@@ -1376,7 +1489,9 @@
 				7715726C1941B12E00195604 /* FXUserModel.m in Sources */,
 				7706BD471929EAE500C3E0E5 /* FXFinishConroller.m in Sources */,
 				77FC8A6A192F361A00FFFCDB /* TextFormat.m in Sources */,
+				937EDC251945B4BF008C5623 /* CDataScanner.m in Sources */,
 				7702C7CB192B4D370015A178 /* KxMenu.m in Sources */,
+				937EDC2A1945B4BF008C5623 /* CDataScanner_Extensions.m in Sources */,
 				77FC8A68192F361A00FFFCDB /* PBArray.m in Sources */,
 				7702C7AC192AF2250015A178 /* FXAdjustViewController.m in Sources */,
 				93EC335B192EFD7800D0DE49 /* FMResultSet.m in Sources */,
@@ -1390,6 +1505,7 @@
 				77FC8A6C192F361A00FFFCDB /* UnknownFieldSet_Builder.m in Sources */,
 				7724B753193F01D800C3304F /* FXTextFormat.m in Sources */,
 				77FC8A5E192F361A00FFFCDB /* ConcreteExtensionField.m in Sources */,
+				937EDC261945B4BF008C5623 /* CFilteringJSONSerializer.m in Sources */,
 				7731EDEE1935D4DF00AA6976 /* FXTimeFormat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1521,6 +1637,11 @@
 				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
 				INFOPLIST_FILE = "FuXin/FuXin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8886F8BB-85C7-4C67-BDFF-9AD958A3CBC7";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1539,6 +1660,10 @@
 				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
 				INFOPLIST_FILE = "FuXin/FuXin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8886F8BB-85C7-4C67-BDFF-9AD958A3CBC7";
 				TARGETED_DEVICE_FAMILY = 1;

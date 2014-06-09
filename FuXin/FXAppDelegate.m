@@ -7,7 +7,7 @@
 //
 
 #import "FXAppDelegate.h"
-
+#import "BaiduMobStat.h"
 static FXLoginController      *s_loginController = nil;
 static UINavigationController *s_loginNavController = nil;
 
@@ -101,7 +101,7 @@ static UINavigationController *s_loginNavController = nil;
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
-#pragma mark --
+#pragma mark -- 工具
 + (void)errorAlert:(NSString *)message {
     if (!message || [message isEqualToString:@""]) {
         return;
@@ -185,6 +185,11 @@ static UINavigationController *s_loginNavController = nil;
         [_progressHUDView addSubview:label];
     }
     return _progressHUDView;
+}
+
+#pragma mark 百度
+- (void)initBaiduStats{
+//    BaiduMobStat *stat = [BaiduMobStat defaultStat];
 }
 
 @end

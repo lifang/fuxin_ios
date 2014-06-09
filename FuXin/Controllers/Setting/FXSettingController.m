@@ -37,7 +37,6 @@
     if (self) {
         // Custom initialization
         [FXAppDelegate showFuWuTitleForViewController:self];
-        self.navigationItem.prompt = @"大家好 ,我是康佳幼儿园小三班的小朋友";
     }
     return self;
 }
@@ -49,6 +48,7 @@
     [self initUI];
     [self getUserInfo];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfo:) name:UpdateUserInfoNotification object:nil];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -323,6 +323,7 @@
             break;
         case 4: {
             FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
+//            self.tabBarController.tabBar.hidden = YES;
             [self.navigationController pushViewController:modifyPassword animated:YES];
         }
             break;

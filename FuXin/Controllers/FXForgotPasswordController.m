@@ -76,7 +76,7 @@
     self.passwordIsOK = NO;
     self.identiCodeIsOK = NO;
     
-    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+//    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     self.title = @"找回密码";
 }
 
@@ -84,7 +84,7 @@
 - (void)initViews{
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     for (UIView *subview in self.view.subviews){
-        if (subview == self.tableView || subview == self.doneButton) {
+        if (subview == self.tableView) {
             continue;
         }
         [subview removeFromSuperview];
@@ -150,14 +150,26 @@
     self.doneButton.backgroundColor = kColor(255, 0, 9, 1);
     [self.doneButton addTarget:self action:@selector(doneButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self changeDoneButtonStatus];
+    
+    UIView *footerView = [[UIView alloc] init];
+    footerView.frame = CGRectMake(0, 0, 320 - 2 * kBlank_Size, [UIScreen mainScreen].bounds.size.height - 6 * kCell_Height - 44 - 51);
+    [footerView addSubview:_doneButton];
+    footerView.backgroundColor = self.view.backgroundColor;
+    _doneButton.frame = (CGRect){0 ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
+    _doneButton.center = CGPointMake(footerView.frame.size.width / 2, footerView.frame.size.height - _doneButton.frame.size.height / 2 - 30);
+    _tableView.tableFooterView = footerView;
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, kBlank_Size)];
+    headerView.backgroundColor = self.view.backgroundColor;
+    _tableView.tableHeaderView = headerView;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.doneButton.frame = (CGRect){kBlank_Size ,self.view.frame.size.height - 40 - kCell_Height ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
+//    self.doneButton.frame = (CGRect){kBlank_Size ,self.view.frame.size.height - 40 - kCell_Height ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
     
     //table边缘有30像素的白边
-//    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
+    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.view.frame.size.height};
     
 }
 
@@ -166,7 +178,6 @@
     [self.reSendTimer invalidate];
     [self.timingTimer invalidate];
     [self.identtifyingCodeTimer invalidate];
-    [self.tableView removeObserver:self forKeyPath:@"contentOffset"];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -187,7 +198,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
-    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
+//    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
     return kCell_Height;
 }
@@ -697,20 +708,5 @@
 
 #pragma mark Notifications
 
-#pragma mark KVO
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"contentOffset"]) {
-        NSValue *oldOffset = [change objectForKey:@"old"];
-        NSValue *newOffset = [change objectForKey:@"new"];
-        CGPoint oldCoordinate;
-        CGPoint newCoordinate;
-        [oldOffset getValue:&oldCoordinate];
-        [newOffset getValue:&newCoordinate];
-        CGFloat distance = newCoordinate.y -  oldCoordinate.y;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
-        });
-    }
-}
 
 @end
