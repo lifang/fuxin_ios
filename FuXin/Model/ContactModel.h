@@ -23,7 +23,7 @@ typedef enum{
 } ContactRelationship;  //关系
 
 typedef enum{
-    ContactSexMale = 1,
+    ContactSexMale = 0,
     ContactSexFemale,
     ContactSexSecret,
 } ContactSex; //性别

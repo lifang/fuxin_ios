@@ -10,6 +10,7 @@
 #import "FXAppDelegate.h"
 #import "LHLDBTools.h"
 #import "Models.pb.h"
+#import "FXTimeFormat.h"
 
 @interface FXMainController ()
 
@@ -44,12 +45,13 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-//    [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(getMessageAll) userInfo:nil repeats:NO];
+//    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
     [self getMessageAll];
     [self getContactAll];
     [self showFirstData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshChatList:) name:ChatNeedRefreshListNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAddressList:) name:AddressNeedRefreshListNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -72,7 +74,7 @@
                                                         tag:0];
     _chatNav = [[UINavigationController alloc] initWithRootViewController:_chatC];
     [FXAppDelegate setNavigationBarTinColor:_chatNav];
-    
+
     _addrC = [[FXAddressListController alloc] init];
     _addrC.tabBarItem = [[UITabBarItem alloc] initWithTitle:@"通讯录"
                                                       image:[UIImage imageNamed:@"addr.png"]
@@ -95,6 +97,10 @@
 
 - (void)refreshChatList:(NSNotification *)notification {
     [_chatC updateChatList:[self getChatListFromDB]];
+}
+
+- (void)refreshAddressList:(NSNotification *)notification {
+    [_addrC updateContactList:[self getContactsListFromDB]];
 }
 
 #pragma mark - 请求消息和联系人接口
@@ -145,11 +151,13 @@
 
 - (void)getContactAll {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat getContactListWithToken:delegate.token UserId:delegate.userID TimeStamp:nil Finished:^(BOOL success, NSData *response){
+    [FXRequestDataFormat getContactListWithToken:delegate.token UserId:delegate.userID TimeStamp:delegate.contactTimeStamp Finished:^(BOOL success, NSData *response){
         if (success) {
             //请求成功
             ContactResponse *resp = [ContactResponse parseFromData:response];
             if (resp.isSucceed) {
+                //保存时间戳
+                delegate.messageTimeStamp = resp.timeStamp;
                 //获取联系人成功
                 [self DBSaveMessageWithArray:resp.contactsList];
             }
@@ -204,6 +212,10 @@
 
 //将所有获取的对话数据保存到数据库
 - (void)DBSaveMessagesWithDictionary:(NSDictionary *)messageDict {
+    __block NSMutableArray *lastCovs = nil;
+    [LHLDBTools getConversationsWithFinished:^(NSMutableArray *covs,NSString *error) {
+        lastCovs = covs;
+    }];
     for (NSString *contactID in messageDict) {
         //每一个联系人的所有消息
         NSArray *messageList = [messageDict objectForKey:contactID];
@@ -211,6 +223,14 @@
         NSMutableArray *recordsForDB = [NSMutableArray array];
         //保存最后会话
         NSMutableArray *lastForDB = [NSMutableArray array];
+        NSString *timeString = nil;
+        //找到此联系人的最后聊天时间
+        for (ConversationModel *cover in lastCovs) {
+            if ([cover.conversationContactID isEqualToString:contactID]) {
+                timeString = cover.conversationLastCommunicateTime;
+                break;
+            }
+        }
         for (Message *message in messageList) {
             //聊天记录对象
             MessageModel *model = [[MessageModel alloc] init];
@@ -218,7 +238,25 @@
             model.messageSendTime = message.sendTime;
             model.messageContent = message.content;
             model.messageStatus = MessageStatusUnRead;
-            model.messageShowTime = [NSNumber numberWithBool:YES];
+            //是否显示时间*********************************
+            if (!timeString) {
+                timeString = message.sendTime;
+                model.messageShowTime = [NSNumber numberWithBool:YES];
+            }
+            else {
+                BOOL needShowTime = [FXTimeFormat needShowTime:timeString withTime:message.sendTime];
+                if (needShowTime) {
+                    timeString = message.sendTime;
+                    model.messageShowTime = [NSNumber numberWithBool:YES];
+                }
+                else {
+                    model.messageShowTime = [NSNumber numberWithBool:NO];
+                }
+            }
+            //********************************************
+            model.messageType = (ContentType)message.contentType;
+            model.imageContent = message.binaryContent;
+            
             [recordsForDB addObject:model];
             
             //最后会话对象
@@ -246,7 +284,7 @@
 - (void)DBSaveMessageWithArray:(NSArray *)contactLists {
     NSMutableArray *arrayForDB = [NSMutableArray array];
     for (Contact *contact in contactLists) {
-        NSLog(@"!!!%@,%@,%d,%d",contact.name,contact.customName,contact.contactId,contact.isBlocked);
+        NSLog(@"!!!%@,%@,%d,%d",contact.name,contact.customName,contact.contactId,contact.source);
         ContactModel *model = [[ContactModel alloc] init];
         model.contactID = [NSString stringWithFormat:@"%d",contact.contactId];
         model.contactNickname = contact.name;
@@ -269,6 +307,8 @@
     }];
     
     [_addrC updateContactList:[self getContactsListFromDB]];
+    
+    [_chatC updateChatList:[self getChatListFromDB]];
 }
 
 @end

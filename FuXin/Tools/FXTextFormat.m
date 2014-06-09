@@ -99,4 +99,40 @@
     return showView;
 }
 
++ (UIView *)getContentViewWithImageData:(NSData *)data {
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectZero];
+    UIImage *content = [UIImage imageWithData:data];
+    UIImageView *imgV = [[UIImageView alloc] initWithImage:content];
+    CGRect rect = imgV.frame;
+    rect.size = [[self class] resizeWithSize:imgV.frame.size];
+    rect.origin = CGPointZero;
+    imgV.frame = rect;
+    [contentView addSubview:imgV];
+    contentView.frame = rect;
+    return contentView;
+}
+
+//3:2调整图片
++ (CGSize)resizeWithSize:(CGSize)size {
+    CGSize resize = size;
+    CGFloat rate = size.width / size.height;
+    if (rate > 1.5) {
+        //宽高比大于3:2
+        if (size.width > kImageWidthMax) {
+            //宽度大于最大值 等比缩小
+            resize.width = kImageWidthMax;
+            resize.height = size.height * kImageWidthMax / size.width;
+        }
+    }
+    else {
+        //宽高比小于3:2
+        //两部分目前实现一样，分开实现是防止以后会限定图片最高值，只需改此处即可
+        if (size.width > kImageWidthMax) {
+            resize.width = kImageWidthMax;
+            resize.height = size.height * kImageWidthMax / size.width;
+        }
+    }
+    return resize;
+}
+
 @end

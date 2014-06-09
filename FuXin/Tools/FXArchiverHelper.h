@@ -14,9 +14,11 @@
 
 @interface FXArchiverHelper : NSObject
 
-//获取当前登录用户的信息（若此用户为登录 返回为nil）
+//获取当前登录用户的信息（若此用户未登录 返回为nil）
 + (FXUserModel *)getUserInfoWithLoginName:(NSString *)loginName;
 //保存当前用户信息
 + (void)saveUserInfo:(FXUserModel *)user;
+
++ (void)print;
 
 @end

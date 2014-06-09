@@ -15,8 +15,15 @@
 //聊天内容宽度最大值
 #define kMessageBoxWigthMax  220
 
+//图片最大宽度
+#define kImageWidthMax     120
+
 @interface FXTextFormat : NSObject
 
+//文字
 + (UIView *)getContentViewWithMessage:(NSString *)message;
+
+//图片
++ (UIView *)getContentViewWithImageData:(NSData *)data;
 
 @end

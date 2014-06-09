@@ -149,6 +149,16 @@
     _remarkLabel.text = _contact.contactRemark;
     _remarkField.placeholder = _contact.contactRemark;
     
+    if (_contact.contactSex == ContactSexMale) {
+        _sexView.image = [UIImage imageNamed:@"male.png"];
+    }
+    else if (_contact.contactSex == ContactSexFemale) {
+        _sexView.image = [UIImage imageNamed:@"female.png"];
+    }
+    else if (_contact.contactSex == ContactSexSecret) {
+
+    }
+    
     UILabel *professsion = (UILabel *)[self viewWithTag:2];
     professsion.text = _contact.contactLisence;
     

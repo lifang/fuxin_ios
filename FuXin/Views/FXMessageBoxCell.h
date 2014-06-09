@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "FXTextFormat.h"
 
+@protocol TouchContactDelegate <NSObject>
+
+- (void)touchContact:(UIGestureRecognizer *)tap;
+
+@end
+
 #define kTimeLabelHeight    40
 
 typedef enum {
@@ -18,6 +24,8 @@ typedef enum {
 }MessageCellStyles;   //cell样式
 
 @interface FXMessageBoxCell : UITableViewCell
+
+@property (nonatomic, assign) id<TouchContactDelegate>delegate;
 
 //消息样式发送还是接收
 @property (nonatomic, assign) MessageCellStyles cellStyle;
@@ -43,5 +51,7 @@ typedef enum {
 
 //时间背景框
 @property (nonatomic, strong) UIImageView *timeBackView;
+
+- (void)setImageData:(NSData *)data;
 
 @end

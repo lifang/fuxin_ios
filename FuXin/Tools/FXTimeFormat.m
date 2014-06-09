@@ -99,4 +99,22 @@
     return nowString;
 }
 
++ (NSDate *)dateWithString:(NSString *)string {
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    return [format dateFromString:string];
+}
+
++ (BOOL)needShowTime:(NSString *)firstTimeString withTime:(NSString *)secondTimeString {
+    NSDateFormatter *format = [[NSDateFormatter alloc] init];
+    [format setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *first = [format dateFromString:firstTimeString];
+    NSDate *second = [format dateFromString:secondTimeString];
+    double diff = [first timeIntervalSinceDate:second];
+    if (fabs(diff) > kTimeInterval) {
+        return YES;
+    }
+    return NO;
+}
+
 @end

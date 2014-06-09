@@ -14,20 +14,22 @@
 #import "FXBlockedContactsController.h"
 #import "FXNotificationManageViewController.h"
 #import "LHLDBTools.h"
+#import "FXArchiverHelper.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
 
 @interface FXSettingController ()<UIAlertViewDelegate>
 
-@property (nonatomic, strong) Profile *userInfo;
-
 @end
 
 @implementation FXSettingController
 
 @synthesize settingTableView = _settingTableView;
-@synthesize userInfo = _userInfo;
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -44,6 +46,7 @@
     // Do any additional setup after loading the view.
     [self initUI];
     [self getUserInfo];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfo:) name:UpdateUserInfoNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -86,10 +89,9 @@
             ProfileResponse *resp = [ProfileResponse parseFromData:response];
             if (resp.isSucceed) {
                 //获取成功
-                _userInfo = resp.profile;
+                [self updateUserInfoWithProfile:resp.profile];
                 NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
                 [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-                NSLog(@"name = %@,nickName = %@,gender = %d,mob = %@,email = %@,birth = %@,tile = %@,is = %d,li = %@,type = %@",resp.profile.name,resp.profile.nickName,resp.profile.gender,resp.profile.mobilePhoneNum,resp.profile.email,resp.profile.birthday,resp.profile.tileUrl,resp.profile.isProvider,resp.profile.lisence,resp.profile.publishClassType);
             }
             else {
                 //获取失败
@@ -102,15 +104,72 @@
     }];
 }
 
-- (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
-    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    cell.nameLabel.text = _userInfo.name;
-    if (_userInfo.gender == 0) {
-        cell.sexView.image = [UIImage imageNamed:@"male.png"];
+- (void)updateUserInfoWithProfile:(Profile *)profile {
+    FXUserModel *user = [[FXUserModel alloc] init];
+    user.userID = [NSNumber numberWithInt:profile.userId];
+    user.name = profile.name;
+    user.nickName = profile.nickName;
+    user.genderType = [NSNumber numberWithInt:profile.gender];
+    user.mobilePhoneNum = profile.mobilePhoneNum;
+    user.email = profile.email;
+    user.birthday = profile.birthday;
+    user.isProvider = [NSNumber numberWithBool:profile.isProvider];
+    user.lisence = profile.lisence;
+    if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
+        user.tile = UIImagePNGRepresentation([UIImage imageNamed:@"placeholder.png"]);
     }
     else {
-        cell.sexView.image = [UIImage imageNamed:@"female.png"];
+        if (![user.tileURL isEqualToString:profile.tileUrl]) {
+            user.tileURL = profile.tileUrl;
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
+                [FXArchiverHelper saveUserInfo:user];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+                    delegate.user = user;
+                    
+                    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+                    [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+                });
+            });
+        }
     }
+}
+
+- (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    if (delegate.user) {
+        if (delegate.user.nickName) {
+            //有昵称显示昵称 没有显示名字
+            cell.nameLabel.text = delegate.user.nickName;
+        }
+        else {
+            cell.nameLabel.text = delegate.user.name;
+        }
+        //性别
+        if ([delegate.user.genderType intValue] == 0) {
+            cell.sexView.image = [UIImage imageNamed:@"male.png"];
+        }
+        else if ([delegate.user.genderType intValue] == 1) {
+            cell.sexView.image = [UIImage imageNamed:@"female.png"];
+        }
+        else if ([delegate.user.genderType intValue] == 2) {
+            //保密
+        }
+        //头像
+        if (delegate.user.tile && [delegate.user.tile length] > 0) {
+            cell.photoView.image = [UIImage imageWithData:delegate.user.tile];
+        }
+        else {
+            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        }
+    }
+}
+
+#pragma mark - 更新界面通知
+- (void)updateUserInfo:(NSNotification *)notification {
+    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+    [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 #pragma mark - TableView
@@ -130,7 +189,6 @@
         if (cell == nil) {
             cell = [[FXSettingUserCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:firstIdentifier];
         }
-        cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
         [self showUserInfoWithCell:cell];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -246,8 +304,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
         case 0: {
+            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
             FXUserSettingController *user = [[FXUserSettingController alloc] init];
-            user.userInfo = _userInfo;
+            user.userInfo = delegate.user;
             user.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:user animated:YES];
         }
@@ -316,6 +375,8 @@
         }];
         [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
             if (finish) {
+                //更新对话界面
+                [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
                                                                 message:@"清除聊天记录完毕"
                                                                delegate:nil

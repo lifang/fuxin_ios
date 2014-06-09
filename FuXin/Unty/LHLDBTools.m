@@ -76,7 +76,7 @@ static LHLDBTools *staticDBTools;
         FMResultSet *rs = [db executeQuery:@"SELECT name FROM SQLITE_MASTER WHERE name = 'ChattingRecords'"];
         if (![rs next]) {
             [rs close];
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE ChattingRecords (id INTEGER PRIMARY KEY AUTOINCREMENT ,contactID INTEGER , time TEXT , content TEXT ,attachment TEXT , showTime NUMBERIC, status NUMBERIC)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE ChattingRecords (id INTEGER PRIMARY KEY AUTOINCREMENT ,contactID INTEGER , time TEXT , content TEXT ,attachment TEXT , showTime NUMBERIC, status NUMBERIC, contentType NUMBERIC,imageContent BLOB)"] : NO;
             //因本数据库插入数据压力较小,应多用索引提升查询效率
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX chatting_id_index ON ChattingRecords(id DESC)"] : NO; //id索引用于统计总数
@@ -441,13 +441,15 @@ static LHLDBTools *staticDBTools;
     [[LHLDBTools shareLHLDBTools].databaseQueue inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
         for (MessageModel *chattingRecord in chattingRecordArray){
-            executeSucceeded = executeSucceeded ? [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status, showTime) VALUES (? ,? ,? ,? ,?, ?)"
+            executeSucceeded = executeSucceeded ? [db executeUpdate:@"INSERT INTO ChattingRecords (contactID ,time ,content ,attachment ,status, showTime,contentType,imageContent) VALUES (? ,? ,? ,? ,?, ?,?,?)"
                                                    ,chattingRecord.messageRecieverID
                                                    ,chattingRecord.messageSendTime
                                                    ,chattingRecord.messageContent
                                                    ,chattingRecord.messageAttachment
                                                    ,[NSNumber numberWithInt:chattingRecord.messageStatus]
                                                    ,chattingRecord.messageShowTime
+                                                   ,[NSNumber numberWithInt:chattingRecord.messageType]
+                                                   ,chattingRecord.imageContent
                                                    ] : NO;
         }
         if (!executeSucceeded) {
@@ -609,6 +611,8 @@ static LHLDBTools *staticDBTools;
     message.messageAttachment = [resultSet stringForColumn:@"attachment"];
     message.messageStatus = (MessageStatus)[resultSet intForColumn:@"status"];
     message.messageShowTime = [resultSet objectForColumnName:@"showTime"];
+    message.messageType = (ContentType)[resultSet intForColumn:@"contentType"];
+    message.imageContent = [resultSet dataForColumn:@"imageContent"];
     return message;
 }
 

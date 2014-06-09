@@ -24,4 +24,6 @@ typedef enum {
 @property (nonatomic, strong) UIButton *msgButton;
 @property (nonatomic, strong) UIButton *phoneButton;
 
+- (void)showRealName:(BOOL)showReal showMessage:(BOOL)showMsg showPhone:(BOOL)showPhone;
+
 @end

@@ -22,10 +22,22 @@
 
 + (void)saveUserInfo:(FXUserModel *)user {
     NSMutableArray *historyLoginUsers = [[self class] getHistoryLoginUsers];
-    if ([historyLoginUsers containsObject:user]) {
-        [historyLoginUsers removeObject:user];
+    if (!historyLoginUsers) {
+        historyLoginUsers = [[NSMutableArray alloc] init];
+    }
+    NSInteger index = -1;
+    for (int i = 0; i < [historyLoginUsers count]; i++) {
+        FXUserModel *historyUser = [historyLoginUsers objectAtIndex:i];
+        if ([historyUser.userID isEqualToNumber:user.userID]) {
+            index = i;
+            break;
+        }
+    }
+    if (index >= 0) {
+        [historyLoginUsers removeObjectAtIndex:index];
     }
     [historyLoginUsers addObject:user];
+    [self saveDataWithArray:historyLoginUsers];
 }
 
 + (NSMutableArray *)getHistoryLoginUsers {
@@ -57,6 +69,24 @@
         }
     }
     return currentUser;
+}
+
++ (void)print {
+    NSMutableArray *history = [[self class] getHistoryLoginUsers];
+    for (FXUserModel *model in history) {
+        NSLog(@"^^^^^^^^^^^^^^^^");
+        NSLog(@"id = %@",model.userID);
+        NSLog(@"name = %@",model.name);
+        NSLog(@"nick = %@",model.nickName);
+        NSLog(@"gender = %@",model.genderType);
+        NSLog(@"mob = %@",model.mobilePhoneNum);
+        NSLog(@"email = %@",model.email);
+        NSLog(@"birth = %@",model.birthday);
+        NSLog(@"url = %@",model.tileURL);
+        NSLog(@"tile = %d",[model.tile length]);
+        NSLog(@"pro = %@",model.isProvider);
+        NSLog(@"lis = %@",model.lisence);
+    }
 }
 
 

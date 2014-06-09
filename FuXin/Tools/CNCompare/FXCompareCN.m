@@ -20,17 +20,23 @@
     //#栏
     BOOL otherIndex = NO;
     for (FXChineseName *object in sortArry) {
-        NSString *firstCharacter = [object.nameEnglish substringToIndex:1];
-        //若第一个字符为非A-Z
-        char firstChar = [firstCharacter characterAtIndex:0];
-        if (!(firstChar >= 'A' && firstChar <= 'Z')) {
+        if ([object.nameEnglish length] < 1) {
             otherIndex = YES;
         }
         else {
-            if (![indexString isEqualToString:firstCharacter]) {
-                [resultArray addObject:firstCharacter];
-                indexString = firstCharacter;
+            NSString *firstCharacter = [object.nameEnglish substringToIndex:1];
+            //若第一个字符为非A-Z
+            char firstChar = [firstCharacter characterAtIndex:0];
+            if (!(firstChar >= 'A' && firstChar <= 'Z')) {
+                otherIndex = YES;
             }
+            else {
+                if (![indexString isEqualToString:firstCharacter]) {
+                    [resultArray addObject:firstCharacter];
+                    indexString = firstCharacter;
+                }
+            }
+
         }
     }
     if (otherIndex) {
@@ -48,28 +54,37 @@
     //#栏
     NSMutableArray *otherArray = [NSMutableArray array];
     for (FXChineseName *object in sortArray) {
-        NSString *firstCharacter = [object.nameEnglish substringToIndex:1];
-//        NSString *name = object.nameChinese;
-        NSDictionary *nameInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  object.nameChinese, kName,
-                                  object.nameIndex, kIndex,
-                                  nil];
-        //若第一个字符为非A-Z
-        char firstChar = [firstCharacter characterAtIndex:0];
-        if (!(firstChar >= 'A' && firstChar <= 'Z')) {
+        if ([object.nameEnglish length] < 1) {
+            NSDictionary *nameInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      object.nameChinese, kName,
+                                      object.nameIndex, kIndex,
+                                      nil];
             [otherArray addObject:nameInfo];
         }
         else {
-            //A-Z
-            if (![indexString isEqualToString:firstCharacter]) {
-                sectionArray = [NSMutableArray array];
-                [sectionArray addObject:nameInfo];
-                [resultArray addObject:sectionArray];
-                indexString = firstCharacter;
+            NSString *firstCharacter = [object.nameEnglish substringToIndex:1];
+            NSDictionary *nameInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      object.nameChinese, kName,
+                                      object.nameIndex, kIndex,
+                                      nil];
+            //若第一个字符为非A-Z
+            char firstChar = [firstCharacter characterAtIndex:0];
+            if (!(firstChar >= 'A' && firstChar <= 'Z')) {
+                [otherArray addObject:nameInfo];
             }
             else {
-                [sectionArray addObject:nameInfo];
+                //A-Z
+                if (![indexString isEqualToString:firstCharacter]) {
+                    sectionArray = [NSMutableArray array];
+                    [sectionArray addObject:nameInfo];
+                    [resultArray addObject:sectionArray];
+                    indexString = firstCharacter;
+                }
+                else {
+                    [sectionArray addObject:nameInfo];
+                }
             }
+
         }
     }
     [resultArray addObject:otherArray];

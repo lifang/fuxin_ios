@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+typedef enum {
+    ContentTypeText = 0, //文字
+    ContentTypeImage, //图片
+}ContentType;
 
 typedef enum{
     MessageStatusDidSent = 1,  //已发送成功
@@ -32,4 +36,9 @@ typedef enum{
 @property (nonatomic, assign) MessageStatus messageStatus;
 //是否显示时间
 @property (nonatomic, strong) NSNumber *messageShowTime;
+
+@property (nonatomic, assign) ContentType messageType;
+
+@property (nonatomic, strong) NSData *imageContent;
+
 @end

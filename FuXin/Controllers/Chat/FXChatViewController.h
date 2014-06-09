@@ -12,9 +12,6 @@
 #import "FXEmojiView.h"
 #import "FXContactView.h"
 
-//时间间隔 用于显示时间
-#define kTimeInterval  30
-
 @interface FXChatViewController : FXAdjustViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *chatTableView;
@@ -30,9 +27,6 @@
 
 //聊天联系人ID，因为contact是从通讯录列表查出，所以需要单独记录
 @property (nonatomic, strong) NSString *ID;
-
-//上次显示timelabel的时间
-@property (nonatomic, strong) NSDate *lastShowDate;
 
 //联系人详细界面
 @property (nonatomic, strong) FXContactView *contactView;
