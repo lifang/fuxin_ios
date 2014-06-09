@@ -41,15 +41,13 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
-    self.view.layer.borderWidth = 1.;
-    self.view.layer.borderColor = [UIColor blackColor].CGColor;
     
+    [FXAppDelegate showFuWuTitleForViewController:self];
 //    [self testDBMethod];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

@@ -37,11 +37,11 @@
     [self initUI];
     
     [self initContents];
+    self.title = @"注册";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"注册";
 }
 
 - (void)didReceiveMemoryWarning

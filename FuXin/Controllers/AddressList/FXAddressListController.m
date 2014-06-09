@@ -52,12 +52,11 @@ static NSString *AddressCellIdentifier = @"ACI";
     // Do any additional setup after loading the view.
     NSLog(@"%@",self.title);
     [self setRightNavBarItemWithImageName:@"search.png"];
-    
+    [FXAppDelegate showFuWuTitleForViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

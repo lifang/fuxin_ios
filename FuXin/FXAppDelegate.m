@@ -50,13 +50,13 @@ static UINavigationController *s_loginNavController = nil;
     UIColor *color = kColor(209, 27, 33, 1);
     if (kDeviceVersion >= 7.0) {
         nav.navigationBar.barTintColor = color;
-        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     }
     else {
         nav.navigationBar.tintColor = color;
     }
     NSMutableDictionary *barAttrs = [NSMutableDictionary dictionary];
-    [barAttrs setObject:[UIColor clearColor] forKey:UITextAttributeTextColor];
+    [barAttrs setObject:[UIColor whiteColor] forKey:UITextAttributeTextColor];
     [[UINavigationBar appearance] setTitleTextAttributes:barAttrs];
 }
 
@@ -115,7 +115,7 @@ static UINavigationController *s_loginNavController = nil;
     [alert show];
 }
 
-+ (void)showFuWuTitle{
++ (void)showFuWuTitleForViewController:(UIViewController *)controller{
     //福务网标题
     NSString *versionString = [NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
     NSString *fullTitleString = [NSString stringWithFormat:@"福务网%@",versionString];
@@ -125,23 +125,18 @@ static UINavigationController *s_loginNavController = nil;
     [attributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17] range:otherRange];
     [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:9] range:versionRange];
     [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.attributedText = attributedString;
-    });
     
-}
-
-- (UILabel *)attributedTitleLabel{
-    if (!_attributedTitleLabel) {
-        UILabel *attributedTitleLabel = [[UILabel alloc] init];
-        _attributedTitleLabel = attributedTitleLabel;
-        attributedTitleLabel.text = @"福务网";
-        attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
-        attributedTitleLabel.backgroundColor = [UIColor clearColor];
-        attributedTitleLabel.textColor = [UIColor whiteColor];
-        attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
-    }
-    return _attributedTitleLabel;
+    UILabel *attributedTitleLabel = [[UILabel alloc] init];
+    attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
+    attributedTitleLabel.textColor = [UIColor whiteColor];
+    attributedTitleLabel.backgroundColor = [UIColor clearColor];
+    attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
+    attributedTitleLabel.attributedText = attributedString;
+    
+    NSMutableDictionary *barAttrs = [NSMutableDictionary dictionary];
+    [barAttrs setObject:[UIColor clearColor] forKey:UITextAttributeTextColor];
+    [controller.navigationController.navigationBar setTitleTextAttributes:barAttrs];
+    [controller.navigationController.navigationBar addSubview:attributedTitleLabel];
 }
 
 ///显示菊花 (只能同时存在一朵)

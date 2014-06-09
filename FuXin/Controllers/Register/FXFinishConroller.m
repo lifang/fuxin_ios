@@ -34,17 +34,18 @@
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     
     [self initUI];
+    self.title = @"注册";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"注册";
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
 }
 
 - (void)initUI {

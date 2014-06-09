@@ -29,19 +29,19 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    [self setRightNavBarItemWithImageName:@"rubbish.png"];
-}
-
-- (void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
+    
     UIWebView *webView = [[UIWebView alloc] init];
     webView.backgroundColor = [UIColor clearColor];
     webView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, self.view.frame.size.height - kBlankSize);
     [self.view addSubview:webView];
     self.webView = webView;
-    
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
+    [self setRightNavBarItemWithImageName:@"rubbish.png"];
     [self setLeftNavBarItemWithImageName:@"back.png"];
+    self.title = @"系统公告";
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning

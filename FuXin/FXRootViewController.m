@@ -48,7 +48,6 @@
         [self addChildViewController:loginNav];
         [self.view addSubview:loginNav.view];
     }
-    [loginNav.navigationBar addSubview:[FXAppDelegate shareFXAppDelegate].attributedTitleLabel];
     loginNav.view.hidden = NO;
     [self.view bringSubviewToFront:loginNav.view];
 }

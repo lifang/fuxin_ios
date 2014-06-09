@@ -32,8 +32,8 @@
 //登录用户信息 初始时从本地读取
 @property (nonatomic, strong) FXUserModel *user;
 
-//公用的titleLabel
-@property (nonatomic, strong) UILabel *attributedTitleLabel;
+////公用的titleLabel
+//@property (nonatomic, strong) UILabel *attributedTitleLabel;
 
 + (FXAppDelegate *)shareFXAppDelegate;
 - (FXRootViewController *)shareRootViewContorller;
@@ -44,7 +44,7 @@
 + (void)errorAlert:(NSString *)message;
 
 ///要显示"服务网v1.0"的页面可以调用.
-+ (void)showFuWuTitle;
++ (void)showFuWuTitleForViewController:(UIViewController *)controller;
 
 ///显示菊花 (只能同时存在一朵)
 + (void)addHUDForView:(UIView *)view animate:(BOOL)animate;

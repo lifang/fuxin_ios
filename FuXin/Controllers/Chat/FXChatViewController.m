@@ -70,6 +70,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     delegate.isChatting = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addMessagesWhileChatting:) name:ChatUpdateMessageNotification object:nil];
+    self.title = _contact.contactNickname;
 }
 
 - (void)didReceiveMemoryWarning
@@ -80,7 +81,6 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = _contact.contactNickname;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -40,6 +40,8 @@
     [self.view addSubview:_textView];
     
     _textView.text = [NSString stringWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"haha" withExtension:@"txt"] encoding:NSUTF8StringEncoding error:nil];
+    [self setLeftNavBarItemWithImageName:@"back.png"];
+    self.title = @"服务协议";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -47,7 +49,7 @@
     _textView.contentOffset = CGPointMake(0, 0);
     _textView.textContainerInset = UIEdgeInsetsMake(15, 15, 0, 15);
     [_textView setNeedsLayout];
-    [self setLeftNavBarItemWithImageName:@"back.png"];
+    
 }
 
 - (void)didReceiveMemoryWarning

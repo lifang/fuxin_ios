@@ -44,11 +44,11 @@
     // Do any additional setup after loading the view.
     [self initUI];
     [self getUserInfo];
+    [FXAppDelegate showFuWuTitleForViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning
