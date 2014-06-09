@@ -57,6 +57,8 @@
     _infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _infoButton.frame = CGRectMake(65, 50, 14, 14);
     _infoButton.tag = UserBtnInfo;
+    _infoButton.hidden = YES;
+    _infoButton.userInteractionEnabled = NO;
     [_infoButton setImage:[UIImage imageNamed:@"signal.png"] forState:UIControlStateNormal];
     [_infoButton addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_infoButton];
@@ -64,6 +66,8 @@
     _msgButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _msgButton.frame = CGRectMake(90, 50, 14, 14);
     _msgButton.tag = UserBtnMessage;
+    _msgButton.hidden = YES;
+    _msgButton.userInteractionEnabled = NO;
     [_msgButton setImage:[UIImage imageNamed:@"text_msg.png"] forState:UIControlStateNormal];
     [_msgButton addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_msgButton];
@@ -71,9 +75,66 @@
     _phoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _phoneButton.frame = CGRectMake(115, 50, 14, 14);
     _phoneButton.tag = UserBtnPhone;
+    _phoneButton.hidden = YES;
+    _phoneButton.userInteractionEnabled = NO;
     [_phoneButton setImage:[UIImage imageNamed:@"phone_icon.png"] forState:UIControlStateNormal];
     [_phoneButton addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_phoneButton];
+}
+
+- (void)showRealName:(BOOL)showReal showMessage:(BOOL)showMsg showPhone:(BOOL)showPhone {
+    CGRect rect1 = CGRectMake(65, 50, 14, 14);
+    CGRect rect2 = CGRectMake(90, 50, 14, 14);
+    CGRect rect3 = CGRectMake(115, 50, 14, 14);
+    if (showReal) {
+        _infoButton.hidden = NO;
+        _infoButton.frame = rect1;
+        if (showMsg) {
+            _msgButton.hidden = NO;
+            _msgButton.frame = rect2;
+            if (showPhone) {
+                _phoneButton.hidden = NO;
+                _phoneButton.frame = rect3;
+            }
+            else {
+                _phoneButton.hidden = YES;
+            }
+        }
+        else {
+            _msgButton.hidden = YES;
+            if (showPhone) {
+                _phoneButton.hidden = NO;
+                _phoneButton.frame = rect2;
+            }
+            else {
+                _phoneButton.hidden = YES;
+            }
+        }
+    }
+    else {
+        _infoButton.hidden = YES;
+        if (showMsg) {
+            _msgButton.hidden = NO;
+            _msgButton.frame = rect1;
+            if (showPhone) {
+                _phoneButton.hidden = NO;
+                _phoneButton.frame = rect2;
+            }
+            else {
+                _phoneButton.hidden = YES;
+            }
+        }
+        else {
+            _msgButton.hidden = YES;
+            if (showPhone) {
+                _phoneButton.hidden = NO;
+                _phoneButton.frame = rect1;
+            }
+            else {
+                _phoneButton.hidden = YES;
+            }
+        }
+    }
 }
 
 - (IBAction)btnClick:(id)sender {

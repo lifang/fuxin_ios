@@ -41,17 +41,23 @@
 @class Message;
 @class MessageList;
 @class MessageList_Builder;
+@class MessagePush;
+@class MessagePush_Builder;
 @class MessageRequest;
 @class MessageRequest_Builder;
 @class MessageResponse;
 @class MessageResponse_Builder;
 @class Message_Builder;
+@class NoticePush;
+@class NoticePush_Builder;
 @class Profile;
 @class ProfileRequest;
 @class ProfileRequest_Builder;
 @class ProfileResponse;
 @class ProfileResponse_Builder;
 @class Profile_Builder;
+@class PushRequest;
+@class PushRequest_Builder;
 @class RegisterRequest;
 @class RegisterRequest_Builder;
 @class RegisterResponse;
@@ -202,6 +208,13 @@ typedef enum {
 } ClientInfoResponse_ErrorCodeType;
 
 BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeType value);
+
+typedef enum {
+  PushRequest_PushTypeMessage = 0,
+  PushRequest_PushTypeNotice = 1,
+} PushRequest_PushType;
+
+BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 
 
 @interface ModelsRoot : NSObject {
@@ -1150,6 +1163,7 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @interface Profile : PBGeneratedMessage {
 @private
   BOOL hasIsProvider_:1;
+  BOOL hasIsAuthentication_:1;
   BOOL hasUserId_:1;
   BOOL hasName_:1;
   BOOL hasNickName_:1;
@@ -1160,6 +1174,7 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   BOOL hasLisence_:1;
   BOOL hasGender_:1;
   BOOL isProvider_:1;
+  BOOL isAuthentication_:1;
   int32_t userId;
   NSString* name;
   NSString* nickName;
@@ -1180,6 +1195,7 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (BOOL) hasTileUrl;
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
+- (BOOL) hasIsAuthentication;
 @property (readonly) int32_t userId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* nickName;
@@ -1190,6 +1206,7 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @property (readonly, retain) NSString* tileUrl;
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
+- (BOOL) isAuthentication;
 
 + (Profile*) defaultInstance;
 - (Profile*) defaultInstance;
@@ -1274,6 +1291,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (NSString*) lisence;
 - (Profile_Builder*) setLisence:(NSString*) value;
 - (Profile_Builder*) clearLisence;
+
+- (BOOL) hasIsAuthentication;
+- (BOOL) isAuthentication;
+- (Profile_Builder*) setIsAuthentication:(BOOL) value;
+- (Profile_Builder*) clearIsAuthentication;
 @end
 
 @interface ProfileRequest : PBGeneratedMessage {
@@ -2778,5 +2800,198 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (BOOL) hasNewVersion;
 - (ClientInfoResponse_Builder*) setHasNewVersion:(BOOL) value;
 - (ClientInfoResponse_Builder*) clearHasNewVersion;
+@end
+
+@interface MessagePush : PBGeneratedMessage {
+@private
+  BOOL hasSenderId_:1;
+  BOOL hasSenderName_:1;
+  BOOL hasContent_:1;
+  BOOL hasContentType_:1;
+  BOOL hasSendTime_:1;
+  int32_t senderId;
+  NSString* senderName;
+  NSString* content;
+  NSString* contentType;
+  NSString* sendTime;
+}
+- (BOOL) hasSenderId;
+- (BOOL) hasSenderName;
+- (BOOL) hasContent;
+- (BOOL) hasContentType;
+- (BOOL) hasSendTime;
+@property (readonly) int32_t senderId;
+@property (readonly, retain) NSString* senderName;
+@property (readonly, retain) NSString* content;
+@property (readonly, retain) NSString* contentType;
+@property (readonly, retain) NSString* sendTime;
+
++ (MessagePush*) defaultInstance;
+- (MessagePush*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (MessagePush_Builder*) builder;
++ (MessagePush_Builder*) builder;
++ (MessagePush_Builder*) builderWithPrototype:(MessagePush*) prototype;
+
++ (MessagePush*) parseFromData:(NSData*) data;
++ (MessagePush*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessagePush*) parseFromInputStream:(NSInputStream*) input;
++ (MessagePush*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessagePush*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (MessagePush*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface MessagePush_Builder : PBGeneratedMessage_Builder {
+@private
+  MessagePush* result;
+}
+
+- (MessagePush*) defaultInstance;
+
+- (MessagePush_Builder*) clear;
+- (MessagePush_Builder*) clone;
+
+- (MessagePush*) build;
+- (MessagePush*) buildPartial;
+
+- (MessagePush_Builder*) mergeFrom:(MessagePush*) other;
+- (MessagePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (MessagePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasSenderId;
+- (int32_t) senderId;
+- (MessagePush_Builder*) setSenderId:(int32_t) value;
+- (MessagePush_Builder*) clearSenderId;
+
+- (BOOL) hasSenderName;
+- (NSString*) senderName;
+- (MessagePush_Builder*) setSenderName:(NSString*) value;
+- (MessagePush_Builder*) clearSenderName;
+
+- (BOOL) hasContent;
+- (NSString*) content;
+- (MessagePush_Builder*) setContent:(NSString*) value;
+- (MessagePush_Builder*) clearContent;
+
+- (BOOL) hasContentType;
+- (NSString*) contentType;
+- (MessagePush_Builder*) setContentType:(NSString*) value;
+- (MessagePush_Builder*) clearContentType;
+
+- (BOOL) hasSendTime;
+- (NSString*) sendTime;
+- (MessagePush_Builder*) setSendTime:(NSString*) value;
+- (MessagePush_Builder*) clearSendTime;
+@end
+
+@interface NoticePush : PBGeneratedMessage {
+@private
+}
+
++ (NoticePush*) defaultInstance;
+- (NoticePush*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (NoticePush_Builder*) builder;
++ (NoticePush_Builder*) builder;
++ (NoticePush_Builder*) builderWithPrototype:(NoticePush*) prototype;
+
++ (NoticePush*) parseFromData:(NSData*) data;
++ (NoticePush*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (NoticePush*) parseFromInputStream:(NSInputStream*) input;
++ (NoticePush*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (NoticePush*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (NoticePush*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface NoticePush_Builder : PBGeneratedMessage_Builder {
+@private
+  NoticePush* result;
+}
+
+- (NoticePush*) defaultInstance;
+
+- (NoticePush_Builder*) clear;
+- (NoticePush_Builder*) clone;
+
+- (NoticePush*) build;
+- (NoticePush*) buildPartial;
+
+- (NoticePush_Builder*) mergeFrom:(NoticePush*) other;
+- (NoticePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (NoticePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface PushRequest : PBGeneratedMessage {
+@private
+  BOOL hasMessagePush_:1;
+  BOOL hasNoticePush_:1;
+  BOOL hasPushType_:1;
+  MessagePush* messagePush;
+  NoticePush* noticePush;
+  PushRequest_PushType pushType;
+}
+- (BOOL) hasPushType;
+- (BOOL) hasMessagePush;
+- (BOOL) hasNoticePush;
+@property (readonly) PushRequest_PushType pushType;
+@property (readonly, retain) MessagePush* messagePush;
+@property (readonly, retain) NoticePush* noticePush;
+
++ (PushRequest*) defaultInstance;
+- (PushRequest*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (PushRequest_Builder*) builder;
++ (PushRequest_Builder*) builder;
++ (PushRequest_Builder*) builderWithPrototype:(PushRequest*) prototype;
+
++ (PushRequest*) parseFromData:(NSData*) data;
++ (PushRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (PushRequest*) parseFromInputStream:(NSInputStream*) input;
++ (PushRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (PushRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (PushRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface PushRequest_Builder : PBGeneratedMessage_Builder {
+@private
+  PushRequest* result;
+}
+
+- (PushRequest*) defaultInstance;
+
+- (PushRequest_Builder*) clear;
+- (PushRequest_Builder*) clone;
+
+- (PushRequest*) build;
+- (PushRequest*) buildPartial;
+
+- (PushRequest_Builder*) mergeFrom:(PushRequest*) other;
+- (PushRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (PushRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasPushType;
+- (PushRequest_PushType) pushType;
+- (PushRequest_Builder*) setPushType:(PushRequest_PushType) value;
+- (PushRequest_Builder*) clearPushType;
+
+- (BOOL) hasMessagePush;
+- (MessagePush*) messagePush;
+- (PushRequest_Builder*) setMessagePush:(MessagePush*) value;
+- (PushRequest_Builder*) setMessagePushBuilder:(MessagePush_Builder*) builderForValue;
+- (PushRequest_Builder*) mergeMessagePush:(MessagePush*) value;
+- (PushRequest_Builder*) clearMessagePush;
+
+- (BOOL) hasNoticePush;
+- (NoticePush*) noticePush;
+- (PushRequest_Builder*) setNoticePush:(NoticePush*) value;
+- (PushRequest_Builder*) setNoticePushBuilder:(NoticePush_Builder*) builderForValue;
+- (PushRequest_Builder*) mergeNoticePush:(NoticePush*) value;
+- (PushRequest_Builder*) clearNoticePush;
 @end
 

@@ -22,6 +22,7 @@
     [aCoder encodeObject:_tile forKey:@"tile"];
     [aCoder encodeObject:_isProvider forKey:@"isProvider"];
     [aCoder encodeObject:_lisence forKey:@"lisence"];
+    [aCoder encodeObject:_isAuth forKey:@"isAuth"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -37,6 +38,7 @@
         _tile = [aDecoder decodeObjectForKey:@"tile"];
         _isProvider = [aDecoder decodeObjectForKey:@"isProvider"];
         _lisence = [aDecoder decodeObjectForKey:@"lisence"];
+        _isAuth = [aDecoder decodeObjectForKey:@"isAuth"];
     }
     return self;
 }
@@ -54,6 +56,7 @@
     user.tile = [_tile copyWithZone:zone];
     user.isProvider = [_isProvider copyWithZone:zone];
     user.lisence = [_lisence copyWithZone:zone];
+    user.isAuth = [_isAuth copyWithZone:zone];
     return user;
 }
 

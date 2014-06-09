@@ -235,20 +235,37 @@ static NSString *MessageCellIdentifier = @"MCI";
         if (success) {
             //请求成功
             ChangeContactDetailResponse *resp = [ChangeContactDetailResponse parseFromData:response];
+            NSString *info = @"";
             if (resp.isSucceed) {
                 //修改成功
-                NSLog(@"修改联系人成功");
+                _contact.contactRemark = remark;
                 [_contactView hiddenContactView];
+                [self updateAfterModify];
+                info = @"修改联系人备注成功";
             }
             else {
                 //修改失败
-                NSLog(@"修改联系人失败");
+                info = @"修改联系人备注失败";
             }
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                            message:info
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil];
+            [alert show];
         }
         else {
             //请求失败
         }
     }];
+}
+
+//修改联系人成功后更新界面
+- (void)updateAfterModify {
+    //更新联系人到数据库
+    [LHLDBTools saveContact:[NSArray arrayWithObject:_contact] withFinished:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
 }
 
 #pragma mark - 菜单事件
@@ -621,6 +638,7 @@ static NSString *MessageCellIdentifier = @"MCI";
             //隐藏图片框
             [FXKeyboardAnimation moveView:_pictureListView withOffset:_pictureListView.bounds.size.height];
             _showListView = NO;
+            _keyboardHeight = endRect.size.height;
         }
         else if (_showEmojiView) {
             //若此时已经弹出表情框
@@ -628,6 +646,7 @@ static NSString *MessageCellIdentifier = @"MCI";
             //隐藏表情框
             [FXKeyboardAnimation moveView:_emojiListView withOffset:_emojiListView.bounds.size.height];
             _showEmojiView = NO;
+            _keyboardHeight = endRect.size.height;
         }
         else {
             //未弹出表情框
@@ -703,8 +722,18 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - EmojiDelegate
 
 - (void)touchEmojiButton:(UIButton *)sender {
-    NSString *emoji = [NSString stringWithFormat:@"[#%d]",sender.tag + 1];
-    _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:emoji];
+    if ((sender.tag + 1) % 21 == 0) {
+        //删除按钮
+        if ([_inputView.inputView.text length] > 0) {
+            _inputView.inputView.text = [_inputView.inputView.text substringToIndex:[_inputView.inputView.text length] - 1];
+        }
+    }
+    else {
+        NSString *emoji = [NSString stringWithFormat:@"[#%d]",sender.tag + 1];
+        _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:emoji];
+    }
+    NSInteger length = [_inputView.inputView.text length];
+    [_inputView.inputView scrollRangeToVisible:NSMakeRange(length, 1)];
 }
 
 #pragma mark - 点击联系人头像

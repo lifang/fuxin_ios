@@ -32,5 +32,7 @@
 @property (nonatomic, strong) NSNumber *isProvider;
 //行业认证
 @property (nonatomic, strong) NSString *lisence;
+//实名认证
+@property (nonatomic, strong) NSNumber *isAuth;
 
 @end

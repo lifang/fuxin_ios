@@ -116,6 +116,7 @@
     user.birthday = profile.birthday;
     user.isProvider = [NSNumber numberWithBool:profile.isProvider];
     user.lisence = profile.lisence;
+    user.isAuth = [NSNumber numberWithBool:profile.isAuthentication];
     if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
         user.tile = UIImagePNGRepresentation([UIImage imageNamed:@"placeholder.png"]);
     }
@@ -164,6 +165,18 @@
         else {
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
         }
+        //小图标显示
+        BOOL showFirst = NO,showSecond = NO,showThird = NO;
+        if ([delegate.user.isAuth boolValue]) {
+            showFirst = YES;
+        }
+        if (delegate.user.email && ![delegate.user.email isEqualToString:@""]) {
+            showSecond = YES;
+        }
+        if (delegate.user.mobilePhoneNum && ![delegate.user.mobilePhoneNum isEqualToString:@""]) {
+            showThird = YES;
+        }
+        [cell showRealName:showFirst showMessage:showSecond showPhone:showThird];
     }
 }
 

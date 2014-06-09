@@ -3818,6 +3818,7 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 @property (retain) NSString* tileUrl;
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
+@property BOOL isAuthentication;
 @end
 
 @implementation Profile
@@ -3897,6 +3898,18 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   hasLisence_ = !!value;
 }
 @synthesize lisence;
+- (BOOL) hasIsAuthentication {
+  return !!hasIsAuthentication_;
+}
+- (void) setHasIsAuthentication:(BOOL) value {
+  hasIsAuthentication_ = !!value;
+}
+- (BOOL) isAuthentication {
+  return !!isAuthentication_;
+}
+- (void) setIsAuthentication:(BOOL) value {
+  isAuthentication_ = !!value;
+}
 - (void) dealloc {
   self.name = nil;
   self.nickName = nil;
@@ -3919,6 +3932,7 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
     self.tileUrl = @"";
     self.isProvider = NO;
     self.lisence = @"";
+    self.isAuthentication = NO;
   }
   return self;
 }
@@ -3968,6 +3982,9 @@ static Profile* defaultProfileInstance = nil;
   if (self.hasLisence) {
     [output writeString:10 value:self.lisence];
   }
+  if (self.hasIsAuthentication) {
+    [output writeBool:11 value:self.isAuthentication];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -4006,6 +4023,9 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasLisence) {
     size += computeStringSize(10, self.lisence);
+  }
+  if (self.hasIsAuthentication) {
+    size += computeBoolSize(11, self.isAuthentication);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4122,6 +4142,9 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
   if (other.hasLisence) {
     [self setLisence:other.lisence];
   }
+  if (other.hasIsAuthentication) {
+    [self setIsAuthentication:other.isAuthentication];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -4186,6 +4209,10 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
       }
       case 82: {
         [self setLisence:[input readString]];
+        break;
+      }
+      case 88: {
+        [self setIsAuthentication:[input readBool]];
         break;
       }
     }
@@ -4349,6 +4376,22 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
 - (Profile_Builder*) clearLisence {
   result.hasLisence = NO;
   result.lisence = @"";
+  return self;
+}
+- (BOOL) hasIsAuthentication {
+  return result.hasIsAuthentication;
+}
+- (BOOL) isAuthentication {
+  return result.isAuthentication;
+}
+- (Profile_Builder*) setIsAuthentication:(BOOL) value {
+  result.hasIsAuthentication = YES;
+  result.isAuthentication = value;
+  return self;
+}
+- (Profile_Builder*) clearIsAuthentication {
+  result.hasIsAuthentication = NO;
+  result.isAuthentication = NO;
   return self;
 }
 @end
@@ -10489,6 +10532,785 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (ClientInfoResponse_Builder*) clearHasNewVersion {
   result.hasHasNewVersion = NO;
   result.hasNewVersion = NO;
+  return self;
+}
+@end
+
+@interface MessagePush ()
+@property int32_t senderId;
+@property (retain) NSString* senderName;
+@property (retain) NSString* content;
+@property (retain) NSString* contentType;
+@property (retain) NSString* sendTime;
+@end
+
+@implementation MessagePush
+
+- (BOOL) hasSenderId {
+  return !!hasSenderId_;
+}
+- (void) setHasSenderId:(BOOL) value {
+  hasSenderId_ = !!value;
+}
+@synthesize senderId;
+- (BOOL) hasSenderName {
+  return !!hasSenderName_;
+}
+- (void) setHasSenderName:(BOOL) value {
+  hasSenderName_ = !!value;
+}
+@synthesize senderName;
+- (BOOL) hasContent {
+  return !!hasContent_;
+}
+- (void) setHasContent:(BOOL) value {
+  hasContent_ = !!value;
+}
+@synthesize content;
+- (BOOL) hasContentType {
+  return !!hasContentType_;
+}
+- (void) setHasContentType:(BOOL) value {
+  hasContentType_ = !!value;
+}
+@synthesize contentType;
+- (BOOL) hasSendTime {
+  return !!hasSendTime_;
+}
+- (void) setHasSendTime:(BOOL) value {
+  hasSendTime_ = !!value;
+}
+@synthesize sendTime;
+- (void) dealloc {
+  self.senderName = nil;
+  self.content = nil;
+  self.contentType = nil;
+  self.sendTime = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.senderId = 0;
+    self.senderName = @"";
+    self.content = @"";
+    self.contentType = @"";
+    self.sendTime = @"";
+  }
+  return self;
+}
+static MessagePush* defaultMessagePushInstance = nil;
++ (void) initialize {
+  if (self == [MessagePush class]) {
+    defaultMessagePushInstance = [[MessagePush alloc] init];
+  }
+}
++ (MessagePush*) defaultInstance {
+  return defaultMessagePushInstance;
+}
+- (MessagePush*) defaultInstance {
+  return defaultMessagePushInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasSenderId) {
+    [output writeInt32:1 value:self.senderId];
+  }
+  if (self.hasSenderName) {
+    [output writeString:2 value:self.senderName];
+  }
+  if (self.hasContent) {
+    [output writeString:3 value:self.content];
+  }
+  if (self.hasContentType) {
+    [output writeString:4 value:self.contentType];
+  }
+  if (self.hasSendTime) {
+    [output writeString:5 value:self.sendTime];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasSenderId) {
+    size += computeInt32Size(1, self.senderId);
+  }
+  if (self.hasSenderName) {
+    size += computeStringSize(2, self.senderName);
+  }
+  if (self.hasContent) {
+    size += computeStringSize(3, self.content);
+  }
+  if (self.hasContentType) {
+    size += computeStringSize(4, self.contentType);
+  }
+  if (self.hasSendTime) {
+    size += computeStringSize(5, self.sendTime);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (MessagePush*) parseFromData:(NSData*) data {
+  return (MessagePush*)[[[MessagePush builder] mergeFromData:data] build];
+}
++ (MessagePush*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessagePush*)[[[MessagePush builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (MessagePush*) parseFromInputStream:(NSInputStream*) input {
+  return (MessagePush*)[[[MessagePush builder] mergeFromInputStream:input] build];
+}
++ (MessagePush*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessagePush*)[[[MessagePush builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessagePush*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (MessagePush*)[[[MessagePush builder] mergeFromCodedInputStream:input] build];
+}
++ (MessagePush*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessagePush*)[[[MessagePush builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessagePush_Builder*) builder {
+  return [[[MessagePush_Builder alloc] init] autorelease];
+}
++ (MessagePush_Builder*) builderWithPrototype:(MessagePush*) prototype {
+  return [[MessagePush builder] mergeFrom:prototype];
+}
+- (MessagePush_Builder*) builder {
+  return [MessagePush builder];
+}
+@end
+
+@interface MessagePush_Builder()
+@property (retain) MessagePush* result;
+@end
+
+@implementation MessagePush_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[MessagePush alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (MessagePush_Builder*) clear {
+  self.result = [[[MessagePush alloc] init] autorelease];
+  return self;
+}
+- (MessagePush_Builder*) clone {
+  return [MessagePush builderWithPrototype:result];
+}
+- (MessagePush*) defaultInstance {
+  return [MessagePush defaultInstance];
+}
+- (MessagePush*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (MessagePush*) buildPartial {
+  MessagePush* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (MessagePush_Builder*) mergeFrom:(MessagePush*) other {
+  if (other == [MessagePush defaultInstance]) {
+    return self;
+  }
+  if (other.hasSenderId) {
+    [self setSenderId:other.senderId];
+  }
+  if (other.hasSenderName) {
+    [self setSenderName:other.senderName];
+  }
+  if (other.hasContent) {
+    [self setContent:other.content];
+  }
+  if (other.hasContentType) {
+    [self setContentType:other.contentType];
+  }
+  if (other.hasSendTime) {
+    [self setSendTime:other.sendTime];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (MessagePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (MessagePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setSenderId:[input readInt32]];
+        break;
+      }
+      case 18: {
+        [self setSenderName:[input readString]];
+        break;
+      }
+      case 26: {
+        [self setContent:[input readString]];
+        break;
+      }
+      case 34: {
+        [self setContentType:[input readString]];
+        break;
+      }
+      case 42: {
+        [self setSendTime:[input readString]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasSenderId {
+  return result.hasSenderId;
+}
+- (int32_t) senderId {
+  return result.senderId;
+}
+- (MessagePush_Builder*) setSenderId:(int32_t) value {
+  result.hasSenderId = YES;
+  result.senderId = value;
+  return self;
+}
+- (MessagePush_Builder*) clearSenderId {
+  result.hasSenderId = NO;
+  result.senderId = 0;
+  return self;
+}
+- (BOOL) hasSenderName {
+  return result.hasSenderName;
+}
+- (NSString*) senderName {
+  return result.senderName;
+}
+- (MessagePush_Builder*) setSenderName:(NSString*) value {
+  result.hasSenderName = YES;
+  result.senderName = value;
+  return self;
+}
+- (MessagePush_Builder*) clearSenderName {
+  result.hasSenderName = NO;
+  result.senderName = @"";
+  return self;
+}
+- (BOOL) hasContent {
+  return result.hasContent;
+}
+- (NSString*) content {
+  return result.content;
+}
+- (MessagePush_Builder*) setContent:(NSString*) value {
+  result.hasContent = YES;
+  result.content = value;
+  return self;
+}
+- (MessagePush_Builder*) clearContent {
+  result.hasContent = NO;
+  result.content = @"";
+  return self;
+}
+- (BOOL) hasContentType {
+  return result.hasContentType;
+}
+- (NSString*) contentType {
+  return result.contentType;
+}
+- (MessagePush_Builder*) setContentType:(NSString*) value {
+  result.hasContentType = YES;
+  result.contentType = value;
+  return self;
+}
+- (MessagePush_Builder*) clearContentType {
+  result.hasContentType = NO;
+  result.contentType = @"";
+  return self;
+}
+- (BOOL) hasSendTime {
+  return result.hasSendTime;
+}
+- (NSString*) sendTime {
+  return result.sendTime;
+}
+- (MessagePush_Builder*) setSendTime:(NSString*) value {
+  result.hasSendTime = YES;
+  result.sendTime = value;
+  return self;
+}
+- (MessagePush_Builder*) clearSendTime {
+  result.hasSendTime = NO;
+  result.sendTime = @"";
+  return self;
+}
+@end
+
+@interface NoticePush ()
+@end
+
+@implementation NoticePush
+
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+  }
+  return self;
+}
+static NoticePush* defaultNoticePushInstance = nil;
++ (void) initialize {
+  if (self == [NoticePush class]) {
+    defaultNoticePushInstance = [[NoticePush alloc] init];
+  }
+}
++ (NoticePush*) defaultInstance {
+  return defaultNoticePushInstance;
+}
+- (NoticePush*) defaultInstance {
+  return defaultNoticePushInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (NoticePush*) parseFromData:(NSData*) data {
+  return (NoticePush*)[[[NoticePush builder] mergeFromData:data] build];
+}
++ (NoticePush*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (NoticePush*)[[[NoticePush builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (NoticePush*) parseFromInputStream:(NSInputStream*) input {
+  return (NoticePush*)[[[NoticePush builder] mergeFromInputStream:input] build];
+}
++ (NoticePush*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (NoticePush*)[[[NoticePush builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (NoticePush*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (NoticePush*)[[[NoticePush builder] mergeFromCodedInputStream:input] build];
+}
++ (NoticePush*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (NoticePush*)[[[NoticePush builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (NoticePush_Builder*) builder {
+  return [[[NoticePush_Builder alloc] init] autorelease];
+}
++ (NoticePush_Builder*) builderWithPrototype:(NoticePush*) prototype {
+  return [[NoticePush builder] mergeFrom:prototype];
+}
+- (NoticePush_Builder*) builder {
+  return [NoticePush builder];
+}
+@end
+
+@interface NoticePush_Builder()
+@property (retain) NoticePush* result;
+@end
+
+@implementation NoticePush_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[NoticePush alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (NoticePush_Builder*) clear {
+  self.result = [[[NoticePush alloc] init] autorelease];
+  return self;
+}
+- (NoticePush_Builder*) clone {
+  return [NoticePush builderWithPrototype:result];
+}
+- (NoticePush*) defaultInstance {
+  return [NoticePush defaultInstance];
+}
+- (NoticePush*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (NoticePush*) buildPartial {
+  NoticePush* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (NoticePush_Builder*) mergeFrom:(NoticePush*) other {
+  if (other == [NoticePush defaultInstance]) {
+    return self;
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (NoticePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (NoticePush_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+    }
+  }
+}
+@end
+
+@interface PushRequest ()
+@property PushRequest_PushType pushType;
+@property (retain) MessagePush* messagePush;
+@property (retain) NoticePush* noticePush;
+@end
+
+@implementation PushRequest
+
+- (BOOL) hasPushType {
+  return !!hasPushType_;
+}
+- (void) setHasPushType:(BOOL) value {
+  hasPushType_ = !!value;
+}
+@synthesize pushType;
+- (BOOL) hasMessagePush {
+  return !!hasMessagePush_;
+}
+- (void) setHasMessagePush:(BOOL) value {
+  hasMessagePush_ = !!value;
+}
+@synthesize messagePush;
+- (BOOL) hasNoticePush {
+  return !!hasNoticePush_;
+}
+- (void) setHasNoticePush:(BOOL) value {
+  hasNoticePush_ = !!value;
+}
+@synthesize noticePush;
+- (void) dealloc {
+  self.messagePush = nil;
+  self.noticePush = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.pushType = PushRequest_PushTypeMessage;
+    self.messagePush = [MessagePush defaultInstance];
+    self.noticePush = [NoticePush defaultInstance];
+  }
+  return self;
+}
+static PushRequest* defaultPushRequestInstance = nil;
++ (void) initialize {
+  if (self == [PushRequest class]) {
+    defaultPushRequestInstance = [[PushRequest alloc] init];
+  }
+}
++ (PushRequest*) defaultInstance {
+  return defaultPushRequestInstance;
+}
+- (PushRequest*) defaultInstance {
+  return defaultPushRequestInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasPushType) {
+    [output writeEnum:1 value:self.pushType];
+  }
+  if (self.hasMessagePush) {
+    [output writeMessage:2 value:self.messagePush];
+  }
+  if (self.hasNoticePush) {
+    [output writeMessage:3 value:self.noticePush];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasPushType) {
+    size += computeEnumSize(1, self.pushType);
+  }
+  if (self.hasMessagePush) {
+    size += computeMessageSize(2, self.messagePush);
+  }
+  if (self.hasNoticePush) {
+    size += computeMessageSize(3, self.noticePush);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (PushRequest*) parseFromData:(NSData*) data {
+  return (PushRequest*)[[[PushRequest builder] mergeFromData:data] build];
+}
++ (PushRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (PushRequest*)[[[PushRequest builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (PushRequest*) parseFromInputStream:(NSInputStream*) input {
+  return (PushRequest*)[[[PushRequest builder] mergeFromInputStream:input] build];
+}
++ (PushRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (PushRequest*)[[[PushRequest builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (PushRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (PushRequest*)[[[PushRequest builder] mergeFromCodedInputStream:input] build];
+}
++ (PushRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (PushRequest*)[[[PushRequest builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (PushRequest_Builder*) builder {
+  return [[[PushRequest_Builder alloc] init] autorelease];
+}
++ (PushRequest_Builder*) builderWithPrototype:(PushRequest*) prototype {
+  return [[PushRequest builder] mergeFrom:prototype];
+}
+- (PushRequest_Builder*) builder {
+  return [PushRequest builder];
+}
+@end
+
+BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value) {
+  switch (value) {
+    case PushRequest_PushTypeMessage:
+    case PushRequest_PushTypeNotice:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface PushRequest_Builder()
+@property (retain) PushRequest* result;
+@end
+
+@implementation PushRequest_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[PushRequest alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (PushRequest_Builder*) clear {
+  self.result = [[[PushRequest alloc] init] autorelease];
+  return self;
+}
+- (PushRequest_Builder*) clone {
+  return [PushRequest builderWithPrototype:result];
+}
+- (PushRequest*) defaultInstance {
+  return [PushRequest defaultInstance];
+}
+- (PushRequest*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (PushRequest*) buildPartial {
+  PushRequest* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (PushRequest_Builder*) mergeFrom:(PushRequest*) other {
+  if (other == [PushRequest defaultInstance]) {
+    return self;
+  }
+  if (other.hasPushType) {
+    [self setPushType:other.pushType];
+  }
+  if (other.hasMessagePush) {
+    [self mergeMessagePush:other.messagePush];
+  }
+  if (other.hasNoticePush) {
+    [self mergeNoticePush:other.noticePush];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (PushRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (PushRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        int32_t value = [input readEnum];
+        if (PushRequest_PushTypeIsValidValue(value)) {
+          [self setPushType:value];
+        } else {
+          [unknownFields mergeVarintField:1 value:value];
+        }
+        break;
+      }
+      case 18: {
+        MessagePush_Builder* subBuilder = [MessagePush builder];
+        if (self.hasMessagePush) {
+          [subBuilder mergeFrom:self.messagePush];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setMessagePush:[subBuilder buildPartial]];
+        break;
+      }
+      case 26: {
+        NoticePush_Builder* subBuilder = [NoticePush builder];
+        if (self.hasNoticePush) {
+          [subBuilder mergeFrom:self.noticePush];
+        }
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self setNoticePush:[subBuilder buildPartial]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasPushType {
+  return result.hasPushType;
+}
+- (PushRequest_PushType) pushType {
+  return result.pushType;
+}
+- (PushRequest_Builder*) setPushType:(PushRequest_PushType) value {
+  result.hasPushType = YES;
+  result.pushType = value;
+  return self;
+}
+- (PushRequest_Builder*) clearPushType {
+  result.hasPushType = NO;
+  result.pushType = PushRequest_PushTypeMessage;
+  return self;
+}
+- (BOOL) hasMessagePush {
+  return result.hasMessagePush;
+}
+- (MessagePush*) messagePush {
+  return result.messagePush;
+}
+- (PushRequest_Builder*) setMessagePush:(MessagePush*) value {
+  result.hasMessagePush = YES;
+  result.messagePush = value;
+  return self;
+}
+- (PushRequest_Builder*) setMessagePushBuilder:(MessagePush_Builder*) builderForValue {
+  return [self setMessagePush:[builderForValue build]];
+}
+- (PushRequest_Builder*) mergeMessagePush:(MessagePush*) value {
+  if (result.hasMessagePush &&
+      result.messagePush != [MessagePush defaultInstance]) {
+    result.messagePush =
+      [[[MessagePush builderWithPrototype:result.messagePush] mergeFrom:value] buildPartial];
+  } else {
+    result.messagePush = value;
+  }
+  result.hasMessagePush = YES;
+  return self;
+}
+- (PushRequest_Builder*) clearMessagePush {
+  result.hasMessagePush = NO;
+  result.messagePush = [MessagePush defaultInstance];
+  return self;
+}
+- (BOOL) hasNoticePush {
+  return result.hasNoticePush;
+}
+- (NoticePush*) noticePush {
+  return result.noticePush;
+}
+- (PushRequest_Builder*) setNoticePush:(NoticePush*) value {
+  result.hasNoticePush = YES;
+  result.noticePush = value;
+  return self;
+}
+- (PushRequest_Builder*) setNoticePushBuilder:(NoticePush_Builder*) builderForValue {
+  return [self setNoticePush:[builderForValue build]];
+}
+- (PushRequest_Builder*) mergeNoticePush:(NoticePush*) value {
+  if (result.hasNoticePush &&
+      result.noticePush != [NoticePush defaultInstance]) {
+    result.noticePush =
+      [[[NoticePush builderWithPrototype:result.noticePush] mergeFrom:value] buildPartial];
+  } else {
+    result.noticePush = value;
+  }
+  result.hasNoticePush = YES;
+  return self;
+}
+- (PushRequest_Builder*) clearNoticePush {
+  result.hasNoticePush = NO;
+  result.noticePush = [NoticePush defaultInstance];
   return self;
 }
 @end

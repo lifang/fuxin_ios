@@ -18,6 +18,8 @@
 @synthesize sexView = _sexView;
 @synthesize remarkLabel = _remarkLabel;
 @synthesize remarkField = _remarkField;
+@synthesize relationView1 = _relationView1;
+@synthesize relationView2 = _relationView2;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -31,13 +33,13 @@
 
 - (void)initUI {
     UIView *backView = [[UIView alloc] initWithFrame:self.bounds];
-    backView.backgroundColor = kColor(120, 120, 120, 0.4);
+    backView.backgroundColor = kColor(120, 120, 120, 0.6);
     [self addSubview:backView];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenSelf:)];
     [backView addGestureRecognizer:tap];
     
-    _deskView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, 240)];
+    _deskView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, 200)];
     _deskView.backgroundColor = [UIColor whiteColor];
     _deskView.layer.cornerRadius = 6;
     [backView addSubview:_deskView];
@@ -52,23 +54,38 @@
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:14];
     _nameLabel.adjustsFontSizeToFitWidth = YES;
-    _nameLabel.text = @"王菲菲";
     _nameLabel.minimumScaleFactor = 0.5f;
     [_deskView addSubview:_nameLabel];
     
-    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(180, 10, 16, 16)];
-    _sexView.image = [UIImage imageNamed:@"male.png"];
+    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(200, 10, 16, 16)];
     [_deskView addSubview:_sexView];
+    
+    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(227, 11, 27, 15)];
+    _relationView1.image = [UIImage imageNamed:@"trade.png"];
+    _relationView1.hidden = YES;
+    [_deskView addSubview:_relationView1];
+    
+    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(259, 11, 27, 15)];
+    _relationView2.image = [UIImage imageNamed:@"subscription.png"];
+    _relationView2.hidden = YES;
+    [_deskView addSubview:_relationView2];
     
     _remarkLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 30, 200, 20)];
     _remarkLabel.backgroundColor = [UIColor clearColor];
     _remarkLabel.font = [UIFont systemFontOfSize:12];
     _remarkLabel.textColor = kColor(150, 150, 150, 1);
-    _remarkLabel.text = @"备注：好学生";
     [_deskView addSubview:_remarkLabel];
     
-    //line
-    for (int i = 1; i <= 4; i++) {
+    
+    int count = 3;
+    if (!_contact.contactIsProvider) {
+        CGRect rect = _deskView.frame;
+        rect.size.height = 100;
+        _deskView.frame = rect;
+        count = 1;
+    }
+    //line 是福师显示认证行业和个人简介，不是福师不显示
+    for (int i = 1; i <= count; i++) {
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(10, i * 48, 280, 1)];
         line.backgroundColor = kColor(200, 200, 200, 1);
         [_deskView addSubview:line];
@@ -90,7 +107,7 @@
     [_deskView addSubview:lineBottom];
     
     UIButton *sureBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    sureBtn.frame = CGRectMake(235, 57, 52, 32);
+    sureBtn.frame = CGRectMake(236, 58, 50, 30);
     sureBtn.layer.cornerRadius = 4;
     sureBtn.layer.borderWidth = 1;
     [sureBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -109,9 +126,6 @@
             title = @"认证行业：";
             break;
         case 3:
-            title = @"开课类型：";
-            break;
-        case 4:
             title = @"个人简介：";
             break;
         default:
@@ -167,6 +181,15 @@
     
     UILabel *sign = (UILabel *)[self viewWithTag:4];
     sign.text = _contact.contactSignature;
+    
+    BOOL showFirst = (_contact.contactRelationship & 3);
+    BOOL showSecond = ((_contact.contactRelationship & 12) >> 2);
+    if (!showFirst) {
+        _relationView1.hidden = NO;
+    }
+    if (!showSecond) {
+        _relationView2.hidden = NO;
+    }
 }
 
 - (IBAction)modifyContactInfo:(id)sender {

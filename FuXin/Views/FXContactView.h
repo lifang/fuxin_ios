@@ -25,6 +25,10 @@
 
 @property (nonatomic, strong) UITextField *remarkField;
 
+@property (nonatomic, strong) UIImageView *relationView1;
+
+@property (nonatomic, strong) UIImageView *relationView2;
+
 - (void)hiddenContactView;
 
 @end

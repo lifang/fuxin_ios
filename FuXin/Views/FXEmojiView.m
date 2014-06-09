@@ -8,12 +8,12 @@
 
 #import "FXEmojiView.h"
 
-#define kRow    4
-#define kNumber 6
+#define kRow    3
+#define kNumber 7
 
 #define kFirstSpace  20
 #define kBtnSide     30
-#define kSpace       15
+#define kSpace       10
 
 @implementation FXEmojiView
 
@@ -60,12 +60,14 @@
         UIImage *image = [UIImage imageNamed:[NSString stringWithFormat:@"%d.png",i]];
         [_emojiArray addObject:image];
     }
+    UIImage *delete = [UIImage imageNamed:@"delete.png"];
+    [_emojiArray insertObject:delete atIndex:20];
 }
 
 - (void)loadEmoji {
     int page = [_emojiArray count] / (kRow * kNumber) + 1;
     _emojiScrollView.contentSize = CGSizeMake(page * self.bounds.size.width, self.bounds.size.height);
-    for (int i = 0; i < [_emojiArray count]; i++) {
+    for (int i = 0; i <= [_emojiArray count]; i++) {
         //第几页
         CGFloat pageOffsetX = i / (kRow * kNumber) * self.bounds.size.width;
         //页内顺序
@@ -80,8 +82,12 @@
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(offsetX, offsetY, kBtnSide, kBtnSide);
         button.tag = i;
-//        [button setTitle:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
-        [button setImage:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
+        if (i == [_emojiArray count]) {
+            [button setImage:[_emojiArray objectAtIndex:20] forState:UIControlStateNormal];
+        }
+        else {
+            [button setImage:[_emojiArray objectAtIndex:i] forState:UIControlStateNormal];
+        }
         [button addTarget:self action:@selector(emojiSelected:) forControlEvents:UIControlEventTouchUpInside];
         [_emojiScrollView addSubview:button];
     }

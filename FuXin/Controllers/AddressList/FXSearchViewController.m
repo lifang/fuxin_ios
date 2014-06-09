@@ -89,7 +89,9 @@ static NSString *searchIdentifer = @"SI";
     NSString *search = _searchController.searchBar.text;
     [_resultArray removeAllObjects];
     for (ContactModel *contact in _primaryArray) {
-        if ([[contact.contactNickname lowercaseString] rangeOfString:[search lowercaseString]].length > 0) {
+        BOOL hasNickName = [[contact.contactNickname lowercaseString] rangeOfString:[search lowercaseString]].length > 0;
+        BOOL hadName = [[contact.contactRemark lowercaseString] rangeOfString:[search lowercaseString]].length > 0;
+        if (hasNickName || hadName) {
             [_resultArray addObject:contact];
         }
     }
@@ -135,7 +137,12 @@ static NSString *searchIdentifer = @"SI";
     if (tableView == _searchController.searchResultsTableView) {
         FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:searchIdentifer forIndexPath:indexPath];
         ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
-        cell.nameLabel.text = rowData.contactNickname;
+        if (rowData.contactRemark && ![rowData.contactRemark isEqualToString:@""]) {
+            cell.nameLabel.text = rowData.contactRemark;
+        }
+        else {
+            cell.nameLabel.text = rowData.contactNickname;
+        }
         return cell;
     }
     return nil;

@@ -89,7 +89,7 @@ static NSString *AddressCellIdentifier = @"ACI";
         [_nameLists removeAllObjects];
         [_contactLists removeAllObjects];
         for (ContactModel *user in list) {
-            [_nameLists addObject:user.contactNickname];
+            [_nameLists addObject:[self addNameForContact:user]];
             [_contactLists addObject:user];
         }
         [self resetIndexView];
@@ -97,6 +97,14 @@ static NSString *AddressCellIdentifier = @"ACI";
         _segmentControl.selectedSegmentIndex = AddressListAll;
         [_dataTableView reloadData];
     }
+}
+
+//有备注显示备注 无备注显示昵称
+- (NSString *)addNameForContact:(ContactModel *)model {
+    if (model.contactRemark && ![model.contactRemark isEqualToString:@""]) {
+        return model.contactRemark;
+    }
+    return model.contactNickname;
 }
 
 #pragma mark - UI
@@ -157,7 +165,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     switch (sender.selectedSegmentIndex) {
         case AddressListAll: {
             for (ContactModel *user in _contactLists) {
-                [_nameLists addObject:user.contactNickname];
+                [_nameLists addObject:[self addNameForContact:user]];
             }
         }
             break;
@@ -201,7 +209,7 @@ static NSString *AddressCellIdentifier = @"ACI";
             for (ContactModel *model in _contactLists) {
                 if ([model.contactID isEqualToString:conv.conversationContactID]) {
                     [_recentLists addObject:model];
-                    [_nameLists addObject:model.contactNickname];
+                    [_nameLists addObject:[self addNameForContact:model]];
                     break;
                 }
             }
@@ -215,7 +223,7 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showFirst = (model.contactRelationship & 3);
         if (showFirst) {
             [_tradeLists addObject:model];
-            [_nameLists addObject:model.contactNickname];
+            [_nameLists addObject:[self addNameForContact:model]];
         }
     }
 }
@@ -226,7 +234,7 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showSecond = ((model.contactRelationship & 12) >> 2);
         if (showSecond) {
             [_subscribeLists addObject:model];
-            [_nameLists addObject:model.contactNickname];
+            [_nameLists addObject:[self addNameForContact:model]];
         }
     }
 }
@@ -278,7 +286,7 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showFirst = (contact.contactRelationship & 3);
         BOOL showSecond = ((contact.contactRelationship & 12) >> 2);
         [cell showOrder:showFirst showSubscribe:showSecond];
-        cell.nameLabel.text = contact.contactNickname;
+        cell.nameLabel.text = [self addNameForContact:contact];
         return cell;
     }
     return [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -290,7 +298,6 @@ static NSString *AddressCellIdentifier = @"ACI";
             FXTableHeaderView *selectedHeaderView = (FXTableHeaderView *)[tableView headerViewForSection:_selectedHeaderViewIndex];
             selectedHeaderView.isSelected = NO;
         }
-        NSLog(@"index = %d",index);
         [_indexView moveToIndex:index
                    withAllIndex:[_dataTableView numberOfSections]
                      withHeight:_dataTableView.frame.size.height];
