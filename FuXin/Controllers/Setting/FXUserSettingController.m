@@ -202,7 +202,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 6;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -238,27 +238,27 @@
             content.text = _userInfo.lisence;
         }
             break;
+//        case 1: {
+//            title.text = @"课程类别：";
+//        }
+//            break;
         case 1: {
-            title.text = @"课程类别：";
-        }
-            break;
-        case 2: {
             title.text = @"手机号码：";
             content.text = _userInfo.mobilePhoneNum;
         }
             break;
-        case 3: {
+        case 2: {
             title.text = @"邮箱：";
             content.text = _userInfo.email;
         }
             break;
-        case 4: {
+        case 3: {
             title.text = @"生日：";
             content.text = _userInfo.birthday;
             
         }
             break;
-        case 5: {
+        case 4: {
             title.text = @"性别：";
             content.text = @"男";
         }

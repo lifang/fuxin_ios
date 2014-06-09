@@ -103,7 +103,7 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _messageView.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, size.width, size.height);
+            _messageView.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, _messageView.bounds.size.width, _messageView.bounds.size.height);
             _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
             
@@ -114,7 +114,7 @@
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
             
-            _messageView.frame = CGRectMake(320 - kSmallOffset - size.width - 14, kTimeLabelHeight - 5, size.width, size.height);
+            _messageView.frame = CGRectMake(320 - kSmallOffset - size.width - 14, kTimeLabelHeight - 5,_messageView.bounds.size.width, _messageView.bounds.size.height);
 
             _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
@@ -125,7 +125,7 @@
     }
     if (adjustHeight > 0) {
         CGRect rect = _messageView.frame;
-        rect.origin.y += adjustHeight / 2 + 3;
+        rect.origin.y += adjustHeight / 2 + 2;
         _messageView.frame = rect;
     }
     [self.contentView addSubview:_messageView];

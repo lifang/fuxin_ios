@@ -67,7 +67,12 @@
         UIImage *avatarImg = [UIImage imageWithData:contactModel.contactAvatar];
         [_photoView setImage:avatarImg];
     }
-    _nameLabel.text = contactModel.contactNickname;
+    if (contactModel.contactRemark && ![contactModel.contactRemark isEqualToString:@""]) {
+        _nameLabel.text = contactModel.contactRemark;
+    }
+    else {
+        _nameLabel.text = contactModel.contactNickname;
+    }
 }
 
 - (void)recoverButtonClicked:(UIButton *)sender{

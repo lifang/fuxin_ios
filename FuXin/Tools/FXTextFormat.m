@@ -74,14 +74,14 @@
                 //文字
                 for (int j = 0; j < [string length]; j++) {
                     NSString *subString = [string substringWithRange:NSMakeRange(j, 1)];
-                    if (dx >= kMessageBoxWigthMax - 10) {
+                    if (dx >= kMessageBoxWigthMax - 8) {
                         dy += kFaceSide;
                         dx = 0;
                         x = kMessageBoxWigthMax;
                         y = dy;
                     }
                     CGSize size = [subString sizeWithFont:font constrainedToSize:CGSizeMake(kMessageBoxWigthMax, 20)];
-                    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(dx, dy, size.width, size.height)];
+                    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(dx, dy + 3, size.width, size.height)];
                     label.font = font;
                     label.text = subString;
                     label.backgroundColor = [UIColor clearColor];
@@ -91,10 +91,10 @@
                         x = dx;
                     }
                 }
-                y += kFaceSide + 5;
             }
         }
     }
+    y += kFaceSide + 5;
     showView.frame = CGRectMake(10, 1, x, y);
     return showView;
 }

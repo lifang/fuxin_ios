@@ -107,7 +107,12 @@ static NSString *chatCellIdentifier = @"CCI";
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         ContactModel *contact = [rowData objectForKey:@"Contact"];
-        cell.nameLabel.text = contact.contactNickname;
+        if (contact.contactRemark && ![contact.contactRemark isEqualToString:@""]) {
+            cell.nameLabel.text = contact.contactRemark;
+        }
+        else {
+            cell.nameLabel.text = contact.contactNickname;
+        }
         [cell setNumber:[NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]]];
         cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
 

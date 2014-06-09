@@ -63,6 +63,7 @@
 		770BC284192DF23A008104ED /* FXEmojiView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC283192DF23A008104ED /* FXEmojiView.m */; };
 		770BC29C192E0B42008104ED /* FXTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 770BC29B192E0B42008104ED /* FXTableHeaderView.m */; };
 		77125273193820FB005419BE /* Models.pb.m in Sources */ = {isa = PBXBuildFile; fileRef = 77125272193820FB005419BE /* Models.pb.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7714C685194568E3006FCFCE /* delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7714C684194568E3006FCFCE /* delete@2x.png */; };
 		771572661941A36900195604 /* FXResizeImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 771572651941A36900195604 /* FXResizeImage.m */; };
 		771572691941B10E00195604 /* FXArchiverHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 771572681941B10E00195604 /* FXArchiverHelper.m */; };
 		7715726C1941B12E00195604 /* FXUserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7715726B1941B12E00195604 /* FXUserModel.m */; };
@@ -302,6 +303,7 @@
 		770BC29B192E0B42008104ED /* FXTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXTableHeaderView.m; sourceTree = "<group>"; };
 		77125271193820FB005419BE /* Models.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Models.pb.h; sourceTree = "<group>"; };
 		77125272193820FB005419BE /* Models.pb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Models.pb.m; sourceTree = "<group>"; };
+		7714C684194568E3006FCFCE /* delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "delete@2x.png"; sourceTree = "<group>"; };
 		771572641941A36900195604 /* FXResizeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXResizeImage.h; sourceTree = "<group>"; };
 		771572651941A36900195604 /* FXResizeImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXResizeImage.m; sourceTree = "<group>"; };
 		771572671941B10E00195604 /* FXArchiverHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXArchiverHelper.h; sourceTree = "<group>"; };
@@ -898,6 +900,7 @@
 				3A3115CE1931F64200663819 /* setting5@2x.png */,
 				3A3115CA1931F63800663819 /* setting6@2x.png */,
 				3A3115CB1931F63800663819 /* setting7@2x.png */,
+				7714C684194568E3006FCFCE /* delete@2x.png */,
 				3A13522C19334882006C59E4 /* new@2x.png */,
 				7718BD86193D774F00F7532C /* save@2x.png */,
 				3A13521C193324D0006C59E4 /* trade@2x.png */,
@@ -1186,6 +1189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7755EC861931C40300ADD1A6 /* placeholder@2x.png in Resources */,
+				7714C685194568E3006FCFCE /* delete@2x.png in Resources */,
 				7720F3DB1930BC1D001F20F4 /* index@2x.png in Resources */,
 				3A1B2D8A1930CA53004D7F01 /* signal@2x.png in Resources */,
 				7702C7B5192B03D70015A178 /* chat@2x.png in Resources */,
