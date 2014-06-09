@@ -44,11 +44,11 @@
     [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setRightNavBarItemWithImageName:@"save.png"];
     [self initUI];
+    self.title = @"我的信息";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"我的信息";
 }
 
 - (void)didReceiveMemoryWarning

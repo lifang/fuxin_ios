@@ -32,9 +32,11 @@ static NSString *cellIdentifier = @"cell";
 {
     [super viewDidLoad];
     [self setRightNavBarItemWithImageName:@"rubbish.png"];
+    [self setLeftNavBarItemWithImageName:@"back.png"];
     [self setTitle:@"系统公告"];
     
     [self initView];
+    self.title = @"系统公告";
 }
 
 - (void)initView{
@@ -59,8 +61,6 @@ static NSString *cellIdentifier = @"cell";
     [super viewWillAppear:animated];
     CGRect frame = self.view.frame;
     self.tableView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, frame.size.height - kBlankSize);
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"系统公告";
-    [self setLeftNavBarItemWithImageName:@"back.png"];
 }
 
 - (void)didReceiveMemoryWarning

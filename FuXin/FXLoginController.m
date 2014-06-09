@@ -31,6 +31,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -41,15 +42,13 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
-//    self.view.layer.borderWidth = 1.;
-//    self.view.layer.borderColor = [UIColor blackColor].CGColor;
+    
     
 //    [self testDBMethod];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

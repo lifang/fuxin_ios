@@ -39,6 +39,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -61,12 +62,10 @@ static NSString *AddressCellIdentifier = @"ACI";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self setRightNavBarItemWithImageName:@"search.png"];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

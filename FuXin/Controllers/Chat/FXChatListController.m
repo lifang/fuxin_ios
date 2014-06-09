@@ -27,6 +27,7 @@ static NSString *chatCellIdentifier = @"CCI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -41,12 +42,10 @@ static NSString *chatCellIdentifier = @"CCI";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

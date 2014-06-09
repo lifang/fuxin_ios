@@ -36,6 +36,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
+        self.navigationItem.prompt = @"大家好 ,我是康佳幼儿园小三班的小朋友";
     }
     return self;
 }
@@ -51,7 +53,6 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    [FXAppDelegate showFuWuTitle];
 }
 
 - (void)didReceiveMemoryWarning

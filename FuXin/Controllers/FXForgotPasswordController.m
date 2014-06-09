@@ -77,6 +77,7 @@
     self.identiCodeIsOK = NO;
     
     [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+    self.title = @"找回密码";
 }
 
 //各种控件初始化
@@ -158,7 +159,6 @@
     //table边缘有30像素的白边
 //    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
     
-    [FXAppDelegate shareFXAppDelegate].attributedTitleLabel.text = @"找回密码";
 }
 
 - (void)back:(id)sender{

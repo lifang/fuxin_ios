@@ -8,6 +8,6 @@
 
 #import "FXAdjustViewController.h"
 
-@interface FXServiceAgreementViewController : FXAdjustViewController
+@interface FXServiceAgreementViewController : FXAdjustViewController<UIWebViewDelegate ,ASIHTTPRequestDelegate>
 
 @end
