@@ -157,6 +157,7 @@ static NSString *searchIdentifer = @"SI";
     ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
     FXChatViewController *chatC = [[FXChatViewController alloc] init];
     chatC.contact = rowData;
+    chatC.ID = rowData.contactID;
     chatC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:chatC animated:YES];
 }

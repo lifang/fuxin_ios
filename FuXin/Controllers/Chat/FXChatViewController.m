@@ -20,7 +20,7 @@
 
 static NSString *MessageCellIdentifier = @"MCI";
 
-@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate,EmojiDelegate>
+@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate,EmojiDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,TouchContactDelegate>
 
 @property (nonatomic, strong) FXChatInputView *inputView;
 
@@ -29,6 +29,11 @@ static NSString *MessageCellIdentifier = @"MCI";
 @property (nonatomic, assign) BOOL showEmojiView;
 
 @property (nonatomic, assign) BOOL showKeyBoard;
+
+@property (nonatomic, assign) CGFloat keyboardHeight;
+
+//用户头像 从delegate.user读出 单独拿出来主要是防止频繁由NSData转换成UIImage
+@property (nonatomic, strong) UIImage *userImage;
 
 @end
 
@@ -45,9 +50,15 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize contact = _contact;
 @synthesize ID = _ID;
 @synthesize emojiListView = _emojiListView;
-@synthesize lastShowDate = _lastShowDate;
 @synthesize contactView = _contactView;
 @synthesize refreshControl = _refreshControl;
+@synthesize keyboardHeight = _keyboardHeight;
+@synthesize userImage = _userImage;
+
+- (void)dealloc {
+    //注销掉键盘通知
+    [[NSNotificationCenter defaultCenter] removeObserver:_inputView];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,6 +80,13 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self showChatMessage];
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     delegate.isChatting = YES;
+    if (delegate.user.tile) {
+        _userImage = [UIImage imageWithData:delegate.user.tile];
+    }
+    else {
+        _userImage = [UIImage imageNamed:@"placeholder.png"];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addMessagesWhileChatting:) name:ChatUpdateMessageNotification object:nil];
     self.title = _contact.contactNickname;
 }
@@ -84,8 +102,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    //注销掉键盘通知
-    [[NSNotificationCenter defaultCenter] removeObserver:_inputView];
+
 }
 
 #pragma mark - UI
@@ -111,7 +128,6 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self.view addSubview:_inputView];
     
     _dataItems = [[NSMutableArray alloc] init];
-    _lastShowDate = [NSDate date];
     
     [self initPictureListView];
     [self initEmojiView];
@@ -266,6 +282,12 @@ static NSString *MessageCellIdentifier = @"MCI";
             if (resp.isSucceed) {
                 //屏蔽成功
                 info = @"成功屏蔽此联系人，你可以在设置中取消屏蔽此人！";
+                [LHLDBTools findContactWithContactID:_ID withFinished:^(ContactModel *model, NSString *error) {
+                    model.contactIsBlocked = YES;
+                    [LHLDBTools saveContact:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+                    }];
+                }];
             }
             else {
                 //屏蔽失败
@@ -319,6 +341,8 @@ static NSString *MessageCellIdentifier = @"MCI";
                 model.messageContent = message.content;
                 model.messageStatus = MessageStatusUnRead;
                 model.messageShowTime = [NSNumber numberWithBool:YES];
+                model.messageType = (ContentType)message.contentType;
+                model.imageContent = message.binaryContent;
                 [recordsForDB addObject:model];
             }
             [_dataItems addObjectsFromArray:recordsForDB];
@@ -335,12 +359,41 @@ static NSString *MessageCellIdentifier = @"MCI";
 }
 
 - (void)writeIntoDBWithMessage:(Message *)message {
+    __block NSMutableArray *lastCovs = nil;
+    [LHLDBTools getConversationsWithFinished:^(NSMutableArray *covs,NSString *error) {
+        lastCovs = covs;
+    }];
+    NSString *timeString = nil;
+    //找到此联系人的最后聊天时间
+    for (ConversationModel *cover in lastCovs) {
+        if ([cover.conversationContactID isEqualToString:[NSString stringWithFormat:@"%d",message.contactId]]) {
+            timeString = cover.conversationLastCommunicateTime;
+            break;
+        }
+    }
     MessageModel *model = [[MessageModel alloc] init];
     model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
-    model.messageSendTime = [FXTimeFormat nowDateString];
+    model.messageSendTime = message.sendTime;
     model.messageContent = message.content;
     model.messageStatus = MessageStatusDidSent;
-    model.messageShowTime = [NSNumber numberWithBool:[self needShowDate]];
+    //是否显示时间*********************************
+    if (!timeString) {
+        timeString = message.sendTime;
+        model.messageShowTime = [NSNumber numberWithBool:YES];
+    }
+    else {
+        BOOL needShowTime = [FXTimeFormat needShowTime:timeString withTime:message.sendTime];
+        if (needShowTime) {
+            timeString = message.sendTime;
+            model.messageShowTime = [NSNumber numberWithBool:YES];
+        }
+        else {
+            model.messageShowTime = [NSNumber numberWithBool:NO];
+        }
+    }
+    //********************************************
+    model.messageType = (ContentType)message.contentType;
+    model.imageContent = message.binaryContent;
     [LHLDBTools saveChattingRecord:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
         
     }];
@@ -358,14 +411,16 @@ static NSString *MessageCellIdentifier = @"MCI";
     [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
 }
 
-- (BOOL)needShowDate {
-    NSDate *now = [NSDate date];
-    double diff = [now timeIntervalSinceDate:_lastShowDate];
-    if (diff > kTimeInterval) {
-        _lastShowDate = now;
-        return YES;
-    }
-    return NO;
+- (Message *)setMessage:(Message *)message withSendTime:(NSString *)time {
+    Message *sendMessage = [[[[[[[[[Message builder]
+                                   setUserId:message.userId]
+                                  setContactId:message.contactId]
+                                 setContentType:message.contentType]
+                                setContent:message.content]
+                               setSendTime:time]
+                              setImageType:message.imageType]
+                             setBinaryContent:message.binaryContent] build];
+    return sendMessage;
 }
 
 #pragma mark - UITableView
@@ -384,38 +439,69 @@ static NSString *MessageCellIdentifier = @"MCI";
     if (message.messageStatus <=2) {
         //发送
         cell.cellStyle = MessageCellStyleSender;
+        cell.userPhotoView.image = _userImage;
     }
     else {
         //接收
         cell.cellStyle = MessageCellStyleReceive;
+        cell.userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
+        cell.delegate = self;
     }
     cell.showTime = [message.messageShowTime boolValue];
     if (cell.showTime) {
         cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:message.messageSendTime];
     }
-    [cell setContents:message.messageContent];
+    if (message.messageType == ContentTypeText) {
+        //文字消息
+        [cell setContents:message.messageContent];
+    }
+    else {
+        //图片消息
+        [cell setImageData:message.imageContent];
+    }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     MessageModel *model = [_dataItems objectAtIndex:indexPath.row];
-    UIView *view = [FXTextFormat getContentViewWithMessage:model.messageContent];
-    CGFloat height = view.frame.size.height;
-    return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
+    if (model.messageType == ContentTypeText) {
+        UIView *view = [FXTextFormat getContentViewWithMessage:model.messageContent];
+        CGFloat height = view.frame.size.height;
+        return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
+    }
+    else {
+        UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
+        return view.frame.size.height + kTimeLabelHeight + 20;
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self hiddenBottomView];
 }
 
 #pragma mark - 获取发送信息和键盘代理 
 #pragma mark - GetInputTextDelegate
 - (void)getInputText:(NSString *)intputText {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    Message *sendMessage = [[[[[[Message builder] setUserId:delegate.userID] setContactId:[_ID intValue]] setContent:intputText] setSendTime:nil] build];
-    [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:sendMessage Finished:^(BOOL success, NSData *response) {
+    Message *sendMessage = [[[[[[[Message builder]
+                                 setUserId:delegate.userID]
+                                setContactId:[_ID intValue]]
+                               setContentType:Message_ContentTypeText]
+                              setContent:intputText]
+                             setSendTime:nil] build];
+    [self sendMessageWithMessage:sendMessage];
+}
+
+- (void)sendMessageWithMessage:(Message *)message {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:message Finished:^(BOOL success, NSData *response) {
         if (success) {
             //请求成功
             SendMessageResponse *resp = [SendMessageResponse parseFromData:response];
             if (resp.isSucceed) {
                 //成功发送
                 //写入数据库并保存数组
+                Message *sendMessage = [self setMessage:message withSendTime:resp.sendTime];
                 [self writeIntoDBWithMessage:sendMessage];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_dataItems count] - 1 inSection:0];
                 NSArray *message = [NSArray arrayWithObject:indexPath];
@@ -434,6 +520,8 @@ static NSString *MessageCellIdentifier = @"MCI";
         }
     }];
 }
+
+#pragma mark - 键盘适应
 
 - (void)sendActionWithButtonTag:(PictureTags)tag {
     [self adjustViewWithKeyboardWithTag:tag];
@@ -543,35 +631,73 @@ static NSString *MessageCellIdentifier = @"MCI";
         }
         else {
             //未弹出表情框
-            if (beginRect.size.height == endRect.size.height) {
+            if (beginRect.size.height == endRect.size.height && beginRect.origin.y == kScreenHeight) {
                 //键盘弹出
                 offset = -beginRect.size.height;
+                _keyboardHeight = endRect.size.height;
             }
             else {
                 //键盘高度改变
-                offset = beginRect.size.height - endRect.size.height;
+                offset = _keyboardHeight - endRect.size.height;
+                _keyboardHeight = endRect.size.height;
             }
         }
     }
     [FXKeyboardAnimation moveView:_inputView withOffset:offset];
 }
 
+- (void)hiddenBottomView {
+    if (_showKeyBoard || _showListView || _showEmojiView) {
+        [_inputView.inputView becomeFirstResponder];
+        [_inputView.inputView resignFirstResponder];
+    }
+}
+
 #pragma mark - 图片菜单代理
 #pragma mark - PictureButtonDelegate
 
 - (void)pictureButtonFunctionWithTag:(ButtonTags)tag {
+    NSInteger sourceType = UIImagePickerControllerSourceTypeCamera;
     switch (tag) {
         case ButtonTagePicture: {
+            sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
             NSLog(@"本地相册！");
         }
             break;
         case ButtonTagPhoto: {
+            sourceType = UIImagePickerControllerSourceTypeCamera;
             NSLog(@"拍照！");
         }
             break;
         default:
             break;
     }
+    if ([UIImagePickerController isSourceTypeAvailable:sourceType]) {
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.delegate = self;
+//        imagePickerController.allowsEditing = YES;
+        imagePickerController.sourceType = sourceType;
+        [self presentViewController:imagePickerController animated:YES completion:nil];
+    }
+}
+
+#pragma mark - UIImagePickerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *editImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    NSData *imageData = UIImagePNGRepresentation(editImage);
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    Message *sendMessage = [[[[[[[[[Message builder]
+                                   setUserId:delegate.userID]
+                                  setContactId:[_ID intValue]]
+                                 setContentType:Message_ContentTypeImage]
+                                setContent:nil]
+                               setSendTime:nil]
+                              setImageType:Message_ImageTypePng]
+                             setBinaryContent:imageData] build];
+    [self sendMessageWithMessage:sendMessage];
+    [self hiddenBottomView];
 }
 
 #pragma mark - EmojiDelegate
@@ -579,6 +705,12 @@ static NSString *MessageCellIdentifier = @"MCI";
 - (void)touchEmojiButton:(UIButton *)sender {
     NSString *emoji = [NSString stringWithFormat:@"[#%d]",sender.tag + 1];
     _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:emoji];
+}
+
+#pragma mark - 点击联系人头像
+
+- (void)touchContact:(UIGestureRecognizer *)tap {
+    [self addDetailView];
 }
 
 @end

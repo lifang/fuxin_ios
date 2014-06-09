@@ -12,4 +12,6 @@
 
 + (void)moveView:(UIView *)view withOffset:(CGFloat)height;
 
++ (void)moveView:(UIView *)view withHeight:(CGFloat)height;
+
 @end

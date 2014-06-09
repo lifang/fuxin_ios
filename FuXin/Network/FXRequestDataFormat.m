@@ -187,12 +187,18 @@
 
 + (void)changeProfileWithToken:(NSString *)token
                         UserID:(int32_t)userID
-                       Profile:(Profile *)profile
+                     Signature:(NSString *)signature
+                         Tiles:(NSData *)tiles
+                   ContentType:(NSString *)contentType
+                      NickName:(NSString *)nickName
                       Finished:(Result)result {
-    ChangeProfileRequest *PBObject = [[[[[ChangeProfileRequest builder]
-                                         setToken:token]
-                                        setUserId:userID]
-                                       setProfile:profile] build];
+    ChangeProfileRequest *PBObject = [[[[[[[[ChangeProfileRequest builder]
+                                            setToken:token]
+                                           setUserId:userID]
+                                          setSignature:signature]
+                                         setTiles:tiles]
+                                        setContentType:contentType]
+                                       setNickName:nickName] build];
     NSData *PBData = [PBObject data];
     //请求信息
     NSMutableDictionary *requestInfo = dictionaryForModifyProfile();

@@ -10,6 +10,8 @@
 #import "FXCompareCN.h"
 #import "FXAppDelegate.h"
 #import "FXAddressListCell.h"
+#import "LHLDBTools.h"
+#import "FXTimeFormat.h"
 
 #define kTopViewHeight   40
 
@@ -24,14 +26,20 @@ static NSString *AddressCellIdentifier = @"ACI";
 @synthesize dataTableView = _dataTableView;
 @synthesize nameLists = _nameLists;
 @synthesize contactLists = _contactLists;
+@synthesize recentLists = _recentLists;
+@synthesize tradeLists = _tradeLists;
+@synthesize subscribeLists = _subscribeLists;
 @synthesize selectedHeaderViewIndex = _selectedHeaderViewIndex;
 @synthesize indexView = _indexView;
+@synthesize listTypes = _listTypes;
+@synthesize segmentControl = _segmentControl;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -40,6 +48,9 @@ static NSString *AddressCellIdentifier = @"ACI";
     if (self = [super init]) {
         _nameLists = [[NSMutableArray alloc] init];
         _contactLists = [[NSMutableArray alloc] init];
+        _recentLists = [[NSMutableArray alloc] init];
+        _tradeLists = [[NSMutableArray alloc] init];
+        _subscribeLists = [[NSMutableArray alloc] init];
         [self initUI];
         [self.view addSubview:self.searchBar];
     }
@@ -50,9 +61,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSLog(@"%@",self.title);
     [self setRightNavBarItemWithImageName:@"search.png"];
-    [FXAppDelegate showFuWuTitleForViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -83,6 +92,9 @@ static NSString *AddressCellIdentifier = @"ACI";
             [_nameLists addObject:user.contactNickname];
             [_contactLists addObject:user];
         }
+        [self resetIndexView];
+        _listTypes = AddressListAll;
+        _segmentControl.selectedSegmentIndex = AddressListAll;
         [_dataTableView reloadData];
     }
 }
@@ -100,12 +112,12 @@ static NSString *AddressCellIdentifier = @"ACI";
     backView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:backView];
     NSArray *segArray = [NSArray arrayWithObjects:@"全部", @"最近", @"交易", @"订阅", nil];
-    UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:segArray];
-    segmentedControl.frame = CGRectMake(10, 5, 300, 29);
-    segmentedControl.tintColor = kColor(209, 27, 33, 1);
-    [segmentedControl addTarget:self action:@selector(selectedType:) forControlEvents:UIControlEventValueChanged];
-    segmentedControl.selectedSegmentIndex = AddressListAll;
-    [backView addSubview:segmentedControl];
+    _segmentControl = [[UISegmentedControl alloc] initWithItems:segArray];
+    _segmentControl.frame = CGRectMake(10, 5, 300, 29);
+    _segmentControl.tintColor = kColor(209, 27, 33, 1);
+    [_segmentControl addTarget:self action:@selector(selectedType:) forControlEvents:UIControlEventValueChanged];
+    _segmentControl.selectedSegmentIndex = AddressListAll;
+    [backView addSubview:_segmentControl];
 }
 
 - (void)initBottomTableView {
@@ -128,13 +140,118 @@ static NSString *AddressCellIdentifier = @"ACI";
     [self.view addSubview:_indexView];
 }
 
+- (void)resetIndexView {
+    CGFloat originY = _dataTableView.frame.origin.y + _dataTableView.bounds.size.height / 2 - 20;
+    _indexView.frame = CGRectMake(265, originY, 40, 40);
+    _indexView.hidden = YES;
+    _indexView.currentIndex = -1;
+    _selectedHeaderViewIndex = -1;
+}
+
 #pragma mark - Action
 
-- (IBAction)selectedType:(id)sender {
-    NSLog(@"!!!!%ld",(long)[(UISegmentedControl *)sender selectedSegmentIndex]);
-//    FXHttpRequest *request = [[FXHttpRequest alloc] init];
-//    [request setHttpRequestWithInfo:nil];
+- (IBAction)selectedType:(UISegmentedControl *)sender {
+    [_nameLists removeAllObjects];
+    [self resetIndexView];
+    _listTypes = (int)sender.selectedSegmentIndex;
+    switch (sender.selectedSegmentIndex) {
+        case AddressListAll: {
+            for (ContactModel *user in _contactLists) {
+                [_nameLists addObject:user.contactNickname];
+            }
+        }
+            break;
+        case AddressListRecent: {
+            [_recentLists removeAllObjects];
+            [self getRecentContacts];
+        }
+            break;
+        case AddressListTrade: {
+            [_tradeLists removeAllObjects];
+            [self getTradeContacts];
+        }
+            break;
+        case AddressListSubscribe: {
+            [_subscribeLists removeAllObjects];
+            [self getSubscribeContacts];
+        }
+            break;
+        default:
+            break;
+    }
+    [_dataTableView reloadData];
 }
+
+//排序找到最近联系人列表
+- (void)getRecentContacts {
+    [LHLDBTools getConversationsWithFinished:^(NSMutableArray *conv,NSString *error) {
+        NSArray *sortArray = [conv sortedArrayUsingComparator:^NSComparisonResult(ConversationModel *model1, ConversationModel *model2) {
+            NSDate *date1 = [FXTimeFormat dateWithString:model1.conversationLastCommunicateTime];
+            NSDate *date2 = [FXTimeFormat dateWithString:model2.conversationLastCommunicateTime];
+            NSComparisonResult result = [date2 compare:date1];
+            return result;
+        }];
+        NSInteger count = [sortArray count];
+        if (count > 20) {
+            //取最近联系20人
+            count = 20;
+        }
+        for (int i = 0; i < count; i++) {
+            ConversationModel *conv = [sortArray objectAtIndex:i];
+            for (ContactModel *model in _contactLists) {
+                if ([model.contactID isEqualToString:conv.conversationContactID]) {
+                    [_recentLists addObject:model];
+                    [_nameLists addObject:model.contactNickname];
+                    break;
+                }
+            }
+        }
+    }];
+}
+
+//交易
+- (void)getTradeContacts {
+    for (ContactModel *model in _contactLists) {
+        BOOL showFirst = (model.contactRelationship & 3);
+        if (showFirst) {
+            [_tradeLists addObject:model];
+            [_nameLists addObject:model.contactNickname];
+        }
+    }
+}
+
+//订阅
+- (void)getSubscribeContacts {
+    for (ContactModel *model in _contactLists) {
+        BOOL showSecond = ((model.contactRelationship & 12) >> 2);
+        if (showSecond) {
+            [_subscribeLists addObject:model];
+            [_nameLists addObject:model.contactNickname];
+        }
+    }
+}
+
+- (NSMutableArray *)dataSourceWithListType:(AddressListTypes)type {
+    NSMutableArray *sourceList = nil;
+    switch (type) {
+        case AddressListAll:
+            sourceList = _contactLists;
+            break;
+        case AddressListRecent:
+            sourceList = _recentLists;
+            break;
+        case AddressListTrade:
+            sourceList = _tradeLists;
+            break;
+        case AddressListSubscribe:
+            sourceList = _subscribeLists;
+            break;
+        default:
+            break;
+    }
+    return sourceList;
+}
+
 
 #pragma mark - UITableView
 
@@ -156,7 +273,12 @@ static NSString *AddressCellIdentifier = @"ACI";
     if (tableView == _dataTableView) {
         FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:AddressCellIdentifier forIndexPath:indexPath];
         NSDictionary *rowDict = [[[FXCompareCN dataForSectionWithArray:_nameLists] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        cell.nameLabel.text = [rowDict objectForKey:kName];
+        NSMutableArray *columnList = [self dataSourceWithListType:_listTypes];
+        ContactModel *contact = [columnList objectAtIndex:[[rowDict objectForKey:kIndex] intValue]];
+        BOOL showFirst = (contact.contactRelationship & 3);
+        BOOL showSecond = ((contact.contactRelationship & 12) >> 2);
+        [cell showOrder:showFirst showSubscribe:showSecond];
+        cell.nameLabel.text = contact.contactNickname;
         return cell;
     }
     return [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -168,7 +290,7 @@ static NSString *AddressCellIdentifier = @"ACI";
             FXTableHeaderView *selectedHeaderView = (FXTableHeaderView *)[tableView headerViewForSection:_selectedHeaderViewIndex];
             selectedHeaderView.isSelected = NO;
         }
-        
+        NSLog(@"index = %d",index);
         [_indexView moveToIndex:index
                    withAllIndex:[_dataTableView numberOfSections]
                      withHeight:_dataTableView.frame.size.height];
@@ -187,7 +309,8 @@ static NSString *AddressCellIdentifier = @"ACI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _dataTableView) {
         NSDictionary *dict = [[[FXCompareCN dataForSectionWithArray:_nameLists] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        ContactModel *contact = [_contactLists objectAtIndex:[[dict objectForKey:kIndex] intValue]];
+        NSMutableArray *columnList = [self dataSourceWithListType:_listTypes];
+        ContactModel *contact = [columnList objectAtIndex:[[dict objectForKey:kIndex] intValue]];
         FXChatViewController *chatC = [[FXChatViewController alloc] init];
         chatC.contact = contact;
         chatC.ID = contact.contactID;

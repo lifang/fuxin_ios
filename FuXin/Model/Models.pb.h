@@ -93,12 +93,35 @@ typedef enum {
 BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse_ErrorCodeType value);
 
 typedef enum {
-  Contact_GenderTypeMale = 1,
-  Contact_GenderTypeFemale = 2,
-  Contact_GenderTypePrivacy = 3,
+  Contact_GenderTypeMale = 0,
+  Contact_GenderTypeFemale = 1,
+  Contact_GenderTypePrivacy = 2,
 } Contact_GenderType;
 
 BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value);
+
+typedef enum {
+  Profile_GenderTypeMale = 0,
+  Profile_GenderTypeFemale = 1,
+  Profile_GenderTypePrivacy = 2,
+} Profile_GenderType;
+
+BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value);
+
+typedef enum {
+  Message_ContentTypeText = 0,
+  Message_ContentTypeImage = 1,
+} Message_ContentType;
+
+BOOL Message_ContentTypeIsValidValue(Message_ContentType value);
+
+typedef enum {
+  Message_ImageTypeJpg = 0,
+  Message_ImageTypePng = 1,
+  Message_ImageTypeGif = 2,
+} Message_ImageType;
+
+BOOL Message_ImageTypeIsValidValue(Message_ImageType value);
 
 typedef enum {
   RegisterResponse_ErrorCodeTypeBadRequest = 1,
@@ -163,8 +186,11 @@ typedef enum {
 BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCodeType value);
 
 typedef enum {
+  ClientInfo_OSTypeOthers = 0,
   ClientInfo_OSTypeIos = 1,
   ClientInfo_OSTypeAndroid = 2,
+  ClientInfo_OSTypeWindowsPhone = 3,
+  ClientInfo_OSTypeSymbian = 4,
 } ClientInfo_OSType;
 
 BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value);
@@ -1125,7 +1151,6 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasIsProvider_:1;
   BOOL hasUserId_:1;
-  BOOL hasGender_:1;
   BOOL hasName_:1;
   BOOL hasNickName_:1;
   BOOL hasMobilePhoneNum_:1;
@@ -1133,10 +1158,9 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   BOOL hasBirthday_:1;
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
-  BOOL hasPublishClassType_:1;
+  BOOL hasGender_:1;
   BOOL isProvider_:1;
   int32_t userId;
-  int32_t gender;
   NSString* name;
   NSString* nickName;
   NSString* mobilePhoneNum;
@@ -1144,7 +1168,7 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   NSString* birthday;
   NSString* tileUrl;
   NSString* lisence;
-  NSString* publishClassType;
+  Profile_GenderType gender;
 }
 - (BOOL) hasUserId;
 - (BOOL) hasName;
@@ -1156,18 +1180,16 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (BOOL) hasTileUrl;
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
-- (BOOL) hasPublishClassType;
 @property (readonly) int32_t userId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* nickName;
-@property (readonly) int32_t gender;
+@property (readonly) Profile_GenderType gender;
 @property (readonly, retain) NSString* mobilePhoneNum;
 @property (readonly, retain) NSString* email;
 @property (readonly, retain) NSString* birthday;
 @property (readonly, retain) NSString* tileUrl;
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
-@property (readonly, retain) NSString* publishClassType;
 
 + (Profile*) defaultInstance;
 - (Profile*) defaultInstance;
@@ -1219,8 +1241,8 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (Profile_Builder*) clearNickName;
 
 - (BOOL) hasGender;
-- (int32_t) gender;
-- (Profile_Builder*) setGender:(int32_t) value;
+- (Profile_GenderType) gender;
+- (Profile_Builder*) setGender:(Profile_GenderType) value;
 - (Profile_Builder*) clearGender;
 
 - (BOOL) hasMobilePhoneNum;
@@ -1252,11 +1274,6 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (NSString*) lisence;
 - (Profile_Builder*) setLisence:(NSString*) value;
 - (Profile_Builder*) clearLisence;
-
-- (BOOL) hasPublishClassType;
-- (NSString*) publishClassType;
-- (Profile_Builder*) setPublishClassType:(NSString*) value;
-- (Profile_Builder*) clearPublishClassType;
 @end
 
 @interface ProfileRequest : PBGeneratedMessage {
@@ -1379,17 +1396,29 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasUserId_:1;
   BOOL hasToken_:1;
-  BOOL hasProfile_:1;
+  BOOL hasSignature_:1;
+  BOOL hasContentType_:1;
+  BOOL hasNickName_:1;
+  BOOL hasTiles_:1;
   int32_t userId;
   NSString* token;
-  Profile* profile;
+  NSString* signature;
+  NSString* contentType;
+  NSString* nickName;
+  NSData* tiles;
 }
 - (BOOL) hasToken;
 - (BOOL) hasUserId;
-- (BOOL) hasProfile;
+- (BOOL) hasSignature;
+- (BOOL) hasTiles;
+- (BOOL) hasContentType;
+- (BOOL) hasNickName;
 @property (readonly, retain) NSString* token;
 @property (readonly) int32_t userId;
-@property (readonly, retain) Profile* profile;
+@property (readonly, retain) NSString* signature;
+@property (readonly, retain) NSData* tiles;
+@property (readonly, retain) NSString* contentType;
+@property (readonly, retain) NSString* nickName;
 
 + (ChangeProfileRequest*) defaultInstance;
 - (ChangeProfileRequest*) defaultInstance;
@@ -1435,12 +1464,25 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (ChangeProfileRequest_Builder*) setUserId:(int32_t) value;
 - (ChangeProfileRequest_Builder*) clearUserId;
 
-- (BOOL) hasProfile;
-- (Profile*) profile;
-- (ChangeProfileRequest_Builder*) setProfile:(Profile*) value;
-- (ChangeProfileRequest_Builder*) setProfileBuilder:(Profile_Builder*) builderForValue;
-- (ChangeProfileRequest_Builder*) mergeProfile:(Profile*) value;
-- (ChangeProfileRequest_Builder*) clearProfile;
+- (BOOL) hasSignature;
+- (NSString*) signature;
+- (ChangeProfileRequest_Builder*) setSignature:(NSString*) value;
+- (ChangeProfileRequest_Builder*) clearSignature;
+
+- (BOOL) hasTiles;
+- (NSData*) tiles;
+- (ChangeProfileRequest_Builder*) setTiles:(NSData*) value;
+- (ChangeProfileRequest_Builder*) clearTiles;
+
+- (BOOL) hasContentType;
+- (NSString*) contentType;
+- (ChangeProfileRequest_Builder*) setContentType:(NSString*) value;
+- (ChangeProfileRequest_Builder*) clearContentType;
+
+- (BOOL) hasNickName;
+- (NSString*) nickName;
+- (ChangeProfileRequest_Builder*) setNickName:(NSString*) value;
+- (ChangeProfileRequest_Builder*) clearNickName;
 @end
 
 @interface ChangeProfileResponse : PBGeneratedMessage {
@@ -1508,19 +1550,31 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   BOOL hasContactId_:1;
   BOOL hasContent_:1;
   BOOL hasSendTime_:1;
+  BOOL hasBinaryContent_:1;
+  BOOL hasContentType_:1;
+  BOOL hasImageType_:1;
   int32_t userId;
   int32_t contactId;
   NSString* content;
   NSString* sendTime;
+  NSData* binaryContent;
+  Message_ContentType contentType;
+  Message_ImageType imageType;
 }
 - (BOOL) hasUserId;
 - (BOOL) hasContactId;
+- (BOOL) hasContentType;
 - (BOOL) hasContent;
 - (BOOL) hasSendTime;
+- (BOOL) hasImageType;
+- (BOOL) hasBinaryContent;
 @property (readonly) int32_t userId;
 @property (readonly) int32_t contactId;
+@property (readonly) Message_ContentType contentType;
 @property (readonly, retain) NSString* content;
 @property (readonly, retain) NSString* sendTime;
+@property (readonly) Message_ImageType imageType;
+@property (readonly, retain) NSData* binaryContent;
 
 + (Message*) defaultInstance;
 - (Message*) defaultInstance;
@@ -1566,6 +1620,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (Message_Builder*) setContactId:(int32_t) value;
 - (Message_Builder*) clearContactId;
 
+- (BOOL) hasContentType;
+- (Message_ContentType) contentType;
+- (Message_Builder*) setContentType:(Message_ContentType) value;
+- (Message_Builder*) clearContentType;
+
 - (BOOL) hasContent;
 - (NSString*) content;
 - (Message_Builder*) setContent:(NSString*) value;
@@ -1575,6 +1634,16 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (NSString*) sendTime;
 - (Message_Builder*) setSendTime:(NSString*) value;
 - (Message_Builder*) clearSendTime;
+
+- (BOOL) hasImageType;
+- (Message_ImageType) imageType;
+- (Message_Builder*) setImageType:(Message_ImageType) value;
+- (Message_Builder*) clearImageType;
+
+- (BOOL) hasBinaryContent;
+- (NSData*) binaryContent;
+- (Message_Builder*) setBinaryContent:(NSData*) value;
+- (Message_Builder*) clearBinaryContent;
 @end
 
 @interface MessageList : PBGeneratedMessage {
@@ -1981,16 +2050,20 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasIsSucceed_:1;
   BOOL hasUserId_:1;
+  BOOL hasToken_:1;
   BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
   int32_t userId;
+  NSString* token;
   RegisterResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasUserId;
+- (BOOL) hasToken;
 - (BOOL) hasErrorCode;
 - (BOOL) isSucceed;
 @property (readonly) int32_t userId;
+@property (readonly, retain) NSString* token;
 @property (readonly) RegisterResponse_ErrorCodeType errorCode;
 
 + (RegisterResponse*) defaultInstance;
@@ -2036,6 +2109,11 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (int32_t) userId;
 - (RegisterResponse_Builder*) setUserId:(int32_t) value;
 - (RegisterResponse_Builder*) clearUserId;
+
+- (BOOL) hasToken;
+- (NSString*) token;
+- (RegisterResponse_Builder*) setToken:(NSString*) value;
+- (RegisterResponse_Builder*) clearToken;
 
 - (BOOL) hasErrorCode;
 - (RegisterResponse_ErrorCodeType) errorCode;
@@ -2443,20 +2521,32 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @private
   BOOL hasIsPushEnable_:1;
   BOOL hasUserId_:1;
+  BOOL hasChannel_:1;
   BOOL hasDeviceId_:1;
+  BOOL hasOsversion_:1;
+  BOOL hasClientVersion_:1;
   BOOL hasOsType_:1;
   BOOL isPushEnable_:1;
   int32_t userId;
+  int32_t channel;
   NSString* deviceId;
+  NSString* osversion;
+  NSString* clientVersion;
   ClientInfo_OSType osType;
 }
 - (BOOL) hasDeviceId;
 - (BOOL) hasOsType;
+- (BOOL) hasOsversion;
 - (BOOL) hasUserId;
+- (BOOL) hasChannel;
+- (BOOL) hasClientVersion;
 - (BOOL) hasIsPushEnable;
 @property (readonly, retain) NSString* deviceId;
 @property (readonly) ClientInfo_OSType osType;
+@property (readonly, retain) NSString* osversion;
 @property (readonly) int32_t userId;
+@property (readonly) int32_t channel;
+@property (readonly, retain) NSString* clientVersion;
 - (BOOL) isPushEnable;
 
 + (ClientInfo*) defaultInstance;
@@ -2503,10 +2593,25 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (ClientInfo_Builder*) setOsType:(ClientInfo_OSType) value;
 - (ClientInfo_Builder*) clearOsType;
 
+- (BOOL) hasOsversion;
+- (NSString*) osversion;
+- (ClientInfo_Builder*) setOsversion:(NSString*) value;
+- (ClientInfo_Builder*) clearOsversion;
+
 - (BOOL) hasUserId;
 - (int32_t) userId;
 - (ClientInfo_Builder*) setUserId:(int32_t) value;
 - (ClientInfo_Builder*) clearUserId;
+
+- (BOOL) hasChannel;
+- (int32_t) channel;
+- (ClientInfo_Builder*) setChannel:(int32_t) value;
+- (ClientInfo_Builder*) clearChannel;
+
+- (BOOL) hasClientVersion;
+- (NSString*) clientVersion;
+- (ClientInfo_Builder*) setClientVersion:(NSString*) value;
+- (ClientInfo_Builder*) clearClientVersion;
 
 - (BOOL) hasIsPushEnable;
 - (BOOL) isPushEnable;
@@ -2585,14 +2690,30 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 @interface ClientInfoResponse : PBGeneratedMessage {
 @private
   BOOL hasIsSucceed_:1;
+  BOOL hasIsNewVersionRequired_:1;
+  BOOL hasHasNewVersion_:1;
+  BOOL hasNewClientVersion_:1;
+  BOOL hasClientUrl_:1;
   BOOL hasErrorCode_:1;
   BOOL isSucceed_:1;
+  BOOL isNewVersionRequired_:1;
+  BOOL hasNewVersion_:1;
+  NSString* newClientVersion;
+  NSString* clientUrl;
   ClientInfoResponse_ErrorCodeType errorCode;
 }
 - (BOOL) hasIsSucceed;
 - (BOOL) hasErrorCode;
+- (BOOL) hasIsNewVersionRequired;
+- (BOOL) hasNewClientVersion;
+- (BOOL) hasClientUrl;
+- (BOOL) hasHasNewVersion;
 - (BOOL) isSucceed;
 @property (readonly) ClientInfoResponse_ErrorCodeType errorCode;
+- (BOOL) isNewVersionRequired;
+@property (readonly, retain) NSString* newClientVersion;
+@property (readonly, retain) NSString* clientUrl;
+- (BOOL) hasNewVersion;
 
 + (ClientInfoResponse*) defaultInstance;
 - (ClientInfoResponse*) defaultInstance;
@@ -2637,5 +2758,25 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (ClientInfoResponse_ErrorCodeType) errorCode;
 - (ClientInfoResponse_Builder*) setErrorCode:(ClientInfoResponse_ErrorCodeType) value;
 - (ClientInfoResponse_Builder*) clearErrorCode;
+
+- (BOOL) hasIsNewVersionRequired;
+- (BOOL) isNewVersionRequired;
+- (ClientInfoResponse_Builder*) setIsNewVersionRequired:(BOOL) value;
+- (ClientInfoResponse_Builder*) clearIsNewVersionRequired;
+
+- (BOOL) hasNewClientVersion;
+- (NSString*) newClientVersion;
+- (ClientInfoResponse_Builder*) setNewClientVersion:(NSString*) value;
+- (ClientInfoResponse_Builder*) clearNewClientVersion;
+
+- (BOOL) hasClientUrl;
+- (NSString*) clientUrl;
+- (ClientInfoResponse_Builder*) setClientUrl:(NSString*) value;
+- (ClientInfoResponse_Builder*) clearClientUrl;
+
+- (BOOL) hasHasNewVersion;
+- (BOOL) hasNewVersion;
+- (ClientInfoResponse_Builder*) setHasNewVersion:(BOOL) value;
+- (ClientInfoResponse_Builder*) clearHasNewVersion;
 @end
 

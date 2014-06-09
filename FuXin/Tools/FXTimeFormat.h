@@ -8,10 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+//时间间隔 用于显示时间
+#define kTimeInterval  30
+
 @interface FXTimeFormat : NSObject
 
 + (NSString *)setTimeFormatWithString:(NSString *)timeString;
 
 + (NSString *)nowDateString;
+
++ (NSDate *)dateWithString:(NSString *)string;
+
++ (BOOL)needShowTime:(NSString *)firstTimeString withTime:(NSString *)secondTimeString;
 
 @end

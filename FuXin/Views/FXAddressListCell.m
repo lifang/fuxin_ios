@@ -50,7 +50,36 @@
     _nameLabel.font = [UIFont boldSystemFontOfSize:14];
     [self.contentView addSubview:_nameLabel];
     
+    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(155, 14, 30, 16)];
+    [self.contentView addSubview:_relationView1];
     
+    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(190, 14, 30, 16)];
+    [self.contentView addSubview:_relationView2];
+}
+
+- (void)showOrder:(BOOL)showFirst showSubscribe:(BOOL)showSecond {
+    NSLog(@"%d,%d",showFirst,showSecond);
+    if (showFirst) {
+        _relationView1.hidden = NO;
+        _relationView1.image = [UIImage imageNamed:@"trade.png"];
+        if (showSecond) {
+            _relationView2.hidden = NO;
+            _relationView2.image = [UIImage imageNamed:@"subscription.png"];
+        }
+        else {
+            _relationView2.hidden = YES;
+        }
+    }
+    else {
+        if (showSecond) {
+            _relationView1.hidden = NO;
+            _relationView1.image = [UIImage imageNamed:@"subscription.png"];
+        }
+        else {
+            _relationView1.hidden = YES;
+        }
+        _relationView2.hidden = YES;
+    }
 }
 
 @end

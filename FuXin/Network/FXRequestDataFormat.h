@@ -125,12 +125,18 @@
  修改个人信息
  token: 成功登入返回的令牌
  userID:成功登入返回的userID
- profile:个人信息对象
+ signature:个人签名
+ tiles:头像
+ contentType:图片类型
+ nickName:昵称
  result:返回结果
  */
 + (void)changeProfileWithToken:(NSString *)token
                         UserID:(int32_t)userID
-                       Profile:(Profile *)profile
+                     Signature:(NSString *)signature
+                          Tiles:(NSData *)tiles
+                   ContentType:(NSString *)contentType
+                      NickName:(NSString *)nickName
                       Finished:(Result)result;
 
 /*

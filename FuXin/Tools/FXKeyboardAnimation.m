@@ -21,4 +21,14 @@
     [UIView commitAnimations];
 }
 
++ (void)moveView:(UIView *)view withHeight:(CGFloat)height {
+    NSTimeInterval duration = 0.3f;
+    CGRect rect = view.frame;
+    rect.origin.y = height;
+    [UIView beginAnimations:@"adjustKeyboard" context:nil];
+    [UIView setAnimationDuration:duration];
+    view.frame = rect;
+    [UIView commitAnimations];
+}
+
 @end

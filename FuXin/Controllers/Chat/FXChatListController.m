@@ -27,6 +27,7 @@ static NSString *chatCellIdentifier = @"CCI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -41,7 +42,6 @@ static NSString *chatCellIdentifier = @"CCI";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [FXAppDelegate showFuWuTitleForViewController:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -108,7 +108,7 @@ static NSString *chatCellIdentifier = @"CCI";
         ContactModel *contact = [rowData objectForKey:@"Contact"];
         cell.nameLabel.text = contact.contactNickname;
         [cell setNumber:[NSString stringWithFormat:@"%@",[rowData objectForKey:@"Number"]]];
-//        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
+        cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
 
         cell.detailLabel.text = [rowData objectForKey:@"Record"];
         if (contact.contactAvatar && [contact.contactAvatar length] > 0) {

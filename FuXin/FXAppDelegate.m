@@ -133,10 +133,7 @@ static UINavigationController *s_loginNavController = nil;
     attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
     attributedTitleLabel.attributedText = attributedString;
     
-    NSMutableDictionary *barAttrs = [NSMutableDictionary dictionary];
-    [barAttrs setObject:[UIColor clearColor] forKey:UITextAttributeTextColor];
-    [controller.navigationController.navigationBar setTitleTextAttributes:barAttrs];
-    [controller.navigationController.navigationBar addSubview:attributedTitleLabel];
+    controller.navigationItem.titleView = attributedTitleLabel;
 }
 
 ///显示菊花 (只能同时存在一朵)

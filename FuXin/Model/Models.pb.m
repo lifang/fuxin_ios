@@ -3811,14 +3811,13 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 @property int32_t userId;
 @property (retain) NSString* name;
 @property (retain) NSString* nickName;
-@property int32_t gender;
+@property Profile_GenderType gender;
 @property (retain) NSString* mobilePhoneNum;
 @property (retain) NSString* email;
 @property (retain) NSString* birthday;
 @property (retain) NSString* tileUrl;
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
-@property (retain) NSString* publishClassType;
 @end
 
 @implementation Profile
@@ -3898,13 +3897,6 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   hasLisence_ = !!value;
 }
 @synthesize lisence;
-- (BOOL) hasPublishClassType {
-  return !!hasPublishClassType_;
-}
-- (void) setHasPublishClassType:(BOOL) value {
-  hasPublishClassType_ = !!value;
-}
-@synthesize publishClassType;
 - (void) dealloc {
   self.name = nil;
   self.nickName = nil;
@@ -3913,7 +3905,6 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   self.birthday = nil;
   self.tileUrl = nil;
   self.lisence = nil;
-  self.publishClassType = nil;
   [super dealloc];
 }
 - (id) init {
@@ -3921,14 +3912,13 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
     self.userId = 0;
     self.name = @"";
     self.nickName = @"";
-    self.gender = 0;
+    self.gender = Profile_GenderTypeMale;
     self.mobilePhoneNum = @"";
     self.email = @"";
     self.birthday = @"";
     self.tileUrl = @"";
     self.isProvider = NO;
     self.lisence = @"";
-    self.publishClassType = @"";
   }
   return self;
 }
@@ -3958,7 +3948,7 @@ static Profile* defaultProfileInstance = nil;
     [output writeString:3 value:self.nickName];
   }
   if (self.hasGender) {
-    [output writeInt32:4 value:self.gender];
+    [output writeEnum:4 value:self.gender];
   }
   if (self.hasMobilePhoneNum) {
     [output writeString:5 value:self.mobilePhoneNum];
@@ -3977,9 +3967,6 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasLisence) {
     [output writeString:10 value:self.lisence];
-  }
-  if (self.hasPublishClassType) {
-    [output writeString:11 value:self.publishClassType];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -4000,7 +3987,7 @@ static Profile* defaultProfileInstance = nil;
     size += computeStringSize(3, self.nickName);
   }
   if (self.hasGender) {
-    size += computeInt32Size(4, self.gender);
+    size += computeEnumSize(4, self.gender);
   }
   if (self.hasMobilePhoneNum) {
     size += computeStringSize(5, self.mobilePhoneNum);
@@ -4019,9 +4006,6 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasLisence) {
     size += computeStringSize(10, self.lisence);
-  }
-  if (self.hasPublishClassType) {
-    size += computeStringSize(11, self.publishClassType);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4056,6 +4040,16 @@ static Profile* defaultProfileInstance = nil;
 }
 @end
 
+BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
+  switch (value) {
+    case Profile_GenderTypeMale:
+    case Profile_GenderTypeFemale:
+    case Profile_GenderTypePrivacy:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface Profile_Builder()
 @property (retain) Profile* result;
 @end
@@ -4128,9 +4122,6 @@ static Profile* defaultProfileInstance = nil;
   if (other.hasLisence) {
     [self setLisence:other.lisence];
   }
-  if (other.hasPublishClassType) {
-    [self setPublishClassType:other.publishClassType];
-  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -4165,7 +4156,12 @@ static Profile* defaultProfileInstance = nil;
         break;
       }
       case 32: {
-        [self setGender:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (Profile_GenderTypeIsValidValue(value)) {
+          [self setGender:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
         break;
       }
       case 42: {
@@ -4190,10 +4186,6 @@ static Profile* defaultProfileInstance = nil;
       }
       case 82: {
         [self setLisence:[input readString]];
-        break;
-      }
-      case 90: {
-        [self setPublishClassType:[input readString]];
         break;
       }
     }
@@ -4250,17 +4242,17 @@ static Profile* defaultProfileInstance = nil;
 - (BOOL) hasGender {
   return result.hasGender;
 }
-- (int32_t) gender {
+- (Profile_GenderType) gender {
   return result.gender;
 }
-- (Profile_Builder*) setGender:(int32_t) value {
+- (Profile_Builder*) setGender:(Profile_GenderType) value {
   result.hasGender = YES;
   result.gender = value;
   return self;
 }
 - (Profile_Builder*) clearGender {
   result.hasGender = NO;
-  result.gender = 0;
+  result.gender = Profile_GenderTypeMale;
   return self;
 }
 - (BOOL) hasMobilePhoneNum {
@@ -4357,22 +4349,6 @@ static Profile* defaultProfileInstance = nil;
 - (Profile_Builder*) clearLisence {
   result.hasLisence = NO;
   result.lisence = @"";
-  return self;
-}
-- (BOOL) hasPublishClassType {
-  return result.hasPublishClassType;
-}
-- (NSString*) publishClassType {
-  return result.publishClassType;
-}
-- (Profile_Builder*) setPublishClassType:(NSString*) value {
-  result.hasPublishClassType = YES;
-  result.publishClassType = value;
-  return self;
-}
-- (Profile_Builder*) clearPublishClassType {
-  result.hasPublishClassType = NO;
-  result.publishClassType = @"";
   return self;
 }
 @end
@@ -4836,7 +4812,10 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
 @interface ChangeProfileRequest ()
 @property (retain) NSString* token;
 @property int32_t userId;
-@property (retain) Profile* profile;
+@property (retain) NSString* signature;
+@property (retain) NSData* tiles;
+@property (retain) NSString* contentType;
+@property (retain) NSString* nickName;
 @end
 
 @implementation ChangeProfileRequest
@@ -4855,23 +4834,50 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
   hasUserId_ = !!value;
 }
 @synthesize userId;
-- (BOOL) hasProfile {
-  return !!hasProfile_;
+- (BOOL) hasSignature {
+  return !!hasSignature_;
 }
-- (void) setHasProfile:(BOOL) value {
-  hasProfile_ = !!value;
+- (void) setHasSignature:(BOOL) value {
+  hasSignature_ = !!value;
 }
-@synthesize profile;
+@synthesize signature;
+- (BOOL) hasTiles {
+  return !!hasTiles_;
+}
+- (void) setHasTiles:(BOOL) value {
+  hasTiles_ = !!value;
+}
+@synthesize tiles;
+- (BOOL) hasContentType {
+  return !!hasContentType_;
+}
+- (void) setHasContentType:(BOOL) value {
+  hasContentType_ = !!value;
+}
+@synthesize contentType;
+- (BOOL) hasNickName {
+  return !!hasNickName_;
+}
+- (void) setHasNickName:(BOOL) value {
+  hasNickName_ = !!value;
+}
+@synthesize nickName;
 - (void) dealloc {
   self.token = nil;
-  self.profile = nil;
+  self.signature = nil;
+  self.tiles = nil;
+  self.contentType = nil;
+  self.nickName = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.token = @"";
     self.userId = 0;
-    self.profile = [Profile defaultInstance];
+    self.signature = @"";
+    self.tiles = [NSData data];
+    self.contentType = @"";
+    self.nickName = @"";
   }
   return self;
 }
@@ -4897,8 +4903,17 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   if (self.hasUserId) {
     [output writeInt32:2 value:self.userId];
   }
-  if (self.hasProfile) {
-    [output writeMessage:3 value:self.profile];
+  if (self.hasSignature) {
+    [output writeString:3 value:self.signature];
+  }
+  if (self.hasTiles) {
+    [output writeData:4 value:self.tiles];
+  }
+  if (self.hasContentType) {
+    [output writeString:5 value:self.contentType];
+  }
+  if (self.hasNickName) {
+    [output writeString:6 value:self.nickName];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -4915,8 +4930,17 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   if (self.hasUserId) {
     size += computeInt32Size(2, self.userId);
   }
-  if (self.hasProfile) {
-    size += computeMessageSize(3, self.profile);
+  if (self.hasSignature) {
+    size += computeStringSize(3, self.signature);
+  }
+  if (self.hasTiles) {
+    size += computeDataSize(4, self.tiles);
+  }
+  if (self.hasContentType) {
+    size += computeStringSize(5, self.contentType);
+  }
+  if (self.hasNickName) {
+    size += computeStringSize(6, self.nickName);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4999,8 +5023,17 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   if (other.hasUserId) {
     [self setUserId:other.userId];
   }
-  if (other.hasProfile) {
-    [self mergeProfile:other.profile];
+  if (other.hasSignature) {
+    [self setSignature:other.signature];
+  }
+  if (other.hasTiles) {
+    [self setTiles:other.tiles];
+  }
+  if (other.hasContentType) {
+    [self setContentType:other.contentType];
+  }
+  if (other.hasNickName) {
+    [self setNickName:other.nickName];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -5032,12 +5065,19 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
         break;
       }
       case 26: {
-        Profile_Builder* subBuilder = [Profile builder];
-        if (self.hasProfile) {
-          [subBuilder mergeFrom:self.profile];
-        }
-        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
-        [self setProfile:[subBuilder buildPartial]];
+        [self setSignature:[input readString]];
+        break;
+      }
+      case 34: {
+        [self setTiles:[input readData]];
+        break;
+      }
+      case 42: {
+        [self setContentType:[input readString]];
+        break;
+      }
+      case 50: {
+        [self setNickName:[input readString]];
         break;
       }
     }
@@ -5075,34 +5115,68 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   result.userId = 0;
   return self;
 }
-- (BOOL) hasProfile {
-  return result.hasProfile;
+- (BOOL) hasSignature {
+  return result.hasSignature;
 }
-- (Profile*) profile {
-  return result.profile;
+- (NSString*) signature {
+  return result.signature;
 }
-- (ChangeProfileRequest_Builder*) setProfile:(Profile*) value {
-  result.hasProfile = YES;
-  result.profile = value;
+- (ChangeProfileRequest_Builder*) setSignature:(NSString*) value {
+  result.hasSignature = YES;
+  result.signature = value;
   return self;
 }
-- (ChangeProfileRequest_Builder*) setProfileBuilder:(Profile_Builder*) builderForValue {
-  return [self setProfile:[builderForValue build]];
-}
-- (ChangeProfileRequest_Builder*) mergeProfile:(Profile*) value {
-  if (result.hasProfile &&
-      result.profile != [Profile defaultInstance]) {
-    result.profile =
-      [[[Profile builderWithPrototype:result.profile] mergeFrom:value] buildPartial];
-  } else {
-    result.profile = value;
-  }
-  result.hasProfile = YES;
+- (ChangeProfileRequest_Builder*) clearSignature {
+  result.hasSignature = NO;
+  result.signature = @"";
   return self;
 }
-- (ChangeProfileRequest_Builder*) clearProfile {
-  result.hasProfile = NO;
-  result.profile = [Profile defaultInstance];
+- (BOOL) hasTiles {
+  return result.hasTiles;
+}
+- (NSData*) tiles {
+  return result.tiles;
+}
+- (ChangeProfileRequest_Builder*) setTiles:(NSData*) value {
+  result.hasTiles = YES;
+  result.tiles = value;
+  return self;
+}
+- (ChangeProfileRequest_Builder*) clearTiles {
+  result.hasTiles = NO;
+  result.tiles = [NSData data];
+  return self;
+}
+- (BOOL) hasContentType {
+  return result.hasContentType;
+}
+- (NSString*) contentType {
+  return result.contentType;
+}
+- (ChangeProfileRequest_Builder*) setContentType:(NSString*) value {
+  result.hasContentType = YES;
+  result.contentType = value;
+  return self;
+}
+- (ChangeProfileRequest_Builder*) clearContentType {
+  result.hasContentType = NO;
+  result.contentType = @"";
+  return self;
+}
+- (BOOL) hasNickName {
+  return result.hasNickName;
+}
+- (NSString*) nickName {
+  return result.nickName;
+}
+- (ChangeProfileRequest_Builder*) setNickName:(NSString*) value {
+  result.hasNickName = YES;
+  result.nickName = value;
+  return self;
+}
+- (ChangeProfileRequest_Builder*) clearNickName {
+  result.hasNickName = NO;
+  result.nickName = @"";
   return self;
 }
 @end
@@ -5350,8 +5424,11 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
 @interface Message ()
 @property int32_t userId;
 @property int32_t contactId;
+@property Message_ContentType contentType;
 @property (retain) NSString* content;
 @property (retain) NSString* sendTime;
+@property Message_ImageType imageType;
+@property (retain) NSData* binaryContent;
 @end
 
 @implementation Message
@@ -5370,6 +5447,13 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
   hasContactId_ = !!value;
 }
 @synthesize contactId;
+- (BOOL) hasContentType {
+  return !!hasContentType_;
+}
+- (void) setHasContentType:(BOOL) value {
+  hasContentType_ = !!value;
+}
+@synthesize contentType;
 - (BOOL) hasContent {
   return !!hasContent_;
 }
@@ -5384,17 +5468,35 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
   hasSendTime_ = !!value;
 }
 @synthesize sendTime;
+- (BOOL) hasImageType {
+  return !!hasImageType_;
+}
+- (void) setHasImageType:(BOOL) value {
+  hasImageType_ = !!value;
+}
+@synthesize imageType;
+- (BOOL) hasBinaryContent {
+  return !!hasBinaryContent_;
+}
+- (void) setHasBinaryContent:(BOOL) value {
+  hasBinaryContent_ = !!value;
+}
+@synthesize binaryContent;
 - (void) dealloc {
   self.content = nil;
   self.sendTime = nil;
+  self.binaryContent = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.userId = 0;
     self.contactId = 0;
+    self.contentType = Message_ContentTypeText;
     self.content = @"";
     self.sendTime = @"";
+    self.imageType = Message_ImageTypeJpg;
+    self.binaryContent = [NSData data];
   }
   return self;
 }
@@ -5420,11 +5522,20 @@ static Message* defaultMessageInstance = nil;
   if (self.hasContactId) {
     [output writeInt32:2 value:self.contactId];
   }
+  if (self.hasContentType) {
+    [output writeEnum:3 value:self.contentType];
+  }
   if (self.hasContent) {
-    [output writeString:3 value:self.content];
+    [output writeString:4 value:self.content];
   }
   if (self.hasSendTime) {
-    [output writeString:4 value:self.sendTime];
+    [output writeString:5 value:self.sendTime];
+  }
+  if (self.hasImageType) {
+    [output writeEnum:6 value:self.imageType];
+  }
+  if (self.hasBinaryContent) {
+    [output writeData:7 value:self.binaryContent];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -5441,11 +5552,20 @@ static Message* defaultMessageInstance = nil;
   if (self.hasContactId) {
     size += computeInt32Size(2, self.contactId);
   }
+  if (self.hasContentType) {
+    size += computeEnumSize(3, self.contentType);
+  }
   if (self.hasContent) {
-    size += computeStringSize(3, self.content);
+    size += computeStringSize(4, self.content);
   }
   if (self.hasSendTime) {
-    size += computeStringSize(4, self.sendTime);
+    size += computeStringSize(5, self.sendTime);
+  }
+  if (self.hasImageType) {
+    size += computeEnumSize(6, self.imageType);
+  }
+  if (self.hasBinaryContent) {
+    size += computeDataSize(7, self.binaryContent);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -5480,6 +5600,25 @@ static Message* defaultMessageInstance = nil;
 }
 @end
 
+BOOL Message_ContentTypeIsValidValue(Message_ContentType value) {
+  switch (value) {
+    case Message_ContentTypeText:
+    case Message_ContentTypeImage:
+      return YES;
+    default:
+      return NO;
+  }
+}
+BOOL Message_ImageTypeIsValidValue(Message_ImageType value) {
+  switch (value) {
+    case Message_ImageTypeJpg:
+    case Message_ImageTypePng:
+    case Message_ImageTypeGif:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface Message_Builder()
 @property (retain) Message* result;
 @end
@@ -5528,11 +5667,20 @@ static Message* defaultMessageInstance = nil;
   if (other.hasContactId) {
     [self setContactId:other.contactId];
   }
+  if (other.hasContentType) {
+    [self setContentType:other.contentType];
+  }
   if (other.hasContent) {
     [self setContent:other.content];
   }
   if (other.hasSendTime) {
     [self setSendTime:other.sendTime];
+  }
+  if (other.hasImageType) {
+    [self setImageType:other.imageType];
+  }
+  if (other.hasBinaryContent) {
+    [self setBinaryContent:other.binaryContent];
   }
   [self mergeUnknownFields:other.unknownFields];
   return self;
@@ -5563,12 +5711,34 @@ static Message* defaultMessageInstance = nil;
         [self setContactId:[input readInt32]];
         break;
       }
-      case 26: {
-        [self setContent:[input readString]];
+      case 24: {
+        int32_t value = [input readEnum];
+        if (Message_ContentTypeIsValidValue(value)) {
+          [self setContentType:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
       case 34: {
+        [self setContent:[input readString]];
+        break;
+      }
+      case 42: {
         [self setSendTime:[input readString]];
+        break;
+      }
+      case 48: {
+        int32_t value = [input readEnum];
+        if (Message_ImageTypeIsValidValue(value)) {
+          [self setImageType:value];
+        } else {
+          [unknownFields mergeVarintField:6 value:value];
+        }
+        break;
+      }
+      case 58: {
+        [self setBinaryContent:[input readData]];
         break;
       }
     }
@@ -5606,6 +5776,22 @@ static Message* defaultMessageInstance = nil;
   result.contactId = 0;
   return self;
 }
+- (BOOL) hasContentType {
+  return result.hasContentType;
+}
+- (Message_ContentType) contentType {
+  return result.contentType;
+}
+- (Message_Builder*) setContentType:(Message_ContentType) value {
+  result.hasContentType = YES;
+  result.contentType = value;
+  return self;
+}
+- (Message_Builder*) clearContentType {
+  result.hasContentType = NO;
+  result.contentType = Message_ContentTypeText;
+  return self;
+}
 - (BOOL) hasContent {
   return result.hasContent;
 }
@@ -5636,6 +5822,38 @@ static Message* defaultMessageInstance = nil;
 - (Message_Builder*) clearSendTime {
   result.hasSendTime = NO;
   result.sendTime = @"";
+  return self;
+}
+- (BOOL) hasImageType {
+  return result.hasImageType;
+}
+- (Message_ImageType) imageType {
+  return result.imageType;
+}
+- (Message_Builder*) setImageType:(Message_ImageType) value {
+  result.hasImageType = YES;
+  result.imageType = value;
+  return self;
+}
+- (Message_Builder*) clearImageType {
+  result.hasImageType = NO;
+  result.imageType = Message_ImageTypeJpg;
+  return self;
+}
+- (BOOL) hasBinaryContent {
+  return result.hasBinaryContent;
+}
+- (NSData*) binaryContent {
+  return result.binaryContent;
+}
+- (Message_Builder*) setBinaryContent:(NSData*) value {
+  result.hasBinaryContent = YES;
+  result.binaryContent = value;
+  return self;
+}
+- (Message_Builder*) clearBinaryContent {
+  result.hasBinaryContent = NO;
+  result.binaryContent = [NSData data];
   return self;
 }
 @end
@@ -7238,6 +7456,7 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
 @interface RegisterResponse ()
 @property BOOL isSucceed;
 @property int32_t userId;
+@property (retain) NSString* token;
 @property RegisterResponse_ErrorCodeType errorCode;
 @end
 
@@ -7262,6 +7481,13 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
   hasUserId_ = !!value;
 }
 @synthesize userId;
+- (BOOL) hasToken {
+  return !!hasToken_;
+}
+- (void) setHasToken:(BOOL) value {
+  hasToken_ = !!value;
+}
+@synthesize token;
 - (BOOL) hasErrorCode {
   return !!hasErrorCode_;
 }
@@ -7270,12 +7496,14 @@ static RegisterRequest* defaultRegisterRequestInstance = nil;
 }
 @synthesize errorCode;
 - (void) dealloc {
+  self.token = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.userId = 0;
+    self.token = @"";
     self.errorCode = RegisterResponse_ErrorCodeTypeBadRequest;
   }
   return self;
@@ -7302,8 +7530,11 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
   if (self.hasUserId) {
     [output writeInt32:2 value:self.userId];
   }
+  if (self.hasToken) {
+    [output writeString:3 value:self.token];
+  }
   if (self.hasErrorCode) {
-    [output writeEnum:3 value:self.errorCode];
+    [output writeEnum:4 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -7320,8 +7551,11 @@ static RegisterResponse* defaultRegisterResponseInstance = nil;
   if (self.hasUserId) {
     size += computeInt32Size(2, self.userId);
   }
+  if (self.hasToken) {
+    size += computeStringSize(3, self.token);
+  }
   if (self.hasErrorCode) {
-    size += computeEnumSize(3, self.errorCode);
+    size += computeEnumSize(4, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7419,6 +7653,9 @@ BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType v
   if (other.hasUserId) {
     [self setUserId:other.userId];
   }
+  if (other.hasToken) {
+    [self setToken:other.token];
+  }
   if (other.hasErrorCode) {
     [self setErrorCode:other.errorCode];
   }
@@ -7451,12 +7688,16 @@ BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType v
         [self setUserId:[input readInt32]];
         break;
       }
-      case 24: {
+      case 26: {
+        [self setToken:[input readString]];
+        break;
+      }
+      case 32: {
         int32_t value = [input readEnum];
         if (RegisterResponse_ErrorCodeTypeIsValidValue(value)) {
           [self setErrorCode:value];
         } else {
-          [unknownFields mergeVarintField:3 value:value];
+          [unknownFields mergeVarintField:4 value:value];
         }
         break;
       }
@@ -7493,6 +7734,22 @@ BOOL RegisterResponse_ErrorCodeTypeIsValidValue(RegisterResponse_ErrorCodeType v
 - (RegisterResponse_Builder*) clearUserId {
   result.hasUserId = NO;
   result.userId = 0;
+  return self;
+}
+- (BOOL) hasToken {
+  return result.hasToken;
+}
+- (NSString*) token {
+  return result.token;
+}
+- (RegisterResponse_Builder*) setToken:(NSString*) value {
+  result.hasToken = YES;
+  result.token = value;
+  return self;
+}
+- (RegisterResponse_Builder*) clearToken {
+  result.hasToken = NO;
+  result.token = @"";
   return self;
 }
 - (BOOL) hasErrorCode {
@@ -9136,7 +9393,10 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 @interface ClientInfo ()
 @property (retain) NSString* deviceId;
 @property ClientInfo_OSType osType;
+@property (retain) NSString* osversion;
 @property int32_t userId;
+@property int32_t channel;
+@property (retain) NSString* clientVersion;
 @property BOOL isPushEnable;
 @end
 
@@ -9156,6 +9416,13 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   hasOsType_ = !!value;
 }
 @synthesize osType;
+- (BOOL) hasOsversion {
+  return !!hasOsversion_;
+}
+- (void) setHasOsversion:(BOOL) value {
+  hasOsversion_ = !!value;
+}
+@synthesize osversion;
 - (BOOL) hasUserId {
   return !!hasUserId_;
 }
@@ -9163,6 +9430,20 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
   hasUserId_ = !!value;
 }
 @synthesize userId;
+- (BOOL) hasChannel {
+  return !!hasChannel_;
+}
+- (void) setHasChannel:(BOOL) value {
+  hasChannel_ = !!value;
+}
+@synthesize channel;
+- (BOOL) hasClientVersion {
+  return !!hasClientVersion_;
+}
+- (void) setHasClientVersion:(BOOL) value {
+  hasClientVersion_ = !!value;
+}
+@synthesize clientVersion;
 - (BOOL) hasIsPushEnable {
   return !!hasIsPushEnable_;
 }
@@ -9177,13 +9458,18 @@ BOOL ValidateCodeResponse_ErrorCodeTypeIsValidValue(ValidateCodeResponse_ErrorCo
 }
 - (void) dealloc {
   self.deviceId = nil;
+  self.osversion = nil;
+  self.clientVersion = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.deviceId = @"";
-    self.osType = ClientInfo_OSTypeIos;
+    self.osType = ClientInfo_OSTypeOthers;
+    self.osversion = @"";
     self.userId = 0;
+    self.channel = 0;
+    self.clientVersion = @"";
     self.isPushEnable = NO;
   }
   return self;
@@ -9210,11 +9496,20 @@ static ClientInfo* defaultClientInfoInstance = nil;
   if (self.hasOsType) {
     [output writeEnum:2 value:self.osType];
   }
+  if (self.hasOsversion) {
+    [output writeString:3 value:self.osversion];
+  }
   if (self.hasUserId) {
-    [output writeInt32:3 value:self.userId];
+    [output writeInt32:4 value:self.userId];
+  }
+  if (self.hasChannel) {
+    [output writeInt32:5 value:self.channel];
+  }
+  if (self.hasClientVersion) {
+    [output writeString:6 value:self.clientVersion];
   }
   if (self.hasIsPushEnable) {
-    [output writeBool:4 value:self.isPushEnable];
+    [output writeBool:7 value:self.isPushEnable];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -9231,11 +9526,20 @@ static ClientInfo* defaultClientInfoInstance = nil;
   if (self.hasOsType) {
     size += computeEnumSize(2, self.osType);
   }
+  if (self.hasOsversion) {
+    size += computeStringSize(3, self.osversion);
+  }
   if (self.hasUserId) {
-    size += computeInt32Size(3, self.userId);
+    size += computeInt32Size(4, self.userId);
+  }
+  if (self.hasChannel) {
+    size += computeInt32Size(5, self.channel);
+  }
+  if (self.hasClientVersion) {
+    size += computeStringSize(6, self.clientVersion);
   }
   if (self.hasIsPushEnable) {
-    size += computeBoolSize(4, self.isPushEnable);
+    size += computeBoolSize(7, self.isPushEnable);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -9272,8 +9576,11 @@ static ClientInfo* defaultClientInfoInstance = nil;
 
 BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
   switch (value) {
+    case ClientInfo_OSTypeOthers:
     case ClientInfo_OSTypeIos:
     case ClientInfo_OSTypeAndroid:
+    case ClientInfo_OSTypeWindowsPhone:
+    case ClientInfo_OSTypeSymbian:
       return YES;
     default:
       return NO;
@@ -9327,8 +9634,17 @@ BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
   if (other.hasOsType) {
     [self setOsType:other.osType];
   }
+  if (other.hasOsversion) {
+    [self setOsversion:other.osversion];
+  }
   if (other.hasUserId) {
     [self setUserId:other.userId];
+  }
+  if (other.hasChannel) {
+    [self setChannel:other.channel];
+  }
+  if (other.hasClientVersion) {
+    [self setClientVersion:other.clientVersion];
   }
   if (other.hasIsPushEnable) {
     [self setIsPushEnable:other.isPushEnable];
@@ -9367,11 +9683,23 @@ BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
         }
         break;
       }
-      case 24: {
-        [self setUserId:[input readInt32]];
+      case 26: {
+        [self setOsversion:[input readString]];
         break;
       }
       case 32: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 40: {
+        [self setChannel:[input readInt32]];
+        break;
+      }
+      case 50: {
+        [self setClientVersion:[input readString]];
+        break;
+      }
+      case 56: {
         [self setIsPushEnable:[input readBool]];
         break;
       }
@@ -9407,7 +9735,23 @@ BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
 }
 - (ClientInfo_Builder*) clearOsType {
   result.hasOsType = NO;
-  result.osType = ClientInfo_OSTypeIos;
+  result.osType = ClientInfo_OSTypeOthers;
+  return self;
+}
+- (BOOL) hasOsversion {
+  return result.hasOsversion;
+}
+- (NSString*) osversion {
+  return result.osversion;
+}
+- (ClientInfo_Builder*) setOsversion:(NSString*) value {
+  result.hasOsversion = YES;
+  result.osversion = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearOsversion {
+  result.hasOsversion = NO;
+  result.osversion = @"";
   return self;
 }
 - (BOOL) hasUserId {
@@ -9424,6 +9768,38 @@ BOOL ClientInfo_OSTypeIsValidValue(ClientInfo_OSType value) {
 - (ClientInfo_Builder*) clearUserId {
   result.hasUserId = NO;
   result.userId = 0;
+  return self;
+}
+- (BOOL) hasChannel {
+  return result.hasChannel;
+}
+- (int32_t) channel {
+  return result.channel;
+}
+- (ClientInfo_Builder*) setChannel:(int32_t) value {
+  result.hasChannel = YES;
+  result.channel = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearChannel {
+  result.hasChannel = NO;
+  result.channel = 0;
+  return self;
+}
+- (BOOL) hasClientVersion {
+  return result.hasClientVersion;
+}
+- (NSString*) clientVersion {
+  return result.clientVersion;
+}
+- (ClientInfo_Builder*) setClientVersion:(NSString*) value {
+  result.hasClientVersion = YES;
+  result.clientVersion = value;
+  return self;
+}
+- (ClientInfo_Builder*) clearClientVersion {
+  result.hasClientVersion = NO;
+  result.clientVersion = @"";
   return self;
 }
 - (BOOL) hasIsPushEnable {
@@ -9721,6 +10097,10 @@ static ClientInfoRequest* defaultClientInfoRequestInstance = nil;
 @interface ClientInfoResponse ()
 @property BOOL isSucceed;
 @property ClientInfoResponse_ErrorCodeType errorCode;
+@property BOOL isNewVersionRequired;
+@property (retain) NSString* newClientVersion;
+@property (retain) NSString* clientUrl;
+@property BOOL hasNewVersion;
 @end
 
 @implementation ClientInfoResponse
@@ -9744,13 +10124,57 @@ static ClientInfoRequest* defaultClientInfoRequestInstance = nil;
   hasErrorCode_ = !!value;
 }
 @synthesize errorCode;
+- (BOOL) hasIsNewVersionRequired {
+  return !!hasIsNewVersionRequired_;
+}
+- (void) setHasIsNewVersionRequired:(BOOL) value {
+  hasIsNewVersionRequired_ = !!value;
+}
+- (BOOL) isNewVersionRequired {
+  return !!isNewVersionRequired_;
+}
+- (void) setIsNewVersionRequired:(BOOL) value {
+  isNewVersionRequired_ = !!value;
+}
+- (BOOL) hasNewClientVersion {
+  return !!hasNewClientVersion_;
+}
+- (void) setHasNewClientVersion:(BOOL) value {
+  hasNewClientVersion_ = !!value;
+}
+@synthesize newClientVersion;
+- (BOOL) hasClientUrl {
+  return !!hasClientUrl_;
+}
+- (void) setHasClientUrl:(BOOL) value {
+  hasClientUrl_ = !!value;
+}
+@synthesize clientUrl;
+- (BOOL) hasHasNewVersion {
+  return !!hasHasNewVersion_;
+}
+- (void) setHasHasNewVersion:(BOOL) value {
+  hasHasNewVersion_ = !!value;
+}
+- (BOOL) hasNewVersion {
+  return !!hasNewVersion_;
+}
+- (void) setHasNewVersion:(BOOL) value {
+  hasNewVersion_ = !!value;
+}
 - (void) dealloc {
+  self.newClientVersion = nil;
+  self.clientUrl = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.errorCode = ClientInfoResponse_ErrorCodeTypeInvalidUserId;
+    self.isNewVersionRequired = NO;
+    self.newClientVersion = @"";
+    self.clientUrl = @"";
+    self.hasNewVersion = NO;
   }
   return self;
 }
@@ -9776,6 +10200,18 @@ static ClientInfoResponse* defaultClientInfoResponseInstance = nil;
   if (self.hasErrorCode) {
     [output writeEnum:2 value:self.errorCode];
   }
+  if (self.hasIsNewVersionRequired) {
+    [output writeBool:3 value:self.isNewVersionRequired];
+  }
+  if (self.hasNewClientVersion) {
+    [output writeString:4 value:self.newClientVersion];
+  }
+  if (self.hasClientUrl) {
+    [output writeString:5 value:self.clientUrl];
+  }
+  if (self.hasHasNewVersion) {
+    [output writeBool:6 value:self.hasNewVersion];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -9790,6 +10226,18 @@ static ClientInfoResponse* defaultClientInfoResponseInstance = nil;
   }
   if (self.hasErrorCode) {
     size += computeEnumSize(2, self.errorCode);
+  }
+  if (self.hasIsNewVersionRequired) {
+    size += computeBoolSize(3, self.isNewVersionRequired);
+  }
+  if (self.hasNewClientVersion) {
+    size += computeStringSize(4, self.newClientVersion);
+  }
+  if (self.hasClientUrl) {
+    size += computeStringSize(5, self.clientUrl);
+  }
+  if (self.hasHasNewVersion) {
+    size += computeBoolSize(6, self.hasNewVersion);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -9882,6 +10330,18 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   if (other.hasErrorCode) {
     [self setErrorCode:other.errorCode];
   }
+  if (other.hasIsNewVersionRequired) {
+    [self setIsNewVersionRequired:other.isNewVersionRequired];
+  }
+  if (other.hasNewClientVersion) {
+    [self setNewClientVersion:other.newClientVersion];
+  }
+  if (other.hasClientUrl) {
+    [self setClientUrl:other.clientUrl];
+  }
+  if (other.hasHasNewVersion) {
+    [self setHasNewVersion:other.hasNewVersion];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -9914,6 +10374,22 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
         } else {
           [unknownFields mergeVarintField:2 value:value];
         }
+        break;
+      }
+      case 24: {
+        [self setIsNewVersionRequired:[input readBool]];
+        break;
+      }
+      case 34: {
+        [self setNewClientVersion:[input readString]];
+        break;
+      }
+      case 42: {
+        [self setClientUrl:[input readString]];
+        break;
+      }
+      case 48: {
+        [self setHasNewVersion:[input readBool]];
         break;
       }
     }
@@ -9949,6 +10425,70 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (ClientInfoResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
   result.errorCode = ClientInfoResponse_ErrorCodeTypeInvalidUserId;
+  return self;
+}
+- (BOOL) hasIsNewVersionRequired {
+  return result.hasIsNewVersionRequired;
+}
+- (BOOL) isNewVersionRequired {
+  return result.isNewVersionRequired;
+}
+- (ClientInfoResponse_Builder*) setIsNewVersionRequired:(BOOL) value {
+  result.hasIsNewVersionRequired = YES;
+  result.isNewVersionRequired = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearIsNewVersionRequired {
+  result.hasIsNewVersionRequired = NO;
+  result.isNewVersionRequired = NO;
+  return self;
+}
+- (BOOL) hasNewClientVersion {
+  return result.hasNewClientVersion;
+}
+- (NSString*) newClientVersion {
+  return result.newClientVersion;
+}
+- (ClientInfoResponse_Builder*) setNewClientVersion:(NSString*) value {
+  result.hasNewClientVersion = YES;
+  result.newClientVersion = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearNewClientVersion {
+  result.hasNewClientVersion = NO;
+  result.newClientVersion = @"";
+  return self;
+}
+- (BOOL) hasClientUrl {
+  return result.hasClientUrl;
+}
+- (NSString*) clientUrl {
+  return result.clientUrl;
+}
+- (ClientInfoResponse_Builder*) setClientUrl:(NSString*) value {
+  result.hasClientUrl = YES;
+  result.clientUrl = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearClientUrl {
+  result.hasClientUrl = NO;
+  result.clientUrl = @"";
+  return self;
+}
+- (BOOL) hasHasNewVersion {
+  return result.hasHasNewVersion;
+}
+- (BOOL) hasNewVersion {
+  return result.hasNewVersion;
+}
+- (ClientInfoResponse_Builder*) setHasNewVersion:(BOOL) value {
+  result.hasHasNewVersion = YES;
+  result.hasNewVersion = value;
+  return self;
+}
+- (ClientInfoResponse_Builder*) clearHasNewVersion {
+  result.hasHasNewVersion = NO;
+  result.hasNewVersion = NO;
   return self;
 }
 @end

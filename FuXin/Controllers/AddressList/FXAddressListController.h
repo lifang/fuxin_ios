@@ -26,10 +26,19 @@ typedef enum {
 //获取的联系人列表
 @property (nonatomic, strong) NSMutableArray *contactLists;
 
+//筛选数组
+@property (nonatomic, strong) NSMutableArray *recentLists;
+@property (nonatomic, strong) NSMutableArray *tradeLists;
+@property (nonatomic, strong) NSMutableArray *subscribeLists;
+
+@property (nonatomic, assign) AddressListTypes listTypes;
+
 //记录选中的headerview的index
 @property (nonatomic, assign) NSInteger selectedHeaderViewIndex;
 //右侧浮动框
 @property (nonatomic, strong) FXSelectIndexView *indexView;
+
+@property (nonatomic, strong) UISegmentedControl *segmentControl;
 
 - (void)updateContactList:(NSArray *)list;
 

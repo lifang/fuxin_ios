@@ -18,6 +18,7 @@
 
 @implementation FXMessageBoxCell
 
+@synthesize delegate = _delegate;
 @synthesize cellStyle = _cellStyle;
 @synthesize userPhotoView = _userPhotoView;
 @synthesize backgroundView = _backgroundView;
@@ -74,10 +75,6 @@
 }
 
 - (void)setSubviewsFrame {
-    if (_messageView) {
-        [_messageView removeFromSuperview];
-    }
-    _messageView = [FXTextFormat getContentViewWithMessage:_contents];
     CGSize size = _messageView.frame.size;
     CGFloat adjustHeight = 0;
     if (size.height < kMessageBoxHeightMin) {
@@ -107,7 +104,7 @@
             _userPhotoView.layer.masksToBounds = YES;
             
             _messageView.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, size.width, size.height);
-            _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 7, size.width + 20, size.height + 3);
+            _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
             
         }
@@ -119,7 +116,7 @@
             
             _messageView.frame = CGRectMake(320 - kSmallOffset - size.width - 14, kTimeLabelHeight - 5, size.width, size.height);
 
-            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 7, size.width + 20, size.height + 3);
+            _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
         }
             break;
@@ -132,11 +129,23 @@
         _messageView.frame = rect;
     }
     [self.contentView addSubview:_messageView];
-    _userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
 }
 
 - (void)setContents:(NSString *)content {
     _contents = content;
+    if (_messageView) {
+        [_messageView removeFromSuperview];
+    }
+    _messageView = [FXTextFormat getContentViewWithMessage:_contents];
+    [self setSubviewsFrame];
+}
+
+- (void)setImageData:(NSData *)data {
+    if (_messageView) {
+        [_messageView removeFromSuperview];
+        _messageView = nil;
+    }
+    _messageView = [FXTextFormat getContentViewWithImageData:data];
     [self setSubviewsFrame];
 }
 
@@ -154,8 +163,9 @@
 
 - (void)showContactDetail:(UITapGestureRecognizer *)tap {
     if (self.cellStyle == MessageCellStyleReceive) {
-        FXChatViewController *chatC = (FXChatViewController *)self.superview.superview.superview.nextResponder;
-        [chatC addDetailView];
+        if (_delegate && [_delegate respondsToSelector:@selector(touchContact:)]) {
+            [_delegate touchContact:tap];
+        }
     }
 }
 

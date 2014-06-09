@@ -9,6 +9,7 @@
 #import "FXUserSettingController.h"
 #import "FXRequestDataFormat.h"
 #import "FXResizeImage.h"
+#import "FXArchiverHelper.h"
 
 #define kTitleTag       200
 #define kContentTag     201
@@ -59,36 +60,63 @@
 #pragma mark - 重写
 
 - (void)rightBarTouched:(id)sender {
-    Profile *modify = [[[[[[[[[[[[[Profile builder]
-                                  setUserId:_userInfo.userId]
-                                 setName:_userInfo.name]
-                                setNickName:_nameField.text]
-                               setGender:_userInfo.gender]
-                              setMobilePhoneNum:_userInfo.mobilePhoneNum]
-                             setEmail:_userInfo.email]
-                            setBirthday:_userInfo.birthday]
-                           setTileUrl:_userInfo.tileUrl]
-                          setIsProvider:_userInfo.isProvider]
-                         setLisence:_userInfo.lisence]
-                        setPublishClassType:_userInfo.publishClassType] build];
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat changeProfileWithToken:delegate.token UserID:delegate.userID Profile:modify Finished:^(BOOL success, NSData *response) {
+    [FXRequestDataFormat changeProfileWithToken:delegate.token
+                                         UserID:delegate.userID
+                                      Signature:nil
+                                          Tiles:UIImagePNGRepresentation(_photoView.image)
+                                    ContentType:@"png"
+                                       NickName:_nameField.text
+                                       Finished:^(BOOL success, NSData *response) {
+        NSString *info = @"";
         if (success) {
             //请求成功
             ChangeProfileResponse *resp = [ChangeProfileResponse parseFromData:response];
-            NSLog(@"修改个人信息 =%d %@",resp.isSucceed,resp.profile.nickName);
             if (resp.isSucceed) {
                 //修改成功
-            
+                [self saveUserInfoWithNewProfile:resp.profile];
+                info = @"修改个人信息成功";
             }
             else {
                 //修改失败
+                info = @"修改个人信息失败";
             }
         }
         else {
             //请求失败
         }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:info
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
     }];
+}
+
+- (void)saveUserInfoWithNewProfile:(Profile *)profile {
+    FXUserModel *user = [[FXUserModel alloc] init];
+    user.userID = [NSNumber numberWithInt:profile.userId];
+    user.name = profile.name;
+    user.nickName = profile.nickName;
+    user.genderType = [NSNumber numberWithInt:profile.gender];
+    user.mobilePhoneNum = profile.mobilePhoneNum;
+    user.email = profile.email;
+    user.birthday = profile.birthday;
+    user.isProvider = [NSNumber numberWithBool:profile.isProvider];
+    user.lisence = profile.lisence;
+    user.tileURL = profile.tileUrl;
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        user.tile = UIImagePNGRepresentation(_photoView.image);
+        [FXArchiverHelper saveUserInfo:user];
+        delegate.user = user;
+        dispatch_async(dispatch_get_main_queue(), ^{
+           //更新用户信息通知
+            [[NSNotificationCenter defaultCenter] postNotificationName:UpdateUserInfoNotification object:nil];
+        });
+    });
+    
 }
 
 #pragma mark - UI
@@ -118,7 +146,12 @@
     _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(260, 10, 40, 40)];
     _photoView.layer.cornerRadius = _photoView.frame.size.height / 2;
     _photoView.layer.masksToBounds = YES;
-    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+    if (_userInfo.tile && [_userInfo.tile length] > 1) {
+        _photoView.image = [UIImage imageWithData:_userInfo.tile];
+    }
+    else {
+        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+    }
     _photoView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectPhoto:)];
     [_photoView addGestureRecognizer:tap];
@@ -141,7 +174,7 @@
     _nameField.font = [UIFont systemFontOfSize:14];
     _nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _nameField.textAlignment = NSTextAlignmentRight;
-    _nameField.text = _userInfo.name;
+    _nameField.text = _userInfo.nickName;
     _nameField.returnKeyType = UIReturnKeyDone;
     _nameField.delegate = self;
     [headerView addSubview:_nameField];
@@ -207,7 +240,6 @@
             break;
         case 1: {
             title.text = @"课程类别：";
-            content.text = _userInfo.publishClassType;
         }
             break;
         case 2: {
