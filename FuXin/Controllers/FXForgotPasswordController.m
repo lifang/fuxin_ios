@@ -12,8 +12,8 @@
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
-#define kReSendTime 20  //重发验证码间隔
-#define kIdentifyingCodeTime 20   //验证码有效期
+#define kReSendTime 300  //重发验证码间隔
+#define kIdentifyingCodeTime 300   //验证码有效期
 
 @interface FXForgotPasswordController ()
 //控件区
@@ -205,13 +205,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //同时调整table尺寸
-//    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
     return kCell_Height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.backgroundColor = tableView.backgroundColor;
@@ -220,13 +219,13 @@
     switch (indexPath.row) {
         case 0:  //密码
             if ([self cell:cell isNotSuperOfView:self.passwordTextField]) {
-                self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
+                self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width * 3 / 4 - 20 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTextField];
             }
             break;
         case 1:   //确认密码
             if ([self cell:cell isNotSuperOfView:self.confirmPasswordTextField]) {
-                self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
+                self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width * 3 / 4 - 20 ,cellSize.height};
                 [cell.contentView addSubview:self.confirmPasswordTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.passwordTipLabel]) { //密码输入提示
@@ -332,6 +331,19 @@
         }
         return NO;
     }
+    
+    //密码长度限制
+    if (textField == self.passwordTextField || textField == self.confirmPasswordTextField) {
+        if ([string isEqualToString:@""]) {
+            return YES;
+        }else{
+            if (textField.text.length + string.length > 20) {
+                return NO;
+            }
+        }
+        
+    }
+    
     
     if (textField == self.phoneNumberTextField) {  //电话号码特殊格式
         if ([string isEqualToString:@""]) {
@@ -616,7 +628,7 @@
             }
         }
         
-        if ([phoneNumberText rangeOfString:@"^[0-9]{11}$" options:NSRegularExpressionSearch].length > 0) { //电话号码格式正确
+        if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
             self.alertLabel.text = @"";
             [self changeRewriteButtonStatus:YES];
             
@@ -715,6 +727,11 @@
 }
 
 #pragma mark Notifications
+- (BOOL)isvalidatePhone:(NSString *)phone{
+    NSString *phoneRegex = @"^[1][34578][0-9]{9}$";
+    NSPredicate *phoneTest = [NSPredicate predicateWithFormat:@"SELF MATCHES%@",phoneRegex];
+    return [phoneTest evaluateWithObject:phone];
+}
 
 
 @end
