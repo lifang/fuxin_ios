@@ -680,9 +680,12 @@
                                                 RegisterResponse *resp = [RegisterResponse parseFromData:response];
                                                 if (resp.isSucceed) {
                                                     //注册成功
+                                                    [FXAppDelegate shareFXAppDelegate].token = resp.token;
+                                                    
+                                                    
                                                     NSLog(@"register succeed");
                                                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                                                        message:@"账号注册成功！"
+                                                                                                        message:@"账号注册成功！确定后自动登录!"
                                                                                                        delegate:self
                                                                                               cancelButtonTitle:@"确定"
                                                                                               otherButtonTitles:nil];
@@ -716,6 +719,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     [self.navigationController popViewControllerAnimated:YES];
+    [[FXAppDelegate shareFXAppDelegate].shareRootViewContorller showMainViewController];
 }
 
 #pragma mark timer触发
