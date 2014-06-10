@@ -40,6 +40,14 @@ static NSString *searchIdentifer = @"SI";
     _resultArray = [[NSMutableArray alloc] init];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

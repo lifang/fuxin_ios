@@ -64,7 +64,16 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"blockedContacts"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"blockedContacts"];
 }
 
 - (void)didReceiveMemoryWarning

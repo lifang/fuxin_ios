@@ -188,7 +188,6 @@
 		9341571F193DBE1700289EE4 /* FXBlockedContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9341571E193DBE1700289EE4 /* FXBlockedContactCell.m */; };
 		93415722193DC64100289EE4 /* FXBlockedContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93415721193DC64100289EE4 /* FXBlockedContactsController.m */; };
 		9354A3CB193470E30032D92D /* FXUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 9354A3CA193470E30032D92D /* FXUtility.m */; };
-		937EDC0A1945B494008C5623 /* libBaiduMobStat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC091945B494008C5623 /* libBaiduMobStat.a */; };
 		937EDC251945B4BF008C5623 /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC0E1945B4BE008C5623 /* CDataScanner.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		937EDC261945B4BF008C5623 /* CFilteringJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC111945B4BE008C5623 /* CFilteringJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		937EDC271945B4BF008C5623 /* CJSONDeserializer_BlocksExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 937EDC131945B4BE008C5623 /* CJSONDeserializer_BlocksExtensions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -203,6 +202,9 @@
 		937EDC321945B5EF008C5623 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC311945B5EF008C5623 /* CoreLocation.framework */; };
 		937EDC341945B60A008C5623 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC331945B60A008C5623 /* libstdc++.dylib */; };
 		937EDC361945B623008C5623 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC351945B623008C5623 /* CoreTelephony.framework */; };
+		937EDC401945D143008C5623 /* libBaiduMobStat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC3F1945D143008C5623 /* libBaiduMobStat.a */; };
+		937EDC411945D143008C5623 /* libBaiduMobStat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 937EDC3F1945D143008C5623 /* libBaiduMobStat.a */; };
+		938A38991946968F00DBA0E4 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 938A38981946968F00DBA0E4 /* AdSupport.framework */; };
 		93AA53F0193078F00029E608 /* FXForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93AA53EE193078F00029E608 /* FXForgotPasswordController.m */; };
 		93AA53F1193078F00029E608 /* FXForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */; };
 		93C8C5B9193EB5290059812C /* FXBlockedContactInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8C5B8193EB5290059812C /* FXBlockedContactInfoView.m */; };
@@ -516,7 +518,6 @@
 		93415721193DC64100289EE4 /* FXBlockedContactsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FXBlockedContactsController.m; path = ../AddressList/FXBlockedContactsController.m; sourceTree = "<group>"; };
 		9354A3C9193470E30032D92D /* FXUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXUtility.h; sourceTree = "<group>"; };
 		9354A3CA193470E30032D92D /* FXUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXUtility.m; sourceTree = "<group>"; };
-		937EDC091945B494008C5623 /* libBaiduMobStat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduMobStat.a; sourceTree = "<group>"; };
 		937EDC0B1945B4A4008C5623 /* BaiduMobStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaiduMobStat.h; sourceTree = "<group>"; };
 		937EDC0D1945B4BE008C5623 /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
 		937EDC0E1945B4BE008C5623 /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
@@ -543,6 +544,8 @@
 		937EDC311945B5EF008C5623 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		937EDC331945B60A008C5623 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		937EDC351945B623008C5623 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		937EDC3F1945D143008C5623 /* libBaiduMobStat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBaiduMobStat.a; sourceTree = "<group>"; };
+		938A38981946968F00DBA0E4 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
@@ -589,6 +592,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				938A38991946968F00DBA0E4 /* AdSupport.framework in Frameworks */,
 				937EDC361945B623008C5623 /* CoreTelephony.framework in Frameworks */,
 				937EDC341945B60A008C5623 /* libstdc++.dylib in Frameworks */,
 				937EDC321945B5EF008C5623 /* CoreLocation.framework in Frameworks */,
@@ -597,10 +601,10 @@
 				77FC8A1A192F192200FFFCDB /* libz.1.2.5.dylib in Frameworks */,
 				77FC8A18192F191A00FFFCDB /* CFNetwork.framework in Frameworks */,
 				77FC8A16192F191300FFFCDB /* MobileCoreServices.framework in Frameworks */,
+				937EDC401945D143008C5623 /* libBaiduMobStat.a in Frameworks */,
 				93EC32E8192EFBDC00D0DE49 /* libsqlite3.0.dylib in Frameworks */,
 				77862772192313B9009AF6E6 /* CoreGraphics.framework in Frameworks */,
 				77862774192313B9009AF6E6 /* UIKit.framework in Frameworks */,
-				937EDC0A1945B494008C5623 /* libBaiduMobStat.a in Frameworks */,
 				77862770192313B9009AF6E6 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -611,6 +615,7 @@
 			files = (
 				77862789192313B9009AF6E6 /* XCTest.framework in Frameworks */,
 				7786278B192313B9009AF6E6 /* UIKit.framework in Frameworks */,
+				937EDC411945D143008C5623 /* libBaiduMobStat.a in Frameworks */,
 				7786278A192313B9009AF6E6 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,6 +647,7 @@
 			children = (
 				937EDC0C1945B4BE008C5623 /* TouchJSON */,
 				937EDC0B1945B4A4008C5623 /* BaiduMobStat.h */,
+				937EDC3F1945D143008C5623 /* libBaiduMobStat.a */,
 				77CB6F03192F682E00936F7F /* ASIHTTPRequest */,
 				7702C7C8192B4D1D0015A178 /* KxMenu */,
 				77FC8A24192F352B00FFFCDB /* GTMBase64 */,
@@ -866,11 +872,11 @@
 		7786276E192313B9009AF6E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				938A38981946968F00DBA0E4 /* AdSupport.framework */,
 				937EDC351945B623008C5623 /* CoreTelephony.framework */,
 				937EDC331945B60A008C5623 /* libstdc++.dylib */,
 				937EDC311945B5EF008C5623 /* CoreLocation.framework */,
 				937EDC2F1945B5E3008C5623 /* Security.framework */,
-				937EDC091945B494008C5623 /* libBaiduMobStat.a */,
 				77FC8A1B192F194200FFFCDB /* SystemConfiguration.framework */,
 				77FC8A19192F192200FFFCDB /* libz.1.2.5.dylib */,
 				77FC8A17192F191A00FFFCDB /* CFNetwork.framework */,
@@ -1643,12 +1649,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FuXin/Library",
 				);
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8886F8BB-85C7-4C67-BDFF-9AD958A3CBC7";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1666,11 +1673,13 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/FuXin/Library",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "8886F8BB-85C7-4C67-BDFF-9AD958A3CBC7";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1691,6 +1700,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "FuXinTests/FuXinTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FuXin/Library",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -1709,6 +1722,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FuXin/FuXin-Prefix.pch";
 				INFOPLIST_FILE = "FuXinTests/FuXinTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/FuXin/Library",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;

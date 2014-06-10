@@ -239,6 +239,14 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"changePassword"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"changePassword"];
+}
 - (void)back:(id)sender{
     [self.inputAlertTimer invalidate];
     [self.reSendTimer invalidate];

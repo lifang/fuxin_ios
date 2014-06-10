@@ -7,7 +7,8 @@
 //
 
 #import "FXAppDelegate.h"
-#import "BaiduMobStat.h"
+#import <AdSupport/ASIdentifierManager.h>
+
 static FXLoginController      *s_loginController = nil;
 static UINavigationController *s_loginNavController = nil;
 
@@ -62,6 +63,9 @@ static UINavigationController *s_loginNavController = nil;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //百度统计
+    [self initBaiduStats];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -69,6 +73,8 @@ static UINavigationController *s_loginNavController = nil;
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    
     return YES;
 }
 
@@ -189,7 +195,23 @@ static UINavigationController *s_loginNavController = nil;
 
 #pragma mark 百度
 - (void)initBaiduStats{
-//    BaiduMobStat *stat = [BaiduMobStat defaultStat];
+    BaiduMobStat *statTracker = [BaiduMobStat defaultStat];
+    statTracker.enableExceptionLog = YES; // 是否允许截获并发送崩溃信息，请设置YES或者NO
+//    statTracker.channelId = @"Cydia";//设置您的app的发布渠道
+    statTracker.logStrategy = BaiduMobStatLogStrategyAppLaunch;//根据开发者设定的时间间隔接口发送 也可以使用启动时发送策略
+    statTracker.enableDebugOn = YES; //打开调试模式，发布时请去除此行代码或者设置为False即可。
+    statTracker.logSendInterval = 1; //为1时表示发送日志的时间间隔为1小时,只有 statTracker.logStrategy = BaiduMobStatLogStrategyAppLaunch这时才生效。
+    statTracker.logSendWifiOnly = NO; //是否仅在WIfi情况下发送日志数据
+    statTracker.sessionResumeInterval = 30;//设置应用进入后台再回到前台为同一次session的间隔时间[0~600s],超过600s则设为600s，默认为30s
+    
+    NSString *adId = @"";
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0f){
+        adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    }
+    
+    statTracker.adid = adId;
+    
+    [statTracker startWithAppId:@"b83d3d1e40"];//设置您在mtj网站上添加的app的appkey
 }
 
 @end

@@ -55,6 +55,14 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"setting"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"setting"];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
