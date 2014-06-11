@@ -83,7 +83,7 @@
         NSLog(@"email = %@",model.email);
         NSLog(@"birth = %@",model.birthday);
         NSLog(@"url = %@",model.tileURL);
-        NSLog(@"tile = %d",[model.tile length]);
+        NSLog(@"tile = %lu",(unsigned long)[model.tile length]);
         NSLog(@"pro = %@",model.isProvider);
         NSLog(@"lis = %@",model.lisence);
     }

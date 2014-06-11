@@ -74,7 +74,7 @@
                 //文字
                 for (int j = 0; j < [string length]; j++) {
                     NSString *subString = [string substringWithRange:NSMakeRange(j, 1)];
-                    if (dx >= kMessageBoxWigthMax - 8) {
+                    if (dx >= kMessageBoxWigthMax - 10) {
                         dy += kFaceSide;
                         dx = 0;
                         x = kMessageBoxWigthMax;
@@ -102,6 +102,10 @@
 + (UIView *)getContentViewWithImageData:(NSData *)data {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectZero];
     UIImage *content = [UIImage imageWithData:data];
+    //下载的数据不是图片返回nil
+    if (!content) {
+        return nil;
+    }
     UIImageView *imgV = [[UIImageView alloc] initWithImage:content];
     CGRect rect = imgV.frame;
     rect.size = [[self class] resizeWithSize:imgV.frame.size];

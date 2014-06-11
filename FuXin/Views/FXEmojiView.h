@@ -27,4 +27,6 @@
 
 - (void)touchEmojiButton:(UIButton *)sender;
 
+- (void)sendMessage;
+
 @end

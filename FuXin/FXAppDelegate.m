@@ -27,6 +27,7 @@ static UINavigationController *s_loginNavController = nil;
 @synthesize contactTimeStamp = _contactTimeStamp;
 @synthesize isChatting = _isChatting;
 @synthesize user = _user;
+@synthesize push_deviceToken = _push_deviceToken;
 
 + (FXAppDelegate *)shareFXAppDelegate {
     return [[UIApplication sharedApplication] delegate];
@@ -49,8 +50,9 @@ static UINavigationController *s_loginNavController = nil;
 //设置导航栏颜色
 + (void)setNavigationBarTinColor:(UINavigationController *)nav {
     UIColor *color = kColor(209, 27, 33, 1);
+    [nav.navigationBar setBackgroundImage:[UIImage imageNamed:@"red.png"] forBarMetrics:UIBarMetricsDefault];
     if (kDeviceVersion >= 7.0) {
-        nav.navigationBar.barTintColor = color;
+//        nav.navigationBar.barTintColor = color;
         [[UINavigationBar appearance] setTintColor:[UIColor blackColor]];
     }
     else {
@@ -69,6 +71,9 @@ static UINavigationController *s_loginNavController = nil;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge)];
+    
     _rootController = [[FXRootViewController alloc] init];
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];
@@ -77,6 +82,24 @@ static UINavigationController *s_loginNavController = nil;
     
     return YES;
 }
+
+#pragma mark - 推送
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSLog(@"deviceToken = %@",[NSString stringWithFormat:@"%@",deviceToken]);
+    self.push_deviceToken = [[[[deviceToken description]
+                               stringByReplacingOccurrencesOfString:@"<" withString:@""]stringByReplacingOccurrencesOfString:@">" withString:@""]stringByReplacingOccurrencesOfString:@" " withString:@""];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"notification error = %@",error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"%@",userInfo);
+}
+
+#pragma mark - life style
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
@@ -183,6 +206,7 @@ static UINavigationController *s_loginNavController = nil;
         [_progressHUDView addSubview:indicator];
         
         UILabel *label = [[UILabel alloc] init];
+        label.backgroundColor = [UIColor clearColor];
         label.frame = CGRectMake(2, 52, 56, 18);
         label.text = @"加载中..";
         label.textColor = [UIColor whiteColor];

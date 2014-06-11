@@ -6,11 +6,9 @@
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "FXListCell.h"
 
-@interface FXAddressListCell : UITableViewCell
-
-@property (nonatomic, strong) UIImageView *photoView;
+@interface FXAddressListCell : FXListCell
 
 @property (nonatomic, strong) UILabel *nameLabel;
 

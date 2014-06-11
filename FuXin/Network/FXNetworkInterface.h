@@ -10,19 +10,22 @@
 #define kRequestType      @"type"
 #define kRequestPostData  @"postdata"
 
+//https://118.242.18.189
+
 //Authentication
 /*
  info:登入
  type:POST
  pram:authenticationRequest
  */
-static NSString *AuthenticationIn = @"https://118.242.18.189/IMApi/api/Authentication";
+static NSString *AuthenticationIn = @"https://i.fuwu.com/IMApi/api/Authentication";
+
 /*
  info:登出
  type:PUT
  parm:unAuthenticationRequest
  */
-static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authentication";
+static NSString *AuthenticationOut = @"https://i.fuwu.com/IMApi/api/Authentication";
 
 //Password
 /*
@@ -30,14 +33,14 @@ static NSString *AuthenticationOut = @"https://118.242.18.189/IMApi/api/Authenti
  type:PUT
  parm:changePasswordRequest
  */
-static NSString *ChangePassword = @"https://118.242.18.189/IMApi/api/Password";
+static NSString *ChangePassword = @"https://i.fuwu.com/IMApi/api/Password";
 
 /*
  info:重置密码
  type:PUT
  parm:resetPasswordRequest
  */
-static NSString *ResetPassword = @"https://118.242.18.189/IMApi/api/ResetPassword";
+static NSString *ResetPassword = @"https://i.fuwu.com/IMApi/api/ResetPassword";
 
 //Contact
 /*
@@ -45,13 +48,13 @@ static NSString *ResetPassword = @"https://118.242.18.189/IMApi/api/ResetPasswor
  type:POST
  parm:contactRequest
  */
-static NSString *GetContactList = @"https://118.242.18.189/IMApi/api/Contact";
+static NSString *GetContactList = @"https://i.fuwu.com/IMApi/api/Contact";
 /*
  info:屏蔽联系人
  type:PUT
  parm:blockContactRequest
  */
-static NSString *BlockContact = @"https://118.242.18.189/IMApi/api/Contact";
+static NSString *BlockContact = @"https://i.fuwu.com/IMApi/api/Contact";
 
 //Message
 /*
@@ -59,13 +62,13 @@ static NSString *BlockContact = @"https://118.242.18.189/IMApi/api/Contact";
  type:POST
  parm:messageRequest
  */
-static NSString *GetMessage = @"https://118.242.18.189/IMApi/api/Message";
+static NSString *GetMessage = @"https://i.fuwu.com/IMApi/api/Message";
 /*
  info:发送聊天消息
  type:PUT
  parm:sendMessageRequest
  */
-static NSString *SendMessage = @"https://118.242.18.189/IMApi/api/Message";
+static NSString *SendMessage = @"https://i.fuwu.com/IMApi/api/Message";
 
 //Profile
 /*
@@ -73,13 +76,13 @@ static NSString *SendMessage = @"https://118.242.18.189/IMApi/api/Message";
  type:POST
  parm:profileRequest
  */
-static NSString *GetProfile = @"https://118.242.18.189/IMApi/api/Profile";
+static NSString *GetProfile = @"https://i.fuwu.com/IMApi/api/Profile";
 /*
  info:获取个人信息
  type:PUT
  parm:profileRequest
  */
-static NSString *ModifyProfile = @"https://118.242.18.189/IMApi/api/Profile";
+static NSString *ModifyProfile = @"https://i.fuwu.com/IMApi/api/Profile";
 
 //ContactDetail
 /*
@@ -88,13 +91,13 @@ static NSString *ModifyProfile = @"https://118.242.18.189/IMApi/api/Profile";
  parm:contactDetailRequest
  id
  */
-static NSString *GetContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail/{id}";
+static NSString *GetContactDetail = @"https://i.fuwu.com/IMApi/api/ContactDetail/{id}";
 /*
  info:修改联系人备注
  type:PUT
  parm:changeContactDetailRequest
  */
-static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApi/api/ContactDetail";
+static NSString *ModifyContactDetail = @"https://i.fuwu.com/IMApi/api/ContactDetail";
 
 //Register
 /*
@@ -102,7 +105,7 @@ static NSString *ModifyContactDetail = @"https://118.242.18.189/IMApi/api/Contac
  type:POST
  parm:registerRequest
  */
-static NSString *Regist = @"https://118.242.18.189/IMApi/api/Register/";
+static NSString *Regist = @"https://i.fuwu.com/IMApi/api/Register/";
 
 //ValidateCode
 /*
@@ -110,8 +113,9 @@ static NSString *Regist = @"https://118.242.18.189/IMApi/api/Register/";
  type:POST
  parm:validatecodeRequest
  */
-static NSString *Validate = @"https://118.242.18.189/IMApi/api/ValidateCode";
+static NSString *Validate = @"https://i.fuwu.com/IMApi/api/ValidateCode";
 
+static
 
 @interface FXNetworkInterface : NSObject
 

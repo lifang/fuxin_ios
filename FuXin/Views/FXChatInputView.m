@@ -93,7 +93,6 @@
     if (_inputDelegate && [_inputDelegate respondsToSelector:@selector(getInputText:)]) {
         [_inputDelegate getInputText:_inputView.text];
     }
-    _inputView.text = @"";
 }
 
 #pragma mark - UITextViewDelegate

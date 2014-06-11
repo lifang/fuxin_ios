@@ -56,7 +56,6 @@ static CGFloat iOS7_Space = 14;
     }
     CGFloat space = [self getSpaceWithHeight:height allIndex:allIndex];
     CGFloat offset = -(index - (toIndex + 1)) * space;
-    NSLog(@"%ld,%ld,%ld,%g",(long)_currentIndex,(long)allIndex,toIndex,offset);
     [self indexViewAnimaitonWithOffset:offset];
     _currentIndex = toIndex + 1;
 }

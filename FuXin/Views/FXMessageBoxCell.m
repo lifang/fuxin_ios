@@ -27,6 +27,7 @@
 @synthesize showTime = _showTime;
 @synthesize contents = _contents;
 @synthesize timeBackView = _timeBackView;
+@synthesize imageURL = _imageURL;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -146,6 +147,17 @@
         _messageView = nil;
     }
     _messageView = [FXTextFormat getContentViewWithImageData:data];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchPicture)];
+    [_messageView addGestureRecognizer:tap];
+    [self setSubviewsFrame];
+}
+
+- (void)setNullView {
+    if (_messageView) {
+        [_messageView removeFromSuperview];
+        _messageView = nil;
+    }
+    _messageView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 80)];
     [self setSubviewsFrame];
 }
 
@@ -160,6 +172,14 @@
 }
 
 #pragma mark - 手势
+
+- (void)touchPicture {
+    if (self.cellStyle == MessageCellStyleReceive) {
+        if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithURL:)]) {
+            [_delegate loadLargeImageWithURL:_imageURL];
+        }
+    }
+}
 
 - (void)showContactDetail:(UITapGestureRecognizer *)tap {
     if (self.cellStyle == MessageCellStyleReceive) {

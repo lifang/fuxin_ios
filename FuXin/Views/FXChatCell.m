@@ -10,7 +10,6 @@
 
 @implementation FXChatCell
 
-@synthesize photoView = _photoView;
 @synthesize numberLabel = _numberLabel;
 @synthesize nameLabel = _nameLabel;
 @synthesize timeLabel = _timeLabel;
@@ -39,10 +38,10 @@
 }
 
 - (void)initUI {
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 34, 34)];
-    _photoView.layer.cornerRadius = _photoView.bounds.size.width / 2;
-    _photoView.layer.masksToBounds = YES;
-    [self.contentView addSubview:_photoView];
+    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 34, 34)];
+    self.photoView.layer.cornerRadius = self.photoView.bounds.size.width / 2;
+    self.photoView.layer.masksToBounds = YES;
+    [self.contentView addSubview:self.photoView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 5, 150, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];

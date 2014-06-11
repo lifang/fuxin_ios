@@ -42,13 +42,13 @@
     [request setRequestMethod:methodType];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setPostBody:postData];
-    [request setValidatesSecureCertificate:NO];
+//    [request setValidatesSecureCertificate:NO];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
 
     __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
-//        NSLog(@"success = %@",[wRequest responseString]);
+        NSLog(@"success");
         NSString *UTF8String = [wRequest responseString];
         NSData *PBData = [[self class] decodeResponseDataWithString:UTF8String];
         result(YES, PBData);

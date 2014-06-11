@@ -10,7 +10,6 @@
 
 @implementation FXAddressListCell
 
-@synthesize photoView = _photoView;
 @synthesize nameLabel = _nameLabel;
 @synthesize relationView1 = _relationView1;
 @synthesize relationView2 = _relationView2;
@@ -38,11 +37,11 @@
 }
 
 - (void)initUI {
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 34, 34)];
-    _photoView.layer.cornerRadius = _photoView.bounds.size.width / 2;
-    _photoView.layer.masksToBounds = YES;
-    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
-    [self.contentView addSubview:_photoView];
+    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 34, 34)];
+    self.photoView.layer.cornerRadius = self.photoView.bounds.size.width / 2;
+    self.photoView.layer.masksToBounds = YES;
+//    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+    [self.contentView addSubview:self.photoView];
     
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 12, 100, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];

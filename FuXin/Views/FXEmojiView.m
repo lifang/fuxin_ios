@@ -11,9 +11,10 @@
 #define kRow    3
 #define kNumber 7
 
-#define kFirstSpace  20
+#define kFirstSpace  25
 #define kBtnSide     30
-#define kSpace       10
+#define kHSpace      10      //水平间距
+#define kVSpace      15      //垂直间距
 
 @implementation FXEmojiView
 
@@ -49,7 +50,9 @@
     _emojiScrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:_emojiScrollView];
     
-    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 190, 320, 20)];
+    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 180, 320, 20)];
+    _pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    _pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
     _pageControl.userInteractionEnabled = NO;
     [self addSubview:_pageControl];
 }
@@ -77,8 +80,8 @@
         //列
         int number = indexInPage % kNumber;
         
-        CGFloat offsetX = pageOffsetX + number * (kSpace + kBtnSide) + kFirstSpace;
-        CGFloat offsetY = row * (kSpace + kBtnSide) + kFirstSpace;
+        CGFloat offsetX = pageOffsetX + number * (kHSpace + kBtnSide) + kFirstSpace;
+        CGFloat offsetY = row * (kVSpace + kBtnSide) + kFirstSpace;
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(offsetX, offsetY, kBtnSide, kBtnSide);
         button.tag = i;
@@ -93,11 +96,30 @@
     }
     _pageControl.numberOfPages = page;
     _pageControl.currentPage = _emojiScrollView.contentOffset.x / self.frame.size.width;
+    
+    for (int i = 0; i < page; i++) {
+        UIButton *send = [UIButton buttonWithType:UIButtonTypeCustom];
+        send.frame = CGRectMake(240 + i * 320, 160, 60, 30);
+        [send setBackgroundColor:kColor(0, 121, 255, 1)];
+        send.titleLabel.font = [UIFont systemFontOfSize:14];
+        [send setTitle:@"发送" forState:UIControlStateNormal];
+        [send setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [send setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+        [send addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
+        [_emojiScrollView addSubview:send];
+    }
 }
 
 - (IBAction)emojiSelected:(id)sender {
     if (_emojiDelegate && [_emojiDelegate respondsToSelector:@selector(touchEmojiButton:)]) {
         [_emojiDelegate touchEmojiButton:(UIButton *)sender];
+    }
+}
+
+- (IBAction)sendMessage:(UIButton *)sender {
+    [sender setBackgroundColor:kColor(0, 121, 255, 1)];
+    if (_emojiDelegate && [_emojiDelegate respondsToSelector:@selector(sendMessage)]) {
+        [_emojiDelegate sendMessage];
     }
 }
 

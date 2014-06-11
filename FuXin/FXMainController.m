@@ -11,6 +11,7 @@
 #import "LHLDBTools.h"
 #import "Models.pb.h"
 #import "FXTimeFormat.h"
+#import "FXFileHelper.h"
 
 @interface FXMainController ()
 
@@ -45,7 +46,7 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-//    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
+//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
     [self getMessageAll];
     [self getContactAll];
     [self showFirstData];
@@ -125,10 +126,19 @@
                     //获取消息成功
                     //保存时间戳
                     delegate.messageTimeStamp = resp.timeStamp;
+                    //保存时间戳到本地
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                        NSString *messageTimeStamp = [NSString stringWithFormat:@"%d_messageTimeStamp",delegate.userID];
+                        [defaults setObject:resp.timeStamp forKey:messageTimeStamp];
+                        [defaults synchronize];
+                    });
+                    
                     NSMutableDictionary *messageDict = [NSMutableDictionary dictionary];
                     for (int i = 0; i < [resp.messageListsList count]; i++) {
                         MessageList *list = [resp.messageListsList objectAtIndex:i];
                         NSArray *messages = list.messagesList;
+                        NSLog(@"消息%d",list.contactId);
                         [messageDict setObject:messages forKey:[NSString stringWithFormat:@"%d",list.contactId]];
                     }
                     [self DBSaveMessagesWithDictionary:messageDict];
@@ -157,7 +167,14 @@
             ContactResponse *resp = [ContactResponse parseFromData:response];
             if (resp.isSucceed) {
                 //保存时间戳
-                delegate.messageTimeStamp = resp.timeStamp;
+                delegate.contactTimeStamp = resp.timeStamp;
+                //保存时间戳到本地
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                    NSString *contactTimeStamp = [NSString stringWithFormat:@"%d_contactTimeStamp",delegate.userID];
+                    [defaults setObject:resp.timeStamp forKey:contactTimeStamp];
+                    [defaults synchronize];
+                });
                 //获取联系人成功
                 [self DBSaveMessageWithArray:resp.contactsList];
             }
@@ -231,7 +248,8 @@
                 break;
             }
         }
-        for (Message *message in messageList) {
+        for (int i = [messageList count] - 1; i >= 0; i--) {
+            Message *message = [messageList objectAtIndex:i];
             //聊天记录对象
             MessageModel *model = [[MessageModel alloc] init];
             model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
@@ -256,14 +274,18 @@
             //********************************************
             model.messageType = (ContentType)message.contentType;
             model.imageContent = message.binaryContent;
-            
             [recordsForDB addObject:model];
             
             //最后会话对象
             ConversationModel *conModel = [[ConversationModel alloc] init];
             conModel.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
             conModel.conversationLastCommunicateTime = message.sendTime;
-            conModel.conversationLastChat = message.content;
+            if (message.contentType == Message_ContentTypeText) {
+                conModel.conversationLastChat = message.content;
+            }
+            else {
+                conModel.conversationLastChat = @"[图片]";
+            }
             [lastForDB addObject:conModel];
         }
         //插入聊天记录表
@@ -298,7 +320,20 @@
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactSignature = contact.individualResume;
-        model.contactAvatarURL = contact.tileUrl;
+        if ([FXFileHelper isHeadImageExist:contact.tileUrl]) {
+            //若头像存在 说明未修改 直接保存
+            model.contactAvatarURL = contact.tileUrl;
+        }
+        else {
+            [LHLDBTools getAllContactsWithFinished:^(NSArray *contactList, NSString *error) {
+                for (ContactModel *oldC in contactList) {
+                    if ([oldC.contactID isEqualToString:model.contactID]) {
+                        //删除旧的头像
+                        [FXFileHelper removeAncientHeadImageIfExistWithName:model.contactAvatarURL];
+                    }
+                }
+            }];
+        }
         [arrayForDB addObject:model];
     }
     //插入联系人表

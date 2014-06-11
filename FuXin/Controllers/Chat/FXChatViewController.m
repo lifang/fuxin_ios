@@ -17,6 +17,8 @@
 #import "LHLDBTools.h"
 #import "FXTimeFormat.h"
 #import "Models.pb.h"
+#import "FXDetailImageView.h"
+#import "FXFileHelper.h"
 
 static NSString *MessageCellIdentifier = @"MCI";
 
@@ -88,7 +90,16 @@ static NSString *MessageCellIdentifier = @"MCI";
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addMessagesWhileChatting:) name:ChatUpdateMessageNotification object:nil];
-    self.title = _contact.contactNickname;
+    if (_contact.contactRemark && ![_contact.contactRemark isEqualToString:@""]) {
+        self.title = _contact.contactRemark;
+    }
+    else {
+        self.title = _contact.contactNickname;
+    }
+    
+    //删除未读标志
+    [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -338,7 +349,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     [LHLDBTools getLatestChattingRecordsWithContactID:_ID withFinished:^(NSArray *list, NSString *error) {
         [_dataItems addObjectsFromArray:list];
         [_chatTableView reloadData];
-        int indexCount = [_chatTableView numberOfRowsInSection:0];
+        NSInteger indexCount = [_chatTableView numberOfRowsInSection:0];
         if (indexCount > 0) {
             //滚动到最后行
             NSIndexPath *indexpath = [NSIndexPath indexPathForRow:[_chatTableView numberOfRowsInSection:0] - 1 inSection:0];
@@ -351,6 +362,10 @@ static NSString *MessageCellIdentifier = @"MCI";
 //正在聊天时获取数据加在数组最后
 - (void)addMessagesWhileChatting:(NSNotification *)notification {
     NSDictionary *dict = notification.userInfo;
+    for (NSString *key in dict) {
+        NSLog(@"key = %@,%d",key,[[dict objectForKey:key] count]);
+    }
+    BOOL hasMessage = NO;
     for (NSString *key in dict) {
         if ([key isEqualToString:_ID]) {
             //找到属于这个人得聊天记录
@@ -367,17 +382,23 @@ static NSString *MessageCellIdentifier = @"MCI";
                 model.messageType = (ContentType)message.contentType;
                 model.imageContent = message.binaryContent;
                 [recordsForDB addObject:model];
+                hasMessage = YES;
             }
             [_dataItems addObjectsFromArray:recordsForDB];
             break;
         }
     }
-    [_chatTableView reloadData];
-    int indexCount = [_chatTableView numberOfRowsInSection:0];
-    if (indexCount > 0) {
-        //滚动到最后行
-        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:[_chatTableView numberOfRowsInSection:0] - 1 inSection:0];
-        [_chatTableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    if (hasMessage) {
+        [_chatTableView reloadData];
+        NSInteger indexCount = [_chatTableView numberOfRowsInSection:0];
+        if (indexCount > 0 && hasMessage) {
+            //滚动到最后行
+            NSIndexPath *indexpath = [NSIndexPath indexPathForRow:[_chatTableView numberOfRowsInSection:0] - 1 inSection:0];
+            [_chatTableView scrollToRowAtIndexPath:indexpath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        }
+        //删除未读标志
+        [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
     }
 }
 
@@ -423,8 +444,13 @@ static NSString *MessageCellIdentifier = @"MCI";
     //最近对话表中加入此联系人
     ConversationModel *conv = [[ConversationModel alloc] init];
     conv.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
-    conv.conversationLastCommunicateTime = [FXTimeFormat nowDateString];
-    conv.conversationLastChat = message.content;
+    conv.conversationLastCommunicateTime = message.sendTime;
+    if (message.contentType == Message_ContentTypeText) {
+        conv.conversationLastChat = message.content;
+    }
+    else {
+        conv.conversationLastChat = @"[图片]";
+    }
     [LHLDBTools saveConversation:[NSArray arrayWithObject:conv] withFinished:^(BOOL finish) {
         
     }];
@@ -444,6 +470,33 @@ static NSString *MessageCellIdentifier = @"MCI";
                               setImageType:message.imageType]
                              setBinaryContent:message.binaryContent] build];
     return sendMessage;
+}
+
+#pragma mark - 下载聊天图片
+
+- (void)downloadImage:(NSString *)content forCell:(FXMessageBoxCell *)cell {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    NSString *urlString = [NSString stringWithFormat:@"%@&userId=%d&token=%@&width=216&height=144",content,delegate.userID,delegate.token];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    [request setValidatesSecureCertificate:NO];
+    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    [request startAsynchronous];
+    
+    __weak ASIHTTPRequest *wRequest = request;
+    [request setCompletionBlock:^{
+        [cell setImageData:[wRequest responseData]];
+//        NSIndexPath *path = [_chatTableView indexPathForCell:cell];
+//        [_chatTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+        [_chatTableView reloadData];
+        [FXFileHelper documentSaveImageData:[wRequest responseData] withName:content withPathType:PathForChatImage];
+    }];
+    [request setFailedBlock:^{
+        //下载失败，保存NO到此命名的文件，防止重复下载
+        NSData *data = [@"NO" dataUsingEncoding:NSUTF8StringEncoding];
+        [FXFileHelper documentSaveImageData:data withName:urlString withPathType:PathForChatImage];
+    }];
 }
 
 #pragma mark - UITableView
@@ -467,8 +520,14 @@ static NSString *MessageCellIdentifier = @"MCI";
     else {
         //接收
         cell.cellStyle = MessageCellStyleReceive;
-        cell.userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
         cell.delegate = self;
+        if ([FXFileHelper isHeadImageExist:_contact.contactAvatarURL]) {
+            NSData *imageData = [FXFileHelper headImageWithName:_contact.contactAvatarURL];
+            cell.userPhotoView.image = [UIImage imageWithData:imageData];
+        }
+        else {
+            cell.userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
+        }
     }
     cell.showTime = [message.messageShowTime boolValue];
     if (cell.showTime) {
@@ -480,7 +539,39 @@ static NSString *MessageCellIdentifier = @"MCI";
     }
     else {
         //图片消息
-        [cell setImageData:message.imageContent];
+        cell.contents = nil;
+        if (message.messageStatus <= 2) {
+            //发送的图片保存在数据库中
+            [cell setImageData:message.imageContent];
+        }
+        else {
+            //接收的图片保存在文件中
+            cell.imageURL = message.messageContent;
+            NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:message.messageContent];
+            if (imageData) {
+                //已保存此图
+                if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
+                    UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
+                    if (!view) {
+                        [cell setNullView];
+                    }
+                }
+                else {
+                    UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
+                    if (!view) {
+                        [cell setNullView];
+                    }
+                    else {
+                        [cell setImageData:[FXFileHelper chatImageAlreadyLoadWithName:message.messageContent]];
+                    }
+                }
+            }
+            else {
+                //未保存此图
+                [self downloadImage:message.messageContent forCell:cell];
+                [cell setNullView];
+            }
+        }
     }
     return cell;
 }
@@ -493,8 +584,31 @@ static NSString *MessageCellIdentifier = @"MCI";
         return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
     }
     else {
-        UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
-        return view.frame.size.height + kTimeLabelHeight + 20;
+        if (model.messageStatus <= 2) {
+            UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
+            return view.frame.size.height + kTimeLabelHeight + 20;
+        }
+        else {
+            //接收的图片保存在文件中
+            if ([FXFileHelper chatImageAlreadyLoadWithName:model.messageContent]) {
+                //已保存此图
+                NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:model.messageContent];
+                if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
+                    return 100 + kTimeLabelHeight + 20;
+                }
+                else {
+                    UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
+                    if (!view) {
+                        return 80 + kTimeLabelHeight;
+                    }
+                    return view.frame.size.height + kTimeLabelHeight + 20;
+                }
+            }
+            else {
+                //未保存此图
+                return 100 + kTimeLabelHeight + 20;
+            }
+        }
     }
 }
 
@@ -505,6 +619,18 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - 获取发送信息和键盘代理 
 #pragma mark - GetInputTextDelegate
 - (void)getInputText:(NSString *)intputText {
+    if ([intputText length] <= 0) {
+        return;
+    }
+    if ([intputText length] > 300) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:@"输入超过300字符上限,请分次发送！"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     Message *sendMessage = [[[[[[[Message builder]
                                  setUserId:delegate.userID]
@@ -513,6 +639,7 @@ static NSString *MessageCellIdentifier = @"MCI";
                               setContent:intputText]
                              setSendTime:nil] build];
     [self sendMessageWithMessage:sendMessage];
+    _inputView.inputView.text = @"";
 }
 
 - (void)sendMessageWithMessage:(Message *)message {
@@ -700,7 +827,6 @@ static NSString *MessageCellIdentifier = @"MCI";
     if ([UIImagePickerController isSourceTypeAvailable:sourceType]) {
         UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
         imagePickerController.delegate = self;
-//        imagePickerController.allowsEditing = YES;
         imagePickerController.sourceType = sourceType;
         [self presentViewController:imagePickerController animated:YES completion:nil];
     }
@@ -710,8 +836,8 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [picker dismissViewControllerAnimated:YES completion:nil];
-    UIImage *editImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    NSData *imageData = UIImagePNGRepresentation(editImage);
+    UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    NSData *imageData = UIImageJPEGRepresentation(originImage, 0.5);
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     Message *sendMessage = [[[[[[[[[Message builder]
                                    setUserId:delegate.userID]
@@ -719,10 +845,14 @@ static NSString *MessageCellIdentifier = @"MCI";
                                  setContentType:Message_ContentTypeImage]
                                 setContent:nil]
                                setSendTime:nil]
-                              setImageType:Message_ImageTypePng]
+                              setImageType:Message_ImageTypeJpg]
                              setBinaryContent:imageData] build];
     [self sendMessageWithMessage:sendMessage];
-    [self hiddenBottomView];
+    if (_showListView) {
+        _showListView = NO;
+        [FXKeyboardAnimation moveView:_inputView withHeight:kScreenHeight - 64 - kInputViewHeight];
+        [FXKeyboardAnimation moveView:_pictureListView withHeight:kScreenHeight - 64];
+    }
 }
 
 #pragma mark - EmojiDelegate
@@ -742,10 +872,49 @@ static NSString *MessageCellIdentifier = @"MCI";
     [_inputView.inputView scrollRangeToVisible:NSMakeRange(length, 1)];
 }
 
-#pragma mark - 点击联系人头像
+- (void)sendMessage {
+    [self getInputText:_inputView.inputView.text];
+    [self hiddenBottomView];
+}
+
+#pragma mark - cell delegate
 
 - (void)touchContact:(UIGestureRecognizer *)tap {
     [self addDetailView];
+}
+
+- (void)loadLargeImageWithURL:(NSString *)urlString {
+    FXDetailImageView *bigView = [[FXDetailImageView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight)];
+    [self.view.window addSubview:bigView];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    NSString *url = [NSString stringWithFormat:@"%@&userId=%d&token=%@",urlString,delegate.userID,delegate.token];
+    
+    if ([FXFileHelper chatImageAlreadyLoadWithName:url]) {
+        [bigView setBigImageWithData:[FXFileHelper chatImageAlreadyLoadWithName:url]];
+    }
+    else {
+        ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+        [request setRequestMethod:@"POST"];
+        [request addRequestHeader:@"Content-Type" value:@"application/json"];
+        [request setValidatesSecureCertificate:NO];
+        [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+        [request startAsynchronous];
+        
+        __block long long dataLength = 0;
+        [request setHeadersReceivedBlock:^(NSDictionary *headers) {
+            dataLength = [[headers objectForKey:@"Content-Length"] longLongValue];
+        }];
+        
+        __block NSMutableData *allData = [[NSMutableData alloc] init];
+        [request setDataReceivedBlock:^(NSData *data) {
+            [allData appendData:data];
+            [bigView.progressView setProgress:(double)[allData length] / dataLength animated:YES];
+        }];
+        [request setCompletionBlock:^{
+            [bigView setBigImageWithData:allData];
+            [FXFileHelper documentSaveImageData:allData withName:url withPathType:PathForChatImage];
+        }];
+    }
 }
 
 @end

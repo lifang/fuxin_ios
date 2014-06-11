@@ -500,6 +500,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
   BOOL hasIndividualResume_:1;
+  BOOL hasFuzhi_:1;
   BOOL hasGender_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
@@ -512,6 +513,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   NSString* tileUrl;
   NSString* lisence;
   NSString* individualResume;
+  NSString* fuzhi;
   Contact_GenderType gender;
 }
 - (BOOL) hasContactId;
@@ -526,6 +528,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
 - (BOOL) hasIndividualResume;
+- (BOOL) hasFuzhi;
 @property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
@@ -538,6 +541,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
 @property (readonly, retain) NSString* individualResume;
+@property (readonly, retain) NSString* fuzhi;
 
 + (Contact*) defaultInstance;
 - (Contact*) defaultInstance;
@@ -632,6 +636,11 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (NSString*) individualResume;
 - (Contact_Builder*) setIndividualResume:(NSString*) value;
 - (Contact_Builder*) clearIndividualResume;
+
+- (BOOL) hasFuzhi;
+- (NSString*) fuzhi;
+- (Contact_Builder*) setFuzhi:(NSString*) value;
+- (Contact_Builder*) clearFuzhi;
 @end
 
 @interface ContactRequest : PBGeneratedMessage {
@@ -1172,6 +1181,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   BOOL hasBirthday_:1;
   BOOL hasTileUrl_:1;
   BOOL hasLisence_:1;
+  BOOL hasFuzhi_:1;
   BOOL hasGender_:1;
   BOOL isProvider_:1;
   BOOL isAuthentication_:1;
@@ -1183,6 +1193,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   NSString* birthday;
   NSString* tileUrl;
   NSString* lisence;
+  NSString* fuzhi;
   Profile_GenderType gender;
 }
 - (BOOL) hasUserId;
@@ -1196,6 +1207,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) hasIsProvider;
 - (BOOL) hasLisence;
 - (BOOL) hasIsAuthentication;
+- (BOOL) hasFuzhi;
 @property (readonly) int32_t userId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* nickName;
@@ -1207,6 +1219,7 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) isProvider;
 @property (readonly, retain) NSString* lisence;
 - (BOOL) isAuthentication;
+@property (readonly, retain) NSString* fuzhi;
 
 + (Profile*) defaultInstance;
 - (Profile*) defaultInstance;
@@ -1296,6 +1309,11 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) isAuthentication;
 - (Profile_Builder*) setIsAuthentication:(BOOL) value;
 - (Profile_Builder*) clearIsAuthentication;
+
+- (BOOL) hasFuzhi;
+- (NSString*) fuzhi;
+- (Profile_Builder*) setFuzhi:(NSString*) value;
+- (Profile_Builder*) clearFuzhi;
 @end
 
 @interface ProfileRequest : PBGeneratedMessage {
