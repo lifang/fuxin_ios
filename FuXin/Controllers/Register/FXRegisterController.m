@@ -729,6 +729,7 @@
     NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
 //    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (usernameText == nil || usernameText.length < 3) {
         self.usernameIsOK = NO;
@@ -762,6 +763,14 @@
     }else{
         self.alertLabel.text = @"格式错误!";
         [self changeRewriteButtonStatus:NO];
+    }
+    
+    if ([identifyingCodeText rangeOfString:@"^[0-9]{6}$" options:NSRegularExpressionSearch].length > 0) {
+        self.alertIdentiyingLabel.text = @"";
+        self.identiCodeIsOK = YES;
+    }else{
+        self.alertIdentiyingLabel.text = @"请输入验证码";
+        self.identiCodeIsOK = NO;
     }
     
     [self changeDoneButtonStatus];
@@ -829,7 +838,7 @@
 
 //改变完成按钮的状态
 - (void)changeDoneButtonStatus{
-    if (self.serviceTextAgreed && self.passwordIsOK && self.usernameIsOK) {
+    if (self.serviceTextAgreed && self.passwordIsOK && self.usernameIsOK && self.identiCodeIsOK) {
         self.doneButton.enabled = YES;
         self.doneButton.backgroundColor = kColor(209, 27, 33, 1);
     }else{
