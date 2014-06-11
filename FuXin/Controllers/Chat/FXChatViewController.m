@@ -112,6 +112,16 @@ static NSString *MessageCellIdentifier = @"MCI";
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"chattingWithSomeone"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"chattingWithSomeone"];
+}
+
+
 #pragma mark - UI
 
 - (void)initUI {

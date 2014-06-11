@@ -24,7 +24,7 @@ static NSString *cellIdentifier = @"cell";
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        self.hidesBottomBarWhenPushed = YES;
     }
     return self;
 }
@@ -44,6 +44,8 @@ static NSString *cellIdentifier = @"cell";
     _tableView.delegate = self;
     [_tableView registerClass:[FXBlockedContactCell class] forCellReuseIdentifier:cellIdentifier];
     [self.view addSubview:_tableView];
+    
+    [self setLeftNavBarItemWithImageName:@"back.png"];
 }
 
 - (void)viewDidLoad
@@ -62,13 +64,26 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [self setLeftNavBarItemWithImageName:@"back.png"];
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"blockedContacts"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"blockedContacts"];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)back:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark UITableView datasource

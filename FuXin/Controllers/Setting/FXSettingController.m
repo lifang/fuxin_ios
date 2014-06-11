@@ -50,12 +50,21 @@
     [self initUI];
     [self getUserInfo];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfo:) name:UpdateUserInfoNotification object:nil];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"setting"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"setting"];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -359,6 +368,7 @@
             break;
         case 4: {
             FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
+//            self.tabBarController.tabBar.hidden = YES;
             [self.navigationController pushViewController:modifyPassword animated:YES];
         }
             break;

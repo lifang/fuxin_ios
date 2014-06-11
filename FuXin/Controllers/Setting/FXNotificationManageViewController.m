@@ -23,7 +23,7 @@ static NSString *cellIdentifier = @"cell";
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.hidesBottomBarWhenPushed = YES;
     }
     return self;
 }
@@ -63,10 +63,23 @@ static NSString *cellIdentifier = @"cell";
     self.tableView.frame = CGRectMake(kBlankSize, kBlankSize, 320 - 2 * kBlankSize, frame.size.height - kBlankSize);
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"notificationManage"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"notificationManage"];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)back:(id)sender{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark TableView Datasource

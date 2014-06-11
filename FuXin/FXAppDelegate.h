@@ -11,6 +11,7 @@
 #import "FXLoginController.h"
 #import "FXMainController.h"
 #import "FXUserModel.h"
+#import "BaiduMobStat.h"
 
 @interface FXAppDelegate : UIResponder <UIApplicationDelegate>
 

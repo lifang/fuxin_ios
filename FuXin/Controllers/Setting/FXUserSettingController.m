@@ -51,6 +51,15 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"userInfo"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"userInfo"];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

@@ -12,8 +12,8 @@
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
-#define kReSendTime 20  //重发验证码间隔
-#define kIdentifyingCodeTime 20   //验证码有效期
+#define kReSendTime 300  //重发验证码间隔
+#define kIdentifyingCodeTime 300   //验证码有效期
 
 @interface FXForgotPasswordController ()
 //控件区
@@ -76,7 +76,7 @@
     self.passwordIsOK = NO;
     self.identiCodeIsOK = NO;
     
-    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
+//    [self.tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     self.title = @"找回密码";
 }
 
@@ -84,7 +84,7 @@
 - (void)initViews{
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     for (UIView *subview in self.view.subviews){
-        if (subview == self.tableView || subview == self.doneButton) {
+        if (subview == self.tableView) {
             continue;
         }
         [subview removeFromSuperview];
@@ -150,15 +150,35 @@
     self.doneButton.backgroundColor = kColor(255, 0, 9, 1);
     [self.doneButton addTarget:self action:@selector(doneButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self changeDoneButtonStatus];
+    
+    UIView *footerView = [[UIView alloc] init];
+    footerView.frame = CGRectMake(0, 0, 320 - 2 * kBlank_Size, [UIScreen mainScreen].bounds.size.height - 6 * kCell_Height - 44 - 51);
+    [footerView addSubview:_doneButton];
+    footerView.backgroundColor = self.view.backgroundColor;
+    _doneButton.frame = (CGRect){0 ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
+    _doneButton.center = CGPointMake(footerView.frame.size.width / 2, footerView.frame.size.height - _doneButton.frame.size.height / 2 - 30);
+    _tableView.tableFooterView = footerView;
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, kBlank_Size)];
+    headerView.backgroundColor = self.view.backgroundColor;
+    _tableView.tableHeaderView = headerView;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    self.doneButton.frame = (CGRect){kBlank_Size ,self.view.frame.size.height - 40 - kCell_Height ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
     
     //table边缘有30像素的白边
-//    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.doneButton.frame.origin.y - 2 * kBlank_Size};
+    self.tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,self.view.frame.size.height};
     
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"forgotPassword"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"forgotPassword"];
 }
 
 - (void)back:(id)sender{
@@ -166,7 +186,6 @@
     [self.reSendTimer invalidate];
     [self.timingTimer invalidate];
     [self.identtifyingCodeTimer invalidate];
-    [self.tableView removeObserver:self forKeyPath:@"contentOffset"];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -186,13 +205,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //同时调整table尺寸
-    tableView.frame = (CGRect){kBlank_Size ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,6 * kCell_Height - 1};
     self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
     return kCell_Height;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     static NSString *identifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.backgroundColor = tableView.backgroundColor;
@@ -201,13 +219,13 @@
     switch (indexPath.row) {
         case 0:  //密码
             if ([self cell:cell isNotSuperOfView:self.passwordTextField]) {
-                self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
+                self.passwordTextField.frame = (CGRect){10 ,0 ,cellSize.width * 3 / 4 - 20 ,cellSize.height};
                 [cell.contentView addSubview:self.passwordTextField];
             }
             break;
         case 1:   //确认密码
             if ([self cell:cell isNotSuperOfView:self.confirmPasswordTextField]) {
-                self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width / 2 ,cellSize.height};
+                self.confirmPasswordTextField.frame = (CGRect){10 ,0 ,cellSize.width * 3 / 4 - 20 ,cellSize.height};
                 [cell.contentView addSubview:self.confirmPasswordTextField];
             }
             if ([self cell:cell isNotSuperOfView:self.passwordTipLabel]) { //密码输入提示
@@ -313,6 +331,19 @@
         }
         return NO;
     }
+    
+    //密码长度限制
+    if (textField == self.passwordTextField || textField == self.confirmPasswordTextField) {
+        if ([string isEqualToString:@""]) {
+            return YES;
+        }else{
+            if (textField.text.length + string.length > 20) {
+                return NO;
+            }
+        }
+        
+    }
+    
     
     if (textField == self.phoneNumberTextField) {  //电话号码特殊格式
         if ([string isEqualToString:@""]) {
@@ -597,7 +628,7 @@
             }
         }
         
-        if ([phoneNumberText rangeOfString:@"^[0-9]{11}$" options:NSRegularExpressionSearch].length > 0) { //电话号码格式正确
+        if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
             self.alertLabel.text = @"";
             [self changeRewriteButtonStatus:YES];
             
@@ -696,21 +727,11 @@
 }
 
 #pragma mark Notifications
-
-#pragma mark KVO
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    if ([keyPath isEqualToString:@"contentOffset"]) {
-        NSValue *oldOffset = [change objectForKey:@"old"];
-        NSValue *newOffset = [change objectForKey:@"new"];
-        CGPoint oldCoordinate;
-        CGPoint newCoordinate;
-        [oldOffset getValue:&oldCoordinate];
-        [newOffset getValue:&newCoordinate];
-        CGFloat distance = newCoordinate.y -  oldCoordinate.y;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.doneButton.center = CGPointMake(self.doneButton.center.x, self.doneButton.center.y - distance);
-        });
-    }
+- (BOOL)isvalidatePhone:(NSString *)phone{
+    NSString *phoneRegex = @"^[1][34578][0-9]{9}$";
+    NSPredicate *phoneTest = [NSPredicate predicateWithFormat:@"SELF MATCHES%@",phoneRegex];
+    return [phoneTest evaluateWithObject:phone];
 }
+
 
 @end

@@ -57,6 +57,15 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
     
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewStartWithName:@"serviceAgreement"];
+
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [[BaiduMobStat defaultStat] pageviewEndWithName:@"serviceAgreement"];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -75,7 +84,6 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
                               "</head> \n"
                               "<body>%@</body> \n"
                               "</html>", 10., @"UTF-8", @"#333333", str];
-        NSLog(@"%@",str);
         [_webView loadHTMLString:jsString baseURL:nil];
     }else{
         [FXAppDelegate errorAlert:@"请求出错,请稍后再试"];
