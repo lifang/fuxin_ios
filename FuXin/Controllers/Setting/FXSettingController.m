@@ -225,7 +225,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 8;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -283,11 +283,11 @@
         }
         return cell;
     }
-    else if (indexPath.row == 6) {
-        static NSString *thirdIdentifer = @"third";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:thirdIdentifer];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:thirdIdentifer];
+//    else if (indexPath.row == 6) {
+//        static NSString *thirdIdentifer = @"third";
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:thirdIdentifer];
+//        if (cell == nil) {
+//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:thirdIdentifer];
 //            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(180, 13, 20, 20)];
 //            backView.tag = kBackViewTag;
 //            backView.image = [UIImage imageNamed:@"messnum.png"];
@@ -300,11 +300,11 @@
 //            numberLabel.textColor = [UIColor whiteColor];
 //            numberLabel.textAlignment = NSTextAlignmentCenter;
 //            [backView addSubview:numberLabel];
-        }
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
-        cell.imageView.image = [UIImage imageNamed:@"setting6.png"];
-        cell.textLabel.text = @"系统公告管理";
-        
+//        }
+//        cell.textLabel.font = [UIFont systemFontOfSize:15];
+//        cell.imageView.image = [UIImage imageNamed:@"setting6.png"];
+//        cell.textLabel.text = @"系统公告管理";
+//        
 //        UIImageView *backView = (UIImageView *)[cell.contentView viewWithTag:kBackViewTag];
 //        UILabel *label = (UILabel *)[backView viewWithTag:kLabelTag];
 //        label.text = @"8";
@@ -320,9 +320,9 @@
 //                backView.hidden = YES;
 //            }
 //        }
-        return cell;
-    }
-    else if (indexPath.row == 7) {
+//        return cell;
+//    }
+    else if (indexPath.row == 6) {
         static NSString *forthIdentifer = @"forth";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:forthIdentifer];
         if (cell == nil) {
@@ -377,12 +377,12 @@
             [self.navigationController pushViewController:blockedContacts animated:YES];
         }
             break;
-        case 6:{
+//        case 6:{
 //            FXNotificationManageViewController *notificationManage = [[FXNotificationManageViewController alloc] init];
 //            [self.navigationController pushViewController:notificationManage animated:YES];
-        }
-            break;
-        case 7: {
+//        }
+//            break;
+        case 6: {
             //退出
             FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
             [FXRequestDataFormat authenticationOutWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {

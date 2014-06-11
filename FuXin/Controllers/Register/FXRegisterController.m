@@ -57,6 +57,10 @@
 //保存服务器返回的验证码
 @property (nonatomic, strong) NSString *validateString;
 
+//注册成功后保存的
+@property (nonatomic, assign) int32_t regUserID;
+@property (nonatomic, strong) NSString *regToken;
+
 @end
 
 @implementation FXRegisterController
@@ -667,38 +671,42 @@
     NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
     [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
     [FXAppDelegate addHUDForView:self.view animate:YES];
-    [FXRequestDataFormat registerWithPhoneNumber:phoneNumberString
-                                        Password:self.passwordTextField.text
-                                 PasswordConfirm:self.confirmPasswordTextField.text
-                                    ValidateCode:self.identifyingCodeTextField.text
-                                        Finished:^(BOOL success, NSData *response) {
-                                            [FXAppDelegate hideHUDForView:self.view animate:YES];
-                                            NSLog(@"res = %@",response);
-                                            [(UIButton *)sender setUserInteractionEnabled:YES];
-                                            if (success) {
-                                                //请求成功
-                                                RegisterResponse *resp = [RegisterResponse parseFromData:response];
-                                                if (resp.isSucceed) {
-                                                    //注册成功
-                                                    NSLog(@"register succeed");
-                                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                                                        message:@"账号注册成功！"
-                                                                                                       delegate:self
-                                                                                              cancelButtonTitle:@"确定"
-                                                                                              otherButtonTitles:nil];
-                                                    [alertView show];
-                                                }
-                                                else {
-                                                    //注册失败
-                                                    NSLog(@"register errorCode = %d",resp.errorCode);
-                                                    [FXAppDelegate errorAlert:[self showErrorInfoWithResetPasswordErrorType:resp.errorCode]];
-                                                }
-                                            }
-                                            else {
-                                                //请求失败
-                                                NSLog(@"request fail");
-                                            }
-                                        }];
+    [FXRequestDataFormat
+     registerWithPhoneNumber:phoneNumberString
+     Password:self.passwordTextField.text
+     PasswordConfirm:self.confirmPasswordTextField.text
+     ValidateCode:self.identifyingCodeTextField.text
+     Finished:^(BOOL success, NSData *response) {
+         [FXAppDelegate hideHUDForView:self.view animate:YES];
+         NSLog(@"res = %@",response);
+         [(UIButton *)sender setUserInteractionEnabled:YES];
+         if (success) {
+             //请求成功
+             RegisterResponse *resp = [RegisterResponse parseFromData:response];
+             if (resp.isSucceed) {
+                 //注册成功
+                 NSLog(@"register succeed");
+                 _regUserID = resp.userId;
+                 _regToken = resp.token;
+                 UIAlertView *alertView = [[UIAlertView alloc]
+                                           initWithTitle:@"提示信息"
+                                           message:@"账号注册成功！"
+                                           delegate:self
+                                           cancelButtonTitle:@"确定"
+                                           otherButtonTitles:nil];
+                 [alertView show];
+             }
+             else {
+                 //注册失败
+                 NSLog(@"register errorCode = %d",resp.errorCode);
+                 [FXAppDelegate errorAlert:[self showErrorInfoWithResetPasswordErrorType:resp.errorCode]];
+             }
+         }
+         else {
+             //请求失败
+             NSLog(@"request fail");
+         }
+     }];
 }
 
 //服务协议按钮
@@ -712,9 +720,13 @@
     
 }
 
-#pragma mark - UIAlertView 
+#pragma mark - UIAlertView
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if ([self.navigationController.childViewControllers count] > 0) {
+        FXLoginController *controller = [self.navigationController.childViewControllers objectAtIndex:0];
+        [controller loginSuccessWithUserID:_regUserID token:_regToken];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

@@ -480,7 +480,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:urlString]];
     [request setRequestMethod:@"POST"];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setValidatesSecureCertificate:NO];
+//    [request setValidatesSecureCertificate:NO];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
     
@@ -896,7 +896,7 @@ static NSString *MessageCellIdentifier = @"MCI";
         ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
         [request setRequestMethod:@"POST"];
         [request addRequestHeader:@"Content-Type" value:@"application/json"];
-        [request setValidatesSecureCertificate:NO];
+//        [request setValidatesSecureCertificate:NO];
         [request setDefaultResponseEncoding:NSUTF8StringEncoding];
         [request startAsynchronous];
         

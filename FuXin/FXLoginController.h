@@ -22,4 +22,6 @@
 //从本地读取此用户是否曾登录过
 - (void)getUserInfoWithLogin:(BOOL)needLogin;
 
+- (void)loginSuccessWithUserID:(int32_t)userid token:(NSString *)loginToken;
+
 @end

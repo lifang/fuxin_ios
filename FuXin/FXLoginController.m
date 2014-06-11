@@ -188,19 +188,7 @@
                  AuthenticationResponse *resp = [AuthenticationResponse parseFromData:response];
                  if (resp.isSucceed) {
                      //正确
-                     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-                     delegate.userID = resp.userId;
-                     delegate.token = resp.token;
-                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-                     NSString *messageTimeStamp = [NSString stringWithFormat:@"%d_messageTimeStamp",delegate.userID];
-                     NSString *contactTimeStamp = [NSString stringWithFormat:@"%d_contactTimeStamp",delegate.userID];
-                     delegate.messageTimeStamp = [defaults objectForKey:messageTimeStamp];
-                     delegate.contactTimeStamp = [defaults objectForKey:contactTimeStamp];
-                     //数据库操作保存id
-                     [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",resp.userId];
-                     
-                     FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
-                     [rootController showMainViewController];
+                     [self loginSuccessWithUserID:resp.userId token:resp.token];
                  }
                  else {
                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
@@ -217,6 +205,22 @@
              }
          }];
     }
+}
+
+- (void)loginSuccessWithUserID:(int32_t)userid token:(NSString *)loginToken {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    delegate.userID = userid;
+    delegate.token = loginToken;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *messageTimeStamp = [NSString stringWithFormat:@"%d_messageTimeStamp",delegate.userID];
+    NSString *contactTimeStamp = [NSString stringWithFormat:@"%d_contactTimeStamp",delegate.userID];
+    delegate.messageTimeStamp = [defaults objectForKey:messageTimeStamp];
+    delegate.contactTimeStamp = [defaults objectForKey:contactTimeStamp];
+    //数据库操作保存id
+    [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",userid];
+    
+    FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
+    [rootController showMainViewController];
 }
 
 - (IBAction)userRegister:(id)sender {
@@ -245,7 +249,9 @@
             _userView.userPhotoView.image = [UIImage imageWithData:user.tile];
         }
     }
-    _userView.userPhotoView.image = [UIImage imageNamed:@"user.png"];
+    else {
+        _userView.userPhotoView.image = [UIImage imageNamed:@"user.png"];
+    }
 }
 
 #pragma mark - UITextFieldDelegate 

@@ -115,7 +115,12 @@ static NSString *Regist = @"https://i.fuwu.com/IMApi/api/Register/";
  */
 static NSString *Validate = @"https://i.fuwu.com/IMApi/api/ValidateCode";
 
-static
+
+///*
+// info:推送相关
+// type:
+// */
+static NSString *ClientInfo = @"https://i.fuwu.com/IMApi/api/Client";
 
 @interface FXNetworkInterface : NSObject
 

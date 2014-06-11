@@ -24,7 +24,7 @@
 }
 
 + (NSString *)hashName:(NSString *)string {
-    return [NSString stringWithFormat:@"%ld",[[string description] hash]];
+    return [NSString stringWithFormat:@"%ld",(unsigned long)[[string description] hash]];
 }
 
 + (void)documentSaveImageData:(NSData *)imageData withName:(NSString *)name withPathType:(PathTypes)type {
