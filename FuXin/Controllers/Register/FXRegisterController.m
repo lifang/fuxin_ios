@@ -177,7 +177,6 @@
     
     self.lineView = [[UIView alloc] init];
     self.lineView.backgroundColor = kColor(191, 191, 191, 1);
-    
     self.rewriteButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self changeRewriteButtonStatus:NO];
     [self.rewriteButton setTitle:@"确认" forState:UIControlStateNormal];

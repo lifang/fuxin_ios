@@ -14,7 +14,6 @@
 #define kCell_Height 44   
 #define kReSendTime 300  //重发验证码间隔
 #define kIdentifyingCodeTime 300   //验证码有效期
-
 @interface FXForgotPasswordController ()
 //控件区
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -64,9 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self setLeftNavBarItemWithImageName:@"back.png"];
-
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     self.tableView.showsVerticalScrollIndicator = NO;
     [self initViews];
