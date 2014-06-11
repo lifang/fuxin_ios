@@ -9,6 +9,8 @@
 #import "FXAdjustViewController.h"
 #import "FXRequestDataFormat.h"
 #import "FXChatViewController.h"
+#import "FXFileHelper.h"
+#import "FXListCell.h"
 
 @interface FXSearchViewController : FXAdjustViewController<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>
 
@@ -21,5 +23,7 @@
 @property (nonatomic, strong) NSMutableArray *resultArray;
 
 - (void)hiddenExtraCellLineWithTableView:(UITableView *)table;
+
+- (void)downloadImageWithContact:(ContactModel *)contact forCell:(FXListCell *)cell;
 
 @end

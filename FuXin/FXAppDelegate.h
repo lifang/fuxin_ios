@@ -29,6 +29,9 @@
 //是否在聊天界面，用于接收消息
 @property (nonatomic, assign) BOOL isChatting;
 
+//deviceToken
+@property (nonatomic, strong) NSString *push_deviceToken;
+
 //登录用户信息 初始时从本地读取
 @property (nonatomic, strong) FXUserModel *user;
 

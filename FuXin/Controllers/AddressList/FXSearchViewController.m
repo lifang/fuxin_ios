@@ -8,6 +8,7 @@
 
 #import "FXSearchViewController.h"
 #import "FXAddressListCell.h"
+#import "FXChatCell.h"
 
 static NSString *searchIdentifer = @"SI";
 
@@ -117,6 +118,24 @@ static NSString *searchIdentifer = @"SI";
     _searchBar.hidden = YES;
 }
 
+#pragma mark - 下载头像
+
+- (void)downloadImageWithContact:(ContactModel *)contact forCell:(FXListCell *)cell {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *url = [NSURL URLWithString:contact.contactAvatarURL];
+        NSData *imageData = [NSData dataWithContentsOfURL:url];
+        NSLog(@"head = %@",url);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([cell.imageURL isEqualToString:contact.contactAvatarURL]) {
+                if ([imageData length] > 0) {
+                    cell.photoView.image = [UIImage imageWithData:imageData];
+                    [FXFileHelper documentSaveImageData:imageData withName:contact.contactAvatarURL withPathType:PathForHeadImage];
+                }
+            }
+        });
+    });
+}
+
 #pragma mark - UITableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -143,6 +162,16 @@ static NSString *searchIdentifer = @"SI";
         else {
             cell.nameLabel.text = rowData.contactNickname;
         }
+        cell.imageURL = rowData.contactAvatarURL;
+        if ([FXFileHelper isHeadImageExist:rowData.contactAvatarURL]) {
+            NSData *imageData = [FXFileHelper headImageWithName:rowData.contactAvatarURL];
+            cell.photoView.image = [UIImage imageWithData:imageData];
+        }
+        else {
+            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+            [self downloadImageWithContact:rowData forCell:cell];
+        }
+        
         return cell;
     }
     return nil;

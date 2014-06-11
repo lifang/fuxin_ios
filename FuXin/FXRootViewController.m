@@ -50,6 +50,11 @@
     }
     loginNav.view.hidden = NO;
     [self.view bringSubviewToFront:loginNav.view];
+    //显示登录用户信息
+    if ([loginNav.childViewControllers count] > 0) {
+        FXLoginController *controller = [loginNav.childViewControllers objectAtIndex:0];
+        [controller getUserInfoWithLogin:NO];
+    }
 }
 
 //主界面

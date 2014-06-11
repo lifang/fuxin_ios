@@ -260,7 +260,6 @@ static NSString *AddressCellIdentifier = @"ACI";
     return sourceList;
 }
 
-
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -287,6 +286,15 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showSecond = ((contact.contactRelationship & 12) >> 2);
         [cell showOrder:showFirst showSubscribe:showSecond];
         cell.nameLabel.text = [self addNameForContact:contact];
+        cell.imageURL = contact.contactAvatarURL;
+        if ([FXFileHelper isHeadImageExist:contact.contactAvatarURL]) {
+            NSData *imageData = [FXFileHelper headImageWithName:contact.contactAvatarURL];
+            cell.photoView.image = [UIImage imageWithData:imageData];
+        }
+        else {
+            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+            [self downloadImageWithContact:contact forCell:cell];
+        }
         return cell;
     }
     return [super tableView:tableView cellForRowAtIndexPath:indexPath];

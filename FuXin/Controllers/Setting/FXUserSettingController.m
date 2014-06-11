@@ -64,8 +64,8 @@
     [FXRequestDataFormat changeProfileWithToken:delegate.token
                                          UserID:delegate.userID
                                       Signature:nil
-                                          Tiles:UIImagePNGRepresentation(_photoView.image)
-                                    ContentType:@"png"
+                                          Tiles:UIImageJPEGRepresentation(_photoView.image, 1.0)
+                                    ContentType:@"jpg"
                                        NickName:_nameField.text
                                        Finished:^(BOOL success, NSData *response) {
         NSString *info = @"";
@@ -108,7 +108,7 @@
     user.tileURL = profile.tileUrl;
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        user.tile = UIImagePNGRepresentation(_photoView.image);
+        user.tile = UIImageJPEGRepresentation(_photoView.image, 1.0);
         [FXArchiverHelper saveUserInfo:user];
         delegate.user = user;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -260,7 +260,15 @@
             break;
         case 4: {
             title.text = @"性别：";
-            content.text = @"男";
+            if ([_userInfo.genderType intValue] == 0) {
+                content.text = @"男";
+            }
+            else if ([_userInfo.genderType intValue] == 1) {
+                content.text = @"女";
+            }
+            else {
+                content.text = @"保密";
+            }
         }
             break;
         default:

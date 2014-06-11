@@ -116,11 +116,14 @@ static NSString *chatCellIdentifier = @"CCI";
         cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:[rowData objectForKey:@"Time"]];
 
         cell.detailLabel.text = [rowData objectForKey:@"Record"];
-        if (contact.contactAvatar && [contact.contactAvatar length] > 0) {
-            cell.photoView.image = [UIImage imageWithData:contact.contactAvatar];
+        cell.imageURL = contact.contactAvatarURL;
+        if ([FXFileHelper isHeadImageExist:contact.contactAvatarURL]) {
+            NSData *imageData = [FXFileHelper headImageWithName:contact.contactAvatarURL];
+            cell.photoView.image = [UIImage imageWithData:imageData];
         }
         else {
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+            [self downloadImageWithContact:contact forCell:cell];
         }
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         

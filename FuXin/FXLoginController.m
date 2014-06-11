@@ -43,8 +43,9 @@
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
     
-    
-//    [self testDBMethod];
+    if (_usernameField.text && ![_usernameField.text isEqualToString:@""]) {
+        [self getUserInfoWithLogin:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -82,7 +83,7 @@
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
-    _usernameField.text = @"18913536561";
+    _usernameField.text = @"mingli.wang@fuwu.com";
     _usernameField.delegate = self;
     [_usernameField addTarget:self action:@selector(getUserInfo) forControlEvents:UIControlEventEditingDidEnd];
     [self.view addSubview:_usernameField];
@@ -113,6 +114,7 @@
     UIView *psdLinsView = [[UIView alloc] initWithFrame:CGRectMake(rect.origin.x, rect.origin.y + rect.size.height + 1, rect.size.width, 1)];
     psdLinsView.backgroundColor = kColor(209, 27, 33, 0.3);
     [self.view addSubview:psdLinsView];
+//    [FXArchiverHelper print];
 }
 
 - (void)setLoginButtonUI {
@@ -180,7 +182,11 @@
                      FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
                      delegate.userID = resp.userId;
                      delegate.token = resp.token;
-                     
+                     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+                     NSString *messageTimeStamp = [NSString stringWithFormat:@"%d_messageTimeStamp",delegate.userID];
+                     NSString *contactTimeStamp = [NSString stringWithFormat:@"%d_contactTimeStamp",delegate.userID];
+                     delegate.messageTimeStamp = [defaults objectForKey:messageTimeStamp];
+                     delegate.contactTimeStamp = [defaults objectForKey:contactTimeStamp];
                      //数据库操作保存id
                      [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",resp.userId];
                      
@@ -214,16 +220,23 @@
     [self.navigationController pushViewController:forgotPWDController animated:YES];
 }
 
-//从本地读取此用户是否曾登录过
 - (void)getUserInfo {
+    [self getUserInfoWithLogin:YES];
+}
+
+//从本地读取此用户是否曾登录过
+- (void)getUserInfoWithLogin:(BOOL)needLogin {
     FXUserModel *user = [FXArchiverHelper getUserInfoWithLoginName:_usernameField.text];
     if (user) {
-        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-        delegate.user = user;
+        if (needLogin) {
+            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+            delegate.user = user;
+        }
         if (user.tile && [user.tile length] > 0) {
-            _userView.userPhotoView.image = [UIImage imageWithData:delegate.user.tile];
+            _userView.userPhotoView.image = [UIImage imageWithData:user.tile];
         }
     }
+    _userView.userPhotoView.image = [UIImage imageNamed:@"user.png"];
 }
 
 #pragma mark - UITextFieldDelegate 

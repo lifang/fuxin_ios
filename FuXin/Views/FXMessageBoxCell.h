@@ -13,6 +13,8 @@
 
 - (void)touchContact:(UIGestureRecognizer *)tap;
 
+- (void)loadLargeImageWithURL:(NSString *)urlString;
+
 @end
 
 #define kTimeLabelHeight    40
@@ -52,6 +54,11 @@ typedef enum {
 //时间背景框
 @property (nonatomic, strong) UIImageView *timeBackView;
 
+//图片地址
+@property (nonatomic, strong) NSString *imageURL;
+
 - (void)setImageData:(NSData *)data;
+
+- (void)setNullView;
 
 @end

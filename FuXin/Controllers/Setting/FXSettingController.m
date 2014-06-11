@@ -15,6 +15,8 @@
 #import "FXNotificationManageViewController.h"
 #import "LHLDBTools.h"
 #import "FXArchiverHelper.h"
+#import "FXTextFormat.h"
+#import "FXFileHelper.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -37,7 +39,6 @@
     if (self) {
         // Custom initialization
         [FXAppDelegate showFuWuTitleForViewController:self];
-        self.navigationItem.prompt = @"大家好 ,我是康佳幼儿园小三班的小朋友";
     }
     return self;
 }
@@ -91,8 +92,8 @@
             if (resp.isSucceed) {
                 //获取成功
                 [self updateUserInfoWithProfile:resp.profile];
-                NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-                [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+//                NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+//                [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
             }
             else {
                 //获取失败
@@ -106,6 +107,7 @@
 }
 
 - (void)updateUserInfoWithProfile:(Profile *)profile {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     FXUserModel *user = [[FXUserModel alloc] init];
     user.userID = [NSNumber numberWithInt:profile.userId];
     user.name = profile.name;
@@ -117,25 +119,46 @@
     user.isProvider = [NSNumber numberWithBool:profile.isProvider];
     user.lisence = profile.lisence;
     user.isAuth = [NSNumber numberWithBool:profile.isAuthentication];
-    if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
-        user.tile = UIImagePNGRepresentation([UIImage imageNamed:@"placeholder.png"]);
-    }
-    else {
-        if (![user.tileURL isEqualToString:profile.tileUrl]) {
-            user.tileURL = profile.tileUrl;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
-                [FXArchiverHelper saveUserInfo:user];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-                    delegate.user = user;
-                    
-                    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-                    [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-                });
-            });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
+            user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
         }
-    }
+        else {
+            if (![delegate.user.tileURL isEqualToString:profile.tileUrl]) {
+                user.tileURL = profile.tileUrl;
+                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
+            }
+            else {
+                user.tileURL = profile.tileUrl;
+                user.tile = delegate.user.tile;
+            }
+        }
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [FXArchiverHelper saveUserInfo:user];
+            delegate.user = user;
+            NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+            [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+        });
+    });
+    
+//    if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
+//        user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
+//    }
+//    else {
+//        if (![delegate.user.tileURL isEqualToString:profile.tileUrl]) {
+//            user.tileURL = profile.tileUrl;
+//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
+//                [FXArchiverHelper saveUserInfo:user];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    delegate.user = user;
+//                    
+//                    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+//                    [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+//                });
+//            });
+//        }
+//    }
 }
 
 - (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
@@ -256,38 +279,38 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:thirdIdentifer];
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:thirdIdentifer];
-            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(180, 13, 20, 20)];
-            backView.tag = kBackViewTag;
-            backView.image = [UIImage imageNamed:@"messnum.png"];
-            [cell.contentView addSubview:backView];
-            
-            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 3, 14, 14)];
-            numberLabel.tag = kLabelTag;
-            numberLabel.backgroundColor = [UIColor clearColor];
-            numberLabel.font = [UIFont systemFontOfSize:10];
-            numberLabel.textColor = [UIColor whiteColor];
-            numberLabel.textAlignment = NSTextAlignmentCenter;
-            [backView addSubview:numberLabel];
+//            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(180, 13, 20, 20)];
+//            backView.tag = kBackViewTag;
+//            backView.image = [UIImage imageNamed:@"messnum.png"];
+//            [cell.contentView addSubview:backView];
+//            
+//            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 3, 14, 14)];
+//            numberLabel.tag = kLabelTag;
+//            numberLabel.backgroundColor = [UIColor clearColor];
+//            numberLabel.font = [UIFont systemFontOfSize:10];
+//            numberLabel.textColor = [UIColor whiteColor];
+//            numberLabel.textAlignment = NSTextAlignmentCenter;
+//            [backView addSubview:numberLabel];
         }
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         cell.imageView.image = [UIImage imageNamed:@"setting6.png"];
         cell.textLabel.text = @"系统公告管理";
         
-        UIImageView *backView = (UIImageView *)[cell.contentView viewWithTag:kBackViewTag];
-        UILabel *label = (UILabel *)[backView viewWithTag:kLabelTag];
-        label.text = @"8";
-        //显示
-        backView.hidden = NO;
-        if (label.text.length >= 3) {
-            label.font = [UIFont systemFontOfSize:7];
-            label.text = @"99+";
-        }
-        else {
-            label.font = [UIFont systemFontOfSize:10];
-            if (label.text == nil || [label.text isEqualToString:@""]) {
-                backView.hidden = YES;
-            }
-        }
+//        UIImageView *backView = (UIImageView *)[cell.contentView viewWithTag:kBackViewTag];
+//        UILabel *label = (UILabel *)[backView viewWithTag:kLabelTag];
+//        label.text = @"8";
+//        //显示
+//        backView.hidden = NO;
+//        if (label.text.length >= 3) {
+//            label.font = [UIFont systemFontOfSize:7];
+//            label.text = @"99+";
+//        }
+//        else {
+//            label.font = [UIFont systemFontOfSize:10];
+//            if (label.text == nil || [label.text isEqualToString:@""]) {
+//                backView.hidden = YES;
+//            }
+//        }
         return cell;
     }
     else if (indexPath.row == 7) {
@@ -345,8 +368,8 @@
         }
             break;
         case 6:{
-            FXNotificationManageViewController *notificationManage = [[FXNotificationManageViewController alloc] init];
-            [self.navigationController pushViewController:notificationManage animated:YES];
+//            FXNotificationManageViewController *notificationManage = [[FXNotificationManageViewController alloc] init];
+//            [self.navigationController pushViewController:notificationManage animated:YES];
         }
             break;
         case 7: {
@@ -387,6 +410,7 @@
         [LHLDBTools deleteAllConversationsWithFinished:^(BOOL finish) {
             
         }];
+        [FXFileHelper removeAllChatImage];
         [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
             if (finish) {
                 //更新对话界面

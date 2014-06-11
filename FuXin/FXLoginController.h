@@ -19,4 +19,7 @@
 //密码框
 @property (nonatomic, strong) UITextField *passwordField;
 
+//从本地读取此用户是否曾登录过
+- (void)getUserInfoWithLogin:(BOOL)needLogin;
+
 @end

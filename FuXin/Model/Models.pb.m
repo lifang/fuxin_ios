@@ -1092,6 +1092,7 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
 @property (retain) NSString* individualResume;
+@property (retain) NSString* fuzhi;
 @end
 
 @implementation Contact
@@ -1190,6 +1191,13 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   hasIndividualResume_ = !!value;
 }
 @synthesize individualResume;
+- (BOOL) hasFuzhi {
+  return !!hasFuzhi_;
+}
+- (void) setHasFuzhi:(BOOL) value {
+  hasFuzhi_ = !!value;
+}
+@synthesize fuzhi;
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1198,6 +1206,7 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   self.tileUrl = nil;
   self.lisence = nil;
   self.individualResume = nil;
+  self.fuzhi = nil;
   [super dealloc];
 }
 - (id) init {
@@ -1214,6 +1223,7 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
     self.isProvider = NO;
     self.lisence = @"";
     self.individualResume = @"";
+    self.fuzhi = @"";
   }
   return self;
 }
@@ -1269,6 +1279,9 @@ static Contact* defaultContactInstance = nil;
   if (self.hasIndividualResume) {
     [output writeString:12 value:self.individualResume];
   }
+  if (self.hasFuzhi) {
+    [output writeString:13 value:self.fuzhi];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -1313,6 +1326,9 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasIndividualResume) {
     size += computeStringSize(12, self.individualResume);
+  }
+  if (self.hasFuzhi) {
+    size += computeStringSize(13, self.fuzhi);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1435,6 +1451,9 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
   if (other.hasIndividualResume) {
     [self setIndividualResume:other.individualResume];
   }
+  if (other.hasFuzhi) {
+    [self setFuzhi:other.fuzhi];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1507,6 +1526,10 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
       }
       case 98: {
         [self setIndividualResume:[input readString]];
+        break;
+      }
+      case 106: {
+        [self setFuzhi:[input readString]];
         break;
       }
     }
@@ -1702,6 +1725,22 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
 - (Contact_Builder*) clearIndividualResume {
   result.hasIndividualResume = NO;
   result.individualResume = @"";
+  return self;
+}
+- (BOOL) hasFuzhi {
+  return result.hasFuzhi;
+}
+- (NSString*) fuzhi {
+  return result.fuzhi;
+}
+- (Contact_Builder*) setFuzhi:(NSString*) value {
+  result.hasFuzhi = YES;
+  result.fuzhi = value;
+  return self;
+}
+- (Contact_Builder*) clearFuzhi {
+  result.hasFuzhi = NO;
+  result.fuzhi = @"";
   return self;
 }
 @end
@@ -3819,6 +3858,7 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 @property BOOL isProvider;
 @property (retain) NSString* lisence;
 @property BOOL isAuthentication;
+@property (retain) NSString* fuzhi;
 @end
 
 @implementation Profile
@@ -3910,6 +3950,13 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 - (void) setIsAuthentication:(BOOL) value {
   isAuthentication_ = !!value;
 }
+- (BOOL) hasFuzhi {
+  return !!hasFuzhi_;
+}
+- (void) setHasFuzhi:(BOOL) value {
+  hasFuzhi_ = !!value;
+}
+@synthesize fuzhi;
 - (void) dealloc {
   self.name = nil;
   self.nickName = nil;
@@ -3918,6 +3965,7 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   self.birthday = nil;
   self.tileUrl = nil;
   self.lisence = nil;
+  self.fuzhi = nil;
   [super dealloc];
 }
 - (id) init {
@@ -3933,6 +3981,7 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
     self.isProvider = NO;
     self.lisence = @"";
     self.isAuthentication = NO;
+    self.fuzhi = @"";
   }
   return self;
 }
@@ -3985,6 +4034,9 @@ static Profile* defaultProfileInstance = nil;
   if (self.hasIsAuthentication) {
     [output writeBool:11 value:self.isAuthentication];
   }
+  if (self.hasFuzhi) {
+    [output writeString:12 value:self.fuzhi];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -4026,6 +4078,9 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasIsAuthentication) {
     size += computeBoolSize(11, self.isAuthentication);
+  }
+  if (self.hasFuzhi) {
+    size += computeStringSize(12, self.fuzhi);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4145,6 +4200,9 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
   if (other.hasIsAuthentication) {
     [self setIsAuthentication:other.isAuthentication];
   }
+  if (other.hasFuzhi) {
+    [self setFuzhi:other.fuzhi];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -4213,6 +4271,10 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
       }
       case 88: {
         [self setIsAuthentication:[input readBool]];
+        break;
+      }
+      case 98: {
+        [self setFuzhi:[input readString]];
         break;
       }
     }
@@ -4392,6 +4454,22 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
 - (Profile_Builder*) clearIsAuthentication {
   result.hasIsAuthentication = NO;
   result.isAuthentication = NO;
+  return self;
+}
+- (BOOL) hasFuzhi {
+  return result.hasFuzhi;
+}
+- (NSString*) fuzhi {
+  return result.fuzhi;
+}
+- (Profile_Builder*) setFuzhi:(NSString*) value {
+  result.hasFuzhi = YES;
+  result.fuzhi = value;
+  return self;
+}
+- (Profile_Builder*) clearFuzhi {
+  result.hasFuzhi = NO;
+  result.fuzhi = @"";
   return self;
 }
 @end
