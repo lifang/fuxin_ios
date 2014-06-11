@@ -18,6 +18,8 @@
 @property (strong, nonatomic) UILabel *remarkLabel;         //备注
 @property (strong, nonatomic) UIImageView *genderImageView;  //性别图片
 @property (strong, nonatomic) UIView *buttonBgView;          //订购 / 交易等button的背景
+@property (strong, nonatomic) UIButton *tradeButton;          //交易
+@property (strong, nonatomic) UIButton *subscriptionButton;   //订阅
 
 @property (strong, nonatomic) id<FXBlockedContactInfoViewDelegate> delegate;
 @property (strong, nonatomic) ContactModel *contact;  //联系人

@@ -241,7 +241,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [[BaiduMobStat defaultStat] pageviewStartWithName:@"changePassword"];
-
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -504,33 +504,35 @@
         NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
         [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
         [FXAppDelegate addHUDForView:self.view animate:YES];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
-            [FXAppDelegate hideHUDForView:self.view animate:YES];
-            if (success) {
-                //请求成功
-                ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
-                if (resp.isSucceed) {
-                    //获取验证码成功
-                    NSLog(@"validate = %d",resp.errorCode);
-                    [self getValidateSuccessWithButton:sender];
-                }
-                else {
-                    //获取失败
-                    NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                        message:errorInfo
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"确定"
-                                                              otherButtonTitles:nil];
-                    [alertView show];
-                }
-            }
-            else {
-                //请求失败
-                NSLog(@"validate fail");
-            }
-        }];
+        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString
+                                                    Type:ValidateCodeRequest_ValidateTypeChangePassword
+                                                Finished:^(BOOL success, NSData *response) {
+                                                    [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                    if (success) {
+                                                        //请求成功
+                                                        ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+                                                        NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
+                                                        if (resp.isSucceed) {
+                                                            //获取验证码成功
+                                                            NSLog(@"validate = %d",resp.errorCode);
+                                                            [self getValidateSuccessWithButton:sender];
+                                                        }
+                                                        else {
+                                                            //获取失败
+                                                            NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                                                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                                message:errorInfo
+                                                                                                               delegate:nil
+                                                                                                      cancelButtonTitle:@"确定"
+                                                                                                      otherButtonTitles:nil];
+                                                            [alertView show];
+                                                        }
+                                                    }
+                                                    else {
+                                                        //请求失败
+                                                        NSLog(@"validate fail");
+                                                    }
+                                                }];
     }else if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"重填"]){
         self.phoneNumberTextField.text = @"";
         [self.reSendTimer invalidate];
