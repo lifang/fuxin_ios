@@ -14,7 +14,6 @@
 #define kCell_Height 44   
 #define kReSendTime 300  //重发验证码间隔
 #define kIdentifyingCodeTime 300   //验证码有效期
-
 @interface FXForgotPasswordController ()
 //控件区
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -64,9 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self setLeftNavBarItemWithImageName:@"back.png"];
-
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     self.tableView.showsVerticalScrollIndicator = NO;
     [self initViews];
@@ -613,7 +610,7 @@
         NSString *passwordText = [self.passwordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSString *confirmPasswordText = [self.confirmPasswordTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
-        NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
         
         if (passwordText == nil || [passwordText isEqualToString:@""]) {
             self.passwordTipLabel.text = @"未输入密码";
@@ -652,6 +649,15 @@
             self.alertIdentiyingLabel.text = @"验证码错误!";
             self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
         }
+        
+        if ([identifyingCodeText rangeOfString:@"^[0-9]{6}$" options:NSRegularExpressionSearch].length > 0) {
+            self.alertIdentiyingLabel.text = @"";
+            self.identiCodeIsOK = YES;
+        }else{
+            self.alertIdentiyingLabel.text = @"请输入验证码";
+            self.identiCodeIsOK = NO;
+        }
+        
         [self changeDoneButtonStatus];
     }
 }
@@ -717,7 +723,7 @@
 
 //改变完成按钮的状态
 - (void)changeDoneButtonStatus{
-    if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK) {
+    if (self.serviceTextAgreed && self.identiCodeIsOK && self.passwordIsOK && self.identiCodeIsOK) {
         self.doneButton.enabled = YES;
         self.doneButton.backgroundColor = kColor(209, 27, 33, 1);
     }else{

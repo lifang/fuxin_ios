@@ -11,8 +11,6 @@
 #define kDATE_FORMAT @"YYYY-MM-dd hh:mm:ss:SSS"  //时间格式 ,主要用于判断聊天记录的顺序
 #define kDB_NAME @"FuXinDB.sqlite" //数据库文件名
 
-static LHLDBTools *staticDBTools;
-
 @interface LHLDBTools()
 @property (assign, nonatomic) int32_t userID; //数据库对应的userID
 @end
@@ -185,20 +183,6 @@ static LHLDBTools *staticDBTools;
     obj.contactAvatarURL = [resultSet stringForColumn:@"avatarURL"];
     obj.contactRemark = [resultSet stringForColumn:@"remark"];
     obj.contactSex = [resultSet boolForColumn:@"sex"] ? ContactSexFemale : ContactSexMale;
-//    int relationshipValue = [resultSet intForColumn:@"relationship"];
-//    switch (relationshipValue) {
-//        case 1:
-//            obj.contactRelationship = ContactRelationshipBuyer;
-//            break;
-//        case 2:
-//            obj.contactRelationship = ContactRelationshipFans;
-//            break;
-//        case 3:
-//            obj.contactRelationship = ContactRelationshipNone;
-//            break;
-//        default:
-//            break;
-//    }
     obj.contactRelationship = (ContactRelationship)[resultSet intForColumn:@"relationship"];
     obj.contactPinyin = [resultSet stringForColumn:@"pinyin"];
     obj.contactIsBlocked = [resultSet boolForColumn:@"isBlocked"];
