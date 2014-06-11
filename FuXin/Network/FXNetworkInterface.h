@@ -120,7 +120,7 @@ static NSString *Validate = @"https://i.fuwu.com/IMApi/api/ValidateCode";
 // info:推送相关
 // type:
 // */
-static NSString *ClientInfo = @"https://i.fuwu.com/IMApi/api/Client";
+static NSString *ClientInf = @"https://i.fuwu.com/IMApi/api/Client";
 
 @interface FXNetworkInterface : NSObject
 
