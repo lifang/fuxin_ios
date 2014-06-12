@@ -33,7 +33,7 @@ static NSString *AuthenticationOut = @"https://i.fuwu.com/IMApi/api/Authenticati
  type:PUT
  parm:changePasswordRequest
  */
-static NSString *ChangePassword = @"https://i.fuwu.com/IMApi/api/Password";
+static NSString *ChangePassword = @"https://i.fuwu.com/IMApi/api/ChangePassword";
 
 /*
  info:重置密码

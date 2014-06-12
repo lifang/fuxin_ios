@@ -12,7 +12,7 @@
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44   
-#define kReSendTime 300  //重发验证码间隔
+#define kReSendTime 180  //重发验证码间隔
 #define kIdentifyingCodeTime 300   //验证码有效期
 @interface FXForgotPasswordController ()
 //控件区
@@ -269,10 +269,10 @@
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
-            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
-                [cell.contentView addSubview:self.coundDownLabel];
-            }
+//            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
+//                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
+//                [cell.contentView addSubview:self.coundDownLabel];
+//            }
             break;
         case 5:
             if ([self cell:cell isNotSuperOfView:self.checkButton]) {   //选中同意
@@ -443,40 +443,15 @@
         [self.identtifyingCodeTimer invalidate];
     }
     self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
+    
+    [self confirmPhoneNuber:self.rewriteButton];
 }
 
 //点击电话号码按钮
 - (void)rewriteButtonClicked:(UIButton *)sender{
     UIView *superView = [sender superview];
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
-        NSString *phoneNumber = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
-        //发送验证码
-        [FXAppDelegate addHUDForView:self.view animate:YES];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber
-                                                    Type:ValidateCodeRequest_ValidateTypeResetPassword
-                                                Finished:^(BOOL success, NSData *response) {
-                                                    [FXAppDelegate hideHUDForView:self.view animate:YES];
-                                                    if (success) {
-                                                        //请求成功
-                                                        ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                                                        if (resp.isSucceed) {
-                                                            //获取验证码成功
-                                                            [self getValidateSuccessWithButton:sender];
-                                                        }else{
-                                                            //获取验证码失败
-                                                            NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
-                                                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                                                                message:errorInfo
-                                                                                                               delegate:nil
-                                                                                                      cancelButtonTitle:@"确定"
-                                                                                                      otherButtonTitles:nil];
-                                                            [alertView show];
-                                                        }
-                                                    }else{
-                                                        //请求失败
-                                                        [FXAppDelegate errorAlert:@"请求失败!"];
-                                                    }
-                                                }];
+        [self confirmPhoneNuber:sender];
         
     }else if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"重填"]){
         self.phoneNumberTextField.text = @"";
@@ -488,7 +463,42 @@
         superView.backgroundColor = [UIColor clearColor];
         self.phoneNumberTextField.enabled = YES;
         self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
+        
+        [self changeRewriteButtonStatus:NO];
+        [self changeReSendButtonStatus:NO];
     }
+}
+
+//确认电话号码, 发送短信
+- (void)confirmPhoneNuber:(UIButton *)sender{
+    NSString *phoneNumber = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //发送验证码
+    [FXAppDelegate addHUDForView:self.view animate:YES];
+    [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber
+                                                Type:ValidateCodeRequest_ValidateTypeResetPassword
+                                            Finished:^(BOOL success, NSData *response) {
+                                                [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                if (success) {
+                                                    //请求成功
+                                                    ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+                                                    if (resp.isSucceed) {
+                                                        //获取验证码成功
+                                                        [self getValidateSuccessWithButton:sender];
+                                                    }else{
+                                                        //获取验证码失败
+                                                        NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                            message:errorInfo
+                                                                                                           delegate:nil
+                                                                                                  cancelButtonTitle:@"确定"
+                                                                                                  otherButtonTitles:nil];
+                                                        [alertView show];
+                                                    }
+                                                }else{
+                                                    //请求失败
+                                                    [FXAppDelegate errorAlert:@"请求失败!"];
+                                                }
+                                            }];
 }
 
 - (NSString *)showErrorInfoWithType:(int)type {

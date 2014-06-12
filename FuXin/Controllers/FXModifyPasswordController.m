@@ -349,10 +349,10 @@
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
-            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
-                [cell.contentView addSubview:self.coundDownLabel];
-            }
+//            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
+//                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
+//                [cell.contentView addSubview:self.coundDownLabel];
+//            }
             break;
         default:
             break;
@@ -716,21 +716,6 @@
         self.alertLabel.text = @"格式错误!";
         [self changeRewriteButtonStatus:NO];
     }
-    
-    //    if ([identifyingCodeText isEqualToString:_validateString]) {  //验证码正确
-    //        self.alertIdentiyingLabel.text = @"验证码正确!";
-    //        self.alertIdentiyingLabel.textColor = [UIColor greenColor];
-    //        self.reSendButton.hidden = YES;
-    //        self.rewriteButton.hidden = YES;
-    //        self.coundDownLabel.text = @"";
-    //        [self.reSendTimer invalidate];
-    //        self.identiCodeIsOK = YES;
-    //        [self.identifyingCodeTextField resignFirstResponder];
-    //        self.identifyingCodeTextField.enabled = NO;
-    //    }else{
-    //        self.alertIdentiyingLabel.text = @"验证码错误!";
-    //        self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
-    //    }
     
     if ([identifyingCodeText rangeOfString:@"^[0-9]{6}$" options:NSRegularExpressionSearch].length > 0) {
         self.alertIdentiyingLabel.text = @"";

@@ -14,8 +14,10 @@
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44
-#define kReSendTime 300  //重发验证码间隔
+#define kReSendTime 180  //重发验证码间隔
 #define kIdentifyingCodeTime 300   //验证码有效期
+#define kMaxPasswordLength 20 //密码长度
+#define kMaxNameLength 30 //用户名长度
 
 @interface FXRegisterController ()<UIAlertViewDelegate>
 //控件区
@@ -93,7 +95,11 @@
     [self.view addGestureRecognizer:tapGestureRecognizer];
     
     self.title = @"注册";
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChangeNotification:) name:UITextFieldTextDidChangeNotification object:nil];
 }
+
+
 
 //各种控件初始化
 - (void)initViews{
@@ -377,10 +383,10 @@
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
-            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
-                [cell.contentView addSubview:self.coundDownLabel];
-            }
+//            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
+//                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
+//                [cell.contentView addSubview:self.coundDownLabel];
+//            }
             break;
         case 6:
             if ([self cell:cell isNotSuperOfView:self.checkButton]) {   //选中同意
@@ -419,6 +425,7 @@
     [self.inputAlertTimer invalidate];
     self.inputAlertTimer = [NSTimer scheduledTimerWithTimeInterval:.5 target:self selector:@selector(timerFired:) userInfo:@{@"textField": textField} repeats:NO];
     
+    //done按钮响应
     if ([string isEqualToString:@"\n"]) {
         if (textField == self.passwordTextField) {
             [self.confirmPasswordTextField becomeFirstResponder];
@@ -439,21 +446,12 @@
         return NO;
     }
     
+    //删除
     if ([string isEqualToString:@""]) {
         return YES;
     }
     
-    //密码长度限制
-    if (textField == self.passwordTextField || textField == self.confirmPasswordTextField) {
-        if ([string isEqualToString:@""]) {
-            return YES;
-        }else{
-            if (textField.text.length + string.length > 20) {
-                return NO;
-            }
-        }
-        
-    }
+    
     
     if (textField == self.phoneNumberTextField) {  //电话号码特殊格式
         if (string.length == 1){
@@ -485,14 +483,38 @@
         }
     }
     
-    if (textField == self.userNameTextField) {
-        //长度小于15
-        if (textField.text.length + string.length > 30) {
-            return NO;
+    return YES;
+}
+
+//输入字符之后的通知回调
+- (void)textDidChangeNotification:(NSNotification *)noti{
+    UITextField *textField = (UITextField *)noti.object;
+    NSString *toBeString = textField.text;
+    NSString *language = [[UITextInputMode currentInputMode] primaryLanguage]; // 键盘输入模式
+    BOOL shouldRestrict = YES; //是否需要限制字数
+    if ([language isEqualToString:@"zh-Hans"]) { // 简体中文输入，包括简体拼音，健体五笔，简体手写
+        UITextRange *selectedRange = [textField markedTextRange];
+        // 有高亮选择的字符串，则暂不对文字进行统计和限制
+        if (selectedRange) {
+            shouldRestrict = NO;
         }
     }
     
-    return YES;
+    if (shouldRestrict) {
+        //密码长度限制
+        if (textField == self.passwordTextField || textField == self.confirmPasswordTextField) {
+            if (toBeString.length > kMaxPasswordLength) {
+                textField.text = [toBeString substringToIndex:kMaxPasswordLength];
+            }
+        }
+        
+        //用户名长度限制
+        if (textField == self.userNameTextField) {
+            if (toBeString.length > kMaxNameLength) {
+                textField.text = [toBeString substringToIndex:kMaxNameLength];
+            }
+        }
+    }
 }
 
 #pragma mark 控件响应
@@ -551,42 +573,14 @@
         [self.identtifyingCodeTimer invalidate];
     }
     self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
+    [self confirmPhoneNuber:self.rewriteButton];
 }
 
 //点击电话号码按钮
 - (void)rewriteButtonClicked:(UIButton *)sender{
     UIView *superView = [sender superview];
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
-        NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
-        [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-        [FXAppDelegate addHUDForView:self.view animate:YES];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
-            [FXAppDelegate hideHUDForView:self.view animate:YES];
-            if (success) {
-                //请求成功
-                ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
-                if (resp.isSucceed) {
-                    //获取验证码成功
-                    NSLog(@"validate = %d",resp.errorCode);
-                    [self getValidateSuccessWithButton:sender];
-                }
-                else {
-                    //获取失败
-                    NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                        message:errorInfo
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"确定"
-                                                              otherButtonTitles:nil];
-                    [alertView show];
-                }
-            }
-            else {
-                //请求失败
-                NSLog(@"validate fail");
-            }
-        }];
+        [self confirmPhoneNuber:sender];
     }else if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"重填"]){
         self.phoneNumberTextField.text = @"";
         [self.reSendTimer invalidate];
@@ -597,7 +591,44 @@
         superView.backgroundColor = [UIColor clearColor];
         self.phoneNumberTextField.enabled = YES;
         self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
+        
+        [self changeReSendButtonStatus:NO];
+        [self changeRewriteButtonStatus:NO];
     }
+}
+
+//确认电话号码, 发送短信
+- (void)confirmPhoneNuber:(UIButton *)sender{
+    NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
+    [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
+    [FXAppDelegate addHUDForView:self.view animate:YES];
+    [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
+        [FXAppDelegate hideHUDForView:self.view animate:YES];
+        if (success) {
+            //请求成功
+            ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+            NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
+            if (resp.isSucceed) {
+                //获取验证码成功
+                NSLog(@"validate = %d",resp.errorCode);
+                [self getValidateSuccessWithButton:sender];
+            }
+            else {
+                //获取失败
+                NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                    message:errorInfo
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }
+        }
+        else {
+            //请求失败
+            NSLog(@"validate fail");
+        }
+    }];
 }
 
 - (NSString *)showErrorInfoWithType:(int)type {
@@ -740,7 +771,7 @@
     NSString *phoneNumberText = [[self.phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
 //    NSString *identifyingCodeText = [self.identifyingCodeTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if (usernameText == nil || usernameText.length < 3) {
+    if (usernameText == nil || usernameText.length < 2) {
         self.usernameIsOK = NO;
         self.userNameTipLabel.text = @"!";
     }else if ([usernameText rangeOfString:@"^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$" options:NSRegularExpressionSearch].length < 1){ //只匹配字母数字汉字和下划线 ,且不能用下划线开始和结尾
