@@ -58,15 +58,17 @@
         [_contentBgView addSubview:_buttonBgView];
         
         UIButton *tradeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        tradeButton.frame = (CGRect){0 , 0, 45 ,_buttonBgView.frame.size.height};
-        [tradeButton setImage:[UIImage imageNamed:@"trade.png"] forState:UIControlStateNormal];
+        tradeButton.frame = (CGRect){0 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
+//        [tradeButton setImage:[UIImage imageNamed:@"trade.png"] forState:UIControlStateNormal];
         [tradeButton addTarget:self action:@selector(tradeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        _tradeButton = tradeButton;
         [_buttonBgView addSubview:tradeButton];
         
         UIButton *subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        subscribeButton.frame = (CGRect){50 , 0, 45 ,_buttonBgView.frame.size.height};
-        [subscribeButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
+        subscribeButton.frame = (CGRect){35 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
+//        [subscribeButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
         [subscribeButton addTarget:self action:@selector(subscribeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        _subscriptionButton = subscribeButton;
         [_buttonBgView addSubview:subscribeButton];
         
         //line
@@ -92,11 +94,19 @@
 }
 
 - (void)setValueForUI {
-    if (_contact.contactAvatar && [_contact.contactAvatar length] > 0) {
-        _photoImageView.image = [UIImage imageWithData:_contact.contactAvatar];
+    if ([FXFileHelper isHeadImageExist:_contact.contactAvatarURL]) {
+        NSData *imageData = [FXFileHelper headImageWithName:_contact.contactAvatarURL];
+        _photoImageView.image = [UIImage imageWithData:imageData];
+    }
+    else {
+        _photoImageView.image = [UIImage imageNamed:@"placeholder.png"];
     }
     _nameLabel.text = _contact.contactNickname;
     _remarkLabel.text = _contact.contactRemark;
+    
+    BOOL showFirst = (_contact.contactRelationship & 3);
+    BOOL showSecond = ((_contact.contactRelationship & 12) >> 2);
+    [self showOrder:showFirst showSubscribe:showSecond];
 }
 
 - (void)hiddenSelf:(UITapGestureRecognizer *)tap {
@@ -130,4 +140,28 @@
     }
 }
 
+- (void)showOrder:(BOOL)showFirst showSubscribe:(BOOL)showSecond {
+    NSLog(@"%d,%d",showFirst,showSecond);
+    if (showFirst) {
+        _tradeButton.hidden = NO;
+        [_tradeButton setImage:[UIImage imageNamed:@"trade.png"] forState:UIControlStateNormal];
+        if (showSecond) {
+            _subscriptionButton.hidden = NO;
+            [_subscriptionButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
+        }
+        else {
+            _subscriptionButton.hidden = YES;
+        }
+    }
+    else {
+        if (showSecond) {
+            _tradeButton.hidden = NO;
+            [_tradeButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
+        }
+        else {
+            _tradeButton.hidden = YES;
+        }
+        _subscriptionButton.hidden = YES;
+    }
+}
 @end

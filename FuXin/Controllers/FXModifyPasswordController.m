@@ -10,7 +10,7 @@
 
 #define kBlank_Size 15   //边缘空白
 #define kCell_Height 44
-#define kReSendTime 300  //重发验证码间隔
+#define kReSendTime 180  //重发验证码间隔
 #define kIdentifyingCodeTime 300   //验证码有效期
 
 @interface FXModifyPasswordController ()<UIAlertViewDelegate>
@@ -241,7 +241,7 @@
 
 - (void)viewDidAppear:(BOOL)animated{
     [[BaiduMobStat defaultStat] pageviewStartWithName:@"changePassword"];
-
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -349,10 +349,10 @@
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
-            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
-                [cell.contentView addSubview:self.coundDownLabel];
-            }
+//            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
+//                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
+//                [cell.contentView addSubview:self.coundDownLabel];
+//            }
             break;
         default:
             break;
@@ -495,42 +495,14 @@
         [self.identtifyingCodeTimer invalidate];
     }
     self.identtifyingCodeTimer = [NSTimer scheduledTimerWithTimeInterval:kIdentifyingCodeTime target:self selector:@selector(identifyingCodeTimerFired:) userInfo:nil repeats:NO];
+    [self confirmPhoneNuber:self.rewriteButton];
 }
 
 //点击电话号码按钮
 - (void)rewriteButtonClicked:(UIButton *)sender{
     UIView *superView = [sender superview];
     if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"确认"]) {
-        NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
-        [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
-        [FXAppDelegate addHUDForView:self.view animate:YES];
-        [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString Type:ValidateCodeRequest_ValidateTypeRegister Finished:^(BOOL success, NSData *response) {
-            [FXAppDelegate hideHUDForView:self.view animate:YES];
-            if (success) {
-                //请求成功
-                ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
-                if (resp.isSucceed) {
-                    //获取验证码成功
-                    NSLog(@"validate = %d",resp.errorCode);
-                    [self getValidateSuccessWithButton:sender];
-                }
-                else {
-                    //获取失败
-                    NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                        message:errorInfo
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"确定"
-                                                              otherButtonTitles:nil];
-                    [alertView show];
-                }
-            }
-            else {
-                //请求失败
-                NSLog(@"validate fail");
-            }
-        }];
+        [self confirmPhoneNuber:sender];
     }else if ([[sender titleForState:UIControlStateNormal] isEqualToString:@"重填"]){
         self.phoneNumberTextField.text = @"";
         [self.reSendTimer invalidate];
@@ -540,7 +512,46 @@
         superView.backgroundColor = [UIColor clearColor];
         self.phoneNumberTextField.enabled = YES;
         self.phoneNumberTextField.textColor = kColor(51, 51, 51, 1);
+        
+        [self changeReSendButtonStatus:NO];
+        [self changeRewriteButtonStatus:NO];
     }
+}
+
+//确认电话号码, 发送短信
+- (void)confirmPhoneNuber:(UIButton *)sender{
+    NSMutableString *phoneNumberString = [NSMutableString stringWithString:self.phoneNumberTextField.text];
+    [phoneNumberString replaceOccurrencesOfString:@" " withString:@"" options:0 range:NSMakeRange(0, phoneNumberString.length)];
+    [FXAppDelegate addHUDForView:self.view animate:YES];
+    [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumberString
+                                                Type:ValidateCodeRequest_ValidateTypeChangePassword
+                                            Finished:^(BOOL success, NSData *response) {
+                                                [FXAppDelegate hideHUDForView:self.view animate:YES];
+                                                if (success) {
+                                                    //请求成功
+                                                    ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+                                                    NSLog(@"%d,%d",resp.isSucceed,resp.errorCode);
+                                                    if (resp.isSucceed) {
+                                                        //获取验证码成功
+                                                        NSLog(@"validate = %d",resp.errorCode);
+                                                        [self getValidateSuccessWithButton:sender];
+                                                    }
+                                                    else {
+                                                        //获取失败
+                                                        NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                                                            message:errorInfo
+                                                                                                           delegate:nil
+                                                                                                  cancelButtonTitle:@"确定"
+                                                                                                  otherButtonTitles:nil];
+                                                        [alertView show];
+                                                    }
+                                                }
+                                                else {
+                                                    //请求失败
+                                                    NSLog(@"validate fail");
+                                                }
+                                            }];
 }
 
 - (NSString *)showErrorInfoWithType:(int)type {
@@ -705,21 +716,6 @@
         self.alertLabel.text = @"格式错误!";
         [self changeRewriteButtonStatus:NO];
     }
-    
-    //    if ([identifyingCodeText isEqualToString:_validateString]) {  //验证码正确
-    //        self.alertIdentiyingLabel.text = @"验证码正确!";
-    //        self.alertIdentiyingLabel.textColor = [UIColor greenColor];
-    //        self.reSendButton.hidden = YES;
-    //        self.rewriteButton.hidden = YES;
-    //        self.coundDownLabel.text = @"";
-    //        [self.reSendTimer invalidate];
-    //        self.identiCodeIsOK = YES;
-    //        [self.identifyingCodeTextField resignFirstResponder];
-    //        self.identifyingCodeTextField.enabled = NO;
-    //    }else{
-    //        self.alertIdentiyingLabel.text = @"验证码错误!";
-    //        self.alertIdentiyingLabel.textColor = kColor(255, 0, 9, 1);
-    //    }
     
     if ([identifyingCodeText rangeOfString:@"^[0-9]{6}$" options:NSRegularExpressionSearch].length > 0) {
         self.alertIdentiyingLabel.text = @"";
