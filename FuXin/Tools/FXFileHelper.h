@@ -13,10 +13,17 @@ typedef enum {
     PathForHeadImage,         //联系人头像保存地址
 }PathTypes;
 
+typedef void (^finishWrite)(BOOL finish);
+
 @interface FXFileHelper : NSObject
 
 //保存图片到相应目录
-+ (void)documentSaveImageData:(NSData *)imageData withName:(NSString *)name withPathType:(PathTypes)type;
++ (void)documentSaveImageData:(NSData *)imageData
+                     withName:(NSString *)name
+                 withPathType:(PathTypes)type;
+
+//保存聊天图片 未开线程
++ (void)documentSaveImageData:(NSData *)imageData withName:(NSString *)name;
 
 //判断聊天中图片是否存在
 + (NSData *)chatImageAlreadyLoadWithName:(NSString *)name;

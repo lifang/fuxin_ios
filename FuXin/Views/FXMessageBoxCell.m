@@ -28,6 +28,7 @@
 @synthesize contents = _contents;
 @synthesize timeBackView = _timeBackView;
 @synthesize imageURL = _imageURL;
+@synthesize imageData = _imageData;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -146,6 +147,7 @@
         [_messageView removeFromSuperview];
         _messageView = nil;
     }
+    _imageData = data;
     _messageView = [FXTextFormat getContentViewWithImageData:data];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchPicture)];
     [_messageView addGestureRecognizer:tap];
@@ -177,6 +179,11 @@
     if (self.cellStyle == MessageCellStyleReceive) {
         if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithURL:)]) {
             [_delegate loadLargeImageWithURL:_imageURL];
+        }
+    }
+    else {
+        if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithData:)]) {
+            [_delegate loadLargeImageWithData:_imageData];
         }
     }
 }

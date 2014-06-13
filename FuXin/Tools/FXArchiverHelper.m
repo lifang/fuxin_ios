@@ -71,6 +71,28 @@
     return currentUser;
 }
 
+#pragma mark - 用户信息
+
++ (NSString *)userLoginInfoPath {
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    return [documentPath stringByAppendingPathComponent:kUserInfoPath];
+}
+
++ (void)saveUserPassword:(FXLoginUser *)user {
+    NSMutableData *data = [[NSMutableData alloc] init];
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    [archiver encodeObject:user forKey:kLoginUser];
+    [archiver finishEncoding];
+    [data writeToFile:[[self class] userLoginInfoPath] atomically:YES];
+}
+
++ (FXLoginUser *)getUserPassword {
+    NSString *userPath = [[self class] userLoginInfoPath];
+    NSMutableData *data = [[NSMutableData alloc] initWithContentsOfFile:userPath];
+    NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+    return [unarchiver decodeObjectForKey:kLoginUser];
+}
+
 + (void)print {
     NSMutableArray *history = [[self class] getHistoryLoginUsers];
     for (FXUserModel *model in history) {
@@ -86,6 +108,7 @@
         NSLog(@"tile = %lu",(unsigned long)[model.tile length]);
         NSLog(@"pro = %@",model.isProvider);
         NSLog(@"lis = %@",model.lisence);
+        NSLog(@"fuzhi = %@",model.fuzhi);
     }
 }
 

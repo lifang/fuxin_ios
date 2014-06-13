@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UIImageView *photoView;
 @property (nonatomic, strong) UITextField *nameField;
 
+@property (nonatomic, assign) BOOL isRequest;
+
 @end
 
 @implementation FXUserSettingController
@@ -27,6 +29,7 @@
 @synthesize photoView = _photoView;
 @synthesize nameField = _nameField;
 @synthesize userTableView = _userTableView;
+@synthesize isRequest = _isRequest;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,38 +72,42 @@
 #pragma mark - 重写
 
 - (void)rightBarTouched:(id)sender {
-    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat changeProfileWithToken:delegate.token
-                                         UserID:delegate.userID
-                                      Signature:nil
-                                          Tiles:UIImageJPEGRepresentation(_photoView.image, 1.0)
-                                    ContentType:@"jpg"
-                                       NickName:_nameField.text
-                                       Finished:^(BOOL success, NSData *response) {
-        NSString *info = @"";
-        if (success) {
-            //请求成功
-            ChangeProfileResponse *resp = [ChangeProfileResponse parseFromData:response];
-            if (resp.isSucceed) {
-                //修改成功
-                [self saveUserInfoWithNewProfile:resp.profile];
-                info = @"修改个人信息成功";
-            }
-            else {
-                //修改失败
-                info = @"修改个人信息失败";
-            }
-        }
-        else {
-            //请求失败
-        }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                        message:info
-                                                       delegate:nil
-                                              cancelButtonTitle:@"确定"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }];
+    if (!_isRequest) {
+        _isRequest = YES;
+        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+        [FXRequestDataFormat
+         changeProfileWithToken:delegate.token UserID:delegate.userID
+         Signature:nil
+         Tiles:UIImageJPEGRepresentation(_photoView.image, 1.0)
+         ContentType:@"jpg"
+         NickName:_nameField.text
+         Finished:^(BOOL success, NSData *response) {
+             _isRequest = NO;
+             NSString *info = @"";
+             if (success) {
+                 //请求成功
+                 ChangeProfileResponse *resp = [ChangeProfileResponse parseFromData:response];
+                 if (resp.isSucceed) {
+                     //修改成功
+                     [self saveUserInfoWithNewProfile:resp.profile];
+                     info = @"修改个人信息成功";
+                 }
+                 else {
+                     //修改失败
+                     info = @"修改个人信息失败";
+                 }
+             }
+             else {
+                 //请求失败
+             }
+             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                             message:info
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"确定"
+                                                   otherButtonTitles:nil];
+             [alert show];
+         }];
+    }
 }
 
 - (void)saveUserInfoWithNewProfile:(Profile *)profile {
@@ -115,6 +122,8 @@
     user.isProvider = [NSNumber numberWithBool:profile.isProvider];
     user.lisence = profile.lisence;
     user.tileURL = profile.tileUrl;
+    user.isAuth = [NSNumber numberWithBool:profile.isAuthentication];
+    user.fuzhi = profile.fuzhi;
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         user.tile = UIImageJPEGRepresentation(_photoView.image, 1.0);
@@ -211,6 +220,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if ([_userInfo.isProvider boolValue]) {
+        return 6;
+    }
     return 5;
 }
 
@@ -241,49 +253,92 @@
     }
     UILabel *title = (UILabel *)[cell.contentView viewWithTag:kTitleTag];
     UILabel *content = (UILabel *)[cell.contentView viewWithTag:kContentTag];
-    switch (indexPath.row) {
-        case 0: {
-            title.text = @"行业认证：";
-            content.text = _userInfo.lisence;
-        }
-            break;
-//        case 1: {
-//            title.text = @"课程类别：";
-//        }
-//            break;
-        case 1: {
-            title.text = @"手机号码：";
-            content.text = _userInfo.mobilePhoneNum;
-        }
-            break;
-        case 2: {
-            title.text = @"邮箱：";
-            content.text = _userInfo.email;
-        }
-            break;
-        case 3: {
-            title.text = @"生日：";
-            content.text = _userInfo.birthday;
-            
-        }
-            break;
-        case 4: {
-            title.text = @"性别：";
-            if ([_userInfo.genderType intValue] == 0) {
-                content.text = @"男";
+    if ([_userInfo.isProvider boolValue]) {
+        switch (indexPath.row) {
+            case 0: {
+                title.text = @"福值：";
+                content.text = _userInfo.fuzhi;
             }
-            else if ([_userInfo.genderType intValue] == 1) {
-                content.text = @"女";
+                break;
+            case 1: {
+                title.text = @"行业认证：";
+                content.text = _userInfo.lisence;
             }
-            else {
-                content.text = @"保密";
+                break;
+            case 2: {
+                title.text = @"手机号码：";
+                content.text = _userInfo.mobilePhoneNum;
             }
+                break;
+            case 3: {
+                title.text = @"邮箱：";
+                content.text = _userInfo.email;
+            }
+                break;
+            case 4: {
+                title.text = @"生日：";
+                content.text = _userInfo.birthday;
+                
+            }
+                break;
+            case 5: {
+                title.text = @"性别：";
+                if ([_userInfo.genderType intValue] == 0) {
+                    content.text = @"男";
+                }
+                else if ([_userInfo.genderType intValue] == 1) {
+                    content.text = @"女";
+                }
+                else {
+                    content.text = @"保密";
+                }
+            }
+                break;
+            default:
+                break;
         }
-            break;
-        default:
-            break;
+
     }
-    
+    else {
+        switch (indexPath.row) {
+            case 0: {
+                title.text = @"行业认证：";
+                content.text = _userInfo.lisence;
+            }
+                break;
+            case 1: {
+                title.text = @"手机号码：";
+                content.text = _userInfo.mobilePhoneNum;
+            }
+                break;
+            case 2: {
+                title.text = @"邮箱：";
+                content.text = _userInfo.email;
+            }
+                break;
+            case 3: {
+                title.text = @"生日：";
+                content.text = _userInfo.birthday;
+                
+            }
+                break;
+            case 4: {
+                title.text = @"性别：";
+                if ([_userInfo.genderType intValue] == 0) {
+                    content.text = @"男";
+                }
+                else if ([_userInfo.genderType intValue] == 1) {
+                    content.text = @"女";
+                }
+                else {
+                    content.text = @"保密";
+                }
+            }
+                break;
+            default:
+                break;
+        }
+    }
     return cell;
 }
 

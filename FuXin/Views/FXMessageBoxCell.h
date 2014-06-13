@@ -13,7 +13,11 @@
 
 - (void)touchContact:(UIGestureRecognizer *)tap;
 
+//查看联系人发送的大图
 - (void)loadLargeImageWithURL:(NSString *)urlString;
+
+//查看自己发送的大图
+- (void)loadLargeImageWithData:(NSData *)data;
 
 @end
 
@@ -56,6 +60,9 @@ typedef enum {
 
 //图片地址
 @property (nonatomic, strong) NSString *imageURL;
+
+//用于保存自己发送的图片
+@property (nonatomic, strong) NSData *imageData;
 
 - (void)setImageData:(NSData *)data;
 

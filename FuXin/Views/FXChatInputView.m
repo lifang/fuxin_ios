@@ -90,6 +90,7 @@
 //发送消息
 - (IBAction)sendMessage:(id)sender {
     [_inputView resignFirstResponder];
+    NSLog(@"text = %@,%d,%@",_inputView.text,[_inputView.text length],[_inputView.text dataUsingEncoding:NSUTF8StringEncoding]);
     if (_inputDelegate && [_inputDelegate respondsToSelector:@selector(getInputText:)]) {
         [_inputDelegate getInputText:_inputView.text];
     }

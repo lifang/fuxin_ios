@@ -23,6 +23,7 @@
     [aCoder encodeObject:_isProvider forKey:@"isProvider"];
     [aCoder encodeObject:_lisence forKey:@"lisence"];
     [aCoder encodeObject:_isAuth forKey:@"isAuth"];
+    [aCoder encodeObject:_fuzhi forKey:@"fuzhi"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -39,6 +40,7 @@
         _isProvider = [aDecoder decodeObjectForKey:@"isProvider"];
         _lisence = [aDecoder decodeObjectForKey:@"lisence"];
         _isAuth = [aDecoder decodeObjectForKey:@"isAuth"];
+        _fuzhi = [aDecoder decodeObjectForKey:@"fuzhi"];
     }
     return self;
 }
@@ -57,6 +59,7 @@
     user.isProvider = [_isProvider copyWithZone:zone];
     user.lisence = [_lisence copyWithZone:zone];
     user.isAuth = [_isAuth copyWithZone:zone];
+    user.fuzhi = [_fuzhi copyWithZone:zone];
     return user;
 }
 

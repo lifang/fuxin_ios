@@ -123,5 +123,13 @@ NSMutableDictionary* dictionaryForValidate() {
             nil];
 }
 
+NSMutableDictionary* dictionaryForClient() {
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            ClientPush, kRequestURL,
+            @"PUT", kRequestType,
+            @"clientInfo",kRequestPostData,
+            nil];
+}
+
 
 @end

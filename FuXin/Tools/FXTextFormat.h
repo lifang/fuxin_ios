@@ -13,7 +13,7 @@
 
 #define kFaceSide    24    //表情大小
 //聊天内容宽度最大值
-#define kMessageBoxWigthMax  220
+#define kMessageBoxWidthMax  220
 
 //图片最大宽度
 #define kImageWidthMax     120

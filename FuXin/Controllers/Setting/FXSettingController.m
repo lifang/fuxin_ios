@@ -20,14 +20,22 @@
 
 #define kBackViewTag      100
 #define kLabelTag         101
+//更新
+#define kUpdateTag        1000
+#define kDeleteTag        1001
+
+#define kAppID            @"883096371"
 
 @interface FXSettingController ()<UIAlertViewDelegate>
+
+@property (nonatomic, assign) BOOL isRequest;
 
 @end
 
 @implementation FXSettingController
 
 @synthesize settingTableView = _settingTableView;
+@synthesize isRequest = _isRequest;
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -128,16 +136,20 @@
     user.isProvider = [NSNumber numberWithBool:profile.isProvider];
     user.lisence = profile.lisence;
     user.isAuth = [NSNumber numberWithBool:profile.isAuthentication];
+    user.fuzhi = profile.fuzhi;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
+            //下载的用户头像url为空
             user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
         }
         else {
             if (![delegate.user.tileURL isEqualToString:profile.tileUrl]) {
+                //更新头像
                 user.tileURL = profile.tileUrl;
                 user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
             }
             else {
+                //未更新头像
                 user.tileURL = profile.tileUrl;
                 user.tile = delegate.user.tile;
             }
@@ -149,25 +161,6 @@
             [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
         });
     });
-    
-//    if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
-//        user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
-//    }
-//    else {
-//        if (![delegate.user.tileURL isEqualToString:profile.tileUrl]) {
-//            user.tileURL = profile.tileUrl;
-//            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
-//                [FXArchiverHelper saveUserInfo:user];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    delegate.user = user;
-//                    
-//                    NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-//                    [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-//                });
-//            });
-//        }
-//    }
 }
 
 - (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
@@ -357,12 +350,20 @@
             [self.navigationController pushViewController:user animated:YES];
         }
             break;
+        case 1: {
+            if (!_isRequest) {
+                [self checkVersion];
+                _isRequest = YES;
+            }
+        }
+            break;
         case 2: {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
                                                             message:@"确定要清空本地的所有聊天记录？"
                                                            delegate:self
                                                   cancelButtonTitle:@"取消"
                                                   otherButtonTitles:@"确定", nil];
+            alert.tag = kDeleteTag;
             [alert show];
         }
             break;
@@ -417,23 +418,79 @@
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        [LHLDBTools deleteAllConversationsWithFinished:^(BOOL finish) {
-            
-        }];
-        [FXFileHelper removeAllChatImage];
-        [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
-            if (finish) {
-                //更新对话界面
-                [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                message:@"清除聊天记录完毕"
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"确定"
-                                                      otherButtonTitles: nil];
-                [alert show];
-            }
-        }];
+        if (alertView.tag == kDeleteTag) {
+            [LHLDBTools deleteAllConversationsWithFinished:^(BOOL finish) {
+                
+            }];
+            [FXFileHelper removeAllChatImage];
+            [LHLDBTools deleteAllChattingRecordWithFinished:^(BOOL finish) {
+                if (finish) {
+                    //更新对话界面
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                    message:@"清除聊天记录完毕"
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles: nil];
+                    [alert show];
+                }
+            }];
+        }
+        else if (alertView.tag == kUpdateTag) {
+            NSString *url = [NSString stringWithFormat:@"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=%@",kAppID];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+        }
     }
 }
+
+#pragma mark - 更新
+
+- (void)checkVersion {
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *currentVersion = [infoDict objectForKey:@"CFBundleVersion"];
+    //883096371
+    NSString *url = @"http://itunes.apple.com/lookup?id=561885553";
+
+    ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
+    [request startAsynchronous];
+    
+    __weak ASIFormDataRequest *wRequest = request;
+    [request setCompletionBlock:^{
+        _isRequest = NO;
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[wRequest responseData] options:0 error:nil];
+        NSArray *infoArray = [dict objectForKey:@"results"];
+        if ([infoArray count] > 0) {
+            NSDictionary *releaseInfo = [infoArray objectAtIndex:0];
+            NSString *lastVersion = [releaseInfo objectForKey:@"version"];
+            if (![lastVersion isEqualToString:currentVersion]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                message:@"有新的版本更新，是否前往更新?"
+                                                               delegate:self
+                                                      cancelButtonTitle:@"取消"
+                                                      otherButtonTitles:@"更新", nil];
+                alert.tag = kUpdateTag;
+                [alert show];
+            }
+        }
+        else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                            message:@"此版本已经是最新版本！"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"确定"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }];
+    [request setFailedBlock:^{
+        _isRequest = NO;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:@"请求失败，请重新加载！"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }];
+}
+
 
 @end

@@ -77,6 +77,8 @@
     [self setUserNameAndPasswordUI];
     //按钮
     [self setLoginButtonUI];
+    
+    [self setValueForUI];
 }
 
 - (void)setUserNameAndPasswordUI {
@@ -92,7 +94,6 @@
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
-    _usernameField.text = @"mingli.wang@fuwu.com";
     _usernameField.delegate = self;
     [_usernameField addTarget:self action:@selector(getUserInfo) forControlEvents:UIControlEventEditingDidEnd];
     [self.view addSubview:_usernameField];
@@ -115,7 +116,6 @@
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
     _passwordField.leftView = psdBackView;
-    _passwordField.text = @"123456";
     _passwordField.delegate = self;
     [self.view addSubview:_passwordField];
     //划线
@@ -157,6 +157,14 @@
     [forgetButton setTitle:@"忘记密码？" forState:UIControlStateNormal];
     [forgetButton addTarget:self action:@selector(forgetPassword:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetButton];
+}
+
+- (void)setValueForUI {
+    FXLoginUser *user = [FXArchiverHelper getUserPassword];
+    if (user) {
+        _usernameField.text = user.username;
+        _passwordField.text = user.password;
+    }
 }
 
 #pragma mark - Action
@@ -219,6 +227,14 @@
     //数据库操作保存id
     [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",userid];
     
+    NSLog(@"%@",delegate.push_deviceToken);
+    [self getUserInfo];
+    //保存用户信息
+    FXLoginUser *loginUser = [[FXLoginUser alloc] init];
+    loginUser.username = _usernameField.text;
+    loginUser.password = _passwordField.text;
+    [FXArchiverHelper saveUserPassword:loginUser];
+    
     FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
     [rootController showMainViewController];
 }
@@ -251,6 +267,8 @@
     }
     else {
         _userView.userPhotoView.image = [UIImage imageNamed:@"user.png"];
+        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+        delegate.user = nil;
     }
 }
 

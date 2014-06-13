@@ -33,7 +33,7 @@ static NSString *AuthenticationOut = @"https://i.fuwu.com/IMApi/api/Authenticati
  type:PUT
  parm:changePasswordRequest
  */
-static NSString *ChangePassword = @"https://i.fuwu.com/IMApi/api/Password";
+static NSString *ChangePassword = @"https://i.fuwu.com/IMApi/api/ChangePassword";
 
 /*
  info:重置密码
@@ -91,7 +91,7 @@ static NSString *ModifyProfile = @"https://i.fuwu.com/IMApi/api/Profile";
  parm:contactDetailRequest
  id
  */
-static NSString *GetContactDetail = @"https://i.fuwu.com/IMApi/api/ContactDetail/{id}";
+static NSString *GetContactDetail = @"https://i.fuwu.com/IMApi/api/ContactDetail/";
 /*
  info:修改联系人备注
  type:PUT
@@ -116,11 +116,12 @@ static NSString *Regist = @"https://i.fuwu.com/IMApi/api/Register/";
 static NSString *Validate = @"https://i.fuwu.com/IMApi/api/ValidateCode";
 
 
-///*
+/*
 // info:推送相关
-// type:
-// */
-static NSString *ClientInf = @"https://i.fuwu.com/IMApi/api/Client";
+// type:PUT
+// parm:
+ */
+static NSString *ClientPush = @"https://i.fuwu.com/IMApi/api/Client";
 
 @interface FXNetworkInterface : NSObject
 
@@ -139,5 +140,6 @@ NSMutableDictionary* dictionaryForGetContactDetail();    //获取某一联系人
 NSMutableDictionary* dictionaryForModifyContactDetail(); //修改联系人备注
 NSMutableDictionary* dictionaryForRegist();              //注册
 NSMutableDictionary* dictionaryForValidate();            //验证码
+NSMutableDictionary* dictionaryForClient();              //推送绑定
 
 @end

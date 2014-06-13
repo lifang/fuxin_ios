@@ -221,6 +221,9 @@
     //请求信息
     NSMutableDictionary *requestInfo = dictionaryForGetContactDetail();
     //修改postdata
+    NSString *urlPrefix = [requestInfo objectForKey:kRequestURL];
+    NSString *url = [urlPrefix stringByAppendingString:[NSString stringWithFormat:@"{%d}",contactID]];
+    [requestInfo setObject:url forKey:url];
     [requestInfo setObject:PBData forKey:kRequestPostData];
     //发送请求
     [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success,NSData *response){
@@ -279,6 +282,22 @@
     //发送请求
     [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success,NSData *response){
         result(success,response);
+    }];
+}
+
++ (void)clientInfoWithToken:(NSString *)token
+                     UserID:(int32_t)userID
+                     Client:(ClientInfo *)clientInfo
+                   Finished:(Result)result {
+    ClientInfoRequest *PBObject = [[[[[ClientInfoRequest builder] setToken:token] setUserId:userID] setClientInfo:clientInfo] build];
+    NSData *PBData = [PBObject data];
+    //请求信息
+    NSMutableDictionary *requestInfo = dictionaryForClient();
+    //修改postdata
+    [requestInfo setObject:PBData forKey:kRequestPostData];
+    //发送请求
+    [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success, NSData *response) {
+        result(success, response);
     }];
 }
 

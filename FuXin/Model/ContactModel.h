@@ -68,5 +68,7 @@ typedef enum{
 @property (strong, nonatomic) NSString *contactTelephone;
 ///邮箱
 @property (strong, nonatomic) NSString *contactEmail;
+//福值
+@property (nonatomic, strong) NSString *fuzhi;
 
 @end

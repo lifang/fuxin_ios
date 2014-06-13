@@ -10616,9 +10616,9 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 
 @interface MessagePush ()
 @property int32_t senderId;
+@property int32_t contactId;
 @property (retain) NSString* senderName;
 @property (retain) NSString* content;
-@property (retain) NSString* contentType;
 @property (retain) NSString* sendTime;
 @end
 
@@ -10631,6 +10631,13 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   hasSenderId_ = !!value;
 }
 @synthesize senderId;
+- (BOOL) hasContactId {
+  return !!hasContactId_;
+}
+- (void) setHasContactId:(BOOL) value {
+  hasContactId_ = !!value;
+}
+@synthesize contactId;
 - (BOOL) hasSenderName {
   return !!hasSenderName_;
 }
@@ -10645,13 +10652,6 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
   hasContent_ = !!value;
 }
 @synthesize content;
-- (BOOL) hasContentType {
-  return !!hasContentType_;
-}
-- (void) setHasContentType:(BOOL) value {
-  hasContentType_ = !!value;
-}
-@synthesize contentType;
 - (BOOL) hasSendTime {
   return !!hasSendTime_;
 }
@@ -10662,16 +10662,15 @@ BOOL ClientInfoResponse_ErrorCodeTypeIsValidValue(ClientInfoResponse_ErrorCodeTy
 - (void) dealloc {
   self.senderName = nil;
   self.content = nil;
-  self.contentType = nil;
   self.sendTime = nil;
   [super dealloc];
 }
 - (id) init {
   if ((self = [super init])) {
     self.senderId = 0;
+    self.contactId = 0;
     self.senderName = @"";
     self.content = @"";
-    self.contentType = @"";
     self.sendTime = @"";
   }
   return self;
@@ -10695,14 +10694,14 @@ static MessagePush* defaultMessagePushInstance = nil;
   if (self.hasSenderId) {
     [output writeInt32:1 value:self.senderId];
   }
+  if (self.hasContactId) {
+    [output writeInt32:2 value:self.contactId];
+  }
   if (self.hasSenderName) {
-    [output writeString:2 value:self.senderName];
+    [output writeString:3 value:self.senderName];
   }
   if (self.hasContent) {
-    [output writeString:3 value:self.content];
-  }
-  if (self.hasContentType) {
-    [output writeString:4 value:self.contentType];
+    [output writeString:4 value:self.content];
   }
   if (self.hasSendTime) {
     [output writeString:5 value:self.sendTime];
@@ -10719,14 +10718,14 @@ static MessagePush* defaultMessagePushInstance = nil;
   if (self.hasSenderId) {
     size += computeInt32Size(1, self.senderId);
   }
+  if (self.hasContactId) {
+    size += computeInt32Size(2, self.contactId);
+  }
   if (self.hasSenderName) {
-    size += computeStringSize(2, self.senderName);
+    size += computeStringSize(3, self.senderName);
   }
   if (self.hasContent) {
-    size += computeStringSize(3, self.content);
-  }
-  if (self.hasContentType) {
-    size += computeStringSize(4, self.contentType);
+    size += computeStringSize(4, self.content);
   }
   if (self.hasSendTime) {
     size += computeStringSize(5, self.sendTime);
@@ -10809,14 +10808,14 @@ static MessagePush* defaultMessagePushInstance = nil;
   if (other.hasSenderId) {
     [self setSenderId:other.senderId];
   }
+  if (other.hasContactId) {
+    [self setContactId:other.contactId];
+  }
   if (other.hasSenderName) {
     [self setSenderName:other.senderName];
   }
   if (other.hasContent) {
     [self setContent:other.content];
-  }
-  if (other.hasContentType) {
-    [self setContentType:other.contentType];
   }
   if (other.hasSendTime) {
     [self setSendTime:other.sendTime];
@@ -10846,16 +10845,16 @@ static MessagePush* defaultMessagePushInstance = nil;
         [self setSenderId:[input readInt32]];
         break;
       }
-      case 18: {
-        [self setSenderName:[input readString]];
+      case 16: {
+        [self setContactId:[input readInt32]];
         break;
       }
       case 26: {
-        [self setContent:[input readString]];
+        [self setSenderName:[input readString]];
         break;
       }
       case 34: {
-        [self setContentType:[input readString]];
+        [self setContent:[input readString]];
         break;
       }
       case 42: {
@@ -10879,6 +10878,22 @@ static MessagePush* defaultMessagePushInstance = nil;
 - (MessagePush_Builder*) clearSenderId {
   result.hasSenderId = NO;
   result.senderId = 0;
+  return self;
+}
+- (BOOL) hasContactId {
+  return result.hasContactId;
+}
+- (int32_t) contactId {
+  return result.contactId;
+}
+- (MessagePush_Builder*) setContactId:(int32_t) value {
+  result.hasContactId = YES;
+  result.contactId = value;
+  return self;
+}
+- (MessagePush_Builder*) clearContactId {
+  result.hasContactId = NO;
+  result.contactId = 0;
   return self;
 }
 - (BOOL) hasSenderName {
@@ -10911,22 +10926,6 @@ static MessagePush* defaultMessagePushInstance = nil;
 - (MessagePush_Builder*) clearContent {
   result.hasContent = NO;
   result.content = @"";
-  return self;
-}
-- (BOOL) hasContentType {
-  return result.hasContentType;
-}
-- (NSString*) contentType {
-  return result.contentType;
-}
-- (MessagePush_Builder*) setContentType:(NSString*) value {
-  result.hasContentType = YES;
-  result.contentType = value;
-  return self;
-}
-- (MessagePush_Builder*) clearContentType {
-  result.hasContentType = NO;
-  result.contentType = @"";
   return self;
 }
 - (BOOL) hasSendTime {

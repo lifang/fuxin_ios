@@ -43,16 +43,16 @@
 //    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     [self.contentView addSubview:self.photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 12, 100, 20)];
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 12, 150, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.textColor = [UIColor blackColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:14];
     [self.contentView addSubview:_nameLabel];
     
-    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(155, 14, 30, 16)];
+    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(205, 14, 30, 16)];
     [self.contentView addSubview:_relationView1];
     
-    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(190, 14, 30, 16)];
+    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(240, 14, 30, 16)];
     [self.contentView addSubview:_relationView2];
 }
 

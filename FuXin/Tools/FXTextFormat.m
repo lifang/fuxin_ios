@@ -54,11 +54,11 @@
             NSString *string = [dataArray objectAtIndex:i];
             if ([string hasPrefix:kBeginFlag] && [string hasSuffix:kEndFlag]) {
                 //图片
-                if (dx >= kMessageBoxWigthMax - kFaceSide) {
+                if (dx >= kMessageBoxWidthMax - kFaceSide) {
                     //换行
                     dy += kFaceSide;
                     dx = 0;
-                    x = kMessageBoxWigthMax;
+                    x = kMessageBoxWidthMax;
                     y = dy;
                 }
                 NSString *imageName = [string substringWithRange:NSMakeRange(2, string.length - 3)];
@@ -66,7 +66,7 @@
                 imgV.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",imageName]];
                 [showView addSubview:imgV];
                 dx += kFaceSide;
-                if (x < kMessageBoxWigthMax) {
+                if (x < kMessageBoxWidthMax) {
                     x = dx;
                 }
             }
@@ -74,20 +74,25 @@
                 //文字
                 for (int j = 0; j < [string length]; j++) {
                     NSString *subString = [string substringWithRange:NSMakeRange(j, 1)];
-                    if (dx >= kMessageBoxWigthMax - 10) {
+                    //若转化为c字符串为null说明可能是emoji表情，与后一字符合并
+                    if (![subString cStringUsingEncoding:NSUTF8StringEncoding] && j + 1 < [string length]) {
+                        subString = [string substringWithRange:NSMakeRange(j, 2)];
+                        j++;
+                    }
+                    if (dx >= kMessageBoxWidthMax - 10) {
                         dy += kFaceSide;
                         dx = 0;
-                        x = kMessageBoxWigthMax;
+                        x = kMessageBoxWidthMax;
                         y = dy;
                     }
-                    CGSize size = [subString sizeWithFont:font constrainedToSize:CGSizeMake(kMessageBoxWigthMax, 20)];
+                    CGSize size = [subString sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 20)];
                     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(dx, dy + 3, size.width, size.height)];
                     label.font = font;
                     label.text = subString;
                     label.backgroundColor = [UIColor clearColor];
                     [showView addSubview:label];
                     dx += size.width;
-                    if (x < kMessageBoxWigthMax) {
+                    if (x < kMessageBoxWidthMax) {
                         x = dx;
                     }
                 }

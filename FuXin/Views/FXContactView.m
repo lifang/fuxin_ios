@@ -39,7 +39,7 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hiddenSelf:)];
     [backView addGestureRecognizer:tap];
     
-    _deskView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, 200)];
+    _deskView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300, 250)];
     _deskView.backgroundColor = [UIColor whiteColor];
     _deskView.layer.cornerRadius = 6;
     [backView addSubview:_deskView];
@@ -50,7 +50,7 @@
     _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     [_deskView addSubview:_photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 100, 20)];
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 140, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:14];
     _nameLabel.adjustsFontSizeToFitWidth = YES;
@@ -77,7 +77,7 @@
     [_deskView addSubview:_remarkLabel];
     
     
-    int count = 3;
+    int count = 4;
     if (!_contact.contactIsProvider) {
         CGRect rect = _deskView.frame;
         rect.size.height = 100;
@@ -123,9 +123,12 @@
             title = @"设置备注：";
             break;
         case 2:
-            title = @"认证行业：";
+            title = @"福值：";
             break;
         case 3:
+            title = @"认证行业：";
+            break;
+        case 4:
             title = @"个人简介：";
             break;
         default:
@@ -138,11 +141,12 @@
     [_deskView addSubview:title1];
     
     if (index >= 2) {
-        UILabel *content = [[UILabel alloc] initWithFrame:CGRectMake(85, 15 + 48 * index, 180 ,20)];
+        UILabel *content = [[UILabel alloc] initWithFrame:CGRectMake(85, 6 + 48 * index, 180 ,40)];
         content.backgroundColor = [UIColor clearColor];
         content.font = [UIFont systemFontOfSize:14];
         content.adjustsFontSizeToFitWidth = YES;
         content.minimumScaleFactor = 0.5f;
+        content.numberOfLines = 2;
         content.textColor = kColor(150 , 150, 150, 1);
         content.tag = index;
         content.text = title;
@@ -156,8 +160,12 @@
 }
 
 - (void)setValueForUI {
-    if (_contact.contactAvatar && [_contact.contactAvatar length] > 0) {
-        _photoView.image = [UIImage imageWithData:_contact.contactAvatar];
+    if ([FXFileHelper isHeadImageExist:_contact.contactAvatarURL]) {
+        NSData *imageData = [FXFileHelper headImageWithName:_contact.contactAvatarURL];
+        _photoView.image = [UIImage imageWithData:imageData];
+    }
+    else {
+        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     }
     _nameLabel.text = _contact.contactNickname;
     _remarkLabel.text = _contact.contactRemark;
@@ -173,11 +181,11 @@
 
     }
     
-    UILabel *professsion = (UILabel *)[self viewWithTag:2];
-    professsion.text = _contact.contactLisence;
+    UILabel *fuzhi = (UILabel *)[self viewWithTag:2];
+    fuzhi.text = _contact.fuzhi;
     
-    UILabel *class = (UILabel *)[self viewWithTag:3];
-    class.text = _contact.contactPublishClassType;
+    UILabel *professsion = (UILabel *)[self viewWithTag:3];
+    professsion.text = _contact.contactLisence;
     
     UILabel *sign = (UILabel *)[self viewWithTag:4];
     sign.text = _contact.contactSignature;

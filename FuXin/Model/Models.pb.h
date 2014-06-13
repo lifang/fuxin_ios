@@ -2823,25 +2823,25 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 @interface MessagePush : PBGeneratedMessage {
 @private
   BOOL hasSenderId_:1;
+  BOOL hasContactId_:1;
   BOOL hasSenderName_:1;
   BOOL hasContent_:1;
-  BOOL hasContentType_:1;
   BOOL hasSendTime_:1;
   int32_t senderId;
+  int32_t contactId;
   NSString* senderName;
   NSString* content;
-  NSString* contentType;
   NSString* sendTime;
 }
 - (BOOL) hasSenderId;
+- (BOOL) hasContactId;
 - (BOOL) hasSenderName;
 - (BOOL) hasContent;
-- (BOOL) hasContentType;
 - (BOOL) hasSendTime;
 @property (readonly) int32_t senderId;
+@property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* senderName;
 @property (readonly, retain) NSString* content;
-@property (readonly, retain) NSString* contentType;
 @property (readonly, retain) NSString* sendTime;
 
 + (MessagePush*) defaultInstance;
@@ -2883,6 +2883,11 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (MessagePush_Builder*) setSenderId:(int32_t) value;
 - (MessagePush_Builder*) clearSenderId;
 
+- (BOOL) hasContactId;
+- (int32_t) contactId;
+- (MessagePush_Builder*) setContactId:(int32_t) value;
+- (MessagePush_Builder*) clearContactId;
+
 - (BOOL) hasSenderName;
 - (NSString*) senderName;
 - (MessagePush_Builder*) setSenderName:(NSString*) value;
@@ -2892,11 +2897,6 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (NSString*) content;
 - (MessagePush_Builder*) setContent:(NSString*) value;
 - (MessagePush_Builder*) clearContent;
-
-- (BOOL) hasContentType;
-- (NSString*) contentType;
-- (MessagePush_Builder*) setContentType:(NSString*) value;
-- (MessagePush_Builder*) clearContentType;
 
 - (BOOL) hasSendTime;
 - (NSString*) sendTime;

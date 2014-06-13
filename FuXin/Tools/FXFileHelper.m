@@ -27,7 +27,9 @@
     return [NSString stringWithFormat:@"%ld",(unsigned long)[[string description] hash]];
 }
 
-+ (void)documentSaveImageData:(NSData *)imageData withName:(NSString *)name withPathType:(PathTypes)type {
++ (void)documentSaveImageData:(NSData *)imageData
+                     withName:(NSString *)name
+                 withPathType:(PathTypes)type {
     NSString *directory = nil;
     switch (type) {
         case PathForChatImage: {
@@ -49,6 +51,17 @@
         NSString *path = [directory stringByAppendingPathComponent:[[self class] hashName:name]];
         [fileManager createFileAtPath:path contents:imageData attributes:nil];
     });
+}
+
++ (void)documentSaveImageData:(NSData *)imageData withName:(NSString *)name {
+    NSString *directory = [[self class] chatImagePath];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:directory]) {
+        [fileManager createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *path = [directory stringByAppendingPathComponent:[[self class] hashName:name]];
+    [imageData writeToFile:path atomically:YES];
+    NSLog(@"写图片完成");
 }
 
 + (NSData *)chatImageAlreadyLoadWithName:(NSString *)name {

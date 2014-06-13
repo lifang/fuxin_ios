@@ -46,8 +46,8 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-//    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
-    [self getMessageAll];
+    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
+//    [self getMessageAll];
     [self getContactAll];
     [self showFirstData];
     
@@ -138,7 +138,9 @@
                     for (int i = 0; i < [resp.messageListsList count]; i++) {
                         MessageList *list = [resp.messageListsList objectAtIndex:i];
                         NSArray *messages = list.messagesList;
-                        NSLog(@"消息%d",list.contactId);
+                        NSLog(@"^^^^");
+                        NSLog(@"消息数%d",[messages count]);
+                        NSLog(@"=---=");
                         [messageDict setObject:messages forKey:[NSString stringWithFormat:@"%d",list.contactId]];
                     }
                     [self DBSaveMessagesWithDictionary:messageDict];
@@ -193,7 +195,7 @@
 
 //从数据库读取对话列表
 - (NSMutableArray *)getChatListFromDB {
-    NSLog(@"读取数据库！");
+//    NSLog(@"读取数据库！");
     NSMutableArray *recentArray = [NSMutableArray array];
     [LHLDBTools getConversationsWithFinished:^(NSMutableArray *list, NSString *error) {
         for (ConversationModel *conv in list) {
@@ -298,8 +300,13 @@
         }];
         
     }
-    NSLog(@"下载读取！");
+//    NSLog(@"下载读取！");
     [_chatC updateChatList:[self getChatListFromDB]];
+}
+
+//将URL中得反斜杠换成斜杠
+- (NSString *)urlStringFormatWithString:(NSString *)url {
+    return [url stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
 }
 
 //将所有获取的联系人保存到数据库
@@ -320,19 +327,23 @@
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactSignature = contact.individualResume;
-        if ([FXFileHelper isHeadImageExist:contact.tileUrl]) {
+        
+        NSString *tileURLFormat = [self urlStringFormatWithString:contact.tileUrl];
+        if ([FXFileHelper isHeadImageExist:tileURLFormat]) {
             //若头像存在 说明未修改 直接保存
-            model.contactAvatarURL = contact.tileUrl;
+            model.contactAvatarURL = tileURLFormat;
         }
         else {
             [LHLDBTools getAllContactsWithFinished:^(NSArray *contactList, NSString *error) {
                 for (ContactModel *oldC in contactList) {
                     if ([oldC.contactID isEqualToString:model.contactID]) {
                         //删除旧的头像
-                        [FXFileHelper removeAncientHeadImageIfExistWithName:model.contactAvatarURL];
+                        [FXFileHelper removeAncientHeadImageIfExistWithName:oldC.contactAvatarURL];
+                        break;
                     }
                 }
             }];
+            model.contactAvatarURL = tileURLFormat;
         }
         [arrayForDB addObject:model];
     }

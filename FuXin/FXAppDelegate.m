@@ -4,7 +4,7 @@
 //
 //  Created by 徐宝桥 on 14-5-14.
 //  Copyright (c) 2014年 ___MyCompanyName___. All rights reserved.
-//
+//883096371
 
 #import "FXAppDelegate.h"
 #import <AdSupport/ASIdentifierManager.h>
@@ -67,7 +67,7 @@ static UINavigationController *s_loginNavController = nil;
 {
     //百度统计
     [self initBaiduStats];
-    
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];

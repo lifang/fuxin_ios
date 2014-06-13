@@ -34,5 +34,7 @@
 @property (nonatomic, strong) NSString *lisence;
 //实名认证
 @property (nonatomic, strong) NSNumber *isAuth;
+//福值
+@property (nonatomic, strong) NSString *fuzhi;
 
 @end

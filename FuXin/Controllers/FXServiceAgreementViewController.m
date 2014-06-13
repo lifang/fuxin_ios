@@ -16,6 +16,8 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
 @property (strong ,nonatomic) UIWebView *webView;
 @property (assign ,nonatomic) BOOL isAuthed;
 @property (strong ,nonatomic) NSURLRequest *originRequest;
+@property (nonatomic, strong) ASIHTTPRequest *request;
+
 @end
 
 @implementation FXServiceAgreementViewController
@@ -40,11 +42,11 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
     
     [self.view addSubview:_webView];
     [_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kServiceURL]]];
-    ASIHTTPRequest *request = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:kServiceURL]];
-    [request setValidatesSecureCertificate:NO];
-    request.defaultResponseEncoding = NSUTF8StringEncoding;
-    request.delegate = self;
-    [request startAsynchronous];
+    _request = [[ASIHTTPRequest alloc] initWithURL:[NSURL URLWithString:kServiceURL]];
+    [_request setValidatesSecureCertificate:NO];
+    _request.defaultResponseEncoding = NSUTF8StringEncoding;
+    _request.delegate = self;
+    [_request startAsynchronous];
     
     
     [self setLeftNavBarItemWithImageName:@"back.png"];
@@ -70,6 +72,11 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)back:(id)sender {
+    _request.delegate = nil;
+    [super back:sender];
 }
 
 #pragma mark ASIHTTPRequest Delegate

@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "FXUserModel.h"
+#import "FXLoginUser.h"
 
 #define kUserPath            @"userLoginInfo"
 #define kHistoryLoginUsers   @"histiryLoginUsers"
+
+
+#define kUserInfoPath        @"userInfo"
+#define kLoginUser           @"loginUser"
 
 @interface FXArchiverHelper : NSObject
 
@@ -20,5 +25,10 @@
 + (void)saveUserInfo:(FXUserModel *)user;
 
 + (void)print;
+
+//用户密码保存
++ (void)saveUserPassword:(FXLoginUser *)user;
+
++ (FXLoginUser *)getUserPassword;
 
 @end

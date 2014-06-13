@@ -187,4 +187,16 @@
                                Type:(ValidateCodeRequest_ValidateType)type
                            Finished:(Result)result;
 
+/*
+ 推送注册
+ token: 成功登入返回的令牌
+ userID:成功登入返回的userID
+ clientInfo:推送信息
+ result:返回结果
+ */
++ (void)clientInfoWithToken:(NSString *)token
+                     UserID:(int32_t)userID
+                     Client:(ClientInfo *)clientInfo
+                   Finished:(Result)result;
+
 @end
