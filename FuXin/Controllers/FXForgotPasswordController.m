@@ -274,6 +274,7 @@
 //                [cell.contentView addSubview:self.coundDownLabel];
 //            }
             break;
+            
         case 5:
             if ([self cell:cell isNotSuperOfView:self.checkButton]) {   //选中同意
                 self.checkButton.frame = (CGRect){5 ,(cellSize.height - 19) / 2 ,19 ,19};
@@ -635,13 +636,17 @@
             }
         }
         
-        if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
-            self.alertLabel.text = @"";
-            [self changeRewriteButtonStatus:YES];
-            
+        if (phoneNumberText.length < 1) {
+            self.alertLabel.text = @"请输入手机号码";
         }else{
-            self.alertLabel.text = @"格式错误!";
-            [self changeRewriteButtonStatus:NO];
+            if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
+                self.alertLabel.text = @"";
+                [self changeRewriteButtonStatus:YES];
+                
+            }else{
+                self.alertLabel.text = @"格式错误!";
+                [self changeRewriteButtonStatus:NO];
+            }
         }
         
         

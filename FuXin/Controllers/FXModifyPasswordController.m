@@ -708,13 +708,17 @@
         }
     }
     
-    if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
-        self.alertLabel.text = @"";
-        [self changeRewriteButtonStatus:YES];
-        
+    if (phoneNumberText.length < 1) {
+        self.alertLabel.text = @"请输入手机号码";
     }else{
-        self.alertLabel.text = @"格式错误!";
-        [self changeRewriteButtonStatus:NO];
+        if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
+            self.alertLabel.text = @"";
+            [self changeRewriteButtonStatus:YES];
+            
+        }else{
+            self.alertLabel.text = @"格式错误!";
+            [self changeRewriteButtonStatus:NO];
+        }
     }
     
     if ([identifyingCodeText rangeOfString:@"^[0-9]{6}$" options:NSRegularExpressionSearch].length > 0) {
