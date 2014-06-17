@@ -111,6 +111,8 @@
     self.phoneNumberTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.phoneNumberTextField.returnKeyType = UIReturnKeyNext;
     
+    self.alertLabel.adjustsFontSizeToFitWidth = YES;
+    
     self.lineView = [[UIView alloc] init];
     self.lineView.backgroundColor = kColor(191, 191, 191, 1);
     
@@ -637,7 +639,7 @@
         }
         
         if (phoneNumberText.length < 1) {
-            self.alertLabel.text = @"请输入手机号码";
+            self.alertLabel.text = @"请输入手机号";
         }else{
             if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
                 self.alertLabel.text = @"";

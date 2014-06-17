@@ -709,7 +709,7 @@
     }
     
     if (phoneNumberText.length < 1) {
-        self.alertLabel.text = @"请输入手机号码";
+        self.alertLabel.text = @"请输入手机号";
     }else{
         if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
             self.alertLabel.text = @"";
