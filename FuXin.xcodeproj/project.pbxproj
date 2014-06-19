@@ -574,6 +574,7 @@
 		937EDC331945B60A008C5623 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		937EDC351945B623008C5623 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		938A38981946968F00DBA0E4 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		93AA31B519501609003D7B84 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		93AA53ED193078F00029E608 /* FXForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXForgotPasswordController.h; sourceTree = "<group>"; };
 		93AA53EE193078F00029E608 /* FXForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXForgotPasswordController.m; sourceTree = "<group>"; };
 		93AA53EF193078F00029E608 /* FXForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FXForgotPasswordController.xib; sourceTree = "<group>"; };
@@ -914,6 +915,7 @@
 		7786276E192313B9009AF6E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				93AA31B519501609003D7B84 /* iAd.framework */,
 				938A38981946968F00DBA0E4 /* AdSupport.framework */,
 				937EDC351945B623008C5623 /* CoreTelephony.framework */,
 				937EDC331945B60A008C5623 /* libstdc++.dylib */,

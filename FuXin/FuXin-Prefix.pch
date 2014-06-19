@@ -17,6 +17,8 @@
     #import "ContactModel.h"
     #import "ConversationModel.h"
     #import "FXAppDelegate.h"
+//设备尺寸
+#define is4Inch(yes ,no) [UIScreen mainScreen].bounds.size.height > 481 ? yes : no
 #endif
 
 #import "FXConstants.h"
