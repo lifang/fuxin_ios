@@ -19,6 +19,9 @@
 
 @property (nonatomic, strong) FXAddressListController *addrC;
 
+//判断是否正在加载消息信息
+@property (nonatomic, assign) BOOL isRequestChatting;
+
 @end
 
 @implementation FXMainController
@@ -28,6 +31,12 @@
 @synthesize settNav = _settNav;
 @synthesize chatC = _chatC;
 @synthesize addrC = _addrC;
+
+@synthesize isRequestChatting = _isRequestChatting;
+
+- (void)dealloc {
+    [self cancelSource];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,13 +55,17 @@
     self.tabBar.selectedImageTintColor = [UIColor redColor];
     
     [self initControllers];
-    [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
+    _timer = [NSTimer timerWithTimeInterval:kGetMessageDuration target:self selector:@selector(getMessageAll) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+    [_timer fire];
+    
 //    [self getMessageAll];
     [self getContactAll];
     [self showFirstData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshChatList:) name:ChatNeedRefreshListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAddressList:) name:AddressNeedRefreshListNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMessageAll) name:PushMessageNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,6 +76,7 @@
 
 //清空
 - (void)cancelSource {
+    [_timer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -116,6 +130,11 @@
 
 //请求消息
 - (void)getMessageAll {
+    NSLog(@"get message");
+    if (_isRequestChatting) {
+        return;
+    }
+    _isRequestChatting = YES;
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     if (delegate.token && delegate.userID >= 0) {
         [FXRequestDataFormat getMessageWithToken:delegate.token UserID:delegate.userID TimeStamp:delegate.messageTimeStamp Finished:^(BOOL success, NSData *response) {
@@ -157,6 +176,7 @@
             else {
                 //请求失败
             }
+            _isRequestChatting = NO;
         }];
     }
 }

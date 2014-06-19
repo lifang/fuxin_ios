@@ -63,9 +63,12 @@
         return;
     }
     _contactModel = contactModel;
-    if (contactModel.contactAvatar.length > 0) {
-        UIImage *avatarImg = [UIImage imageWithData:contactModel.contactAvatar];
-        [_photoView setImage:avatarImg];
+    if ([FXFileHelper isHeadImageExist:_contactModel.contactAvatarURL]) {
+        NSData *imageData = [FXFileHelper headImageWithName:_contactModel.contactAvatarURL];
+        _photoView.image = [UIImage imageWithData:imageData];
+    }
+    else {
+        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     }
     if (contactModel.contactRemark && ![contactModel.contactRemark isEqualToString:@""]) {
         _nameLabel.text = contactModel.contactRemark;

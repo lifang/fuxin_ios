@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 //时间间隔 用于显示时间
-#define kTimeInterval  30
+#define kTimeInterval  300
 
 @interface FXTimeFormat : NSObject
 

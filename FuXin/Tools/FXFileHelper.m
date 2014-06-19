@@ -10,6 +10,7 @@
 
 #define kImagePath     @"chatimage"
 #define kHeadImagePath @"headImage"
+#define kPListName     @"sizePlist"
 
 @implementation FXFileHelper
 
@@ -61,7 +62,7 @@
     }
     NSString *path = [directory stringByAppendingPathComponent:[[self class] hashName:name]];
     [imageData writeToFile:path atomically:YES];
-    NSLog(@"写图片完成");
+    NSLog(@"写图片完成%@",name);
 }
 
 + (NSData *)chatImageAlreadyLoadWithName:(NSString *)name {
@@ -100,6 +101,22 @@
     if ([[NSFileManager defaultManager] fileExistsAtPath:directory]) {
         [[NSFileManager defaultManager] removeItemAtPath:directory error:nil];
     }
+}
+
+#pragma mark - 保存图片大小
+
++ (void)saveChatImagePList:(NSMutableDictionary *)plist {
+    NSString *directory = [[self class] chatImagePath];
+    NSString *plistPath = [directory stringByAppendingPathComponent:kPListName];
+    [plist writeToFile:plistPath atomically:YES];
+    NSLog(@"write = %d",[plist writeToFile:plistPath atomically:YES]);
+}
+
++ (NSMutableDictionary *)getPList {
+    NSString *directory = [[self class] chatImagePath];
+    NSString *plistPath = [directory stringByAppendingPathComponent:kPListName];
+    NSMutableDictionary *plist = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
+    return plist;
 }
 
 @end

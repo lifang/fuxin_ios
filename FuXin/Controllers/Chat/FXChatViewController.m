@@ -19,6 +19,7 @@
 #import "Models.pb.h"
 #import "FXDetailImageView.h"
 #import "FXFileHelper.h"
+#import "FXInfoView.h"
 
 #define kSmallImage   @"&width=216&height=144"
 
@@ -41,6 +42,8 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 @property (nonatomic, strong) ContactModel *contactDetail;
 
+@property (nonatomic, strong) FXInfoView *infoView;   //提示框
+
 @end
 
 @implementation FXChatViewController
@@ -61,6 +64,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 @synthesize keyboardHeight = _keyboardHeight;
 @synthesize userImage = _userImage;
 @synthesize contactDetail = _contactDetail;
+@synthesize infoView = _infoView;
 
 - (void)dealloc {
     //注销掉键盘通知
@@ -153,6 +157,8 @@ static NSString *MessageCellIdentifier = @"MCI";
     
     [self initPictureListView];
     [self initEmojiView];
+    
+    [self initInfoView];
 }
 
 - (void)hiddenExtraCellLine {
@@ -173,6 +179,17 @@ static NSString *MessageCellIdentifier = @"MCI";
     _emojiListView = [[FXEmojiView alloc] initWithFrame:CGRectMake(0, kScreenHeight - 64, 320, 216)];
     _emojiListView.emojiDelegate = self;
     [self.view addSubview:_emojiListView];
+}
+
+//提示框
+- (void)initInfoView {
+    CGFloat originY = (kScreenHeight - 64 - 40) / 2;
+    _infoView = [[FXInfoView alloc] initWithFrame:CGRectMake(100, originY, 120, 40)];
+    _infoView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _infoView.layer.cornerRadius = 4;
+    _infoView.layer.masksToBounds = YES;
+    _infoView.hidden = YES;
+    [self.view addSubview:_infoView];
 }
 
 //联系人详细
@@ -250,18 +267,21 @@ static NSString *MessageCellIdentifier = @"MCI";
 
 //重写导航右按钮方法
 - (IBAction)rightBarTouched:(id)sender {
-    NSArray *listArray = [NSArray arrayWithObjects:
-                          [KxMenuItem menuItem:@"清除聊天记录"
-                                         image:nil
-                                        target:self
-                                        action:@selector(cleanUp:)],
-                          [KxMenuItem menuItem:@"屏蔽此人"
-                                         image:nil
-                                        target:self action:@selector(hiddenUser:)],
-                          [KxMenuItem menuItem:@"修改备注"
-                                         image:nil
-                                        target:self action:@selector(addDetailView)],
-                          nil];
+    NSMutableArray *listArray = [NSMutableArray arrayWithObjects:
+                                 [KxMenuItem menuItem:@"清除聊天记录"
+                                                image:nil
+                                               target:self
+                                               action:@selector(cleanUp:)],
+                                 [KxMenuItem menuItem:@"修改备注"
+                                                image:nil
+                                               target:self action:@selector(addDetailView)],
+                                 nil];
+    if (!_contact.contactIsBlocked) {
+        [listArray insertObject:[KxMenuItem menuItem:@"屏蔽此人"
+                                              image:nil
+                                              target:self action:@selector(hiddenUser:)]
+                        atIndex:1];
+    }
     CGRect rect = CGRectMake(280, 0, 20, 0);
     [KxMenu showMenuInView:self.view fromRect:rect menuItems:listArray];
 }
@@ -371,10 +391,12 @@ static NSString *MessageCellIdentifier = @"MCI";
             if (resp.isSucceed) {
                 //屏蔽成功
                 info = @"成功屏蔽此联系人，你可以在设置中取消屏蔽此人！";
+                _contact.contactIsBlocked = YES;
                 [LHLDBTools findContactWithContactID:_ID withFinished:^(ContactModel *model, NSString *error) {
                     model.contactIsBlocked = YES;
                     [LHLDBTools saveContact:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
                         [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
                     }];
                 }];
             }
@@ -395,12 +417,9 @@ static NSString *MessageCellIdentifier = @"MCI";
     }];
 }
 
-#pragma mark - 数据
+#pragma mark - 数据-
 
 - (void)showChatMessage {
-    [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:^(BOOL finish) {
-        
-    }];
     [LHLDBTools getLatestChattingRecordsWithContactID:_ID withFinished:^(NSArray *list, NSString *error) {
         [_dataItems addObjectsFromArray:list];
         [_chatTableView reloadData];
@@ -543,14 +562,11 @@ static NSString *MessageCellIdentifier = @"MCI";
     //保存到本地的图片名
     NSString *cacheString = [NSString stringWithFormat:@"%@%@",content,kSmallImage];
     
-    __weak ASIHTTPRequest *wRequest = request;
+//    __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
-//        [cell setImageData:[wRequest responseData]];
-//        NSIndexPath *path = [_chatTableView indexPathForCell:cell];
-//        [_chatTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
-        [FXFileHelper documentSaveImageData:[wRequest responseData] withName:cacheString withPathType:PathForChatImage];
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [FXFileHelper documentSaveImageData:[wRequest responseData] withName:cacheString];
+            NSData *imageData = [request responseData];
+            [FXFileHelper documentSaveImageData:imageData withName:cacheString];
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSLog(@"下载完成！");
                [_chatTableView reloadData];
@@ -559,6 +575,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     }];
     [request setFailedBlock:^{
         //下载失败，保存NO到此命名的文件，防止重复下载
+        NSLog(@"fail");
         NSData *data = [@"NO" dataUsingEncoding:NSUTF8StringEncoding];
         [FXFileHelper documentSaveImageData:data withName:cacheString withPathType:PathForChatImage];
     }];
@@ -653,6 +670,25 @@ static NSString *MessageCellIdentifier = @"MCI";
         }
         else {
             //接收的图片保存在文件中
+//            NSValue *value = [_plist objectForKey:model.messageContent];
+//            if (value) {
+//                //已缓存此图
+//                CGSize imageSize = [value CGSizeValue];
+//                NSLog(@"imageSize = %@",NSStringFromCGSize(imageSize));
+//                if (imageSize.height == 0 && imageSize.width == 0) {
+//                    //下载失败
+//                    return 100 + kTimeLabelHeight + 20;
+//                }
+//                else {
+//                    return imageSize.height + kTimeLabelHeight + 20;
+//                }
+//            }
+//            else {
+//                //未缓存此图
+//                NSLog(@"!!!!!");
+//                return 100 + kTimeLabelHeight + 20;
+//            }
+//        }
             NSString *cacheString = [NSString stringWithFormat:@"%@%@",model.messageContent,kSmallImage];
             NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:cacheString];
             NSLog(@"length = %d",[imageData length]);
@@ -708,6 +744,8 @@ static NSString *MessageCellIdentifier = @"MCI";
 }
 
 - (void)sendMessageWithMessage:(Message *)message {
+    [_infoView show];
+    [_infoView setText:@"正在发送消息"];
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     [FXRequestDataFormat sendMessageWithToken:delegate.token UserID:delegate.userID Message:message Finished:^(BOOL success, NSData *response) {
         if (success) {
@@ -722,17 +760,23 @@ static NSString *MessageCellIdentifier = @"MCI";
                 NSArray *message = [NSArray arrayWithObject:indexPath];
                 [self.chatTableView insertRowsAtIndexPaths:message withRowAnimation:UITableViewRowAnimationBottom];
                 [self.chatTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                [_infoView setText:@"消息发送成功！"];
             }
             else {
                 NSLog(@"errorCode = %d",resp.errorCode);
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                    message:@"消息发送失败"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"确定"
-                                                          otherButtonTitles:nil];
-                [alertView show];
+//                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+//                                                                    message:@"消息发送失败"
+//                                                                   delegate:nil
+//                                                          cancelButtonTitle:@"确定"
+//                                                          otherButtonTitles:nil];
+//                [alertView show];
+                [_infoView setText:@"消息发送失败！"];
             }
         }
+        else {
+            [_infoView setText:@"网络请求失败！"];
+        }
+        [_infoView hide];
     }];
 }
 

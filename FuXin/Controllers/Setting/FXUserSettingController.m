@@ -256,7 +256,7 @@
     if ([_userInfo.isProvider boolValue]) {
         switch (indexPath.row) {
             case 0: {
-                title.text = @"福值：";
+                title.text = @"福指：";
                 content.text = _userInfo.fuzhi;
             }
                 break;

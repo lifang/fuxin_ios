@@ -19,12 +19,15 @@ static NSString *ChatUpdateMessageNotification = @"ChatUpdateMessageNotification
 static NSString *AddressNeedRefreshListNotification = @"AddressNeedRefreshListNotification";
 //更新个人信息
 static NSString *UpdateUserInfoNotification = @"UpdateUserInfoNotification";
+//退到后台时接收消息
+static NSString *PushMessageNotification = @"PushMessageNotification";
 
 @interface FXMainController : UITabBarController
 
 @property (nonatomic, strong) UINavigationController *chatNav;
 @property (nonatomic, strong) UINavigationController *addrNav;
 @property (nonatomic, strong) UINavigationController *settNav;
+@property (nonatomic, strong) NSTimer *timer;
 
 - (void)cancelSource;
 

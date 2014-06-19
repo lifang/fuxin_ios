@@ -62,7 +62,7 @@
 + (FXUserModel *)getCurrentUserInfo:(NSString *)loginName fromUserArray:(NSArray *)userArray {
     FXUserModel *currentUser = nil;
     for (FXUserModel *user in userArray) {
-        if ([user.mobilePhoneNum isEqualToString:loginName] || [user.email isEqualToString:loginName]) {
+        if ([user.mobilePhoneNum isEqualToString:loginName] || [user.email caseInsensitiveCompare:loginName] == NSOrderedSame) {
             //此用户已登录过
             currentUser = user;
             break;

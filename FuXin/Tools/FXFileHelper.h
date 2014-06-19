@@ -40,4 +40,9 @@ typedef void (^finishWrite)(BOOL finish);
 //删除所有聊天图片
 + (void)removeAllChatImage;
 
+//图片信息读取
++ (void)saveChatImagePList:(NSMutableDictionary *)plist;
+
++ (NSMutableDictionary *)getPList;
+
 @end

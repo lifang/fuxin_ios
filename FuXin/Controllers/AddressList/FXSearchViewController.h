@@ -11,6 +11,7 @@
 #import "FXChatViewController.h"
 #import "FXFileHelper.h"
 #import "FXListCell.h"
+#import "FXContactController.h"
 
 @interface FXSearchViewController : FXAdjustViewController<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>
 

@@ -34,18 +34,16 @@
     NSURL *url = [NSURL URLWithString:[dict objectForKey:kRequestURL]];
     NSString *methodType = [dict objectForKey:kRequestType];
     NSData *PBData = [dict objectForKey:kRequestPostData];
-    
     NSMutableData *postData = [[self class] encodePostdataWithData:PBData];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    NSLog(@"url = %@",url);
     [request setRequestMethod:methodType];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setPostBody:postData];
+    [request setTimeOutSeconds:kGetMessageDuration - 1];
 //    [request setValidatesSecureCertificate:NO];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
-
     __weak ASIHTTPRequest *wRequest = request;
     [request setCompletionBlock:^{
         NSLog(@"success");

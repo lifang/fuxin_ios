@@ -26,6 +26,10 @@
 @synthesize usernameField = _usernameField;
 @synthesize passwordField = _passwordField;
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,6 +50,8 @@
     if (_usernameField.text && ![_usernameField.text isEqualToString:@""]) {
         [self getUserInfoWithLogin:YES];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -94,6 +100,7 @@
     _usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     _usernameField.leftViewMode = UITextFieldViewModeAlways;
     _usernameField.leftView = userBackView;
+    _usernameField.placeholder = @"输入账号";
     _usernameField.delegate = self;
     [_usernameField addTarget:self action:@selector(getUserInfo) forControlEvents:UIControlEventEditingDidEnd];
     [self.view addSubview:_usernameField];
@@ -116,6 +123,7 @@
     _passwordField.clearButtonMode = UITextFieldViewModeWhileEditing;
     _passwordField.leftViewMode = UITextFieldViewModeAlways;
     _passwordField.leftView = psdBackView;
+    _passwordField.placeholder = @"输入密码";
     _passwordField.delegate = self;
     [self.view addSubview:_passwordField];
     //划线
@@ -174,6 +182,7 @@
     [(UIButton *)sender setUserInteractionEnabled:NO];
     [_usernameField resignFirstResponder];
     [_passwordField resignFirstResponder];
+    [self resetViewFrame];
     if ([_usernameField.text isEqualToString:@""] || [_passwordField.text isEqualToString:@""]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
                                                         message:@"用户名或密码不能为空！"
@@ -235,8 +244,40 @@
     loginUser.password = _passwordField.text;
     [FXArchiverHelper saveUserPassword:loginUser];
     
+    [self setPushInfo];
+    
     FXRootViewController *rootController = [[FXAppDelegate shareFXAppDelegate] shareRootViewContorller];
     [rootController showMainViewController];
+}
+
+- (void)setPushInfo {
+    //设置推送相关
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *currentVersion = [infoDict objectForKey:@"CFBundleVersion"];
+    ClientInfo *client = [[[[[[[[[ClientInfo builder]
+                                setDeviceId:delegate.push_deviceToken]
+                               setOsType:ClientInfo_OSTypeIos]
+                              setOsversion:[[UIDevice currentDevice] systemVersion]]
+                             setUserId:delegate.userID]
+                            setChannel:kPushChannel]
+                            setClientVersion:currentVersion]
+                           setIsPushEnable:YES] build];
+    [FXRequestDataFormat clientInfoWithToken:delegate.token UserID:delegate.userID Client:client Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ClientInfoResponse *resp = [ClientInfoResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //接收成功
+                delegate.enablePush = YES;
+                NSLog(@"push success");
+            }
+            else {
+                //接收失败
+                NSLog(@"push = %d",resp.errorCode);
+            }
+        }
+    }];
 }
 
 - (IBAction)userRegister:(id)sender {
@@ -276,7 +317,35 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
+    [self resetViewFrame];
     return YES;
+}
+
+#pragma mark - Keyboard
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    if ([_usernameField isFirstResponder] || [_passwordField isFirstResponder]) {
+        NSDictionary *info = [notification userInfo];
+        CGRect kbRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        //308为登录按钮最低端
+        int offset = 308 - (kScreenHeight - 64 - kbRect.size.height);
+        [UIView animateWithDuration:0.3 animations:^{
+            CGRect rect = self.view.frame;
+            rect.origin.y -= offset;
+            self.view.frame = rect;
+        }];
+    }
+}
+
+- (void)resetViewFrame {
+    [UIView animateWithDuration:0.3 animations:^{
+        CGFloat originY = 0;
+        if (kDeviceVersion >= 7.0) {
+            originY = 64;
+        }
+        CGRect rect = CGRectMake(0, originY, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = rect;
+    }];
 }
 
 @end

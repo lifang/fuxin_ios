@@ -199,11 +199,16 @@ static NSString *searchIdentifer = @"SI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [_searchBar resignFirstResponder];
     ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
-    FXChatViewController *chatC = [[FXChatViewController alloc] init];
-    chatC.contact = rowData;
-    chatC.ID = rowData.contactID;
-    chatC.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:chatC animated:YES];
+//    FXChatViewController *chatC = [[FXChatViewController alloc] init];
+//    chatC.contact = rowData;
+//    chatC.ID = rowData.contactID;
+//    chatC.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:chatC animated:YES];
+    FXContactController *contactC = [[FXContactController alloc] init];
+    contactC.contact = rowData;
+    contactC.ID = rowData.contactID;
+    contactC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:contactC animated:YES];
 }
 
 @end

@@ -17,6 +17,8 @@
 #import "FXArchiverHelper.h"
 #import "FXTextFormat.h"
 #import "FXFileHelper.h"
+#import "SharedClass.h"
+#import "FXPushViewController.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -367,6 +369,12 @@
             [alert show];
         }
             break;
+        case 3: {
+            FXPushViewController *push = [[FXPushViewController alloc] init];
+            push.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:push animated:YES];
+        }
+            break;
         case 4: {
             FXModifyPasswordController *modifyPassword = [[FXModifyPasswordController alloc] init];
 //            self.tabBarController.tabBar.hidden = YES;
@@ -384,7 +392,8 @@
 //        }
 //            break;
         case 6: {
-            //退出
+            //推送注销
+            [self resignPushInfo];
             FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
             [FXRequestDataFormat authenticationOutWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {
                 if (success) {
@@ -405,6 +414,9 @@
             delegate.token = nil;
             delegate.userID = -1;
             delegate.user = nil;
+            delegate.enablePush = NO;
+            //数据库操作保存id
+            [SharedClass sharedObject].userID = nil;
             [[delegate shareRootViewContorller] showLoginViewController];
             [[delegate shareRootViewContorller] removeMainController];
             
@@ -413,6 +425,35 @@
         default:
             break;
     }
+}
+
+- (void)resignPushInfo {
+    //设置推送相关
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+    NSString *currentVersion = [infoDict objectForKey:@"CFBundleVersion"];
+    ClientInfo *client = [[[[[[[[[ClientInfo builder]
+                                setDeviceId:delegate.push_deviceToken]
+                               setOsType:ClientInfo_OSTypeIos]
+                              setOsversion:[[UIDevice currentDevice] systemVersion]]
+                             setUserId:delegate.userID]
+                            setChannel:kPushChannel]
+                            setClientVersion:currentVersion]
+                           setIsPushEnable:NO] build];
+    [FXRequestDataFormat clientInfoWithToken:delegate.token UserID:delegate.userID Client:client Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ClientInfoResponse *resp = [ClientInfoResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //接收成功
+                NSLog(@"push success");
+            }
+            else {
+                //接收失败
+                NSLog(@"push = %d",resp.errorCode);
+            }
+        }
+    }];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -449,7 +490,7 @@
     NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
     NSString *currentVersion = [infoDict objectForKey:@"CFBundleVersion"];
     //883096371
-    NSString *url = @"http://itunes.apple.com/lookup?id=561885553";
+    NSString *url = @"http://itunes.apple.com/lookup?id=883096371";
 
     ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
     [request startAsynchronous];
@@ -480,7 +521,7 @@
                                                   otherButtonTitles:nil];
             [alert show];
         }
-    }];
+    }]; 
     [request setFailedBlock:^{
         _isRequest = NO;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"

@@ -70,28 +70,13 @@
     _relationView2.hidden = YES;
     [_deskView addSubview:_relationView2];
     
+    
+    
     _remarkLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 30, 200, 20)];
     _remarkLabel.backgroundColor = [UIColor clearColor];
     _remarkLabel.font = [UIFont systemFontOfSize:12];
     _remarkLabel.textColor = kColor(150, 150, 150, 1);
     [_deskView addSubview:_remarkLabel];
-    
-    
-    int count = 4;
-    if (!_contact.contactIsProvider) {
-        CGRect rect = _deskView.frame;
-        rect.size.height = 100;
-        _deskView.frame = rect;
-        count = 1;
-    }
-    //line 是福师显示认证行业和个人简介，不是福师不显示
-    for (int i = 1; i <= count; i++) {
-        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(10, i * 48, 280, 1)];
-        line.backgroundColor = kColor(200, 200, 200, 1);
-        [_deskView addSubview:line];
-        
-        [self addTitleLabelWithInt:i];
-    }
     
     _remarkField = [[UITextField alloc] initWithFrame:CGRectMake(85, 59, 140, 30)];
     _remarkField.borderStyle = UITextBorderStyleNone;
@@ -123,7 +108,7 @@
             title = @"设置备注：";
             break;
         case 2:
-            title = @"福值：";
+            title = @"福       指：";
             break;
         case 3:
             title = @"认证行业：";
@@ -149,13 +134,27 @@
         content.numberOfLines = 2;
         content.textColor = kColor(150 , 150, 150, 1);
         content.tag = index;
-        content.text = title;
         [_deskView addSubview:content];
     }
 }
 
 - (void)setContact:(ContactModel *)contact {
     _contact = contact;
+    int count = 4;
+    if (!_contact.contactIsProvider) {
+        CGRect rect = _deskView.frame;
+        rect.size.height = 100;
+        _deskView.frame = rect;
+        count = 1;
+    }
+    //line 是福师显示认证行业和个人简介，不是福师不显示
+    for (int i = 1; i <= count; i++) {
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(10, i * 48, 280, 1)];
+        line.backgroundColor = kColor(200, 200, 200, 1);
+        [_deskView addSubview:line];
+        
+        [self addTitleLabelWithInt:i];
+    }
     [self setValueForUI];
 }
 

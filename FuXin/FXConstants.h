@@ -14,3 +14,9 @@
 
 //手机系统版本
 #define kDeviceVersion [[[UIDevice currentDevice] systemVersion] floatValue]
+
+//推送渠道号
+#define kPushChannel    10001
+
+//获取消息间隔
+#define kGetMessageDuration   10

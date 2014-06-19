@@ -65,7 +65,7 @@ static CGFloat iOS7_Space = 14;
         return iOS7_Space;
     }
     else {
-        return (height / (allIndex - 1)) - 9;
+        return ((height - 30) / (allIndex - 1));
     }
 }
 

@@ -28,6 +28,7 @@ static UINavigationController *s_loginNavController = nil;
 @synthesize isChatting = _isChatting;
 @synthesize user = _user;
 @synthesize push_deviceToken = _push_deviceToken;
+@synthesize enablePush = _enablePush;
 
 + (FXAppDelegate *)shareFXAppDelegate {
     return [[UIApplication sharedApplication] delegate];
@@ -67,7 +68,6 @@ static UINavigationController *s_loginNavController = nil;
 {
     //百度统计
     [self initBaiduStats];
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -78,7 +78,6 @@ static UINavigationController *s_loginNavController = nil;
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    
     
     return YES;
 }
@@ -96,6 +95,9 @@ static UINavigationController *s_loginNavController = nil;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[NSNotificationCenter defaultCenter] postNotificationName:PushMessageNotification object:nil];
     NSLog(@"%@",userInfo);
 }
 
@@ -194,14 +196,14 @@ static UINavigationController *s_loginNavController = nil;
 - (UIView *)progressHUDView{
     if (!_progressHUDView) {
         _progressHUDView = [[UIView alloc] init];
-        _progressHUDView.frame = CGRectMake(0, 0, 60, 70);
+        _progressHUDView.frame = CGRectMake(0, 0, 70, 70);
         _progressHUDView.backgroundColor = kColor(51, 51, 51, .5);
         _progressHUDView.layer.cornerRadius = 6.;
-        _progressHUDView.layer.borderColor = kColor(0, 0, 0, .5).CGColor;
-        _progressHUDView.layer.borderWidth = .5;
+//        _progressHUDView.layer.borderColor = kColor(0, 0, 0, .5).CGColor;
+//        _progressHUDView.layer.borderWidth = .5;
         
         UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        indicator.frame = CGRectMake(0, 0, 60, 60);
+        indicator.frame = CGRectMake(0, 0, 70, 60);
         [indicator startAnimating];
         [_progressHUDView addSubview:indicator];
         

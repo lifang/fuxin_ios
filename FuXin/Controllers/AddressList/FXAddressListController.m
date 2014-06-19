@@ -152,14 +152,22 @@ static NSString *AddressCellIdentifier = @"ACI";
 
 - (void)initIndexView {
     CGFloat originY = _dataTableView.frame.origin.y + _dataTableView.bounds.size.height / 2 - 20;
-    _indexView = [[FXSelectIndexView alloc] initWithFrame:CGRectMake(265, originY, 40, 40)];
+    CGFloat originX = 265;
+    if (kDeviceVersion < 7.0) {
+        originX = 250;
+    }
+    _indexView = [[FXSelectIndexView alloc] initWithFrame:CGRectMake(originX, originY, 40, 40)];
     _indexView.hidden = YES;
     [self.view addSubview:_indexView];
 }
 
 - (void)resetIndexView {
     CGFloat originY = _dataTableView.frame.origin.y + _dataTableView.bounds.size.height / 2 - 20;
-    _indexView.frame = CGRectMake(265, originY, 40, 40);
+    CGFloat originX = 265;
+    if (kDeviceVersion < 7.0) {
+        originX = 250;
+    }
+    _indexView.frame = CGRectMake(originX, originY, 40, 40);
     _indexView.hidden = YES;
     _indexView.currentIndex = -1;
     _selectedHeaderViewIndex = -1;
@@ -335,11 +343,16 @@ static NSString *AddressCellIdentifier = @"ACI";
         NSDictionary *dict = [[[FXCompareCN dataForSectionWithArray:_nameLists] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         NSMutableArray *columnList = [self dataSourceWithListType:_listTypes];
         ContactModel *contact = [columnList objectAtIndex:[[dict objectForKey:kIndex] intValue]];
-        FXChatViewController *chatC = [[FXChatViewController alloc] init];
-        chatC.contact = contact;
-        chatC.ID = contact.contactID;
-        chatC.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:chatC animated:YES];
+//        FXChatViewController *chatC = [[FXChatViewController alloc] init];
+//        chatC.contact = contact;
+//        chatC.ID = contact.contactID;
+//        chatC.hidesBottomBarWhenPushed = YES;
+//        [self.navigationController pushViewController:chatC animated:YES];
+        FXContactController *contactC = [[FXContactController alloc] init];
+        contactC.contact = contact;
+        contactC.ID = contact.contactID;
+        contactC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:contactC animated:YES];
     }
     else {
         [super tableView:tableView didSelectRowAtIndexPath:indexPath];

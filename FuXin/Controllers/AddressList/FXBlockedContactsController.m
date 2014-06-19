@@ -15,6 +15,8 @@
 
 @interface FXBlockedContactsController ()
 @property (strong ,nonatomic) FXBlockedContactInfoView *contactInfoView;
+
+@property (nonatomic, assign) BOOL isRequest;
 @end
 
 static NSString *cellIdentifier = @"cell";
@@ -117,6 +119,10 @@ static NSString *cellIdentifier = @"cell";
 
 #pragma mark BlockedContactCell delegate
 - (void)blockedContactCell:(FXBlockedContactCell *)cell recoverContact:(ContactModel *)contact{
+    if (_isRequest) {
+        return;
+    }
+    _isRequest = YES;
     NSUInteger row = [self.dataArray indexOfObject:contact];
     contact.contactIsBlocked = NO;
     [FXRequestDataFormat blockContactWithToken:[FXAppDelegate shareFXAppDelegate].token
@@ -131,8 +137,11 @@ static NSString *cellIdentifier = @"cell";
                                                   //恢复成功
                                                   [LHLDBTools saveContact:@[contact] withFinished:^(BOOL flag) {
                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                          cell.delegate = nil;
                                                           [self.dataArray removeObjectAtIndex:row];
                                                           [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                                          [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+                                                          [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
                                                       });
                                                   }];
                                               }else{
@@ -141,6 +150,7 @@ static NSString *cellIdentifier = @"cell";
                                           }else{
                                               //请求失败
                                           }
+                                          _isRequest = NO;
                                       }];
 }
 

@@ -36,6 +36,9 @@
 //登录用户信息 初始时从本地读取
 @property (nonatomic, strong) FXUserModel *user;
 
+//是否接受推送
+@property (nonatomic, assign) BOOL enablePush;
+
 ////公用的titleLabel
 //@property (nonatomic, strong) UILabel *attributedTitleLabel;
 
