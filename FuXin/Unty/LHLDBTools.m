@@ -10,7 +10,7 @@
 #define kNUMBER_OF_CHAT_PER_LOAD 20 //每次加载的聊天记录条数
 #define kDATE_FORMAT @"YYYY-MM-dd hh:mm:ss:SSS"  //时间格式 ,主要用于判断聊天记录的顺序
 #define kDB_NAME @"FuXinDB.sqlite" //数据库文件名
-
+#import "FXTimeFormat.h"
 @interface LHLDBTools()
 @property (assign, nonatomic) int32_t userID; //数据库对应的userID
 @end
@@ -364,8 +364,19 @@
         
     }];
     if (finished) {
-        finished(conversations,nil);
+        finished([LHLDBTools sortConversationArray:conversations],nil);
     }
+}
+
+//排序
++ (NSMutableArray *)sortConversationArray:(NSMutableArray *)convArray{
+    NSMutableArray *sortArray = [NSMutableArray arrayWithArray:[convArray sortedArrayUsingComparator:^NSComparisonResult(ConversationModel *model1, ConversationModel *model2) {
+        NSDate *date1 = [FXTimeFormat dateWithString:model1.conversationLastCommunicateTime];
+        NSDate *date2 = [FXTimeFormat dateWithString:model2.conversationLastCommunicateTime];
+        NSComparisonResult result = [date2 compare:date1];
+        return result;
+    }]];
+    return sortArray;
 }
 
 ///转换resultSet为最近对话对象

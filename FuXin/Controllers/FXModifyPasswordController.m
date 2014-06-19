@@ -363,10 +363,6 @@
                 self.tipLabel.frame = (CGRect){10 ,0 ,2 * cellSize.width / 3 ,cellSize.height};
                 [cell.contentView addSubview:self.tipLabel];
             }
-//            if ([self cell:cell isNotSuperOfView:self.coundDownLabel]) {   //验证码倒计时
-//                self.coundDownLabel.frame = (CGRect){(cellSize.width * 3 / 4) - 10 ,0 ,cellSize.width / 4 ,cellSize.height};
-//                [cell.contentView addSubview:self.coundDownLabel];
-//            }
             break;
         default:
             break;
