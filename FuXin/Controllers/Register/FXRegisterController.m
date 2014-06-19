@@ -39,6 +39,7 @@
 @property (strong, nonatomic) UIButton *doneButton;   //完成按钮
 @property (strong, nonatomic) UITextField *userNameTextField;  //用户名
 @property (strong, nonatomic) UILabel *userNameTipLabel; //用户名提示
+@property (strong, nonatomic) UIView *footerView; //用来放置doneButton
 @property (strong, nonatomic) UIView *lineView; //一条线
 
 - (IBAction)spaceAreaClicked:(id)sender;
@@ -49,6 +50,7 @@
 @property (assign, nonatomic) BOOL serviceTextAgreed; //已同意"服务条款"
 @property (assign, nonatomic) BOOL passwordIsOK; //密码无问题
 @property (assign, nonatomic) BOOL identiCodeIsOK;  //验证码OK
+@property (assign, nonatomic) BOOL phoneNumberIsOK; //手机号码格式OK
 
 //其他
 @property (strong ,nonatomic) NSTimer *inputAlertTimer; //输入1秒后提示timer
@@ -90,6 +92,7 @@
     self.passwordIsOK = NO;
     self.identiCodeIsOK = NO;
     self.usernameIsOK = NO;
+    self.phoneNumberIsOK = NO;
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spaceAreaClicked:)];
     [self.view addGestureRecognizer:tapGestureRecognizer];
@@ -97,6 +100,14 @@
     self.title = @"注册";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChangeNotification:) name:UITextFieldTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDismissNotification:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDismissNotification:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
 }
 
 
@@ -204,6 +215,9 @@
     _identifyingCodeTextField.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.identifyingCodeTextField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
     self.identifyingCodeTextField.returnKeyType = UIReturnKeyDone;
+    UIView *inputAccessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kCell_Height)];
+    inputAccessoryView.backgroundColor = [UIColor clearColor];
+    self.identifyingCodeTextField.inputAccessoryView = inputAccessoryView;
     
     self.checkButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.checkButton setImage:[UIImage imageNamed:@"check.png"] forState:UIControlStateNormal];
@@ -256,13 +270,15 @@
     [self.view addSubview:self.doneButton];
     [self changeDoneButtonStatus];
     
-    UIView *footerView = [[UIView alloc] init];
-    footerView.frame = CGRectMake(0, 0, 320 - 2 * kBlank_Size, [UIScreen mainScreen].bounds.size.height - 7 * kCell_Height - 44 - 51);
-    [footerView addSubview:_doneButton];
-    footerView.backgroundColor = self.view.backgroundColor;
+    
+    
+    _footerView = [[UIView alloc] init];
+    _footerView.frame = CGRectMake(0, 0, 320 - 2 * kBlank_Size, [UIScreen mainScreen].bounds.size.height - 7 * kCell_Height - 44 - 51);
+    [_footerView addSubview:_doneButton];
+    _footerView.backgroundColor = self.view.backgroundColor;
     _doneButton.frame = (CGRect){0 ,0 ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
-    _doneButton.center = CGPointMake(footerView.frame.size.width / 2, footerView.frame.size.height - _doneButton.frame.size.height / 2 - 30);
-    _tableView.tableFooterView = footerView;
+    _doneButton.center = CGPointMake(_footerView.frame.size.width / 2, _footerView.frame.size.height - _doneButton.frame.size.height / 2 - 30);
+    _tableView.tableFooterView = _footerView;
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, kBlank_Size)];
     headerView.backgroundColor = self.view.backgroundColor;
@@ -291,6 +307,7 @@
     [self.timingTimer invalidate];
     [self.identtifyingCodeTimer invalidate];
     [self.navigationController popViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -307,7 +324,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //同时调整table尺寸
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 160, 0);
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 180, 0);
 
     return kCell_Height;
 }
@@ -479,6 +496,19 @@
         }
     }
     
+    return YES;
+}
+
+//选中验证码框时, 界面上移
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    if (textField == self.identifyingCodeTextField) {
+        [self doneButtonMoveToKeyboard];
+        [UIView animateWithDuration:.2 animations:^{
+            self.tableView.contentOffset = CGPointMake(0, is4Inch(80, 160));
+        }];
+    }else{
+        [self doneButtonMoveToFooter];
+    }
     return YES;
 }
 
@@ -746,6 +776,23 @@
     
 }
 
+//键盘消失
+- (void)keyboardDismissNotification:(NSNotification *)notification{
+    [self doneButtonMoveToFooter];
+}
+
+#pragma mark done button 的位置
+- (void)doneButtonMoveToKeyboard{
+    [self.identifyingCodeTextField.inputAccessoryView addSubview:self.doneButton];
+    self.doneButton.frame = (CGRect){kBlank_Size ,-1 ,self.view.frame.size.width - 2 * kBlank_Size ,kCell_Height};
+}
+
+- (void)doneButtonMoveToFooter{
+    [self.footerView addSubview:self.doneButton];
+    _doneButton.center = CGPointMake(_footerView.frame.size.width / 2, _footerView.frame.size.height - _doneButton.frame.size.height / 2 - 30);
+    _doneButton.layer.cornerRadius = 4.;
+}
+
 #pragma mark - UIAlertView
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -794,13 +841,16 @@
     
     if (phoneNumberText.length < 1) {
         self.alertLabel.text = @"请输入手机号";
+        self.phoneNumberIsOK = NO;
     }else{
         if ([self isvalidatePhone:phoneNumberText]) { //电话号码格式正确
             self.alertLabel.text = @"";
+            self.phoneNumberIsOK = YES;
             [self changeRewriteButtonStatus:YES];
             
         }else{
             self.alertLabel.text = @"格式错误!";
+            self.phoneNumberIsOK = NO;
             [self changeRewriteButtonStatus:NO];
         }
     }
@@ -878,7 +928,7 @@
 
 //改变完成按钮的状态
 - (void)changeDoneButtonStatus{
-    if (self.serviceTextAgreed && self.passwordIsOK && self.usernameIsOK && self.identiCodeIsOK) {
+    if (self.serviceTextAgreed && self.passwordIsOK && self.usernameIsOK && self.identiCodeIsOK && self.phoneNumberIsOK) {
         self.doneButton.enabled = YES;
         self.doneButton.backgroundColor = kColor(209, 27, 33, 1);
     }else{
