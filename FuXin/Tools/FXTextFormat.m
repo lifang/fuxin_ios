@@ -8,6 +8,8 @@
 
 #import "FXTextFormat.h"
 
+static NSDictionary *_emojiList;
+
 @implementation FXTextFormat
 
 + (void)getImageRange:(NSString *)message Array:(NSMutableArray *)array {
@@ -63,7 +65,8 @@
                 }
                 NSString *imageName = [string substringWithRange:NSMakeRange(2, string.length - 3)];
                 UIImageView *imgV = [[UIImageView alloc] initWithFrame:CGRectMake(dx, dy, kFaceSide, kFaceSide)];
-                imgV.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",imageName]];
+                NSString *keyName = [[self class] imageNameForValue:imageName];
+                imgV.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",keyName]];
                 [showView addSubview:imgV];
                 dx += kFaceSide;
                 if (x < kMessageBoxWidthMax) {
@@ -142,6 +145,29 @@
         }
     }
     return resize;
+}
+
+
+#pragma mark - 表情
+//表情编码
+
++ (NSDictionary *)getEmojiList {
+    if (!_emojiList) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"FXEmojiList" ofType:@"plist"];
+        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
+        _emojiList = [dict objectForKey:@"list"];
+    }
+    return _emojiList;
+}
+
++ (NSString *)imageNameForValue:(NSString *)value {
+    NSDictionary *dict = [[self class] getEmojiList];
+    for (NSString *key in dict) {
+        if ([[dict objectForKey:key] isEqualToString:value]) {
+            return key;
+        }
+    }
+    return nil;
 }
 
 @end

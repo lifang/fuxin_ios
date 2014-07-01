@@ -26,4 +26,6 @@
 //图片
 + (UIView *)getContentViewWithImageData:(NSData *)data;
 
++ (NSDictionary *)getEmojiList;
+
 @end

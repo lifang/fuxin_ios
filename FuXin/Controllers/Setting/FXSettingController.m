@@ -48,7 +48,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [FXAppDelegate showFuWuTitleForViewController:self];
+//        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -57,6 +57,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.title = @"设置";
     [self initUI];
     [self getUserInfo];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfo:) name:UpdateUserInfoNotification object:nil];

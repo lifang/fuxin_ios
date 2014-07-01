@@ -66,6 +66,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshChatList:) name:ChatNeedRefreshListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAddressList:) name:AddressNeedRefreshListNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMessageAll) name:PushMessageNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getContactAll) name:UpdateContactNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -184,6 +185,8 @@
 - (void)getContactAll {
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     [FXRequestDataFormat getContactListWithToken:delegate.token UserId:delegate.userID TimeStamp:delegate.contactTimeStamp Finished:^(BOOL success, NSData *response){
+        //用于联系人下拉刷新返回状态
+        NSMutableDictionary *responseDict = [NSMutableDictionary dictionary];
         if (success) {
             //请求成功
             ContactResponse *resp = [ContactResponse parseFromData:response];
@@ -199,15 +202,19 @@
                 });
                 //获取联系人成功
                 [self DBSaveMessageWithArray:resp.contactsList];
+                [responseDict setObject:[NSNumber numberWithBool:YES] forKey:@"result"];
             }
             else {
                 //获取失败
+                [responseDict setObject:[NSNumber numberWithBool:NO] forKey:@"result"];
                 NSLog(@"contact fail");
             }
         }
         else {
+            [responseDict setObject:[NSNumber numberWithBool:NO] forKey:@"result"];
             //请求失败
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:RequestFinishNotification object:nil userInfo:responseDict];
     }];
 }
 
@@ -347,6 +354,8 @@
         model.contactIsProvider = contact.isProvider;
         model.contactLisence = contact.lisence;
         model.contactSignature = contact.individualResume;
+        model.orderTime = contact.orderTime;
+        model.subscribeTime = contact.subscribeTime;
         
         NSString *tileURLFormat = [self urlStringFormatWithString:contact.tileUrl];
         if ([FXFileHelper isHeadImageExist:tileURLFormat]) {

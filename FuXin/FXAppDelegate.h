@@ -11,7 +11,6 @@
 #import "FXLoginController.h"
 #import "FXMainController.h"
 #import "FXUserModel.h"
-#import "BaiduMobStat.h"
 
 @interface FXAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -51,7 +50,7 @@
 + (void)errorAlert:(NSString *)message;
 
 ///要显示"服务网v1.0"的页面可以调用.
-+ (void)showFuWuTitleForViewController:(UIViewController *)controller;
+//+ (void)showFuWuTitleForViewController:(UIViewController *)controller;
 
 ///显示菊花 (只能同时存在一朵)
 + (void)addHUDForView:(UIView *)view animate:(BOOL)animate;

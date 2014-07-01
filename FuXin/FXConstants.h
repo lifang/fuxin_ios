@@ -19,4 +19,7 @@
 #define kPushChannel    10001
 
 //获取消息间隔
-#define kGetMessageDuration   10
+#define kGetMessageDuration   25
+
+//百度统计key
+#define kBaiDuAppKey    @"b1e74f703c"

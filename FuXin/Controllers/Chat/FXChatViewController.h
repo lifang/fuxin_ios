@@ -33,11 +33,14 @@
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
-//添加联系人详细界面
-- (void)addDetailView;
+//判断是否从通讯录进入
+@property (nonatomic, assign) BOOL isFromDetail;
 
-//修改联系人备注
-- (void)modifyContactRemark:(NSString *)remark;
+////添加联系人详细界面
+//- (void)addDetailView;
+//
+////修改联系人备注
+//- (void)modifyContactRemark:(NSString *)remark;
 //正在聊天时获取数据加在数组最后
 - (void)addMessagesWhileChatting:(NSDictionary *)dict;
 

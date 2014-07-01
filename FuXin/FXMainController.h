@@ -21,6 +21,10 @@ static NSString *AddressNeedRefreshListNotification = @"AddressNeedRefreshListNo
 static NSString *UpdateUserInfoNotification = @"UpdateUserInfoNotification";
 //退到后台时接收消息
 static NSString *PushMessageNotification = @"PushMessageNotification";
+//刷新联系人
+static NSString *UpdateContactNotification = @"UpdateContactNotification";
+//刷新完联系人获取请求结果
+static NSString *RequestFinishNotification = @"RequestFinishNotification";
 
 @interface FXMainController : UITabBarController
 

@@ -7,7 +7,8 @@
 //883096371
 
 #import "FXAppDelegate.h"
-#import <AdSupport/ASIdentifierManager.h>
+#import "BaiduMobStat.h"
+#import "FXTextFormat.h"
 
 static FXLoginController      *s_loginController = nil;
 static UINavigationController *s_loginNavController = nil;
@@ -73,6 +74,9 @@ static UINavigationController *s_loginNavController = nil;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge)];
+    
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
     _rootController = [[FXRootViewController alloc] init];
     self.window.rootViewController = _rootController;
@@ -146,26 +150,26 @@ static UINavigationController *s_loginNavController = nil;
     [alert show];
 }
 
-+ (void)showFuWuTitleForViewController:(UIViewController *)controller{
-    //福务网标题
-    NSString *versionString = [NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-    NSString *fullTitleString = [NSString stringWithFormat:@"福务网%@",versionString];
-    NSRange versionRange = [fullTitleString rangeOfString:versionString];
-    NSRange otherRange = NSMakeRange(0, versionRange.location);
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:fullTitleString];
-    [attributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17] range:otherRange];
-    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:9] range:versionRange];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-    
-    UILabel *attributedTitleLabel = [[UILabel alloc] init];
-    attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
-    attributedTitleLabel.textColor = [UIColor whiteColor];
-    attributedTitleLabel.backgroundColor = [UIColor clearColor];
-    attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
-    attributedTitleLabel.attributedText = attributedString;
-    
-    controller.navigationItem.titleView = attributedTitleLabel;
-}
+//+ (void)showFuWuTitleForViewController:(UIViewController *)controller{
+//    //福务网标题
+//    NSString *versionString = [NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+//    NSString *fullTitleString = [NSString stringWithFormat:@"福务网%@",versionString];
+//    NSRange versionRange = [fullTitleString rangeOfString:versionString];
+//    NSRange otherRange = NSMakeRange(0, versionRange.location);
+//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:fullTitleString];
+//    [attributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17] range:otherRange];
+//    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:9] range:versionRange];
+//    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
+//    
+//    UILabel *attributedTitleLabel = [[UILabel alloc] init];
+//    attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
+//    attributedTitleLabel.textColor = [UIColor whiteColor];
+//    attributedTitleLabel.backgroundColor = [UIColor clearColor];
+//    attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
+//    attributedTitleLabel.attributedText = attributedString;
+//    
+//    controller.navigationItem.titleView = attributedTitleLabel;
+//}
 
 ///显示菊花 (只能同时存在一朵)
 + (void)addHUDForView:(UIView *)view animate:(BOOL)animate {
@@ -230,14 +234,7 @@ static UINavigationController *s_loginNavController = nil;
     statTracker.logSendWifiOnly = NO; //是否仅在WIfi情况下发送日志数据
     statTracker.sessionResumeInterval = 30;//设置应用进入后台再回到前台为同一次session的间隔时间[0~600s],超过600s则设为600s，默认为30s
     
-    NSString *adId = @"";
-    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0f){
-        adId = [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
-    }
-    
-    statTracker.adid = adId;
-    
-    [statTracker startWithAppId:@"b83d3d1e40"];//设置您在mtj网站上添加的app的appkey
+    [statTracker startWithAppId:kBaiDuAppKey];//设置您在mtj网站上添加的app的appkey
 }
 
 @end

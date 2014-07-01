@@ -37,22 +37,22 @@
 }
 
 - (void)initUI {
-    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 34, 34)];
+    self.photoView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
     self.photoView.layer.cornerRadius = self.photoView.bounds.size.width / 2;
     self.photoView.layer.masksToBounds = YES;
 //    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     [self.contentView addSubview:self.photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 12, 150, 20)];
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 20, 200, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.textColor = [UIColor blackColor];
-    _nameLabel.font = [UIFont boldSystemFontOfSize:14];
+    _nameLabel.font = [UIFont boldSystemFontOfSize:16];
     [self.contentView addSubview:_nameLabel];
     
-    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(205, 14, 30, 16)];
+    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(215, 32, 30, 16)];
     [self.contentView addSubview:_relationView1];
     
-    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(240, 14, 30, 16)];
+    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(250, 32, 30, 16)];
     [self.contentView addSubview:_relationView2];
 }
 

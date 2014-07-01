@@ -32,10 +32,29 @@
     _progressView.frame = rect;
     [self addSubview:_progressView];
     [self addSubview:_bigImageView];
+    
+    _saveBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _saveBtn.frame = CGRectMake(130, kScreenHeight - 60, 60, 30);
+    _saveBtn.layer.cornerRadius = 4;
+    _saveBtn.layer.masksToBounds = YES;
+    _saveBtn.layer.borderWidth = 1;
+    _saveBtn.layer.borderColor = [UIColor whiteColor].CGColor;
+    [_saveBtn setBackgroundColor:[UIColor clearColor]];
+    _saveBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    [_saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
+    [_saveBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_saveBtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [_saveBtn addTarget:self action:@selector(saveImage:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_saveBtn];
 }
 
 - (void)setBigImageWithData:(NSData *)data {
+    _imageData = data;
     UIImage *image = [UIImage imageWithData:data];
+    [self setBigImageWithImage:image];
+}
+
+- (void)setBigImageWithImage:(UIImage *)image {
     CGSize size = image.size;
     if (size.width > 320) {
         size.height = size.height * 320 / size.width;
@@ -54,6 +73,37 @@
 
 - (void)removeSelf {
     [self removeFromSuperview];
+}
+
+- (void)saveImage:(UIButton *)sender {
+    UIImage *image = [UIImage imageWithData:_imageData];
+    if (image) {
+        UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:@"下载图片失败！"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    NSString *info = @"";
+    if (error != NULL) {
+        info = @"图片保存到相册失败！";
+    }
+    else {
+        info = @"成功保存至相册！";
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                    message:info
+                                                   delegate:nil
+                                          cancelButtonTitle:@"确定"
+                                          otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

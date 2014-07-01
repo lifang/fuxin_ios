@@ -81,8 +81,10 @@
         [recoverButton setTitleColor:kColor(51, 51, 51, 1) forState:UIControlStateNormal];
         [recoverButton setTitle:@"恢复收听此人" forState:UIControlStateNormal];
         recoverButton.titleLabel.font = [UIFont systemFontOfSize:14];
-        recoverButton.backgroundColor = kColor(229, 229, 229, 1);
+        recoverButton.backgroundColor = kColor(240, 240, 240, 1);
         [recoverButton addTarget:self action:@selector(recoverButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [recoverButton addTarget:self action:@selector(recoverButtonTouched:) forControlEvents:UIControlEventTouchDown];
+        [recoverButton addTarget:self action:@selector(recoverButtonDragedExit:) forControlEvents:UIControlEventTouchDragExit];
         [_contentBgView addSubview:recoverButton];
     }
     return self;
@@ -130,6 +132,14 @@
 
 - (void)subscribeButtonClicked:(UIButton *)sender{
     //订阅按钮
+}
+
+- (void)recoverButtonTouched:(UIButton *)sender{
+    sender.backgroundColor = kColor(220, 220, 220, 1);
+}
+
+- (void)recoverButtonDragedExit:(UIButton *)sender{
+    sender.backgroundColor = [UIColor clearColor];
 }
 
 - (void)recoverButtonClicked:(UIButton *)sender{

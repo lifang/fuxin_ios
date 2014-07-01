@@ -9,6 +9,7 @@
 #import "FXBlockedContactsController.h"
 #import "LHLDBTools.h"
 #import "FXRequestDataFormat.h"
+#import "FXInfoView.h"
 
 #define kBlank_Size    15   //边缘空白
 #define kTopViewHeight   40
@@ -17,6 +18,8 @@
 @property (strong ,nonatomic) FXBlockedContactInfoView *contactInfoView;
 
 @property (nonatomic, assign) BOOL isRequest;
+@property (nonatomic, strong) FXInfoView *infoView;
+
 @end
 
 static NSString *cellIdentifier = @"cell";
@@ -63,6 +66,7 @@ static NSString *cellIdentifier = @"cell";
         }
     }];
     self.title = @"屏蔽管理";
+    [self initInfoView];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -84,6 +88,17 @@ static NSString *cellIdentifier = @"cell";
     // Dispose of any resources that can be recreated.
 }
 
+//提示框
+- (void)initInfoView {
+    CGFloat originY = (kScreenHeight - 64 - 40) / 2;
+    _infoView = [[FXInfoView alloc] initWithFrame:CGRectMake(100, originY, 120, 40)];
+    _infoView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.8];
+    _infoView.layer.cornerRadius = 4;
+    _infoView.layer.masksToBounds = YES;
+    _infoView.hidden = YES;
+    [self.view addSubview:_infoView];
+}
+
 - (void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -102,6 +117,7 @@ static NSString *cellIdentifier = @"cell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     //点击cell ,弹出联系人信息
     ContactModel *contact = self.dataArray[indexPath.row];
     if (!_contactInfoView) {
@@ -122,36 +138,38 @@ static NSString *cellIdentifier = @"cell";
     if (_isRequest) {
         return;
     }
+    [_infoView show];
+    [_infoView setText:@"正在取消屏蔽..."];
     _isRequest = YES;
     NSUInteger row = [self.dataArray indexOfObject:contact];
     contact.contactIsBlocked = NO;
-    [FXRequestDataFormat blockContactWithToken:[FXAppDelegate shareFXAppDelegate].token
-                                        UserID:[FXAppDelegate shareFXAppDelegate].userID
-                                     ContactID:(int32_t)contact.contactID.intValue
-                                     IsBlocked:NO
-                                      Finished:^(BOOL success, NSData *response) {
-                                          if (success) {
-                                              //请求成功
-                                              BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
-                                              if (resp.isSucceed) {
-                                                  //恢复成功
-                                                  [LHLDBTools saveContact:@[contact] withFinished:^(BOOL flag) {
-                                                      dispatch_async(dispatch_get_main_queue(), ^{
-                                                          cell.delegate = nil;
-                                                          [self.dataArray removeObjectAtIndex:row];
-                                                          [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
-                                                          [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
-                                                          [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
-                                                      });
-                                                  }];
-                                              }else{
-                                                  //恢复失败
-                                              }
-                                          }else{
-                                              //请求失败
-                                          }
-                                          _isRequest = NO;
-                                      }];
+    [FXRequestDataFormat blockContactWithToken:[FXAppDelegate shareFXAppDelegate].token UserID:[FXAppDelegate shareFXAppDelegate].userID ContactID:(int32_t)contact.contactID.intValue IsBlocked:NO Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //恢复成功
+                [_infoView setText:@"成功取消屏蔽！"];
+                [LHLDBTools saveContact:@[contact] withFinished:^(BOOL flag) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        cell.delegate = nil;
+                        [self.dataArray removeObjectAtIndex:row];
+                        [self.tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+                    });
+                }];
+            }else{
+                //恢复失败
+                [_infoView setText:@"取消屏蔽失败！"];
+            }
+        }else{
+            //请求失败
+            [_infoView setText:@"网络请求超时！"];
+        }
+        _isRequest = NO;
+        [_infoView hide];
+    }];
 }
 
 #pragma mark BlockedContactInfoView delegate

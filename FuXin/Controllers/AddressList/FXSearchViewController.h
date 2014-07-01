@@ -12,8 +12,9 @@
 #import "FXFileHelper.h"
 #import "FXListCell.h"
 #import "FXContactController.h"
+#import "FXContactDetailController.h"
 
-@interface FXSearchViewController : FXAdjustViewController<UISearchBarDelegate,UISearchDisplayDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface FXSearchViewController : UITableViewController<UISearchBarDelegate,UISearchDisplayDelegate>
 
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 

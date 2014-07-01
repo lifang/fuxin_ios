@@ -147,6 +147,9 @@
         _deskView.frame = rect;
         count = 1;
     }
+    else {
+        _deskView.frame = CGRectMake(10, 10, 300, 250);
+    }
     //line 是福师显示认证行业和个人简介，不是福师不显示
     for (int i = 1; i <= count; i++) {
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(10, i * 48, 280, 1)];
@@ -191,18 +194,24 @@
     
     BOOL showFirst = (_contact.contactRelationship & 3);
     BOOL showSecond = ((_contact.contactRelationship & 12) >> 2);
-    if (!showFirst) {
+    if (showFirst) {
         _relationView1.hidden = NO;
     }
-    if (!showSecond) {
+    else {
+        _relationView1.hidden = YES;
+    }
+    if (showSecond) {
         _relationView2.hidden = NO;
+    }
+    else {
+        _relationView2.hidden = YES;
     }
 }
 
 - (IBAction)modifyContactInfo:(id)sender {
     [_remarkField resignFirstResponder];
-    FXChatViewController *chatC = (FXChatViewController *)self.superview.nextResponder;
-    [chatC modifyContactRemark:_remarkField.text];
+//    FXChatViewController *chatC = (FXChatViewController *)self.superview.nextResponder;
+//    [chatC modifyContactRemark:_remarkField.text];
 }
 
 - (void)hiddenSelf:(UITapGestureRecognizer *)tap {

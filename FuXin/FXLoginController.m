@@ -18,6 +18,9 @@
 
 @interface FXLoginController ()<UITextFieldDelegate>
 //@property (assign ,nonatomic) NSTimeInterval seconds;
+
+@property (nonatomic, assign) BOOL isMove;
+
 @end
 
 @implementation FXLoginController
@@ -35,7 +38,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [FXAppDelegate showFuWuTitleForViewController:self];
+//        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -43,6 +46,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"福务网";
     // Do any additional setup after loading the view.
     self.view.backgroundColor = kColor(250, 250, 250, 1);
     [self initUI];
@@ -236,7 +240,7 @@
     //数据库操作保存id
     [SharedClass sharedObject].userID = [NSString stringWithFormat:@"%d",userid];
     
-    NSLog(@"%@",delegate.push_deviceToken);
+    NSLog(@"!!%@",delegate.push_deviceToken);
     [self getUserInfo];
     //保存用户信息
     FXLoginUser *loginUser = [[FXLoginUser alloc] init];
@@ -324,20 +328,24 @@
 #pragma mark - Keyboard
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-    if ([_usernameField isFirstResponder] || [_passwordField isFirstResponder]) {
+    if (([_usernameField isFirstResponder] || [_passwordField isFirstResponder]) && !_isMove) {
+        _isMove = YES;
         NSDictionary *info = [notification userInfo];
         CGRect kbRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
         //308为登录按钮最低端
         int offset = 308 - (kScreenHeight - 64 - kbRect.size.height);
-        [UIView animateWithDuration:0.3 animations:^{
-            CGRect rect = self.view.frame;
-            rect.origin.y -= offset;
-            self.view.frame = rect;
-        }];
+        if (offset > 0) {
+            [UIView animateWithDuration:0.3 animations:^{
+                CGRect rect = self.view.frame;
+                rect.origin.y -= offset;
+                self.view.frame = rect;
+            }];
+        }
     }
 }
 
 - (void)resetViewFrame {
+    _isMove = NO;
     [UIView animateWithDuration:0.3 animations:^{
         CGFloat originY = 0;
         if (kDeviceVersion >= 7.0) {

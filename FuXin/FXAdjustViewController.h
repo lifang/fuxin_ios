@@ -9,6 +9,7 @@
 //简单的适配view，大多数controller继承此类
 
 #import <UIKit/UIKit.h>
+#import "BaiduMobStat.h"
 
 @interface FXAdjustViewController : UIViewController
 

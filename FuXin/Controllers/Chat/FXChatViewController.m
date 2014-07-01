@@ -192,45 +192,45 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self.view addSubview:_infoView];
 }
 
-//联系人详细
-- (void)addDetailView {
-    if (!_contactView) {
-        _contactView = [[FXContactView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64)];
-        [self.view addSubview:_contactView];
-    }
-    if (_contactDetail) {
-        _contactView.contact = _contactDetail;
-    }
-    else {
-        _contactView.contact = _contact;
-    }
-    if (_contactView.hidden) {
-        _contactView.hidden = NO;
-        _contactView.alpha = 1.0f;
-    }
-    //若没有请求过联系人详细信息或请求联系人详细信息失败
-    if (!_contactDetail) {
-        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-        [FXRequestDataFormat getContactDetailWithToken:delegate.token UserID:delegate.userID ContactID:[_contact.contactID intValue] Finished:^(BOOL success, NSData *response) {
-            if (success) {
-                //请求成功
-                ContactDetailResponse *resp = [ContactDetailResponse parseFromData:response];
-                NSLog(@"联系人详情：%d",resp.isSucceed);
-                if (resp.isSucceed) {
-                    //获取成功
-                    [self setContactWithContact:resp.contact];
-                    _contactView.contact = _contactDetail;
-                }
-                else {
-                    //获取失败
-                }
-            }
-            else {
-                //请求失败
-            }
-        }];
-    }
-}
+////联系人详细
+//- (void)addDetailView {
+//    if (!_contactView) {
+//        _contactView = [[FXContactView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64)];
+//        [self.view addSubview:_contactView];
+//    }
+//    if (_contactDetail) {
+//        _contactView.contact = _contactDetail;
+//    }
+//    else {
+//        _contactView.contact = _contact;
+//    }
+//    if (_contactView.hidden) {
+//        _contactView.hidden = NO;
+//        _contactView.alpha = 1.0f;
+//    }
+//    //若没有请求过联系人详细信息或请求联系人详细信息失败
+//    if (!_contactDetail) {
+//        FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+//        [FXRequestDataFormat getContactDetailWithToken:delegate.token UserID:delegate.userID ContactID:[_contact.contactID intValue] Finished:^(BOOL success, NSData *response) {
+//            if (success) {
+//                //请求成功
+//                ContactDetailResponse *resp = [ContactDetailResponse parseFromData:response];
+//                NSLog(@"联系人详情：%d",resp.isSucceed);
+//                if (resp.isSucceed) {
+//                    //获取成功
+//                    [self setContactWithContact:resp.contact];
+//                    _contactView.contact = _contactDetail;
+//                }
+//                else {
+//                    //获取失败
+//                }
+//            }
+//            else {
+//                //请求失败
+//            }
+//        }];
+//    }
+//}
 
 #pragma mark - 下拉刷新
 
@@ -262,7 +262,12 @@ static NSString *MessageCellIdentifier = @"MCI";
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     delegate.isChatting = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super back:sender];
+    if (_isFromDetail) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    else {
+        [super back:sender];
+    }
 }
 
 //重写导航右按钮方法
@@ -272,93 +277,90 @@ static NSString *MessageCellIdentifier = @"MCI";
                                                 image:nil
                                                target:self
                                                action:@selector(cleanUp:)],
-                                 [KxMenuItem menuItem:@"修改备注"
-                                                image:nil
-                                               target:self action:@selector(addDetailView)],
                                  nil];
-    if (!_contact.contactIsBlocked) {
-        [listArray insertObject:[KxMenuItem menuItem:@"屏蔽此人"
-                                              image:nil
-                                              target:self action:@selector(hiddenUser:)]
-                        atIndex:1];
-    }
+//    if (!_contact.contactIsBlocked) {
+//        [listArray insertObject:[KxMenuItem menuItem:@"屏蔽此人"
+//                                              image:nil
+//                                              target:self action:@selector(hiddenUser:)]
+//                        atIndex:1];
+//    }
     CGRect rect = CGRectMake(280, 0, 20, 0);
     [KxMenu showMenuInView:self.view fromRect:rect menuItems:listArray];
 }
 
-#pragma mark - 修改联系人
-
-- (void)modifyContactRemark:(NSString *)remark {
-    Contact *contact = [[[[[[[[[[[[[[Contact builder]
-                                    setContactId:[_contact.contactID intValue]]
-                                   setName:_contact.contactNickname]
-                                  setCustomName:remark]
-                                 setPinyin:_contact.contactPinyin]
-                                setIsBlocked:_contact.contactIsBlocked]
-                               setLastContactTime:_contact.contactLastContactTime]
-                              setGender:(Contact_GenderType)_contact.contactSex]
-                             setSource:_contact.contactRelationship]
-                            setTileUrl:_contact.contactAvatarURL]
-                           setIsProvider:_contact.contactIsProvider]
-                          setLisence:_contact.contactLisence]
-                         setIndividualResume:_contact.contactSignature] build];
-    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat modifyContactDetailWithToken:delegate.token UserID:delegate.userID Contact:contact Finished:^(BOOL success, NSData *response) {
-        if (success) {
-            //请求成功
-            ChangeContactDetailResponse *resp = [ChangeContactDetailResponse parseFromData:response];
-            NSString *info = @"";
-            if (resp.isSucceed) {
-                //修改成功
-                _contact.contactRemark = remark;
-                [_contactView hiddenContactView];
-                [self updateAfterModify];
-                info = @"修改联系人备注成功";
-            }
-            else {
-                //修改失败
-                info = @"修改联系人备注失败";
-            }
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                            message:info
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-        else {
-            //请求失败
-        }
-    }];
-}
-
-//修改联系人成功后更新界面
-- (void)updateAfterModify {
-    //更新联系人到数据库
-    [LHLDBTools saveContact:[NSArray arrayWithObject:_contact] withFinished:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
-}
-
-//加载联系人详细信息紧查看 并不保存至数据库
-- (void)setContactWithContact:(Contact *)newContact {
-    ContactModel *model = [[ContactModel alloc] init];
-    model.contactID = [NSString stringWithFormat:@"%d",newContact.contactId];
-    model.contactNickname = newContact.name;
-    model.contactRemark = newContact.customName;
-    model.contactIsBlocked = newContact.isBlocked;
-    model.contactPinyin = newContact.pinyin;
-    model.contactLastContactTime = newContact.lastContactTime;
-    model.contactSex = (ContactSex)newContact.gender;
-    model.contactRelationship = newContact.source;
-    model.contactIsProvider = newContact.isProvider;
-    model.contactLisence = newContact.lisence;
-    model.contactSignature = newContact.individualResume;
-    model.fuzhi = newContact.fuzhi;
-    //防止和列表头像不一致
-    model.contactAvatarURL = _contact.contactAvatarURL;
-    _contactDetail = model;
-}
+//#pragma mark - 修改联系人
+//
+//- (void)modifyContactRemark:(NSString *)remark {
+//    Contact *contact = [[[[[[[[[[[[[[Contact builder]
+//                                    setContactId:[_contact.contactID intValue]]
+//                                   setName:_contact.contactNickname]
+//                                  setCustomName:remark]
+//                                 setPinyin:_contact.contactPinyin]
+//                                setIsBlocked:_contact.contactIsBlocked]
+//                               setLastContactTime:_contact.contactLastContactTime]
+//                              setGender:(Contact_GenderType)_contact.contactSex]
+//                             setSource:_contact.contactRelationship]
+//                            setTileUrl:_contact.contactAvatarURL]
+//                           setIsProvider:_contact.contactIsProvider]
+//                          setLisence:_contact.contactLisence]
+//                         setIndividualResume:_contact.contactSignature] build];
+//    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+//    [FXRequestDataFormat modifyContactDetailWithToken:delegate.token UserID:delegate.userID Contact:contact Finished:^(BOOL success, NSData *response) {
+//        if (success) {
+//            //请求成功
+//            ChangeContactDetailResponse *resp = [ChangeContactDetailResponse parseFromData:response];
+//            NSString *info = @"";
+//            if (resp.isSucceed) {
+//                //修改成功
+//                _contact.contactRemark = remark;
+//                [_contactView hiddenContactView];
+//                [self updateAfterModify];
+//                info = @"修改联系人备注成功";
+//            }
+//            else {
+//                //修改失败
+//                info = @"修改联系人备注失败";
+//            }
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+//                                                            message:info
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"确定"
+//                                                  otherButtonTitles:nil];
+//            [alert show];
+//        }
+//        else {
+//            //请求失败
+//        }
+//    }];
+//}
+//
+////修改联系人成功后更新界面
+//- (void)updateAfterModify {
+//    //更新联系人到数据库
+//    [LHLDBTools saveContact:[NSArray arrayWithObject:_contact] withFinished:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+//}
+//
+////加载联系人详细信息紧查看 并不保存至数据库
+//- (void)setContactWithContact:(Contact *)newContact {
+//    ContactModel *model = [[ContactModel alloc] init];
+//    model.contactID = [NSString stringWithFormat:@"%d",newContact.contactId];
+//    model.contactNickname = newContact.name;
+//    model.contactRemark = newContact.customName;
+//    model.contactIsBlocked = newContact.isBlocked;
+//    model.contactPinyin = newContact.pinyin;
+//    model.contactLastContactTime = newContact.lastContactTime;
+//    model.contactSex = (ContactSex)newContact.gender;
+//    model.contactRelationship = newContact.source;
+//    model.contactIsProvider = newContact.isProvider;
+//    model.contactLisence = newContact.lisence;
+//    model.contactSignature = newContact.individualResume;
+//    model.fuzhi = newContact.fuzhi;
+//    //防止和列表头像不一致
+//    model.contactAvatarURL = _contact.contactAvatarURL;
+//    _contactDetail = model;
+//}
 
 #pragma mark - 菜单事件
 //清除此人聊天记录  进行操作
@@ -379,43 +381,43 @@ static NSString *MessageCellIdentifier = @"MCI";
     }];
 }
 
-//屏蔽联系人 进行操作
-- (IBAction)hiddenUser:(id)sender {
-    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-    [FXRequestDataFormat blockContactWithToken:delegate.token UserID:delegate.userID ContactID:[_ID intValue] IsBlocked:YES Finished:^(BOOL success, NSData *response) {
-        if (success) {
-            //请求成功
-            BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
-            NSLog(@"屏蔽 %d",resp.isSucceed);
-            NSString *info = @"";
-            if (resp.isSucceed) {
-                //屏蔽成功
-                info = @"成功屏蔽此联系人，你可以在设置中取消屏蔽此人！";
-                _contact.contactIsBlocked = YES;
-                [LHLDBTools findContactWithContactID:_ID withFinished:^(ContactModel *model, NSString *error) {
-                    model.contactIsBlocked = YES;
-                    [LHLDBTools saveContact:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
-                    }];
-                }];
-            }
-            else {
-                //屏蔽失败
-                info = @"屏蔽联系人失败！";
-            }
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                            message:info
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
-        else {
-            //请求失败
-        }
-    }];
-}
+////屏蔽联系人 进行操作
+//- (IBAction)hiddenUser:(id)sender {
+//    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+//    [FXRequestDataFormat blockContactWithToken:delegate.token UserID:delegate.userID ContactID:[_ID intValue] IsBlocked:YES Finished:^(BOOL success, NSData *response) {
+//        if (success) {
+//            //请求成功
+//            BlockContactResponse *resp = [BlockContactResponse parseFromData:response];
+//            NSLog(@"屏蔽 %d",resp.isSucceed);
+//            NSString *info = @"";
+//            if (resp.isSucceed) {
+//                //屏蔽成功
+//                info = @"成功屏蔽此联系人，你可以在设置中取消屏蔽此人！";
+//                _contact.contactIsBlocked = YES;
+//                [LHLDBTools findContactWithContactID:_ID withFinished:^(ContactModel *model, NSString *error) {
+//                    model.contactIsBlocked = YES;
+//                    [LHLDBTools saveContact:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+//                    }];
+//                }];
+//            }
+//            else {
+//                //屏蔽失败
+//                info = @"屏蔽联系人失败！";
+//            }
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+//                                                            message:info
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"确定"
+//                                                  otherButtonTitles:nil];
+//            [alert show];
+//        }
+//        else {
+//            //请求失败
+//        }
+//    }];
+//}
 
 #pragma mark - 数据-
 
@@ -513,9 +515,8 @@ static NSString *MessageCellIdentifier = @"MCI";
     //********************************************
     model.messageType = (ContentType)message.contentType;
     model.imageContent = message.binaryContent;
-    [LHLDBTools saveChattingRecord:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
-        
-    }];
+    [LHLDBTools saveChattingRecord:[NSArray arrayWithObject:model] withFinished:nil];
+    
     //最近对话表中加入此联系人
     ConversationModel *conv = [[ConversationModel alloc] init];
     conv.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
@@ -526,9 +527,19 @@ static NSString *MessageCellIdentifier = @"MCI";
     else {
         conv.conversationLastChat = @"[图片]";
     }
-    [LHLDBTools saveConversation:[NSArray arrayWithObject:conv] withFinished:^(BOOL finish) {
-        
+    [LHLDBTools saveConversation:[NSArray arrayWithObject:conv] withFinished:nil];
+    
+    //更新联系人最后聊天时间
+    [LHLDBTools getAllContactsWithFinished:^(NSArray *contactList, NSString *error) {
+        for (ContactModel *contact in contactList) {
+            if ([contact.contactID isEqualToString:[NSString stringWithFormat:@"%d",message.contactId]]) {
+                contact.contactLastContactTime = message.sendTime;
+                [LHLDBTools saveContact:[NSArray arrayWithObject:contact] withFinished:nil];
+                break;
+            }
+        }
     }];
+    
     //展示在界面中
     [_dataItems addObject:model];
     //对话列表更新界面
@@ -774,7 +785,7 @@ static NSString *MessageCellIdentifier = @"MCI";
             }
         }
         else {
-            [_infoView setText:@"网络请求失败！"];
+            [_infoView setText:@"网络请求超时！"];
         }
         [_infoView hide];
     }];
@@ -974,7 +985,14 @@ static NSString *MessageCellIdentifier = @"MCI";
         }
     }
     else {
-        NSString *emoji = [NSString stringWithFormat:@"[#%d]",sender.tag + 1];
+        int index = sender.tag + 1;
+        if (sender.tag + 1 > 21) {
+            //减去一个删除按钮
+            index = sender.tag;
+        }
+        NSDictionary *list = [FXTextFormat getEmojiList];
+        NSString *key = [NSString stringWithFormat:@"%d",index];
+        NSString *emoji = [NSString stringWithFormat:@"[#%@]",[list objectForKey:key]];
         _inputView.inputView.text = [_inputView.inputView.text stringByAppendingString:emoji];
     }
     NSInteger length = [_inputView.inputView.text length];
@@ -989,7 +1007,17 @@ static NSString *MessageCellIdentifier = @"MCI";
 #pragma mark - cell delegate
 
 - (void)touchContact:(UIGestureRecognizer *)tap {
-    [self addDetailView];
+//    [self addDetailView];
+    if (_isFromDetail) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
+        FXContactDetailController *contactC = [[FXContactDetailController alloc] init];
+        contactC.contact = _contact;
+        contactC.ID = _contact.contactID;
+        contactC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:contactC animated:YES];
+    }
 }
 
 - (void)loadLargeImageWithURL:(NSString *)urlString {

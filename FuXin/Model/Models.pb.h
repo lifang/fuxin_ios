@@ -501,6 +501,8 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   BOOL hasLisence_:1;
   BOOL hasIndividualResume_:1;
   BOOL hasFuzhi_:1;
+  BOOL hasOrderTime_:1;
+  BOOL hasSubscribeTime_:1;
   BOOL hasGender_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
@@ -514,6 +516,8 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
   NSString* lisence;
   NSString* individualResume;
   NSString* fuzhi;
+  NSString* orderTime;
+  NSString* subscribeTime;
   Contact_GenderType gender;
 }
 - (BOOL) hasContactId;
@@ -529,6 +533,8 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (BOOL) hasLisence;
 - (BOOL) hasIndividualResume;
 - (BOOL) hasFuzhi;
+- (BOOL) hasOrderTime;
+- (BOOL) hasSubscribeTime;
 @property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
@@ -542,6 +548,8 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 @property (readonly, retain) NSString* lisence;
 @property (readonly, retain) NSString* individualResume;
 @property (readonly, retain) NSString* fuzhi;
+@property (readonly, retain) NSString* orderTime;
+@property (readonly, retain) NSString* subscribeTime;
 
 + (Contact*) defaultInstance;
 - (Contact*) defaultInstance;
@@ -641,6 +649,16 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value);
 - (NSString*) fuzhi;
 - (Contact_Builder*) setFuzhi:(NSString*) value;
 - (Contact_Builder*) clearFuzhi;
+
+- (BOOL) hasOrderTime;
+- (NSString*) orderTime;
+- (Contact_Builder*) setOrderTime:(NSString*) value;
+- (Contact_Builder*) clearOrderTime;
+
+- (BOOL) hasSubscribeTime;
+- (NSString*) subscribeTime;
+- (Contact_Builder*) setSubscribeTime:(NSString*) value;
+- (Contact_Builder*) clearSubscribeTime;
 @end
 
 @interface ContactRequest : PBGeneratedMessage {

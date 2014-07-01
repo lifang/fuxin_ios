@@ -27,7 +27,7 @@ static NSString *chatCellIdentifier = @"CCI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        [FXAppDelegate showFuWuTitleForViewController:self];
+//        [FXAppDelegate showFuWuTitleForViewController:self];
     }
     return self;
 }
@@ -42,6 +42,7 @@ static NSString *chatCellIdentifier = @"CCI";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"对话";
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -69,10 +70,19 @@ static NSString *chatCellIdentifier = @"CCI";
     _chatListTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64 - 49)];
     _chatListTable.delegate = self;
     _chatListTable.dataSource = self;
+    if (kDeviceVersion >= 7.0) {
+        _chatListTable.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
     [self.view addSubview:_chatListTable];
     [self.chatListTable registerClass:[FXChatCell class] forCellReuseIdentifier:chatCellIdentifier];
     _chatList = [[NSMutableArray alloc] init];
     [self hiddenExtraCellLineWithTableView:_chatListTable];
+}
+
+- (void)hiddenExtraCellLineWithTableView:(UITableView *)table {
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    [table setTableFooterView:view];
 }
 
 #pragma mark - 更新数据
@@ -82,7 +92,36 @@ static NSString *chatCellIdentifier = @"CCI";
         [_chatList removeAllObjects];
         [_chatList addObjectsFromArray:list];
         [_chatListTable reloadData];
+        
+        _messageCount = 0;
+        for (NSDictionary *dict in _chatList) {
+            NSNumber *count = [dict objectForKey:@"Number"];
+            _messageCount += [count intValue];
+        }
+        if (_messageCount <= 0 ) {
+            self.tabBarItem.badgeValue = nil;
+        }
+        else {
+            self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d",_messageCount];
+        }
     }
+}
+
+#pragma mark - 下载头像
+
+- (void)downloadImageWithContact:(ContactModel *)contact forCell:(FXListCell *)cell {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *url = [NSURL URLWithString:contact.contactAvatarURL];
+        NSData *imageData = [NSData dataWithContentsOfURL:url];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([cell.imageURL isEqualToString:contact.contactAvatarURL]) {
+                if ([imageData length] > 0) {
+                    cell.photoView.image = [UIImage imageWithData:imageData];
+                    [FXFileHelper documentSaveImageData:imageData withName:contact.contactAvatarURL withPathType:PathForHeadImage];
+                }
+            }
+        });
+    });
 }
 
 #pragma mark - 重写
@@ -159,7 +198,7 @@ static NSString *chatCellIdentifier = @"CCI";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _chatListTable) {
-        return 54.0f;
+        return 70.0f;
     }
     return 0;
 }

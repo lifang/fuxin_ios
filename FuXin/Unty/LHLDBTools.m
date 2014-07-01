@@ -119,13 +119,20 @@
             //生日
             //手机
             //邮箱
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,avatarURL TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,avatarURL TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT, orderTime TEXT, subscribeTime TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
             if (!everythingIsOK) {
                 [db rollback];
             }
             [db commit];
+        }
+        else {
+            //添加字段
+            NSString *alterSQL_ordetTime = @"ALTER TABLE Contacts ADD orderTime TEXT";
+            [db executeUpdate:alterSQL_ordetTime];
+            NSString *alterSQL_subscribeTime = @"ALTER TABLE Contacts ADD subscribeTime TEXT";
+            [db executeUpdate:alterSQL_subscribeTime];
         }
         
         [rs close];
@@ -194,6 +201,8 @@
     obj.contactBirthday = [resultSet stringForColumn:@"birthday"];
     obj.contactTelephone = [resultSet stringForColumn:@"telephone"];
     obj.contactEmail = [resultSet stringForColumn:@"email"];
+    obj.orderTime = [resultSet stringForColumn:@"orderTime"];
+    obj.subscribeTime = [resultSet stringForColumn:@"subscribeTime"];
     
     return obj;
 }
@@ -238,7 +247,7 @@
             resultSet = [db executeQuery:@"SELECT contactID FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
             if ([resultSet next]) {
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,avatarURL = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? WHERE contactID = ?"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,avatarURL = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? ,orderTime = ? ,subscribeTime = ? WHERE contactID = ?"
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
                                                              ,contactObj.contactAvatarURL
@@ -256,11 +265,13 @@
                                                              ,contactObj.contactBirthday
                                                              ,contactObj.contactTelephone
                                                              ,contactObj.contactEmail
+                                                             ,contactObj.orderTime
+                                                             ,contactObj.subscribeTime
                                                              ,contactObj.contactID
                                                              ] : NO;
             }else{
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email,orderTime ,subscribeTime) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
                                                              ,contactObj.contactID
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
@@ -278,7 +289,9 @@
                                                              ,contactObj.contactSignature
                                                              ,contactObj.contactBirthday
                                                              ,contactObj.contactTelephone
-                                                             ,contactObj.contactEmail] : NO;
+                                                             ,contactObj.contactEmail
+                                                             ,contactObj.orderTime
+                                                             ,contactObj.subscribeTime] : NO;
                 
             }
         }

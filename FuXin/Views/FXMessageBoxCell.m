@@ -63,6 +63,9 @@
 
     _timeBackView = [[UIImageView alloc] initWithFrame:CGRectZero];
     _timeBackView.image = [UIImage imageNamed:@"gray.png"];
+    
+    _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _reSendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_userPhotoView];
     [self.contentView addSubview:_backgroundView];
     [self.contentView addSubview:_timeBackView];

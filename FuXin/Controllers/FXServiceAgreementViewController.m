@@ -50,7 +50,7 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
     
     
     [self setLeftNavBarItemWithImageName:@"back.png"];
-    self.title = @"服务协议";
+    self.title = @"福务网用户注册协议";
 }
 
 - (void)viewWillAppear:(BOOL)animated{

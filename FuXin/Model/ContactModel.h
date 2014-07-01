@@ -70,5 +70,9 @@ typedef enum{
 @property (strong, nonatomic) NSString *contactEmail;
 //福值
 @property (nonatomic, strong) NSString *fuzhi;
+///最后产生订单时间
+@property (nonatomic, strong) NSString *orderTime;
+///最后订阅时间
+@property (nonatomic, strong) NSString *subscribeTime;
 
 @end

@@ -11,15 +11,14 @@
 #import "FXSelectIndexView.h"
 
 typedef enum {
-    AddressListAll = 0,      //全部
-    AddressListRecent,       //最近
+    AddressListRecent = 0,   //最近
     AddressListTrade,        //交易
     AddressListSubscribe,    //订阅
 }AddressListTypes;    //通讯录类型
 
 @interface FXAddressListController : FXSearchViewController
 
-@property (nonatomic, strong) UITableView *dataTableView;
+//@property (nonatomic, strong) UITableView *dataTableView;
 
 //获取的联系人 名字数组
 @property (nonatomic, strong) NSMutableArray *nameLists;

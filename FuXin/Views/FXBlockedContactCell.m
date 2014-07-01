@@ -55,6 +55,8 @@
     [_recoverButton setTitleColor:kColor(51, 51, 51, 1) forState:UIControlStateNormal];
     [_recoverButton setTitle:@"恢复" forState:UIControlStateNormal];
     [_recoverButton addTarget:self action:@selector(recoverButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_recoverButton addTarget:self action:@selector(recoverButtonTouched:) forControlEvents:UIControlEventTouchDown];
+    [_recoverButton addTarget:self action:@selector(recoverButtonDragedExit:) forControlEvents:UIControlEventTouchDragExit];
     [self.contentView addSubview:_recoverButton];
 }
 
@@ -76,6 +78,14 @@
     else {
         _nameLabel.text = contactModel.contactNickname;
     }
+}
+
+- (void)recoverButtonTouched:(UIButton *)sender{
+    _recoverButton.backgroundColor = kColor(200, 200, 200, 1);
+}
+
+- (void)recoverButtonDragedExit:(UIButton *)sender{
+    _recoverButton.backgroundColor = [UIColor clearColor];
 }
 
 - (void)recoverButtonClicked:(UIButton *)sender{

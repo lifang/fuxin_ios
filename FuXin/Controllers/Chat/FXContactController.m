@@ -50,6 +50,9 @@
     _detailTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64) style:UITableViewStylePlain];
     _detailTable.dataSource = self;
     _detailTable.delegate = self;
+    if (kDeviceVersion >= 7.0) {
+        _detailTable.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
     [self.view addSubview:_detailTable];
 }
 
@@ -102,7 +105,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (_contact.contactIsProvider) {
+    ContactModel *data = _contact;
+    if (_downloadContact) {
+        data = _downloadContact;
+    }
+    if (data.contactIsProvider) {
         return 4;
     }
     return 1;
@@ -130,6 +137,10 @@
             cell.sexView.image = [UIImage imageNamed:@"female.png"];
         }
         cell.remarkLabel.text = [NSString stringWithFormat:@"备注：%@",data.contactRemark];
+        
+        BOOL showFirst = (data.contactRelationship & 3);
+        BOOL showSecond = ((data.contactRelationship & 12) >> 2);
+        [cell showOrder:showFirst showSubscribe:showSecond];
         return cell;
     }
     else {
@@ -204,6 +215,10 @@
         [sendBtn setTitle:@"发送消息" forState:UIControlStateNormal];
         [sendBtn addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:sendBtn];
+        
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 1)];
+        line.backgroundColor = kColor(200, 200, 200, 1);
+        [view addSubview:line];
         return view;
     }
     return nil;
@@ -251,6 +266,7 @@
     FXChatViewController *chatC = [[FXChatViewController alloc] init];
     chatC.contact = _contact;
     chatC.ID = _contact.contactID;
+    chatC.isFromDetail = YES;
     [self.navigationController pushViewController:chatC animated:YES];
 }
 

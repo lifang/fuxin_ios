@@ -139,6 +139,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    self.tableView.allowsSelection = NO;
     [self.view addSubview:self.tableView];
     self.tableView.backgroundColor = [UIColor clearColor];
     if (kDeviceVersion >= 7.0) {
@@ -236,7 +237,7 @@
     
     
     self.agreeLabel = [[UILabel alloc] init];
-    self.agreeLabel.text = @"我已经阅读并同意";
+    self.agreeLabel.text = @"我已经阅读并同意福务网";
     self.agreeLabel.font = [UIFont systemFontOfSize:12.];
     _agreeLabel.textAlignment = NSTextAlignmentLeft;
     _agreeLabel.backgroundColor = [UIColor clearColor];
@@ -245,7 +246,7 @@
     self.serviceTextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.serviceTextButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     self.serviceTextButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
-    NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"服务协议"];
+    NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"用户注册协议"];
     [buttonString addAttribute:NSForegroundColorAttributeName value:kColor(255, 0, 9, 1) range:NSMakeRange(0, buttonString.length)];
     [buttonString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, buttonString.length)];
     [self.serviceTextButton setAttributedTitle:buttonString forState:UIControlStateNormal];
@@ -411,7 +412,7 @@
                 [cell.contentView addSubview:self.agreeLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.serviceTextButton]) { //服务协议
-                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 95 ,1 ,cellSize.width / 4 ,cellSize.height};
+                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 132 ,1 ,cellSize.width / 4 ,cellSize.height};
                 [cell.contentView addSubview:self.serviceTextButton];
             }
             break;

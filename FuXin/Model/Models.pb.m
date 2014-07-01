@@ -1093,6 +1093,8 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
 @property (retain) NSString* lisence;
 @property (retain) NSString* individualResume;
 @property (retain) NSString* fuzhi;
+@property (retain) NSString* orderTime;
+@property (retain) NSString* subscribeTime;
 @end
 
 @implementation Contact
@@ -1198,6 +1200,20 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   hasFuzhi_ = !!value;
 }
 @synthesize fuzhi;
+- (BOOL) hasOrderTime {
+  return !!hasOrderTime_;
+}
+- (void) setHasOrderTime:(BOOL) value {
+  hasOrderTime_ = !!value;
+}
+@synthesize orderTime;
+- (BOOL) hasSubscribeTime {
+  return !!hasSubscribeTime_;
+}
+- (void) setHasSubscribeTime:(BOOL) value {
+  hasSubscribeTime_ = !!value;
+}
+@synthesize subscribeTime;
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1207,6 +1223,8 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   self.lisence = nil;
   self.individualResume = nil;
   self.fuzhi = nil;
+  self.orderTime = nil;
+  self.subscribeTime = nil;
   [super dealloc];
 }
 - (id) init {
@@ -1224,6 +1242,8 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
     self.lisence = @"";
     self.individualResume = @"";
     self.fuzhi = @"";
+    self.orderTime = @"";
+    self.subscribeTime = @"";
   }
   return self;
 }
@@ -1282,6 +1302,12 @@ static Contact* defaultContactInstance = nil;
   if (self.hasFuzhi) {
     [output writeString:13 value:self.fuzhi];
   }
+  if (self.hasOrderTime) {
+    [output writeString:14 value:self.orderTime];
+  }
+  if (self.hasSubscribeTime) {
+    [output writeString:15 value:self.subscribeTime];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -1329,6 +1355,12 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasFuzhi) {
     size += computeStringSize(13, self.fuzhi);
+  }
+  if (self.hasOrderTime) {
+    size += computeStringSize(14, self.orderTime);
+  }
+  if (self.hasSubscribeTime) {
+    size += computeStringSize(15, self.subscribeTime);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1454,6 +1486,12 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
   if (other.hasFuzhi) {
     [self setFuzhi:other.fuzhi];
   }
+  if (other.hasOrderTime) {
+    [self setOrderTime:other.orderTime];
+  }
+  if (other.hasSubscribeTime) {
+    [self setSubscribeTime:other.subscribeTime];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1530,6 +1568,14 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
       }
       case 106: {
         [self setFuzhi:[input readString]];
+        break;
+      }
+      case 114: {
+        [self setOrderTime:[input readString]];
+        break;
+      }
+      case 122: {
+        [self setSubscribeTime:[input readString]];
         break;
       }
     }
@@ -1741,6 +1787,38 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
 - (Contact_Builder*) clearFuzhi {
   result.hasFuzhi = NO;
   result.fuzhi = @"";
+  return self;
+}
+- (BOOL) hasOrderTime {
+  return result.hasOrderTime;
+}
+- (NSString*) orderTime {
+  return result.orderTime;
+}
+- (Contact_Builder*) setOrderTime:(NSString*) value {
+  result.hasOrderTime = YES;
+  result.orderTime = value;
+  return self;
+}
+- (Contact_Builder*) clearOrderTime {
+  result.hasOrderTime = NO;
+  result.orderTime = @"";
+  return self;
+}
+- (BOOL) hasSubscribeTime {
+  return result.hasSubscribeTime;
+}
+- (NSString*) subscribeTime {
+  return result.subscribeTime;
+}
+- (Contact_Builder*) setSubscribeTime:(NSString*) value {
+  result.hasSubscribeTime = YES;
+  result.subscribeTime = value;
+  return self;
+}
+- (Contact_Builder*) clearSubscribeTime {
+  result.hasSubscribeTime = NO;
+  result.subscribeTime = @"";
   return self;
 }
 @end

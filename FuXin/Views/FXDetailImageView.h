@@ -15,6 +15,11 @@
 
 @property (nonatomic, strong) EVCircularProgressView *progressView;
 
+@property (nonatomic, strong) UIButton *saveBtn;
+
+@property (nonatomic, strong) NSData *imageData;
+
 - (void)setBigImageWithData:(NSData *)data;
+- (void)setBigImageWithImage:(UIImage *)image;
 
 @end

@@ -143,7 +143,7 @@
     
     self.agreeLabel.textColor = kColor(51, 51, 51, 1);
     
-    NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"服务协议"];
+    NSMutableAttributedString *buttonString = [[NSMutableAttributedString alloc] initWithString:@"用户注册协议"];
     [buttonString addAttribute:NSForegroundColorAttributeName value:kColor(255, 0, 9, 1) range:NSMakeRange(0, buttonString.length)];
     [buttonString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, buttonString.length)];
     [self.serviceTextButton setAttributedTitle:buttonString forState:UIControlStateNormal];
@@ -295,7 +295,7 @@
                 [cell.contentView addSubview:self.agreeLabel];
             }
             if ([self cell:cell isNotSuperOfView:self.serviceTextButton]) { //服务协议
-                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 94 ,0 ,cellSize.width / 4 ,cellSize.height - 1};
+                self.serviceTextButton.frame = (CGRect){CGRectGetMaxX(self.checkButton.frame) + 150 ,0 ,cellSize.width / 4 ,cellSize.height - 1};
                 [cell.contentView addSubview:self.serviceTextButton];
             }
             break;

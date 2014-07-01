@@ -53,6 +53,36 @@
     
     _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 9, 16, 16)];
     [self.contentView addSubview:_sexView];
+    
+    _relationView1 = [[UIImageView alloc] initWithFrame:CGRectMake(240, 8, 30, 16)];
+    [self.contentView addSubview:_relationView1];
+    
+    _relationView2 = [[UIImageView alloc] initWithFrame:CGRectMake(275, 8, 30, 16)];
+    [self.contentView addSubview:_relationView2];
+}
+
+- (void)showOrder:(BOOL)showFirst showSubscribe:(BOOL)showSecond {
+    if (showFirst) {
+        _relationView1.hidden = NO;
+        _relationView1.image = [UIImage imageNamed:@"trade.png"];
+        if (showSecond) {
+            _relationView2.hidden = NO;
+            _relationView2.image = [UIImage imageNamed:@"subscription.png"];
+        }
+        else {
+            _relationView2.hidden = YES;
+        }
+    }
+    else {
+        if (showSecond) {
+            _relationView1.hidden = NO;
+            _relationView1.image = [UIImage imageNamed:@"subscription.png"];
+        }
+        else {
+            _relationView1.hidden = YES;
+        }
+        _relationView2.hidden = YES;
+    }
 }
 
 @end

@@ -10,6 +10,7 @@
 #import "FXRequestDataFormat.h"
 #import "FXResizeImage.h"
 #import "FXArchiverHelper.h"
+#import "FXDetailImageView.h"
 
 #define kTitleTag       200
 #define kContentTag     201
@@ -143,65 +144,23 @@
     _userTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 64) style:UITableViewStylePlain];
     _userTableView.delegate = self;
     _userTableView.dataSource = self;
-    _userTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _userTableView.backgroundColor = [UIColor whiteColor];
-    _userTableView.tableHeaderView = [self setHeaderView];
+    UIView *view = [[UIView alloc] initWithFrame:_userTableView.bounds];
+    view.backgroundColor = kColor(239, 239, 244, 1);
+    _userTableView.backgroundView = view;
+    if (kDeviceVersion >= 7.0) {
+        _userTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    [self hiddenExtraCellLineWithTableView:_userTableView];
     [self.view addSubview:_userTableView];
+    
+    _photoView = [[UIImageView alloc] init];
+    _nameField = [[UITextField alloc] init];
 }
 
-- (UIView *)setHeaderView {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
-    headerView.backgroundColor = [UIColor clearColor];
-    
-    UILabel *lab1 = [[UILabel alloc] initWithFrame:CGRectMake(10, 25, 60, 25)];
-    lab1.backgroundColor = [UIColor clearColor];
-    lab1.textColor = [UIColor blackColor];
-    lab1.textAlignment = NSTextAlignmentLeft;
-    lab1.font = [UIFont systemFontOfSize:14.0];
-    lab1.text = @"头像：";
-    [headerView addSubview:lab1];
-    
-    _photoView = [[UIImageView alloc] initWithFrame:CGRectMake(260, 10, 40, 40)];
-    _photoView.layer.cornerRadius = _photoView.frame.size.height / 2;
-    _photoView.layer.masksToBounds = YES;
-    if (_userInfo.tile && [_userInfo.tile length] > 1) {
-        _photoView.image = [UIImage imageWithData:_userInfo.tile];
-    }
-    else {
-        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
-    }
-    _photoView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selectPhoto:)];
-    [_photoView addGestureRecognizer:tap];
-    [headerView addSubview:_photoView];
-    
-    UILabel *line1 = [[UILabel alloc] initWithFrame:CGRectMake(10,57,300, 1)];
-    line1.backgroundColor = kColor(228, 228, 228, 1);
-    [headerView addSubview:line1];
-    
-    UILabel *lab2 = [[UILabel alloc] initWithFrame:CGRectMake(10, 70, 60, 25)];
-    lab2.backgroundColor = [UIColor clearColor];
-    lab2.textColor = [UIColor blackColor];
-    lab2.textAlignment = NSTextAlignmentLeft;
-    lab2.font = [UIFont systemFontOfSize:14.0];
-    lab2.text = @"昵称：";
-    [headerView addSubview:lab2];
-    
-    _nameField = [[UITextField alloc] initWithFrame:CGRectMake(160, 70, 140, 25)];
-    _nameField.borderStyle = UITextBorderStyleNone;
-    _nameField.font = [UIFont systemFontOfSize:14];
-    _nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    _nameField.textAlignment = NSTextAlignmentRight;
-    _nameField.text = _userInfo.nickName;
-    _nameField.returnKeyType = UIReturnKeyDone;
-    _nameField.delegate = self;
-    [headerView addSubview:_nameField];
-    
-    UILabel *line2 = [[UILabel alloc] initWithFrame:CGRectMake(10,98,300,2)];
-    line2.backgroundColor = kColor(228, 228, 228, 1);
-    [headerView addSubview:line2];
-    
-    return headerView;
+- (void)hiddenExtraCellLineWithTableView:(UITableView *)table {
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = [UIColor clearColor];
+    [table setTableFooterView:view];
 }
 
 - (void)selectPhoto:(UITapGestureRecognizer *)tap {
@@ -213,141 +172,272 @@
     [sheet showInView:self.view];
 }
 
+- (void)showBigImage:(UITapGestureRecognizer *)tap {
+    _userTableView.userInteractionEnabled = NO;
+    FXDetailImageView *bigView = [[FXDetailImageView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight)];
+    bigView.transform = CGAffineTransformMakeScale(0.1, 0.1);
+    bigView.saveBtn.hidden = YES;
+    bigView.progressView.hidden = YES;
+    [UIView animateWithDuration:0.3f animations:^{
+        bigView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finish) {
+        _userTableView.userInteractionEnabled = YES;
+    }];
+    [self.view.window addSubview:bigView];
+    if (_userInfo.tile && [_userInfo.tile length] > 1) {
+        [bigView setBigImageWithData:_userInfo.tile];
+    }
+    else {
+        UIImage *placeImage = [UIImage imageNamed:@"placeholder.png"];
+        [bigView setBigImageWithImage:placeImage];
+    }
+}
+
 #pragma mark - TableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([_userInfo.isProvider boolValue]) {
-        return 6;
+    switch (section) {
+        case 0: {
+            return 2;
+        }
+            break;
+        case 1: {
+            if ([_userInfo.isProvider boolValue]) {
+                return 6;
+            }
+            return 5;
+        }
+            break;
+        default:
+            break;
     }
-    return 5;
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identifier = @"user";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nil];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 130, 25)];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, 100, cell.bounds.size.height)];
         titleLabel.tag = kTitleTag;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textAlignment = NSTextAlignmentLeft;
-        titleLabel.font = [UIFont systemFontOfSize:13];
+        titleLabel.font = [UIFont systemFontOfSize:15];
         titleLabel.textColor = [UIColor grayColor];
         [cell.contentView addSubview:titleLabel];
         
-        UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(130, 10, 170, 25)];
-        contentLabel.tag = kContentTag;
-        contentLabel.backgroundColor = [UIColor clearColor];
-        contentLabel.textAlignment = NSTextAlignmentRight;
-        contentLabel.font = [UIFont systemFontOfSize:14];
-        contentLabel.textColor = [UIColor grayColor];
-        [cell.contentView addSubview:contentLabel];
-        
-        UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(10,44, 300, 1)];
-        line.backgroundColor = kColor(228, 228, 228, 1);
-        [cell.contentView addSubview:line];
+        if (indexPath.section == 0) {
+            switch (indexPath.row) {
+                case 0: {
+                    _photoView.frame = CGRectMake(240, 10, 60, 60);
+                    _photoView.layer.cornerRadius = _photoView.frame.size.height / 2;
+                    _photoView.layer.masksToBounds = YES;
+                    _photoView.userInteractionEnabled = YES;
+                    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showBigImage:)];
+                    [_photoView addGestureRecognizer:tap];
+                    [cell.contentView addSubview:_photoView];
+                }
+                    break;
+                case 1: {
+                    _nameField.frame = CGRectMake(160, 13, 140, 25);
+                    _nameField.borderStyle = UITextBorderStyleNone;
+                    _nameField.font = [UIFont systemFontOfSize:15];
+                    _nameField.clearButtonMode = UITextFieldViewModeWhileEditing;
+                    _nameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+                    _nameField.textAlignment = NSTextAlignmentRight;
+                    _nameField.returnKeyType = UIReturnKeyDone;
+                    _nameField.delegate = self;
+                    [cell.contentView addSubview:_nameField];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(130, 10, 170, 25)];
+            contentLabel.tag = kContentTag;
+            contentLabel.backgroundColor = [UIColor clearColor];
+            contentLabel.textAlignment = NSTextAlignmentRight;
+            contentLabel.font = [UIFont systemFontOfSize:15];
+            contentLabel.textColor = [UIColor grayColor];
+            [cell.contentView addSubview:contentLabel];
+        }
+        if (kDeviceVersion < 7.0) {
+            UIView *view = [[UIView alloc] initWithFrame:cell.bounds];
+            view.backgroundColor = [UIColor whiteColor];
+            cell.backgroundView = view;
+        }
     }
     UILabel *title = (UILabel *)[cell.contentView viewWithTag:kTitleTag];
     UILabel *content = (UILabel *)[cell.contentView viewWithTag:kContentTag];
-    if ([_userInfo.isProvider boolValue]) {
-        switch (indexPath.row) {
-            case 0: {
-                title.text = @"福指：";
-                content.text = _userInfo.fuzhi;
+    title.frame = CGRectMake(10, 0, 120, 50);
+    content.frame = CGRectMake(110, 0, 190, 50);
+    content.numberOfLines = 2;
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 0: {
+                    title.frame = CGRectMake(10, 0, 100, 80);
+                    title.textColor = [UIColor blackColor];
+                    title.text = @"头       像";
+                    if (_userInfo.tile && [_userInfo.tile length] > 1) {
+                        _photoView.image = [UIImage imageWithData:_userInfo.tile];
+                    }
+                    else {
+                        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+                    }
+                }
+                    break;
+                case 1: {
+                    title.textColor = [UIColor blackColor];
+                    title.text = @"昵       称";
+                    _nameField.text = _userInfo.nickName;
+                }
+                    break;
+                default:
+                    break;
             }
-                break;
-            case 1: {
-                title.text = @"行业认证：";
-                content.text = _userInfo.lisence;
-            }
-                break;
-            case 2: {
-                title.text = @"手机号码：";
-                content.text = _userInfo.mobilePhoneNum;
-            }
-                break;
-            case 3: {
-                title.text = @"邮箱：";
-                content.text = _userInfo.email;
-            }
-                break;
-            case 4: {
-                title.text = @"生日：";
-                content.text = _userInfo.birthday;
+        }
+            break;
+        case 1: {
+            if ([_userInfo.isProvider boolValue]) {
+                switch (indexPath.row) {
+                    case 0: {
+                        title.text = @"福       指：";
+                        content.text = _userInfo.fuzhi;
+                    }
+                        break;
+                    case 1: {
+                        title.text = @"行业认证：";
+                        content.text = _userInfo.lisence;
+                    }
+                        break;
+                    case 2: {
+                        title.text = @"手机号码：";
+                        content.text = _userInfo.mobilePhoneNum;
+                    }
+                        break;
+                    case 3: {
+                        title.text = @"邮       箱：";
+                        content.text = _userInfo.email;
+                    }
+                        break;
+                    case 4: {
+                        title.text = @"生       日：";
+                        content.text = _userInfo.birthday;
+                    }
+                        break;
+                    case 5: {
+                        title.text = @"性       别：";
+                        if ([_userInfo.genderType intValue] == 0) {
+                            content.text = @"男";
+                        }
+                        else if ([_userInfo.genderType intValue] == 1) {
+                            content.text = @"女";
+                        }
+                        else {
+                            content.text = @"保密";
+                        }
+                    }
+                        break;
+                    default:
+                        break;
+                }
                 
             }
-                break;
-            case 5: {
-                title.text = @"性别：";
-                if ([_userInfo.genderType intValue] == 0) {
-                    content.text = @"男";
-                }
-                else if ([_userInfo.genderType intValue] == 1) {
-                    content.text = @"女";
-                }
-                else {
-                    content.text = @"保密";
+            else {
+                switch (indexPath.row) {
+                    case 0: {
+                        title.text = @"行业认证：";
+                        content.text = _userInfo.lisence;
+                    }
+                        break;
+                    case 1: {
+                        title.text = @"手机号码：";
+                        content.text = _userInfo.mobilePhoneNum;
+                    }
+                        break;
+                    case 2: {
+                        title.text = @"邮       箱：";
+                        content.text = _userInfo.email;
+                    }
+                        break;
+                    case 3: {
+                        title.text = @"生       日：";
+                        content.text = _userInfo.birthday;
+                        
+                    }
+                        break;
+                    case 4: {
+                        title.text = @"性       别：";
+                        if ([_userInfo.genderType intValue] == 0) {
+                            content.text = @"男";
+                        }
+                        else if ([_userInfo.genderType intValue] == 1) {
+                            content.text = @"女";
+                        }
+                        else {
+                            content.text = @"保密";
+                        }
+                    }
+                        break;
+                    default:
+                        break;
                 }
             }
-                break;
-            default:
-                break;
         }
-
-    }
-    else {
-        switch (indexPath.row) {
-            case 0: {
-                title.text = @"行业认证：";
-                content.text = _userInfo.lisence;
-            }
-                break;
-            case 1: {
-                title.text = @"手机号码：";
-                content.text = _userInfo.mobilePhoneNum;
-            }
-                break;
-            case 2: {
-                title.text = @"邮箱：";
-                content.text = _userInfo.email;
-            }
-                break;
-            case 3: {
-                title.text = @"生日：";
-                content.text = _userInfo.birthday;
-                
-            }
-                break;
-            case 4: {
-                title.text = @"性别：";
-                if ([_userInfo.genderType intValue] == 0) {
-                    content.text = @"男";
-                }
-                else if ([_userInfo.genderType intValue] == 1) {
-                    content.text = @"女";
-                }
-                else {
-                    content.text = @"保密";
-                }
-            }
-                break;
-            default:
-                break;
-        }
+            break;
+        default:
+            break;
     }
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 45;
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        return 80;
+    }
+    else {
+        return 50;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    switch (indexPath.section) {
+        case 0: {
+            switch (indexPath.row) {
+                case 0: {
+                    [self selectPhoto:nil];
+                }
+                    break;
+                case 1: {
+                    [_nameField becomeFirstResponder];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 15;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 15)];
+    view.backgroundColor = [UIColor clearColor];
+    return view;
 }
 
 #pragma mark - TextField

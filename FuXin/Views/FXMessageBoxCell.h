@@ -63,6 +63,10 @@ typedef enum {
 
 //用于保存自己发送的图片
 @property (nonatomic, strong) NSData *imageData;
+//发送状态
+@property (nonatomic, strong) UIActivityIndicatorView *activityView;
+//重发按钮
+@property (nonatomic, strong) UIButton *reSendBtn;
 
 - (void)setImageData:(NSData *)data;
 

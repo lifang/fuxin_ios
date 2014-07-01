@@ -121,6 +121,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    self.tableView.allowsSelection = NO;
     [self.view addSubview:self.tableView];
     self.tableView.backgroundColor = [UIColor clearColor];
     if (kDeviceVersion >= 7.0) {

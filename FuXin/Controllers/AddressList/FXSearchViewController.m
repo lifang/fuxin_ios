@@ -85,6 +85,9 @@ static NSString *searchIdentifer = @"SI";
     _searchController.searchResultsTableView.delegate = self;
     _searchController.searchResultsTableView.dataSource = self;
     [_searchController.searchResultsTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:searchIdentifer];
+    if (kDeviceVersion >= 7.0) {
+        _searchController.searchResultsTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
     [self hiddenExtraCellLineWithTableView:_searchController.searchResultsTableView];
 }
 
@@ -196,6 +199,10 @@ static NSString *searchIdentifer = @"SI";
     return nil;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [_searchBar resignFirstResponder];
     ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
@@ -204,7 +211,7 @@ static NSString *searchIdentifer = @"SI";
 //    chatC.ID = rowData.contactID;
 //    chatC.hidesBottomBarWhenPushed = YES;
 //    [self.navigationController pushViewController:chatC animated:YES];
-    FXContactController *contactC = [[FXContactController alloc] init];
+    FXContactDetailController *contactC = [[FXContactDetailController alloc] init];
     contactC.contact = rowData;
     contactC.ID = rowData.contactID;
     contactC.hidesBottomBarWhenPushed = YES;
