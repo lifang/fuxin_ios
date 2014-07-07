@@ -182,7 +182,6 @@
 #pragma mark - Action
 
 - (IBAction)userLogin:(id)sender {
-    [FXArchiverHelper print];
     [(UIButton *)sender setUserInteractionEnabled:NO];
     [_usernameField resignFirstResponder];
     [_passwordField resignFirstResponder];

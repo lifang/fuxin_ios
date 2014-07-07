@@ -57,7 +57,6 @@
 }
 
 - (void)showOrder:(BOOL)showFirst showSubscribe:(BOOL)showSecond {
-    NSLog(@"%d,%d",showFirst,showSecond);
     if (showFirst) {
         _relationView1.hidden = NO;
         _relationView1.image = [UIImage imageNamed:@"trade.png"];

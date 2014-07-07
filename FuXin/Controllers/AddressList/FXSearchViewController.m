@@ -37,7 +37,6 @@ static NSString *searchIdentifer = @"SI";
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     _resultArray = [[NSMutableArray alloc] init];
 }
 
@@ -70,12 +69,12 @@ static NSString *searchIdentifer = @"SI";
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
     imageView.image = [UIImage imageNamed:@"red.png"];
     [_searchBar insertSubview:imageView atIndex:1];
-    for (UIView *view in [[_searchBar.subviews objectAtIndex:0] subviews]) {
-        if ([view isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
-            [view removeFromSuperview];
-            break;
-        }
-    }
+//    for (UIView *view in [[_searchBar.subviews objectAtIndex:0] subviews]) {
+//        if ([view isKindOfClass:NSClassFromString(@"UISearchBarBackground")]) {
+//            [view removeFromSuperview];
+//            break;
+//        }
+//    }
     _searchBar.delegate = self;
     _searchBar.hidden = YES;
 //    [self.view addSubview:_searchBar];
@@ -84,7 +83,6 @@ static NSString *searchIdentifer = @"SI";
     _searchController.delegate = self;
     _searchController.searchResultsTableView.delegate = self;
     _searchController.searchResultsTableView.dataSource = self;
-    [_searchController.searchResultsTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:searchIdentifer];
     if (kDeviceVersion >= 7.0) {
         _searchController.searchResultsTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     }
@@ -106,6 +104,10 @@ static NSString *searchIdentifer = @"SI";
         if (hasNickName || hadName) {
             [_resultArray addObject:contact];
         }
+    }
+    if (!_searchController.searchResultsTableView.delegate) {
+        _searchController.searchResultsTableView.delegate = self;
+        _searchController.searchResultsTableView.dataSource = self;
     }
 //    [_searchController.searchResultsTableView reloadData];
 }
@@ -129,13 +131,17 @@ static NSString *searchIdentifer = @"SI";
     _searchBar.hidden = YES;
 }
 
+- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
+    [tableView setContentInset:UIEdgeInsetsZero];
+    [tableView setScrollIndicatorInsets:UIEdgeInsetsZero];
+}
+
 #pragma mark - 下载头像
 
 - (void)downloadImageWithContact:(ContactModel *)contact forCell:(FXListCell *)cell {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSURL *url = [NSURL URLWithString:contact.contactAvatarURL];
         NSData *imageData = [NSData dataWithContentsOfURL:url];
-        NSLog(@"head = %@",url);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([cell.imageURL isEqualToString:contact.contactAvatarURL]) {
                 if ([imageData length] > 0) {
@@ -165,7 +171,10 @@ static NSString *searchIdentifer = @"SI";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _searchController.searchResultsTableView) {
-        FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:searchIdentifer forIndexPath:indexPath];
+        FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:searchIdentifer];
+        if (cell == nil) {
+            cell = [[FXAddressListCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:searchIdentifer];
+        }
         ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
         if (rowData.contactRemark && ![rowData.contactRemark isEqualToString:@""]) {
             cell.nameLabel.text = rowData.contactRemark;
@@ -206,11 +215,6 @@ static NSString *searchIdentifer = @"SI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [_searchBar resignFirstResponder];
     ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
-//    FXChatViewController *chatC = [[FXChatViewController alloc] init];
-//    chatC.contact = rowData;
-//    chatC.ID = rowData.contactID;
-//    chatC.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:chatC animated:YES];
     FXContactDetailController *contactC = [[FXContactDetailController alloc] init];
     contactC.contact = rowData;
     contactC.ID = rowData.contactID;

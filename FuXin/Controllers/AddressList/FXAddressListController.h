@@ -9,6 +9,7 @@
 #import "FXSearchViewController.h"
 #import "FXTableHeaderView.h"
 #import "FXSelectIndexView.h"
+#import "EGORefreshTableHeaderView.h"
 
 typedef enum {
     AddressListRecent = 0,   //最近
@@ -16,12 +17,10 @@ typedef enum {
     AddressListSubscribe,    //订阅
 }AddressListTypes;    //通讯录类型
 
-@interface FXAddressListController : FXSearchViewController
+@interface FXAddressListController : FXSearchViewController<EGORefreshTableHeaderDelegate>
 
-//@property (nonatomic, strong) UITableView *dataTableView;
+@property (nonatomic, strong) UITableView *dataTableView;
 
-//获取的联系人 名字数组
-@property (nonatomic, strong) NSMutableArray *nameLists;
 //获取的联系人列表
 @property (nonatomic, strong) NSMutableArray *contactLists;
 
@@ -38,6 +37,11 @@ typedef enum {
 @property (nonatomic, strong) FXSelectIndexView *indexView;
 
 @property (nonatomic, strong) UISegmentedControl *segmentControl;
+
+@property (nonatomic, strong) UIView *topView;
+
+@property (nonatomic, assign) BOOL reloading;
+@property (nonatomic, retain) EGORefreshTableHeaderView *refreshHeaderView;
 
 - (void)updateContactList:(NSArray *)list;
 

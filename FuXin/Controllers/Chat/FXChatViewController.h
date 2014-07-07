@@ -12,6 +12,12 @@
 #import "FXEmojiView.h"
 #import "FXContactView.h"
 
+typedef enum {
+    StatusSending = 0,
+    StatusFail,
+    StatusSuccess,
+}StatusForSending;
+
 @interface FXChatViewController : FXAdjustViewController<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *chatTableView;

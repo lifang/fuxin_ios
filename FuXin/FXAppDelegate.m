@@ -75,9 +75,6 @@ static UINavigationController *s_loginNavController = nil;
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeBadge)];
     
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
     _rootController = [[FXRootViewController alloc] init];
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];

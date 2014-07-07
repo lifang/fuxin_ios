@@ -51,6 +51,7 @@ typedef enum{
 
 @property (nonatomic, retain) UILabel *_lastUpdatedLabel;
 @property (nonatomic, retain) UILabel *_statusLabel;
+@property (nonatomic, retain) UIActivityIndicatorView *_activityView;
 
 - (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor;
 

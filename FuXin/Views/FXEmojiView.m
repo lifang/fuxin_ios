@@ -99,12 +99,13 @@
     
     for (int i = 0; i < page; i++) {
         UIButton *send = [UIButton buttonWithType:UIButtonTypeCustom];
-        send.frame = CGRectMake(240 + i * 320, 160, 60, 30);
-        [send setBackgroundColor:kColor(0, 121, 255, 1)];
-        send.titleLabel.font = [UIFont systemFontOfSize:14];
-        [send setTitle:@"发送" forState:UIControlStateNormal];
-        [send setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [send setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+        send.frame = CGRectMake(250 + i * 320, 160, 50, 30);
+//        [send setBackgroundColor:kColor(0, 121, 255, 1)];
+        [send setBackgroundImage:[UIImage imageNamed:@"send.png"] forState:UIControlStateNormal];
+//        send.titleLabel.font = [UIFont systemFontOfSize:14];
+//        [send setTitle:@"发送" forState:UIControlStateNormal];
+//        [send setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [send setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
         [send addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
         [_emojiScrollView addSubview:send];
     }
@@ -117,7 +118,6 @@
 }
 
 - (IBAction)sendMessage:(UIButton *)sender {
-    [sender setBackgroundColor:kColor(0, 121, 255, 1)];
     if (_emojiDelegate && [_emojiDelegate respondsToSelector:@selector(sendMessage)]) {
         [_emojiDelegate sendMessage];
     }

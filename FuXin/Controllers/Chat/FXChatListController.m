@@ -22,6 +22,10 @@ static NSString *chatCellIdentifier = @"CCI";
 @synthesize chatListTable = _chatListTable;
 @synthesize chatList = _chatList;
 
+- (void)dealloc {
+    NSLog(@"chat dealloc");
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -184,6 +188,8 @@ static NSString *chatCellIdentifier = @"CCI";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _chatListTable) {
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         //清空信息条数
         FXChatCell *cell = (FXChatCell *)[tableView cellForRowAtIndexPath:indexPath];
         [cell setNumber:@""];

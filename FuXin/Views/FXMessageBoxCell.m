@@ -65,11 +65,18 @@
     _timeBackView.image = [UIImage imageNamed:@"gray.png"];
     
     _activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    _activityView.hidesWhenStopped = YES;
     _reSendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _reSendBtn.frame = CGRectMake(0, 0, 24, 24);
+    [_reSendBtn addTarget:self action:@selector(reSend:) forControlEvents:UIControlEventTouchUpInside];
+    _reSendBtn.hidden = YES;
+    [_reSendBtn setBackgroundImage:[UIImage imageNamed:@"warning.png"] forState:UIControlStateNormal];
     [self.contentView addSubview:_userPhotoView];
     [self.contentView addSubview:_backgroundView];
     [self.contentView addSubview:_timeBackView];
     [self.contentView addSubview:_timeLabel];
+    [self.contentView addSubview:_activityView];
+    [self.contentView addSubview:_reSendBtn];
     
     UIView *backView = [[UIView alloc] initWithFrame:self.frame];
     backView.backgroundColor = [UIColor clearColor];
@@ -104,6 +111,8 @@
     }
     switch (_cellStyle) {
         case MessageCellStyleReceive: {
+            _activityView.hidden = YES;
+            _reSendBtn.hidden = YES;
             _userPhotoView.frame = CGRectMake(5, kTimeLabelHeight - 5, 34, 34);
             _userPhotoView.layer.cornerRadius = _userPhotoView.bounds.size.width / 2;
             _userPhotoView.layer.masksToBounds = YES;
@@ -111,7 +120,6 @@
             _messageView.frame = CGRectMake(kLargeOffset, kTimeLabelHeight - 5, _messageView.bounds.size.width, _messageView.bounds.size.height);
             _backgroundView.frame = CGRectMake(kSmallOffset, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"receive.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
-            
         }
             break;
         case MessageCellStyleSender: {
@@ -123,6 +131,11 @@
 
             _backgroundView.frame = CGRectMake(320 - kLargeOffset - size.width - 5, kTimeLabelHeight - 7, size.width + 20, size.height + 4);
             _backgroundView.image = [[UIImage imageNamed:@"sender.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(30, 30, 30, 30)];
+            
+            CGRect rect = _backgroundView.frame;
+            CGFloat originY = rect.size.height > 24 ? rect.origin.y + (rect.size.height - 24) / 2 : rect.origin.y;
+            _activityView.frame = CGRectMake(rect.origin.x - 30, originY, 24, 24);
+            _reSendBtn.frame = _activityView.frame;
         }
             break;
         default:
@@ -134,6 +147,17 @@
         _messageView.frame = rect;
     }
     [self.contentView addSubview:_messageView];
+}
+
+- (void)showSendingStatus {
+    _activityView.hidden = NO;
+    _reSendBtn.hidden = YES;
+    [_activityView startAnimating];
+}
+
+- (void)showWarningStatus {
+    _reSendBtn.hidden = NO;
+    _activityView.hidden = YES;
 }
 
 - (void)setContents:(NSString *)content {
@@ -196,6 +220,12 @@
         if (_delegate && [_delegate respondsToSelector:@selector(touchContact:)]) {
             [_delegate touchContact:tap];
         }
+    }
+}
+
+- (IBAction)reSend:(id)sender {
+    if (_delegate && [_delegate respondsToSelector:@selector(reSendMessageForCell:)]) {
+        [_delegate reSendMessageForCell:self];
     }
 }
 

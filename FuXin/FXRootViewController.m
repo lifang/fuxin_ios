@@ -63,8 +63,10 @@
     _mainController = [[FXMainController alloc] init];
     if (_mainController.parentViewController == nil) {
         _mainController.view.frame = self.view.bounds;
+        [_mainController willMoveToParentViewController:self];
         [self addChildViewController:_mainController];
         [self.view addSubview:_mainController.view];
+        [_mainController didMoveToParentViewController:self];
     }
     loginNav.view.hidden = YES;
     [self.view bringSubviewToFront:_mainController.view];
@@ -72,8 +74,9 @@
 
 - (void)removeMainController {
     [_mainController cancelSource];
-    [_mainController removeFromParentViewController];
+    [_mainController willMoveToParentViewController:nil];
     [_mainController.view removeFromSuperview];
+    [_mainController removeFromParentViewController];
     _mainController = nil;
 }
 

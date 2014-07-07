@@ -50,12 +50,12 @@
     _nameLabel.font = [UIFont boldSystemFontOfSize:16];
     [self addSubview:_nameLabel];
     
-    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(220, 24, 12, 12)];
+    _sexView = [[UIImageView alloc] initWithFrame:CGRectMake(65, 51, 12, 12)];
     [self addSubview:_sexView];
     
     //按钮
     _infoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _infoButton.frame = CGRectMake(65, 50, 14, 14);
+    _infoButton.frame = CGRectMake(90, 50, 14, 14);
     _infoButton.tag = UserBtnInfo;
     _infoButton.hidden = YES;
     _infoButton.userInteractionEnabled = NO;
@@ -64,7 +64,7 @@
     [self addSubview:_infoButton];
     
     _msgButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _msgButton.frame = CGRectMake(90, 50, 14, 14);
+    _msgButton.frame = CGRectMake(115, 50, 14, 14);
     _msgButton.tag = UserBtnMessage;
     _msgButton.hidden = YES;
     _msgButton.userInteractionEnabled = NO;
@@ -73,7 +73,7 @@
     [self addSubview:_msgButton];
     
     _phoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _phoneButton.frame = CGRectMake(115, 50, 14, 14);
+    _phoneButton.frame = CGRectMake(140, 50, 14, 14);
     _phoneButton.tag = UserBtnPhone;
     _phoneButton.hidden = YES;
     _phoneButton.userInteractionEnabled = NO;
@@ -83,9 +83,9 @@
 }
 
 - (void)showRealName:(BOOL)showReal showMessage:(BOOL)showMsg showPhone:(BOOL)showPhone {
-    CGRect rect1 = CGRectMake(65, 50, 14, 14);
-    CGRect rect2 = CGRectMake(90, 50, 14, 14);
-    CGRect rect3 = CGRectMake(115, 50, 14, 14);
+    CGRect rect1 = CGRectMake(90, 50, 14, 14);
+    CGRect rect2 = CGRectMake(115, 50, 14, 14);
+    CGRect rect3 = CGRectMake(140, 50, 14, 14);
     if (showReal) {
         _infoButton.hidden = NO;
         _infoButton.frame = rect1;

@@ -112,8 +112,6 @@
             if (resp.isSucceed) {
                 //获取成功
                 [self updateUserInfoWithProfile:resp.profile];
-//                NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
-//                [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
             }
             else {
                 //获取失败
@@ -279,45 +277,6 @@
         }
         return cell;
     }
-//    else if (indexPath.row == 6) {
-//        static NSString *thirdIdentifer = @"third";
-//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:thirdIdentifer];
-//        if (cell == nil) {
-//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:thirdIdentifer];
-//            UIImageView *backView = [[UIImageView alloc] initWithFrame:CGRectMake(180, 13, 20, 20)];
-//            backView.tag = kBackViewTag;
-//            backView.image = [UIImage imageNamed:@"messnum.png"];
-//            [cell.contentView addSubview:backView];
-//            
-//            UILabel *numberLabel = [[UILabel alloc] initWithFrame:CGRectMake(3, 3, 14, 14)];
-//            numberLabel.tag = kLabelTag;
-//            numberLabel.backgroundColor = [UIColor clearColor];
-//            numberLabel.font = [UIFont systemFontOfSize:10];
-//            numberLabel.textColor = [UIColor whiteColor];
-//            numberLabel.textAlignment = NSTextAlignmentCenter;
-//            [backView addSubview:numberLabel];
-//        }
-//        cell.textLabel.font = [UIFont systemFontOfSize:15];
-//        cell.imageView.image = [UIImage imageNamed:@"setting6.png"];
-//        cell.textLabel.text = @"系统公告管理";
-//        
-//        UIImageView *backView = (UIImageView *)[cell.contentView viewWithTag:kBackViewTag];
-//        UILabel *label = (UILabel *)[backView viewWithTag:kLabelTag];
-//        label.text = @"8";
-//        //显示
-//        backView.hidden = NO;
-//        if (label.text.length >= 3) {
-//            label.font = [UIFont systemFontOfSize:7];
-//            label.text = @"99+";
-//        }
-//        else {
-//            label.font = [UIFont systemFontOfSize:10];
-//            if (label.text == nil || [label.text isEqualToString:@""]) {
-//                backView.hidden = YES;
-//            }
-//        }
-//        return cell;
-//    }
     else if (indexPath.row == 6) {
         static NSString *forthIdentifer = @"forth";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:forthIdentifer];
@@ -337,7 +296,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 70;
+        return 75;
     }
     return 45;
 }
@@ -420,7 +379,6 @@
             [SharedClass sharedObject].userID = nil;
             [[delegate shareRootViewContorller] showLoginViewController];
             [[delegate shareRootViewContorller] removeMainController];
-            
         }
             break;
         default:
@@ -513,14 +471,14 @@
                 alert.tag = kUpdateTag;
                 [alert show];
             }
-        }
-        else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                            message:@"此版本已经是最新版本！"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil];
-            [alert show];
+            else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                message:@"此版本已经是最新版本！"
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"确定"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
         }
     }]; 
     [request setFailedBlock:^{

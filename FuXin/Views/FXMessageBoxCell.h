@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "FXTextFormat.h"
 
+@class FXMessageBoxCell;
+
 @protocol TouchContactDelegate <NSObject>
 
 - (void)touchContact:(UIGestureRecognizer *)tap;
@@ -18,6 +20,8 @@
 
 //查看自己发送的大图
 - (void)loadLargeImageWithData:(NSData *)data;
+
+- (void)reSendMessageForCell:(FXMessageBoxCell *)cell;
 
 @end
 
@@ -71,5 +75,9 @@ typedef enum {
 - (void)setImageData:(NSData *)data;
 
 - (void)setNullView;
+
+- (void)showSendingStatus;
+
+- (void)showWarningStatus;
 
 @end

@@ -35,7 +35,7 @@
 @synthesize isRequestChatting = _isRequestChatting;
 
 - (void)dealloc {
-    [self cancelSource];
+    NSLog(@"dealloc");
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

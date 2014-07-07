@@ -40,6 +40,7 @@
 @implementation EGORefreshTableHeaderView
 
 @synthesize delegate=_delegate;
+@synthesize _activityView;
 @synthesize _statusLabel;
 @synthesize _lastUpdatedLabel;
 
@@ -57,19 +58,19 @@
 		label.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
 		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
 		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 		[self addSubview:label];
 		_lastUpdatedLabel=label;
 		[label release];
 		
-		label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f)];
+		label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 25.0f, self.frame.size.width, 20.0f)];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont boldSystemFontOfSize:13.0f];
-		label.textColor = textColor;
-		label.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
+		label.font = [UIFont systemFontOfSize:12.0f];
+		label.textColor = [UIColor blackColor];
+//		label.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+//		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
 		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 		[self addSubview:label];
 		_statusLabel=label;
 		[label release];
@@ -85,11 +86,12 @@
 		}
 #endif
 		
-		[[self layer] addSublayer:layer];
+//		[[self layer] addSublayer:layer];
 		_arrowImage=layer;
 		
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		view.frame = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
+		view.frame = CGRectMake(150.0f, frame.size.height - 45.0f, 20.0f, 20.0f);
+        view.hidesWhenStopped = YES;
 		[self addSubview:view];
 		_activityView = view;
 		[view release];
@@ -138,29 +140,31 @@
 	switch (aState) {
 		case EGOOPullRefreshPulling:
 			
-			_statusLabel.text = NSLocalizedString(@"松开刷新...", @"Release to refresh status");
-			[CATransaction begin];
-			[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
-			_arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
-			[CATransaction commit];
+			_statusLabel.text = NSLocalizedString(@"松开刷新", @"Release to refresh status");
+            _statusLabel.hidden = NO;
+//			[CATransaction begin];
+//			[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
+//			_arrowImage.transform = CATransform3DMakeRotation((M_PI / 180.0) * 180.0f, 0.0f, 0.0f, 1.0f);
+//			[CATransaction commit];
 			
 			break;
 		case EGOOPullRefreshNormal:
 			
 			if (_state == EGOOPullRefreshPulling) {
-				[CATransaction begin];
-				[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
-				_arrowImage.transform = CATransform3DIdentity;
-				[CATransaction commit];
+//				[CATransaction begin];
+//				[CATransaction setAnimationDuration:FLIP_ANIMATION_DURATION];
+//				_arrowImage.transform = CATransform3DIdentity;
+//				[CATransaction commit];
 			}
 			
-			_statusLabel.text = NSLocalizedString(@"下拉刷新...", @"Pull down to refresh status");
+			_statusLabel.text = NSLocalizedString(@"下拉刷新", @"Pull down to refresh status");
+            _statusLabel.hidden = NO;
 			[_activityView stopAnimating];
-			[CATransaction begin];
-			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
-			_arrowImage.hidden = NO;
-			_arrowImage.transform = CATransform3DIdentity;
-			[CATransaction commit];
+//			[CATransaction begin];
+//			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
+//			_arrowImage.hidden = NO;
+//			_arrowImage.transform = CATransform3DIdentity;
+//			[CATransaction commit];
 			
 			[self refreshLastUpdatedDate];
 			
@@ -168,11 +172,12 @@
 		case EGOOPullRefreshLoading:
 			
 			_statusLabel.text = NSLocalizedString(@"加载中...", @"Loading Status");
+            _statusLabel.hidden = YES;
 			[_activityView startAnimating];
-			[CATransaction begin];
-			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
-			_arrowImage.hidden = YES;
-			[CATransaction commit];
+//			[CATransaction begin];
+//			[CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions]; 
+//			_arrowImage.hidden = YES;
+//			[CATransaction commit];
 			
 			break;
 		default:

@@ -23,8 +23,6 @@ static NSString *AddressCellIdentifier = @"ACI";
 
 @implementation FXAddressListController
 
-//@synthesize dataTableView = _dataTableView;
-@synthesize nameLists = _nameLists;
 @synthesize contactLists = _contactLists;
 @synthesize recentLists = _recentLists;
 @synthesize tradeLists = _tradeLists;
@@ -43,20 +41,18 @@ static NSString *AddressCellIdentifier = @"ACI";
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-//        [FXAppDelegate showFuWuTitleForViewController:self];
+    
     }
     return self;
 }
 
 - (id)init {
     if (self = [super init]) {
-        _nameLists = [[NSMutableArray alloc] init];
         _contactLists = [[NSMutableArray alloc] init];
         _recentLists = [[NSMutableArray alloc] init];
         _tradeLists = [[NSMutableArray alloc] init];
         _subscribeLists = [[NSMutableArray alloc] init];
         [self initUI];
-        [self.view addSubview:self.searchBar];
     }
     return self;
 }
@@ -66,13 +62,14 @@ static NSString *AddressCellIdentifier = @"ACI";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"通讯录";
-//    [self setRightNavBarItemWithImageName:@"search.png"];
+
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     rightButton.frame = CGRectMake(0, 0, 32, 32);
     [rightButton setBackgroundImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(rightBarTouched:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = right;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endRefresh:) name:RequestFinishNotification object:nil];
 }
 
@@ -107,17 +104,15 @@ static NSString *AddressCellIdentifier = @"ACI";
 
 - (void)updateContactList:(NSArray *)list {
     if (list) {
-        [_nameLists removeAllObjects];
         [_contactLists removeAllObjects];
         for (ContactModel *user in list) {
-            [_nameLists addObject:[self addNameForContact:user]];
             [_contactLists addObject:user];
         }
 //        [self resetIndexView];
 //        self.listTypes = AddressListRecent;
 //        _segmentControl.selectedSegmentIndex = AddressListRecent;
         [self showContactInColumn];
-        [self.tableView reloadData];
+        [_dataTableView reloadData];
     }
 }
 
@@ -135,7 +130,6 @@ static NSString *AddressCellIdentifier = @"ACI";
 }
 
 - (void)showContactInColumn {
-    [_nameLists removeAllObjects];
     switch (_listTypes) {
         case AddressListRecent: {
             [_recentLists removeAllObjects];
@@ -155,58 +149,61 @@ static NSString *AddressCellIdentifier = @"ACI";
         default:
             break;
     }
-    [self.tableView reloadData];
+    [_dataTableView reloadData];
 }
 
 #pragma mark - UI
 
 - (void)initUI {
+    [self setTopSegmentedControlView];
     [self initBottomTableView];
+    [self.view addSubview:self.searchBar];
 //    [self initIndexView];
 }
 
-- (UIView *)setTopSegmentedControlView {
-    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kTopViewHeight)];
-    backView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:backView];
-    NSArray *segArray = [NSArray arrayWithObjects:@"最近", @"交易", @"订阅", nil];
+- (void)setTopSegmentedControlView {
+    _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kTopViewHeight)];
+    _topView.backgroundColor = [UIColor whiteColor];
+//    [self.view addSubview:_topView];
+    NSArray *segArray = [NSArray arrayWithObjects:@"最近", @"交易",@"订阅", nil];
     _segmentControl = [[UISegmentedControl alloc] initWithItems:segArray];
-    _segmentControl.frame = CGRectMake(10, 4, 300, 32);
+    _segmentControl.frame = CGRectMake(10, 7, 300, 32);
     _segmentControl.tintColor = kColor(209, 27, 33, 1);
     [_segmentControl addTarget:self action:@selector(selectedType:) forControlEvents:UIControlEventValueChanged];
     _listTypes = AddressListRecent;
-    _segmentControl.selectedSegmentIndex = AddressListRecent;
-    [backView addSubview:_segmentControl];
-    return backView;
+    _segmentControl.selectedSegmentIndex = 0;
+    [_topView addSubview:_segmentControl];
 }
 
 - (void)initBottomTableView {
-//    _dataTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, kTopViewHeight, 320, kScreenHeight - 64 - kTopViewHeight - 49) style:UITableViewStylePlain];
-//    _dataTableView.dataSource = self;
-//    _dataTableView.delegate = self;
-//    if (kDeviceVersion >= 7.0) {
-//        _dataTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//        _dataTableView.sectionIndexBackgroundColor = [UIColor clearColor];
-//    }
-//    [self.view addSubview:_dataTableView];
-//    [_dataTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:AddressCellIdentifier];
-//    [self hiddenExtraCellLineWithTableView:_dataTableView];
+    _dataTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kScreenHeight - 49 - 64) style:UITableViewStylePlain];
+    _dataTableView.delegate = self;
+    _dataTableView.dataSource = self;
+    [self.view addSubview:_dataTableView];
     if (kDeviceVersion >= 7.0) {
-        self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+        _dataTableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        _dataTableView.sectionIndexBackgroundColor = [UIColor clearColor];
     }
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
-    [self.tableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:AddressCellIdentifier];
-    [self hiddenExtraCellLineWithTableView:self.tableView];
-    self.tableView.tableHeaderView = [self setTopSegmentedControlView];
+    if (_refreshHeaderView == nil) {
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0 - _dataTableView.bounds.size.height, self.view.frame.size.width, _dataTableView.bounds.size.height)];
+        view.delegate = self;
+        [_dataTableView addSubview:view];
+        _refreshHeaderView = view;
+    }
+
+//    self.refreshControl = [[UIRefreshControl alloc] init];
+//    [self.refreshControl addTarget:self action:@selector(refresh) forControlEvents:UIControlEventValueChanged];
+//    [self.refreshControl beginRefreshing];
+    [_dataTableView registerClass:[FXAddressListCell class] forCellReuseIdentifier:AddressCellIdentifier];
+    [self hiddenExtraCellLineWithTableView:_dataTableView];
+    _dataTableView.tableHeaderView = _topView;
     _selectedHeaderViewIndex = -1;
 }
 
 - (void)refresh {
-    if (self.refreshControl.isRefreshing) {
+//    if (self.refreshControl.isRefreshing) {
         [[NSNotificationCenter defaultCenter] postNotificationName:UpdateContactNotification object:nil];
-    }
+//    }
 }
 
 #pragma mark - 通知
@@ -214,22 +211,29 @@ static NSString *AddressCellIdentifier = @"ACI";
 - (void)endRefresh:(NSNotification *)notification {
     NSDictionary *dict = notification.userInfo;
     BOOL result = [[dict objectForKey:@"result"] boolValue];
+    _refreshHeaderView._statusLabel.hidden = NO;
+
     if (result) {
-        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"刷新成功"];
+//        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"刷新成功"];
+        _refreshHeaderView._statusLabel.text = @"刷新成功";
     }
     else {
-        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"刷新失败"];
+//        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"刷新失败"];
+        _refreshHeaderView._statusLabel.text = @"刷新失败";
     }
     [self performSelector:@selector(hiddenRefresh) withObject:nil afterDelay:0.5];
 }
 
 - (void)hiddenRefresh {
-    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@" "];
-    [self.refreshControl endRefreshing];
+//    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@" "];
+//    [self.refreshControl endRefreshing];
+    if (_reloading) {
+        [self doneLoadingTableViewData];
+    }
 }
 
 #pragma mark - 右侧索引框 deprecated in 2014-6-25
-
+/*
 - (void)initIndexView {
     CGFloat originY = self.tableView.frame.origin.y + self.tableView.bounds.size.height / 2 - 20;
     CGFloat originX = 265;
@@ -252,6 +256,7 @@ static NSString *AddressCellIdentifier = @"ACI";
     _indexView.currentIndex = -1;
     _selectedHeaderViewIndex = -1;
 }
+ */
 
 #pragma mark - Action
 
@@ -300,7 +305,6 @@ static NSString *AddressCellIdentifier = @"ACI";
     for (int i = 0; i < count; i++) {
         ContactModel *contact = [sortArray objectAtIndex:i];
         [_recentLists addObject:contact];
-        [_nameLists addObject:[self addNameForContact:contact]];
     }
 }
 
@@ -312,7 +316,6 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showFirst = (contact.contactRelationship & 3);
         if (showFirst) {
             [_tradeLists addObject:contact];
-            [_nameLists addObject:[self addNameForContact:contact]];
         }
     }
 }
@@ -325,7 +328,6 @@ static NSString *AddressCellIdentifier = @"ACI";
         BOOL showSecond = ((contact.contactRelationship & 12) >> 2);
         if (showSecond) {
             [_subscribeLists addObject:contact];
-            [_nameLists addObject:[self addNameForContact:contact]];
         }
     }
 }
@@ -351,21 +353,33 @@ static NSString *AddressCellIdentifier = @"ACI";
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (tableView == self.tableView) {
+    if (tableView == _dataTableView) {
         return 1;
     }
     return [super numberOfSectionsInTableView:tableView];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (tableView == self.tableView) {
-        return [_nameLists count];
+    if (tableView == _dataTableView) {
+        switch (_listTypes) {
+            case AddressListRecent:
+                return [_recentLists count];
+                break;
+            case AddressListTrade:
+                return [_tradeLists count];
+                break;
+            case AddressListSubscribe:
+                return [_subscribeLists count];
+                break;
+            default:
+                break;
+        }
     }
     return [super tableView:tableView numberOfRowsInSection:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == self.tableView) {
+    if (tableView == _dataTableView) {
         FXAddressListCell *cell = [tableView dequeueReusableCellWithIdentifier:AddressCellIdentifier forIndexPath:indexPath];
         NSMutableArray *columnList = [self dataSourceWithListType:_listTypes];
         ContactModel *contact = [columnList objectAtIndex:indexPath.row];
@@ -386,7 +400,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == self.tableView) {
+    if (tableView == _dataTableView) {
         NSMutableArray *columnList = [self dataSourceWithListType:_listTypes];
         ContactModel *contact = [columnList objectAtIndex:indexPath.row];
 
@@ -402,7 +416,7 @@ static NSString *AddressCellIdentifier = @"ACI";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView == self.tableView) {
+    if (tableView == _dataTableView) {
         return 60;
     }
     else {
@@ -411,10 +425,49 @@ static NSString *AddressCellIdentifier = @"ACI";
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if (tableView == self.tableView) {
+    if (tableView == _dataTableView) {
         return 0;
     }
     return [super tableView:tableView heightForHeaderInSection:section];
+}
+
+#pragma mark - 下拉刷新
+
+- (void)reloadTableViewDataSource{
+    _reloading = YES;
+}
+
+- (void)doneLoadingTableViewData{
+    _reloading = NO;
+    [_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_dataTableView];
+}
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view{
+    [self reloadTableViewDataSource];
+    [self refresh];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view{
+    return _reloading;
+}
+
+//- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view{
+//    return [NSDate date];
+//}
+
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+	
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	
 }
 
 #pragma mark - 联系人分组排序 deprecated in 2014-6-25
