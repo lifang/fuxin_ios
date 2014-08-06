@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FXUserLicence.h"
 
 @interface FXUserModel : NSObject<NSCoding,NSCopying>
 
@@ -36,5 +37,13 @@
 @property (nonatomic, strong) NSNumber *isAuth;
 //福值
 @property (nonatomic, strong) NSString *fuzhi;
+//所在地
+@property (nonatomic, strong) NSString *location;
+//福师简介
+@property (nonatomic, strong) NSString *description;
+
+@property (nonatomic, strong) NSString *backgroundURL;
+
+@property (nonatomic, strong, setter = setLicences:) NSArray *licences;
 
 @end

@@ -135,7 +135,7 @@
     UIView *psdLinsView = [[UIView alloc] initWithFrame:CGRectMake(rect.origin.x, rect.origin.y + rect.size.height + 1, rect.size.width, 1)];
     psdLinsView.backgroundColor = kColor(209, 27, 33, 0.3);
     [self.view addSubview:psdLinsView];
-//    [FXArchiverHelper print];
+    [FXArchiverHelper print];
 }
 
 - (void)setLoginButtonUI {
@@ -151,7 +151,7 @@
     [self.view addSubview:loginButton];
     //注册按钮
     UIButton *registerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    registerButton.frame = CGRectMake(40, 320, 80, 20);
+    registerButton.frame = CGRectMake(30, 320, 55, 20);
     registerButton.titleLabel.font = [UIFont systemFontOfSize:13];
     registerButton.titleLabel.textAlignment = NSTextAlignmentLeft;
     [registerButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -161,7 +161,7 @@
     [self.view addSubview:registerButton];
     //忘记密码
     UIButton *forgetButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    forgetButton.frame = CGRectMake(200, 320, 80, 20);
+    forgetButton.frame = CGRectMake(230, 320, 65, 20);
     forgetButton.titleLabel.font = [UIFont systemFontOfSize:13];
     forgetButton.titleLabel.textAlignment = NSTextAlignmentRight;
     [forgetButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];

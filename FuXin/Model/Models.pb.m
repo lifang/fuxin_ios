@@ -1095,6 +1095,10 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
 @property (retain) NSString* fuzhi;
 @property (retain) NSString* orderTime;
 @property (retain) NSString* subscribeTime;
+@property (retain) NSString* location;
+@property (retain) NSString* centerLink;
+@property (retain) NSMutableArray* mutableLicensesList;
+@property (retain) NSString* backgroundUrl;
 @end
 
 @implementation Contact
@@ -1214,6 +1218,28 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   hasSubscribeTime_ = !!value;
 }
 @synthesize subscribeTime;
+- (BOOL) hasLocation {
+  return !!hasLocation_;
+}
+- (void) setHasLocation:(BOOL) value {
+  hasLocation_ = !!value;
+}
+@synthesize location;
+- (BOOL) hasCenterLink {
+  return !!hasCenterLink_;
+}
+- (void) setHasCenterLink:(BOOL) value {
+  hasCenterLink_ = !!value;
+}
+@synthesize centerLink;
+@synthesize mutableLicensesList;
+- (BOOL) hasBackgroundUrl {
+  return !!hasBackgroundUrl_;
+}
+- (void) setHasBackgroundUrl:(BOOL) value {
+  hasBackgroundUrl_ = !!value;
+}
+@synthesize backgroundUrl;
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1225,6 +1251,10 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   self.fuzhi = nil;
   self.orderTime = nil;
   self.subscribeTime = nil;
+  self.location = nil;
+  self.centerLink = nil;
+  self.mutableLicensesList = nil;
+  self.backgroundUrl = nil;
   [super dealloc];
 }
 - (id) init {
@@ -1244,6 +1274,9 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
     self.fuzhi = @"";
     self.orderTime = @"";
     self.subscribeTime = @"";
+    self.location = @"";
+    self.centerLink = @"";
+    self.backgroundUrl = @"";
   }
   return self;
 }
@@ -1258,6 +1291,13 @@ static Contact* defaultContactInstance = nil;
 }
 - (Contact*) defaultInstance {
   return defaultContactInstance;
+}
+- (NSArray*) licensesList {
+  return mutableLicensesList;
+}
+- (License*) licensesAtIndex:(int32_t) index {
+  id value = [mutableLicensesList objectAtIndex:index];
+  return value;
 }
 - (BOOL) isInitialized {
   return YES;
@@ -1307,6 +1347,18 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasSubscribeTime) {
     [output writeString:15 value:self.subscribeTime];
+  }
+  if (self.hasLocation) {
+    [output writeString:16 value:self.location];
+  }
+  if (self.hasCenterLink) {
+    [output writeString:17 value:self.centerLink];
+  }
+  for (License* element in self.licensesList) {
+    [output writeMessage:18 value:element];
+  }
+  if (self.hasBackgroundUrl) {
+    [output writeString:19 value:self.backgroundUrl];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -1361,6 +1413,18 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasSubscribeTime) {
     size += computeStringSize(15, self.subscribeTime);
+  }
+  if (self.hasLocation) {
+    size += computeStringSize(16, self.location);
+  }
+  if (self.hasCenterLink) {
+    size += computeStringSize(17, self.centerLink);
+  }
+  for (License* element in self.licensesList) {
+    size += computeMessageSize(18, element);
+  }
+  if (self.hasBackgroundUrl) {
+    size += computeStringSize(19, self.backgroundUrl);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1492,6 +1556,21 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
   if (other.hasSubscribeTime) {
     [self setSubscribeTime:other.subscribeTime];
   }
+  if (other.hasLocation) {
+    [self setLocation:other.location];
+  }
+  if (other.hasCenterLink) {
+    [self setCenterLink:other.centerLink];
+  }
+  if (other.mutableLicensesList.count > 0) {
+    if (result.mutableLicensesList == nil) {
+      result.mutableLicensesList = [NSMutableArray array];
+    }
+    [result.mutableLicensesList addObjectsFromArray:other.mutableLicensesList];
+  }
+  if (other.hasBackgroundUrl) {
+    [self setBackgroundUrl:other.backgroundUrl];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1576,6 +1655,24 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
       }
       case 122: {
         [self setSubscribeTime:[input readString]];
+        break;
+      }
+      case 130: {
+        [self setLocation:[input readString]];
+        break;
+      }
+      case 138: {
+        [self setCenterLink:[input readString]];
+        break;
+      }
+      case 146: {
+        License_Builder* subBuilder = [License builder];
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self addLicenses:[subBuilder buildPartial]];
+        break;
+      }
+      case 154: {
+        [self setBackgroundUrl:[input readString]];
         break;
       }
     }
@@ -1819,6 +1916,83 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
 - (Contact_Builder*) clearSubscribeTime {
   result.hasSubscribeTime = NO;
   result.subscribeTime = @"";
+  return self;
+}
+- (BOOL) hasLocation {
+  return result.hasLocation;
+}
+- (NSString*) location {
+  return result.location;
+}
+- (Contact_Builder*) setLocation:(NSString*) value {
+  result.hasLocation = YES;
+  result.location = value;
+  return self;
+}
+- (Contact_Builder*) clearLocation {
+  result.hasLocation = NO;
+  result.location = @"";
+  return self;
+}
+- (BOOL) hasCenterLink {
+  return result.hasCenterLink;
+}
+- (NSString*) centerLink {
+  return result.centerLink;
+}
+- (Contact_Builder*) setCenterLink:(NSString*) value {
+  result.hasCenterLink = YES;
+  result.centerLink = value;
+  return self;
+}
+- (Contact_Builder*) clearCenterLink {
+  result.hasCenterLink = NO;
+  result.centerLink = @"";
+  return self;
+}
+- (NSArray*) licensesList {
+  if (result.mutableLicensesList == nil) { return [NSArray array]; }
+  return result.mutableLicensesList;
+}
+- (License*) licensesAtIndex:(int32_t) index {
+  return [result licensesAtIndex:index];
+}
+- (Contact_Builder*) replaceLicensesAtIndex:(int32_t) index with:(License*) value {
+  [result.mutableLicensesList replaceObjectAtIndex:index withObject:value];
+  return self;
+}
+- (Contact_Builder*) addAllLicenses:(NSArray*) values {
+  if (result.mutableLicensesList == nil) {
+    result.mutableLicensesList = [NSMutableArray array];
+  }
+  [result.mutableLicensesList addObjectsFromArray:values];
+  return self;
+}
+- (Contact_Builder*) clearLicensesList {
+  result.mutableLicensesList = nil;
+  return self;
+}
+- (Contact_Builder*) addLicenses:(License*) value {
+  if (result.mutableLicensesList == nil) {
+    result.mutableLicensesList = [NSMutableArray array];
+  }
+  [result.mutableLicensesList addObject:value];
+  return self;
+}
+- (BOOL) hasBackgroundUrl {
+  return result.hasBackgroundUrl;
+}
+- (NSString*) backgroundUrl {
+  return result.backgroundUrl;
+}
+- (Contact_Builder*) setBackgroundUrl:(NSString*) value {
+  result.hasBackgroundUrl = YES;
+  result.backgroundUrl = value;
+  return self;
+}
+- (Contact_Builder*) clearBackgroundUrl {
+  result.hasBackgroundUrl = NO;
+  result.backgroundUrl = @"";
   return self;
 }
 @end
@@ -2082,6 +2256,7 @@ static ContactRequest* defaultContactRequestInstance = nil;
 @property BOOL isSucceed;
 @property (retain) NSMutableArray* mutableContactsList;
 @property (retain) NSString* timeStamp;
+@property ContactResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ContactResponse
@@ -2106,6 +2281,13 @@ static ContactRequest* defaultContactRequestInstance = nil;
   hasTimeStamp_ = !!value;
 }
 @synthesize timeStamp;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.mutableContactsList = nil;
   self.timeStamp = nil;
@@ -2115,6 +2297,7 @@ static ContactRequest* defaultContactRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.timeStamp = @"";
+    self.errorCode = ContactResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -2150,6 +2333,9 @@ static ContactResponse* defaultContactResponseInstance = nil;
   if (self.hasTimeStamp) {
     [output writeString:3 value:self.timeStamp];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:4 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -2167,6 +2353,9 @@ static ContactResponse* defaultContactResponseInstance = nil;
   }
   if (self.hasTimeStamp) {
     size += computeStringSize(3, self.timeStamp);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(4, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -2201,6 +2390,14 @@ static ContactResponse* defaultContactResponseInstance = nil;
 }
 @end
 
+BOOL ContactResponse_ErrorCodeTypeIsValidValue(ContactResponse_ErrorCodeType value) {
+  switch (value) {
+    case ContactResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ContactResponse_Builder()
 @property (retain) ContactResponse* result;
 @end
@@ -2255,6 +2452,9 @@ static ContactResponse* defaultContactResponseInstance = nil;
   if (other.hasTimeStamp) {
     [self setTimeStamp:other.timeStamp];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -2288,6 +2488,15 @@ static ContactResponse* defaultContactResponseInstance = nil;
       }
       case 26: {
         [self setTimeStamp:[input readString]];
+        break;
+      }
+      case 32: {
+        int32_t value = [input readEnum];
+        if (ContactResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
         break;
       }
     }
@@ -2352,6 +2561,22 @@ static ContactResponse* defaultContactResponseInstance = nil;
 - (ContactResponse_Builder*) clearTimeStamp {
   result.hasTimeStamp = NO;
   result.timeStamp = @"";
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ContactResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ContactResponse_Builder*) setErrorCode:(ContactResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ContactResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ContactResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -2657,6 +2882,7 @@ static BlockContactRequest* defaultBlockContactRequestInstance = nil;
 @property BOOL isSucceed;
 @property int32_t contactId;
 @property BOOL isBlocked;
+@property BlockContactResponse_ErrorCodeType errorCode;
 @end
 
 @implementation BlockContactResponse
@@ -2692,6 +2918,13 @@ static BlockContactRequest* defaultBlockContactRequestInstance = nil;
 - (void) setIsBlocked:(BOOL) value {
   isBlocked_ = !!value;
 }
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   [super dealloc];
 }
@@ -2700,6 +2933,7 @@ static BlockContactRequest* defaultBlockContactRequestInstance = nil;
     self.isSucceed = NO;
     self.contactId = 0;
     self.isBlocked = NO;
+    self.errorCode = BlockContactResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -2728,6 +2962,9 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
   if (self.hasIsBlocked) {
     [output writeBool:3 value:self.isBlocked];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:4 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -2745,6 +2982,9 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
   }
   if (self.hasIsBlocked) {
     size += computeBoolSize(3, self.isBlocked);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(4, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -2779,6 +3019,14 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
 }
 @end
 
+BOOL BlockContactResponse_ErrorCodeTypeIsValidValue(BlockContactResponse_ErrorCodeType value) {
+  switch (value) {
+    case BlockContactResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface BlockContactResponse_Builder()
 @property (retain) BlockContactResponse* result;
 @end
@@ -2830,6 +3078,9 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
   if (other.hasIsBlocked) {
     [self setIsBlocked:other.isBlocked];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -2861,6 +3112,15 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
       }
       case 24: {
         [self setIsBlocked:[input readBool]];
+        break;
+      }
+      case 32: {
+        int32_t value = [input readEnum];
+        if (BlockContactResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
         break;
       }
     }
@@ -2912,6 +3172,22 @@ static BlockContactResponse* defaultBlockContactResponseInstance = nil;
 - (BlockContactResponse_Builder*) clearIsBlocked {
   result.hasIsBlocked = NO;
   result.isBlocked = NO;
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (BlockContactResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (BlockContactResponse_Builder*) setErrorCode:(BlockContactResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (BlockContactResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = BlockContactResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -3173,6 +3449,7 @@ static ContactDetailRequest* defaultContactDetailRequestInstance = nil;
 @interface ContactDetailResponse ()
 @property BOOL isSucceed;
 @property (retain) Contact* contact;
+@property ContactDetailResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ContactDetailResponse
@@ -3196,6 +3473,13 @@ static ContactDetailRequest* defaultContactDetailRequestInstance = nil;
   hasContact_ = !!value;
 }
 @synthesize contact;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.contact = nil;
   [super dealloc];
@@ -3204,6 +3488,7 @@ static ContactDetailRequest* defaultContactDetailRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.contact = [Contact defaultInstance];
+    self.errorCode = ContactDetailResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -3229,6 +3514,9 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
   if (self.hasContact) {
     [output writeMessage:2 value:self.contact];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:3 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -3243,6 +3531,9 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
   }
   if (self.hasContact) {
     size += computeMessageSize(2, self.contact);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -3277,6 +3568,14 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
 }
 @end
 
+BOOL ContactDetailResponse_ErrorCodeTypeIsValidValue(ContactDetailResponse_ErrorCodeType value) {
+  switch (value) {
+    case ContactDetailResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ContactDetailResponse_Builder()
 @property (retain) ContactDetailResponse* result;
 @end
@@ -3325,6 +3624,9 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
   if (other.hasContact) {
     [self mergeContact:other.contact];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -3357,6 +3659,15 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self setContact:[subBuilder buildPartial]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (ContactDetailResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -3406,6 +3717,22 @@ static ContactDetailResponse* defaultContactDetailResponseInstance = nil;
 - (ContactDetailResponse_Builder*) clearContact {
   result.hasContact = NO;
   result.contact = [Contact defaultInstance];
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ContactDetailResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ContactDetailResponse_Builder*) setErrorCode:(ContactDetailResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ContactDetailResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ContactDetailResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -3687,6 +4014,7 @@ static ChangeContactDetailRequest* defaultChangeContactDetailRequestInstance = n
 @interface ChangeContactDetailResponse ()
 @property BOOL isSucceed;
 @property (retain) Contact* contact;
+@property ChangeContactDetailResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ChangeContactDetailResponse
@@ -3710,6 +4038,13 @@ static ChangeContactDetailRequest* defaultChangeContactDetailRequestInstance = n
   hasContact_ = !!value;
 }
 @synthesize contact;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.contact = nil;
   [super dealloc];
@@ -3718,6 +4053,7 @@ static ChangeContactDetailRequest* defaultChangeContactDetailRequestInstance = n
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.contact = [Contact defaultInstance];
+    self.errorCode = ChangeContactDetailResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -3743,6 +4079,9 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   if (self.hasContact) {
     [output writeMessage:2 value:self.contact];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:3 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -3757,6 +4096,9 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   }
   if (self.hasContact) {
     size += computeMessageSize(2, self.contact);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -3791,6 +4133,14 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 }
 @end
 
+BOOL ChangeContactDetailResponse_ErrorCodeTypeIsValidValue(ChangeContactDetailResponse_ErrorCodeType value) {
+  switch (value) {
+    case ChangeContactDetailResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ChangeContactDetailResponse_Builder()
 @property (retain) ChangeContactDetailResponse* result;
 @end
@@ -3839,6 +4189,9 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   if (other.hasContact) {
     [self mergeContact:other.contact];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -3871,6 +4224,15 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self setContact:[subBuilder buildPartial]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (ChangeContactDetailResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -3922,6 +4284,22 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   result.contact = [Contact defaultInstance];
   return self;
 }
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ChangeContactDetailResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ChangeContactDetailResponse_Builder*) setErrorCode:(ChangeContactDetailResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ChangeContactDetailResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ChangeContactDetailResponse_ErrorCodeTypeInvalidToken;
+  return self;
+}
 @end
 
 @interface Profile ()
@@ -3937,6 +4315,10 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
 @property (retain) NSString* lisence;
 @property BOOL isAuthentication;
 @property (retain) NSString* fuzhi;
+@property (retain) NSMutableArray* mutableLicensesList;
+@property (retain) NSString* location;
+@property (retain) NSString* description;
+@property (retain) NSString* backgroundUrl;
 @end
 
 @implementation Profile
@@ -4035,6 +4417,28 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   hasFuzhi_ = !!value;
 }
 @synthesize fuzhi;
+@synthesize mutableLicensesList;
+- (BOOL) hasLocation {
+  return !!hasLocation_;
+}
+- (void) setHasLocation:(BOOL) value {
+  hasLocation_ = !!value;
+}
+@synthesize location;
+- (BOOL) hasDescription {
+  return !!hasDescription_;
+}
+- (void) setHasDescription:(BOOL) value {
+  hasDescription_ = !!value;
+}
+@synthesize description;
+- (BOOL) hasBackgroundUrl {
+  return !!hasBackgroundUrl_;
+}
+- (void) setHasBackgroundUrl:(BOOL) value {
+  hasBackgroundUrl_ = !!value;
+}
+@synthesize backgroundUrl;
 - (void) dealloc {
   self.name = nil;
   self.nickName = nil;
@@ -4044,6 +4448,10 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
   self.tileUrl = nil;
   self.lisence = nil;
   self.fuzhi = nil;
+  self.mutableLicensesList = nil;
+  self.location = nil;
+  self.description = nil;
+  self.backgroundUrl = nil;
   [super dealloc];
 }
 - (id) init {
@@ -4060,6 +4468,9 @@ static ChangeContactDetailResponse* defaultChangeContactDetailResponseInstance =
     self.lisence = @"";
     self.isAuthentication = NO;
     self.fuzhi = @"";
+    self.location = @"";
+    self.description = @"";
+    self.backgroundUrl = @"";
   }
   return self;
 }
@@ -4074,6 +4485,13 @@ static Profile* defaultProfileInstance = nil;
 }
 - (Profile*) defaultInstance {
   return defaultProfileInstance;
+}
+- (NSArray*) licensesList {
+  return mutableLicensesList;
+}
+- (License*) licensesAtIndex:(int32_t) index {
+  id value = [mutableLicensesList objectAtIndex:index];
+  return value;
 }
 - (BOOL) isInitialized {
   return YES;
@@ -4114,6 +4532,18 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasFuzhi) {
     [output writeString:12 value:self.fuzhi];
+  }
+  for (License* element in self.licensesList) {
+    [output writeMessage:13 value:element];
+  }
+  if (self.hasLocation) {
+    [output writeString:14 value:self.location];
+  }
+  if (self.hasDescription) {
+    [output writeString:15 value:self.description];
+  }
+  if (self.hasBackgroundUrl) {
+    [output writeString:16 value:self.backgroundUrl];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -4159,6 +4589,18 @@ static Profile* defaultProfileInstance = nil;
   }
   if (self.hasFuzhi) {
     size += computeStringSize(12, self.fuzhi);
+  }
+  for (License* element in self.licensesList) {
+    size += computeMessageSize(13, element);
+  }
+  if (self.hasLocation) {
+    size += computeStringSize(14, self.location);
+  }
+  if (self.hasDescription) {
+    size += computeStringSize(15, self.description);
+  }
+  if (self.hasBackgroundUrl) {
+    size += computeStringSize(16, self.backgroundUrl);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4281,6 +4723,21 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
   if (other.hasFuzhi) {
     [self setFuzhi:other.fuzhi];
   }
+  if (other.mutableLicensesList.count > 0) {
+    if (result.mutableLicensesList == nil) {
+      result.mutableLicensesList = [NSMutableArray array];
+    }
+    [result.mutableLicensesList addObjectsFromArray:other.mutableLicensesList];
+  }
+  if (other.hasLocation) {
+    [self setLocation:other.location];
+  }
+  if (other.hasDescription) {
+    [self setDescription:other.description];
+  }
+  if (other.hasBackgroundUrl) {
+    [self setBackgroundUrl:other.backgroundUrl];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -4353,6 +4810,24 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
       }
       case 98: {
         [self setFuzhi:[input readString]];
+        break;
+      }
+      case 106: {
+        License_Builder* subBuilder = [License builder];
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self addLicenses:[subBuilder buildPartial]];
+        break;
+      }
+      case 114: {
+        [self setLocation:[input readString]];
+        break;
+      }
+      case 122: {
+        [self setDescription:[input readString]];
+        break;
+      }
+      case 130: {
+        [self setBackgroundUrl:[input readString]];
         break;
       }
     }
@@ -4548,6 +5023,83 @@ BOOL Profile_GenderTypeIsValidValue(Profile_GenderType value) {
 - (Profile_Builder*) clearFuzhi {
   result.hasFuzhi = NO;
   result.fuzhi = @"";
+  return self;
+}
+- (NSArray*) licensesList {
+  if (result.mutableLicensesList == nil) { return [NSArray array]; }
+  return result.mutableLicensesList;
+}
+- (License*) licensesAtIndex:(int32_t) index {
+  return [result licensesAtIndex:index];
+}
+- (Profile_Builder*) replaceLicensesAtIndex:(int32_t) index with:(License*) value {
+  [result.mutableLicensesList replaceObjectAtIndex:index withObject:value];
+  return self;
+}
+- (Profile_Builder*) addAllLicenses:(NSArray*) values {
+  if (result.mutableLicensesList == nil) {
+    result.mutableLicensesList = [NSMutableArray array];
+  }
+  [result.mutableLicensesList addObjectsFromArray:values];
+  return self;
+}
+- (Profile_Builder*) clearLicensesList {
+  result.mutableLicensesList = nil;
+  return self;
+}
+- (Profile_Builder*) addLicenses:(License*) value {
+  if (result.mutableLicensesList == nil) {
+    result.mutableLicensesList = [NSMutableArray array];
+  }
+  [result.mutableLicensesList addObject:value];
+  return self;
+}
+- (BOOL) hasLocation {
+  return result.hasLocation;
+}
+- (NSString*) location {
+  return result.location;
+}
+- (Profile_Builder*) setLocation:(NSString*) value {
+  result.hasLocation = YES;
+  result.location = value;
+  return self;
+}
+- (Profile_Builder*) clearLocation {
+  result.hasLocation = NO;
+  result.location = @"";
+  return self;
+}
+- (BOOL) hasDescription {
+  return result.hasDescription;
+}
+- (NSString*) description {
+  return result.description;
+}
+- (Profile_Builder*) setDescription:(NSString*) value {
+  result.hasDescription = YES;
+  result.description = value;
+  return self;
+}
+- (Profile_Builder*) clearDescription {
+  result.hasDescription = NO;
+  result.description = @"";
+  return self;
+}
+- (BOOL) hasBackgroundUrl {
+  return result.hasBackgroundUrl;
+}
+- (NSString*) backgroundUrl {
+  return result.backgroundUrl;
+}
+- (Profile_Builder*) setBackgroundUrl:(NSString*) value {
+  result.hasBackgroundUrl = YES;
+  result.backgroundUrl = value;
+  return self;
+}
+- (Profile_Builder*) clearBackgroundUrl {
+  result.hasBackgroundUrl = NO;
+  result.backgroundUrl = @"";
   return self;
 }
 @end
@@ -4771,6 +5323,7 @@ static ProfileRequest* defaultProfileRequestInstance = nil;
 @interface ProfileResponse ()
 @property BOOL isSucceed;
 @property (retain) Profile* profile;
+@property ProfileResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ProfileResponse
@@ -4794,6 +5347,13 @@ static ProfileRequest* defaultProfileRequestInstance = nil;
   hasProfile_ = !!value;
 }
 @synthesize profile;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.profile = nil;
   [super dealloc];
@@ -4802,6 +5362,7 @@ static ProfileRequest* defaultProfileRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.profile = [Profile defaultInstance];
+    self.errorCode = ProfileResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -4827,6 +5388,9 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
   if (self.hasProfile) {
     [output writeMessage:2 value:self.profile];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:3 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -4841,6 +5405,9 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
   }
   if (self.hasProfile) {
     size += computeMessageSize(2, self.profile);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -4875,6 +5442,14 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
 }
 @end
 
+BOOL ProfileResponse_ErrorCodeTypeIsValidValue(ProfileResponse_ErrorCodeType value) {
+  switch (value) {
+    case ProfileResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ProfileResponse_Builder()
 @property (retain) ProfileResponse* result;
 @end
@@ -4923,6 +5498,9 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
   if (other.hasProfile) {
     [self mergeProfile:other.profile];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -4955,6 +5533,15 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self setProfile:[subBuilder buildPartial]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (ProfileResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -5004,6 +5591,22 @@ static ProfileResponse* defaultProfileResponseInstance = nil;
 - (ProfileResponse_Builder*) clearProfile {
   result.hasProfile = NO;
   result.profile = [Profile defaultInstance];
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ProfileResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ProfileResponse_Builder*) setErrorCode:(ProfileResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ProfileResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ProfileResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -5383,6 +5986,7 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
 @interface ChangeProfileResponse ()
 @property BOOL isSucceed;
 @property (retain) Profile* profile;
+@property ChangeProfileResponse_ErrorCodeType errorCode;
 @end
 
 @implementation ChangeProfileResponse
@@ -5406,6 +6010,13 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   hasProfile_ = !!value;
 }
 @synthesize profile;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.profile = nil;
   [super dealloc];
@@ -5414,6 +6025,7 @@ static ChangeProfileRequest* defaultChangeProfileRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.profile = [Profile defaultInstance];
+    self.errorCode = ChangeProfileResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -5439,6 +6051,9 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
   if (self.hasProfile) {
     [output writeMessage:2 value:self.profile];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:3 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -5453,6 +6068,9 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
   }
   if (self.hasProfile) {
     size += computeMessageSize(2, self.profile);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -5487,6 +6105,14 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
 }
 @end
 
+BOOL ChangeProfileResponse_ErrorCodeTypeIsValidValue(ChangeProfileResponse_ErrorCodeType value) {
+  switch (value) {
+    case ChangeProfileResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface ChangeProfileResponse_Builder()
 @property (retain) ChangeProfileResponse* result;
 @end
@@ -5535,6 +6161,9 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
   if (other.hasProfile) {
     [self mergeProfile:other.profile];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -5567,6 +6196,15 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
         }
         [input readMessage:subBuilder extensionRegistry:extensionRegistry];
         [self setProfile:[subBuilder buildPartial]];
+        break;
+      }
+      case 24: {
+        int32_t value = [input readEnum];
+        if (ChangeProfileResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -5616,6 +6254,22 @@ static ChangeProfileResponse* defaultChangeProfileResponseInstance = nil;
 - (ChangeProfileResponse_Builder*) clearProfile {
   result.hasProfile = NO;
   result.profile = [Profile defaultInstance];
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (ChangeProfileResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (ChangeProfileResponse_Builder*) setErrorCode:(ChangeProfileResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (ChangeProfileResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = ChangeProfileResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -5803,6 +6457,7 @@ BOOL Message_ContentTypeIsValidValue(Message_ContentType value) {
   switch (value) {
     case Message_ContentTypeText:
     case Message_ContentTypeImage:
+    case Message_ContentTypeNotice:
       return YES;
     default:
       return NO;
@@ -6550,6 +7205,7 @@ static MessageRequest* defaultMessageRequestInstance = nil;
 @property BOOL isSucceed;
 @property (retain) NSMutableArray* mutableMessageListsList;
 @property (retain) NSString* timeStamp;
+@property MessageResponse_ErrorCodeType errorCode;
 @end
 
 @implementation MessageResponse
@@ -6574,6 +7230,13 @@ static MessageRequest* defaultMessageRequestInstance = nil;
   hasTimeStamp_ = !!value;
 }
 @synthesize timeStamp;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
 - (void) dealloc {
   self.mutableMessageListsList = nil;
   self.timeStamp = nil;
@@ -6583,6 +7246,7 @@ static MessageRequest* defaultMessageRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.timeStamp = @"";
+    self.errorCode = MessageResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -6618,6 +7282,9 @@ static MessageResponse* defaultMessageResponseInstance = nil;
   if (self.hasTimeStamp) {
     [output writeString:3 value:self.timeStamp];
   }
+  if (self.hasErrorCode) {
+    [output writeEnum:4 value:self.errorCode];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -6635,6 +7302,9 @@ static MessageResponse* defaultMessageResponseInstance = nil;
   }
   if (self.hasTimeStamp) {
     size += computeStringSize(3, self.timeStamp);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(4, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -6669,6 +7339,14 @@ static MessageResponse* defaultMessageResponseInstance = nil;
 }
 @end
 
+BOOL MessageResponse_ErrorCodeTypeIsValidValue(MessageResponse_ErrorCodeType value) {
+  switch (value) {
+    case MessageResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface MessageResponse_Builder()
 @property (retain) MessageResponse* result;
 @end
@@ -6723,6 +7401,9 @@ static MessageResponse* defaultMessageResponseInstance = nil;
   if (other.hasTimeStamp) {
     [self setTimeStamp:other.timeStamp];
   }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -6756,6 +7437,15 @@ static MessageResponse* defaultMessageResponseInstance = nil;
       }
       case 26: {
         [self setTimeStamp:[input readString]];
+        break;
+      }
+      case 32: {
+        int32_t value = [input readEnum];
+        if (MessageResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
         break;
       }
     }
@@ -6820,6 +7510,22 @@ static MessageResponse* defaultMessageResponseInstance = nil;
 - (MessageResponse_Builder*) clearTimeStamp {
   result.hasTimeStamp = NO;
   result.timeStamp = @"";
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (MessageResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (MessageResponse_Builder*) setErrorCode:(MessageResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (MessageResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = MessageResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -7101,7 +7807,7 @@ static SendMessageRequest* defaultSendMessageRequestInstance = nil;
 @interface SendMessageResponse ()
 @property BOOL isSucceed;
 @property (retain) NSString* sendTime;
-@property int32_t errorCode;
+@property SendMessageResponse_ErrorCodeType errorCode;
 @end
 
 @implementation SendMessageResponse
@@ -7140,7 +7846,7 @@ static SendMessageRequest* defaultSendMessageRequestInstance = nil;
   if ((self = [super init])) {
     self.isSucceed = NO;
     self.sendTime = @"";
-    self.errorCode = 0;
+    self.errorCode = SendMessageResponse_ErrorCodeTypeInvalidToken;
   }
   return self;
 }
@@ -7167,7 +7873,7 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
     [output writeString:2 value:self.sendTime];
   }
   if (self.hasErrorCode) {
-    [output writeInt32:3 value:self.errorCode];
+    [output writeEnum:3 value:self.errorCode];
   }
   [self.unknownFields writeToCodedOutputStream:output];
 }
@@ -7185,7 +7891,7 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
     size += computeStringSize(2, self.sendTime);
   }
   if (self.hasErrorCode) {
-    size += computeInt32Size(3, self.errorCode);
+    size += computeEnumSize(3, self.errorCode);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -7220,6 +7926,14 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
 }
 @end
 
+BOOL SendMessageResponse_ErrorCodeTypeIsValidValue(SendMessageResponse_ErrorCodeType value) {
+  switch (value) {
+    case SendMessageResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
 @interface SendMessageResponse_Builder()
 @property (retain) SendMessageResponse* result;
 @end
@@ -7301,7 +8015,12 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
         break;
       }
       case 24: {
-        [self setErrorCode:[input readInt32]];
+        int32_t value = [input readEnum];
+        if (SendMessageResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:3 value:value];
+        }
         break;
       }
     }
@@ -7342,17 +8061,17 @@ static SendMessageResponse* defaultSendMessageResponseInstance = nil;
 - (BOOL) hasErrorCode {
   return result.hasErrorCode;
 }
-- (int32_t) errorCode {
+- (SendMessageResponse_ErrorCodeType) errorCode {
   return result.errorCode;
 }
-- (SendMessageResponse_Builder*) setErrorCode:(int32_t) value {
+- (SendMessageResponse_Builder*) setErrorCode:(SendMessageResponse_ErrorCodeType) value {
   result.hasErrorCode = YES;
   result.errorCode = value;
   return self;
 }
 - (SendMessageResponse_Builder*) clearErrorCode {
   result.hasErrorCode = NO;
-  result.errorCode = 0;
+  result.errorCode = SendMessageResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end
@@ -11466,6 +12185,826 @@ BOOL PushRequest_PushTypeIsValidValue(PushRequest_PushType value) {
 - (PushRequest_Builder*) clearNoticePush {
   result.hasNoticePush = NO;
   result.noticePush = [NoticePush defaultInstance];
+  return self;
+}
+@end
+
+@interface MessageConfirmedRequest ()
+@property int32_t userId;
+@property (retain) NSString* token;
+@property int32_t contactId;
+@property (retain) NSString* timeStamp;
+@end
+
+@implementation MessageConfirmedRequest
+
+- (BOOL) hasUserId {
+  return !!hasUserId_;
+}
+- (void) setHasUserId:(BOOL) value {
+  hasUserId_ = !!value;
+}
+@synthesize userId;
+- (BOOL) hasToken {
+  return !!hasToken_;
+}
+- (void) setHasToken:(BOOL) value {
+  hasToken_ = !!value;
+}
+@synthesize token;
+- (BOOL) hasContactId {
+  return !!hasContactId_;
+}
+- (void) setHasContactId:(BOOL) value {
+  hasContactId_ = !!value;
+}
+@synthesize contactId;
+- (BOOL) hasTimeStamp {
+  return !!hasTimeStamp_;
+}
+- (void) setHasTimeStamp:(BOOL) value {
+  hasTimeStamp_ = !!value;
+}
+@synthesize timeStamp;
+- (void) dealloc {
+  self.token = nil;
+  self.timeStamp = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.userId = 0;
+    self.token = @"";
+    self.contactId = 0;
+    self.timeStamp = @"";
+  }
+  return self;
+}
+static MessageConfirmedRequest* defaultMessageConfirmedRequestInstance = nil;
++ (void) initialize {
+  if (self == [MessageConfirmedRequest class]) {
+    defaultMessageConfirmedRequestInstance = [[MessageConfirmedRequest alloc] init];
+  }
+}
++ (MessageConfirmedRequest*) defaultInstance {
+  return defaultMessageConfirmedRequestInstance;
+}
+- (MessageConfirmedRequest*) defaultInstance {
+  return defaultMessageConfirmedRequestInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasUserId) {
+    [output writeInt32:1 value:self.userId];
+  }
+  if (self.hasToken) {
+    [output writeString:2 value:self.token];
+  }
+  if (self.hasContactId) {
+    [output writeInt32:3 value:self.contactId];
+  }
+  if (self.hasTimeStamp) {
+    [output writeString:4 value:self.timeStamp];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasUserId) {
+    size += computeInt32Size(1, self.userId);
+  }
+  if (self.hasToken) {
+    size += computeStringSize(2, self.token);
+  }
+  if (self.hasContactId) {
+    size += computeInt32Size(3, self.contactId);
+  }
+  if (self.hasTimeStamp) {
+    size += computeStringSize(4, self.timeStamp);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (MessageConfirmedRequest*) parseFromData:(NSData*) data {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromData:data] build];
+}
++ (MessageConfirmedRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedRequest*) parseFromInputStream:(NSInputStream*) input {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromInputStream:input] build];
+}
++ (MessageConfirmedRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromCodedInputStream:input] build];
+}
++ (MessageConfirmedRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedRequest*)[[[MessageConfirmedRequest builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedRequest_Builder*) builder {
+  return [[[MessageConfirmedRequest_Builder alloc] init] autorelease];
+}
++ (MessageConfirmedRequest_Builder*) builderWithPrototype:(MessageConfirmedRequest*) prototype {
+  return [[MessageConfirmedRequest builder] mergeFrom:prototype];
+}
+- (MessageConfirmedRequest_Builder*) builder {
+  return [MessageConfirmedRequest builder];
+}
+@end
+
+@interface MessageConfirmedRequest_Builder()
+@property (retain) MessageConfirmedRequest* result;
+@end
+
+@implementation MessageConfirmedRequest_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[MessageConfirmedRequest alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (MessageConfirmedRequest_Builder*) clear {
+  self.result = [[[MessageConfirmedRequest alloc] init] autorelease];
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) clone {
+  return [MessageConfirmedRequest builderWithPrototype:result];
+}
+- (MessageConfirmedRequest*) defaultInstance {
+  return [MessageConfirmedRequest defaultInstance];
+}
+- (MessageConfirmedRequest*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (MessageConfirmedRequest*) buildPartial {
+  MessageConfirmedRequest* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (MessageConfirmedRequest_Builder*) mergeFrom:(MessageConfirmedRequest*) other {
+  if (other == [MessageConfirmedRequest defaultInstance]) {
+    return self;
+  }
+  if (other.hasUserId) {
+    [self setUserId:other.userId];
+  }
+  if (other.hasToken) {
+    [self setToken:other.token];
+  }
+  if (other.hasContactId) {
+    [self setContactId:other.contactId];
+  }
+  if (other.hasTimeStamp) {
+    [self setTimeStamp:other.timeStamp];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (MessageConfirmedRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 18: {
+        [self setToken:[input readString]];
+        break;
+      }
+      case 24: {
+        [self setContactId:[input readInt32]];
+        break;
+      }
+      case 34: {
+        [self setTimeStamp:[input readString]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasUserId {
+  return result.hasUserId;
+}
+- (int32_t) userId {
+  return result.userId;
+}
+- (MessageConfirmedRequest_Builder*) setUserId:(int32_t) value {
+  result.hasUserId = YES;
+  result.userId = value;
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) clearUserId {
+  result.hasUserId = NO;
+  result.userId = 0;
+  return self;
+}
+- (BOOL) hasToken {
+  return result.hasToken;
+}
+- (NSString*) token {
+  return result.token;
+}
+- (MessageConfirmedRequest_Builder*) setToken:(NSString*) value {
+  result.hasToken = YES;
+  result.token = value;
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) clearToken {
+  result.hasToken = NO;
+  result.token = @"";
+  return self;
+}
+- (BOOL) hasContactId {
+  return result.hasContactId;
+}
+- (int32_t) contactId {
+  return result.contactId;
+}
+- (MessageConfirmedRequest_Builder*) setContactId:(int32_t) value {
+  result.hasContactId = YES;
+  result.contactId = value;
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) clearContactId {
+  result.hasContactId = NO;
+  result.contactId = 0;
+  return self;
+}
+- (BOOL) hasTimeStamp {
+  return result.hasTimeStamp;
+}
+- (NSString*) timeStamp {
+  return result.timeStamp;
+}
+- (MessageConfirmedRequest_Builder*) setTimeStamp:(NSString*) value {
+  result.hasTimeStamp = YES;
+  result.timeStamp = value;
+  return self;
+}
+- (MessageConfirmedRequest_Builder*) clearTimeStamp {
+  result.hasTimeStamp = NO;
+  result.timeStamp = @"";
+  return self;
+}
+@end
+
+@interface MessageConfirmedResponse ()
+@property BOOL isSucceed;
+@property MessageConfirmedResponse_ErrorCodeType errorCode;
+@end
+
+@implementation MessageConfirmedResponse
+
+- (BOOL) hasIsSucceed {
+  return !!hasIsSucceed_;
+}
+- (void) setHasIsSucceed:(BOOL) value {
+  hasIsSucceed_ = !!value;
+}
+- (BOOL) isSucceed {
+  return !!isSucceed_;
+}
+- (void) setIsSucceed:(BOOL) value {
+  isSucceed_ = !!value;
+}
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
+- (void) dealloc {
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.isSucceed = NO;
+    self.errorCode = MessageConfirmedResponse_ErrorCodeTypeInvalidToken;
+  }
+  return self;
+}
+static MessageConfirmedResponse* defaultMessageConfirmedResponseInstance = nil;
++ (void) initialize {
+  if (self == [MessageConfirmedResponse class]) {
+    defaultMessageConfirmedResponseInstance = [[MessageConfirmedResponse alloc] init];
+  }
+}
++ (MessageConfirmedResponse*) defaultInstance {
+  return defaultMessageConfirmedResponseInstance;
+}
+- (MessageConfirmedResponse*) defaultInstance {
+  return defaultMessageConfirmedResponseInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasIsSucceed) {
+    [output writeBool:1 value:self.isSucceed];
+  }
+  if (self.hasErrorCode) {
+    [output writeEnum:2 value:self.errorCode];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasIsSucceed) {
+    size += computeBoolSize(1, self.isSucceed);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(2, self.errorCode);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (MessageConfirmedResponse*) parseFromData:(NSData*) data {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromData:data] build];
+}
++ (MessageConfirmedResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedResponse*) parseFromInputStream:(NSInputStream*) input {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromInputStream:input] build];
+}
++ (MessageConfirmedResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromCodedInputStream:input] build];
+}
++ (MessageConfirmedResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageConfirmedResponse*)[[[MessageConfirmedResponse builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageConfirmedResponse_Builder*) builder {
+  return [[[MessageConfirmedResponse_Builder alloc] init] autorelease];
+}
++ (MessageConfirmedResponse_Builder*) builderWithPrototype:(MessageConfirmedResponse*) prototype {
+  return [[MessageConfirmedResponse builder] mergeFrom:prototype];
+}
+- (MessageConfirmedResponse_Builder*) builder {
+  return [MessageConfirmedResponse builder];
+}
+@end
+
+BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse_ErrorCodeType value) {
+  switch (value) {
+    case MessageConfirmedResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface MessageConfirmedResponse_Builder()
+@property (retain) MessageConfirmedResponse* result;
+@end
+
+@implementation MessageConfirmedResponse_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[MessageConfirmedResponse alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (MessageConfirmedResponse_Builder*) clear {
+  self.result = [[[MessageConfirmedResponse alloc] init] autorelease];
+  return self;
+}
+- (MessageConfirmedResponse_Builder*) clone {
+  return [MessageConfirmedResponse builderWithPrototype:result];
+}
+- (MessageConfirmedResponse*) defaultInstance {
+  return [MessageConfirmedResponse defaultInstance];
+}
+- (MessageConfirmedResponse*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (MessageConfirmedResponse*) buildPartial {
+  MessageConfirmedResponse* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (MessageConfirmedResponse_Builder*) mergeFrom:(MessageConfirmedResponse*) other {
+  if (other == [MessageConfirmedResponse defaultInstance]) {
+    return self;
+  }
+  if (other.hasIsSucceed) {
+    [self setIsSucceed:other.isSucceed];
+  }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (MessageConfirmedResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (MessageConfirmedResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setIsSucceed:[input readBool]];
+        break;
+      }
+      case 16: {
+        int32_t value = [input readEnum];
+        if (MessageConfirmedResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:2 value:value];
+        }
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasIsSucceed {
+  return result.hasIsSucceed;
+}
+- (BOOL) isSucceed {
+  return result.isSucceed;
+}
+- (MessageConfirmedResponse_Builder*) setIsSucceed:(BOOL) value {
+  result.hasIsSucceed = YES;
+  result.isSucceed = value;
+  return self;
+}
+- (MessageConfirmedResponse_Builder*) clearIsSucceed {
+  result.hasIsSucceed = NO;
+  result.isSucceed = NO;
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (MessageConfirmedResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (MessageConfirmedResponse_Builder*) setErrorCode:(MessageConfirmedResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (MessageConfirmedResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = MessageConfirmedResponse_ErrorCodeTypeInvalidToken;
+  return self;
+}
+@end
+
+@interface License ()
+@property (retain) NSString* name;
+@property (retain) NSString* iconUrl;
+@property int32_t order;
+@property (retain) NSString* backgroundUrl;
+@end
+
+@implementation License
+
+- (BOOL) hasName {
+  return !!hasName_;
+}
+- (void) setHasName:(BOOL) value {
+  hasName_ = !!value;
+}
+@synthesize name;
+- (BOOL) hasIconUrl {
+  return !!hasIconUrl_;
+}
+- (void) setHasIconUrl:(BOOL) value {
+  hasIconUrl_ = !!value;
+}
+@synthesize iconUrl;
+- (BOOL) hasOrder {
+  return !!hasOrder_;
+}
+- (void) setHasOrder:(BOOL) value {
+  hasOrder_ = !!value;
+}
+@synthesize order;
+- (BOOL) hasBackgroundUrl {
+  return !!hasBackgroundUrl_;
+}
+- (void) setHasBackgroundUrl:(BOOL) value {
+  hasBackgroundUrl_ = !!value;
+}
+@synthesize backgroundUrl;
+- (void) dealloc {
+  self.name = nil;
+  self.iconUrl = nil;
+  self.backgroundUrl = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.name = @"";
+    self.iconUrl = @"";
+    self.order = 0;
+    self.backgroundUrl = @"";
+  }
+  return self;
+}
+static License* defaultLicenseInstance = nil;
++ (void) initialize {
+  if (self == [License class]) {
+    defaultLicenseInstance = [[License alloc] init];
+  }
+}
++ (License*) defaultInstance {
+  return defaultLicenseInstance;
+}
+- (License*) defaultInstance {
+  return defaultLicenseInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasName) {
+    [output writeString:1 value:self.name];
+  }
+  if (self.hasIconUrl) {
+    [output writeString:2 value:self.iconUrl];
+  }
+  if (self.hasOrder) {
+    [output writeInt32:3 value:self.order];
+  }
+  if (self.hasBackgroundUrl) {
+    [output writeString:4 value:self.backgroundUrl];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasName) {
+    size += computeStringSize(1, self.name);
+  }
+  if (self.hasIconUrl) {
+    size += computeStringSize(2, self.iconUrl);
+  }
+  if (self.hasOrder) {
+    size += computeInt32Size(3, self.order);
+  }
+  if (self.hasBackgroundUrl) {
+    size += computeStringSize(4, self.backgroundUrl);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (License*) parseFromData:(NSData*) data {
+  return (License*)[[[License builder] mergeFromData:data] build];
+}
++ (License*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (License*)[[[License builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (License*) parseFromInputStream:(NSInputStream*) input {
+  return (License*)[[[License builder] mergeFromInputStream:input] build];
+}
++ (License*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (License*)[[[License builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (License*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (License*)[[[License builder] mergeFromCodedInputStream:input] build];
+}
++ (License*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (License*)[[[License builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (License_Builder*) builder {
+  return [[[License_Builder alloc] init] autorelease];
+}
++ (License_Builder*) builderWithPrototype:(License*) prototype {
+  return [[License builder] mergeFrom:prototype];
+}
+- (License_Builder*) builder {
+  return [License builder];
+}
+@end
+
+@interface License_Builder()
+@property (retain) License* result;
+@end
+
+@implementation License_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[License alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (License_Builder*) clear {
+  self.result = [[[License alloc] init] autorelease];
+  return self;
+}
+- (License_Builder*) clone {
+  return [License builderWithPrototype:result];
+}
+- (License*) defaultInstance {
+  return [License defaultInstance];
+}
+- (License*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (License*) buildPartial {
+  License* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (License_Builder*) mergeFrom:(License*) other {
+  if (other == [License defaultInstance]) {
+    return self;
+  }
+  if (other.hasName) {
+    [self setName:other.name];
+  }
+  if (other.hasIconUrl) {
+    [self setIconUrl:other.iconUrl];
+  }
+  if (other.hasOrder) {
+    [self setOrder:other.order];
+  }
+  if (other.hasBackgroundUrl) {
+    [self setBackgroundUrl:other.backgroundUrl];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (License_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (License_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 10: {
+        [self setName:[input readString]];
+        break;
+      }
+      case 18: {
+        [self setIconUrl:[input readString]];
+        break;
+      }
+      case 24: {
+        [self setOrder:[input readInt32]];
+        break;
+      }
+      case 34: {
+        [self setBackgroundUrl:[input readString]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasName {
+  return result.hasName;
+}
+- (NSString*) name {
+  return result.name;
+}
+- (License_Builder*) setName:(NSString*) value {
+  result.hasName = YES;
+  result.name = value;
+  return self;
+}
+- (License_Builder*) clearName {
+  result.hasName = NO;
+  result.name = @"";
+  return self;
+}
+- (BOOL) hasIconUrl {
+  return result.hasIconUrl;
+}
+- (NSString*) iconUrl {
+  return result.iconUrl;
+}
+- (License_Builder*) setIconUrl:(NSString*) value {
+  result.hasIconUrl = YES;
+  result.iconUrl = value;
+  return self;
+}
+- (License_Builder*) clearIconUrl {
+  result.hasIconUrl = NO;
+  result.iconUrl = @"";
+  return self;
+}
+- (BOOL) hasOrder {
+  return result.hasOrder;
+}
+- (int32_t) order {
+  return result.order;
+}
+- (License_Builder*) setOrder:(int32_t) value {
+  result.hasOrder = YES;
+  result.order = value;
+  return self;
+}
+- (License_Builder*) clearOrder {
+  result.hasOrder = NO;
+  result.order = 0;
+  return self;
+}
+- (BOOL) hasBackgroundUrl {
+  return result.hasBackgroundUrl;
+}
+- (NSString*) backgroundUrl {
+  return result.backgroundUrl;
+}
+- (License_Builder*) setBackgroundUrl:(NSString*) value {
+  result.hasBackgroundUrl = YES;
+  result.backgroundUrl = value;
+  return self;
+}
+- (License_Builder*) clearBackgroundUrl {
+  result.hasBackgroundUrl = NO;
+  result.backgroundUrl = @"";
   return self;
 }
 @end

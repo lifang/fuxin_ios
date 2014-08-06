@@ -162,6 +162,10 @@ static NSString *cellIdentifier = @"cell";
             }else{
                 //恢复失败
                 [_infoView setText:@"取消屏蔽失败！"];
+                if (!self.errorHandler) {
+                    self.errorHandler = [[FXReuqestError alloc] init];
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
             }
         }else{
             //请求失败

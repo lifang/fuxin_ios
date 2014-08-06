@@ -109,6 +109,10 @@
         NSLog(@"pro = %@",model.isProvider);
         NSLog(@"lis = %@",model.lisence);
         NSLog(@"fuzhi = %@",model.fuzhi);
+        NSLog(@"location = %@",model.location);
+        NSLog(@"desc = %@",model.description);
+        NSLog(@"lices = %@",model.licences);
+        NSLog(@"backurl = %@",model.backgroundURL);
     }
 }
 

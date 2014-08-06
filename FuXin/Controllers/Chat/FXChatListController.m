@@ -119,8 +119,9 @@ static NSString *chatCellIdentifier = @"CCI";
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([cell.imageURL isEqualToString:contact.contactAvatarURL]) {
-                if ([imageData length] > 0) {
-                    cell.photoView.image = [UIImage imageWithData:imageData];
+                UIImage *image = [UIImage imageWithData:imageData];
+                if ([imageData length] > 0 && image) {
+                    cell.photoView.image = image;
                     [FXFileHelper documentSaveImageData:imageData withName:contact.contactAvatarURL withPathType:PathForHeadImage];
                 }
             }
@@ -177,7 +178,7 @@ static NSString *chatCellIdentifier = @"CCI";
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
             [self downloadImageWithContact:contact forCell:cell];
         }
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         // Configure the cell...
         
@@ -188,8 +189,6 @@ static NSString *chatCellIdentifier = @"CCI";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (tableView == _chatListTable) {
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
         //清空信息条数
         FXChatCell *cell = (FXChatCell *)[tableView cellForRowAtIndexPath:indexPath];
         [cell setNumber:@""];

@@ -11,6 +11,7 @@
 #define kRequestPostData  @"postdata"
 
 //https://118.242.18.189
+//https://i.fuwu.com
 
 //Authentication
 /*
@@ -123,6 +124,12 @@ static NSString *Validate = @"https://i.fuwu.com/IMApi/api/ValidateCode";
  */
 static NSString *ClientPush = @"https://i.fuwu.com/IMApi/api/Client";
 
+/*
+ info:确认接收消息
+ type:POST
+ */
+static NSString *MessageConfirm = @"https://i.fuwu.com/IMApi/api/MessageConfirmed";
+
 @interface FXNetworkInterface : NSObject
 
 //字典中的kRequestPostData仅用于占位，之后会替换成需要post的内容
@@ -141,5 +148,6 @@ NSMutableDictionary* dictionaryForModifyContactDetail(); //修改联系人备注
 NSMutableDictionary* dictionaryForRegist();              //注册
 NSMutableDictionary* dictionaryForValidate();            //验证码
 NSMutableDictionary* dictionaryForClient();              //推送绑定
+NSMutableDictionary* dictionaryForMessageConfirm();      //确认接收消息
 
 @end

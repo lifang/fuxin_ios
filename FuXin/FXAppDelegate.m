@@ -81,6 +81,7 @@ static UINavigationController *s_loginNavController = nil;
     [self.window makeKeyAndVisible];
     
     return YES;
+    
 }
 
 #pragma mark - 推送
@@ -125,6 +126,8 @@ static UINavigationController *s_loginNavController = nil;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     NSLog(@"active");
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
@@ -146,27 +149,6 @@ static UINavigationController *s_loginNavController = nil;
     [[FXAppDelegate shareFXAppDelegate] setAlertView:alert];
     [alert show];
 }
-
-//+ (void)showFuWuTitleForViewController:(UIViewController *)controller{
-//    //福务网标题
-//    NSString *versionString = [NSString stringWithFormat:@"v%@",[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
-//    NSString *fullTitleString = [NSString stringWithFormat:@"福务网%@",versionString];
-//    NSRange versionRange = [fullTitleString rangeOfString:versionString];
-//    NSRange otherRange = NSMakeRange(0, versionRange.location);
-//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:fullTitleString];
-//    [attributedString addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:17] range:otherRange];
-//    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:9] range:versionRange];
-//    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedString.length)];
-//    
-//    UILabel *attributedTitleLabel = [[UILabel alloc] init];
-//    attributedTitleLabel.frame = CGRectMake(85, 0, 150, 44);
-//    attributedTitleLabel.textColor = [UIColor whiteColor];
-//    attributedTitleLabel.backgroundColor = [UIColor clearColor];
-//    attributedTitleLabel.textAlignment = NSTextAlignmentCenter;
-//    attributedTitleLabel.attributedText = attributedString;
-//    
-//    controller.navigationItem.titleView = attributedTitleLabel;
-//}
 
 ///显示菊花 (只能同时存在一朵)
 + (void)addHUDForView:(UIView *)view animate:(BOOL)animate {

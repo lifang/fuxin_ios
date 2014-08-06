@@ -38,6 +38,9 @@
 //是否接受推送
 @property (nonatomic, assign) BOOL enablePush;
 
+//判断是否已显示被顶掉提示，防止多次显示
+@property (nonatomic, assign) BOOL isShowRelogin;
+
 ////公用的titleLabel
 //@property (nonatomic, strong) UILabel *attributedTitleLabel;
 

@@ -144,8 +144,9 @@ static NSString *searchIdentifer = @"SI";
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([cell.imageURL isEqualToString:contact.contactAvatarURL]) {
-                if ([imageData length] > 0) {
-                    cell.photoView.image = [UIImage imageWithData:imageData];
+                UIImage *image = [UIImage imageWithData:imageData];
+                if ([imageData length] > 0 && image) {
+                    cell.photoView.image = image;
                     [FXFileHelper documentSaveImageData:imageData withName:contact.contactAvatarURL withPathType:PathForHeadImage];
                 }
             }
@@ -215,7 +216,7 @@ static NSString *searchIdentifer = @"SI";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [_searchBar resignFirstResponder];
     ContactModel *rowData = [_resultArray objectAtIndex:indexPath.row];
-    FXContactDetailController *contactC = [[FXContactDetailController alloc] init];
+    FXContactInfoController *contactC = [[FXContactInfoController alloc] init];
     contactC.contact = rowData;
     contactC.ID = rowData.contactID;
     contactC.hidesBottomBarWhenPushed = YES;

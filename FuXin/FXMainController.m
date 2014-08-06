@@ -19,6 +19,8 @@
 
 @property (nonatomic, strong) FXAddressListController *addrC;
 
+@property (nonatomic, strong) FXReuqestError *errorHandler;
+
 //判断是否正在加载消息信息
 @property (nonatomic, assign) BOOL isRequestChatting;
 
@@ -159,7 +161,10 @@
                         MessageList *list = [resp.messageListsList objectAtIndex:i];
                         NSArray *messages = list.messagesList;
                         NSLog(@"^^^^");
-                        NSLog(@"消息数%d",[messages count]);
+                        NSLog(@"消息数%d,contactID = %d",[messages count],list.contactId);
+                        for (Message *mess in messages) {
+                            NSLog(@"userID = %d, contactID = %d,content = %@, sendTime = %@",mess.userId,mess.contactId,mess.content,mess.sendTime);
+                        }
                         NSLog(@"=---=");
                         [messageDict setObject:messages forKey:[NSString stringWithFormat:@"%d",list.contactId]];
                     }
@@ -171,7 +176,10 @@
                 }
                 else {
                     //获取消息失败
-                    NSLog(@"message fail");
+                    if (!self.errorHandler) {
+                        self.errorHandler = [[FXReuqestError alloc] init];
+                    }
+                    [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
                 }
             }
             else {
@@ -200,6 +208,7 @@
                     [defaults setObject:resp.timeStamp forKey:contactTimeStamp];
                     [defaults synchronize];
                 });
+                NSLog(@"新改联系人数量：%d",[resp.contactsList count]);
                 //获取联系人成功
                 [self DBSaveMessageWithArray:resp.contactsList];
                 [responseDict setObject:[NSNumber numberWithBool:YES] forKey:@"result"];
@@ -207,7 +216,10 @@
             else {
                 //获取失败
                 [responseDict setObject:[NSNumber numberWithBool:NO] forKey:@"result"];
-                NSLog(@"contact fail");
+                if (!self.errorHandler) {
+                    self.errorHandler = [[FXReuqestError alloc] init];
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
             }
         }
         else {
@@ -226,6 +238,11 @@
     NSMutableArray *recentArray = [NSMutableArray array];
     [LHLDBTools getConversationsWithFinished:^(NSMutableArray *list, NSString *error) {
         for (ConversationModel *conv in list) {
+            //如果对话id和登录用户相同 不显示
+            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+            if (delegate.userID == [conv.conversationContactID intValue]) {
+                continue;
+            }
             NSMutableDictionary *recentChat = [NSMutableDictionary dictionary];
             [recentChat setValue:conv.conversationContactID forKey:@"ID"];
             [recentChat setValue:conv.conversationLastCommunicateTime forKey:@"Time"];
@@ -262,7 +279,19 @@
     [LHLDBTools getConversationsWithFinished:^(NSMutableArray *covs,NSString *error) {
         lastCovs = covs;
     }];
+    
+/*
+ 2014年7月30日新改需求--------
+ */
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    //自己发送的消息
+//    NSArray *sendList = [messageDict objectForKey:[NSString stringWithFormat:@"%d",delegate.userID]];
+//-------------------------------
     for (NSString *contactID in messageDict) {
+        //如果对话id和登录用户相同 不保存 (保存到发送人的地方)
+        if (delegate.userID == [contactID intValue]) {
+            continue;
+        }
         //每一个联系人的所有消息
         NSArray *messageList = [messageDict objectForKey:contactID];
         //保存聊天记录
@@ -279,12 +308,21 @@
         }
         for (int i = [messageList count] - 1; i >= 0; i--) {
             Message *message = [messageList objectAtIndex:i];
+//            NSLog(@"接收：send = %d,user = %d,%@",message.contactId,message.userId,message.content);
             //聊天记录对象
             MessageModel *model = [[MessageModel alloc] init];
-            model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+            if (delegate.userID == message.contactId) {
+                //发送的消息
+                model.messageRecieverID = [NSString stringWithFormat:@"%d",message.userId];
+                model.messageStatus = MessageStatusDidSent;
+            }
+            else if (delegate.userID == message.userId) {
+                //接收的消息
+                model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+                model.messageStatus = MessageStatusUnRead;
+            }
             model.messageSendTime = message.sendTime;
             model.messageContent = message.content;
-            model.messageStatus = MessageStatusUnRead;
             //是否显示时间*********************************
             if (!timeString) {
                 timeString = message.sendTime;
@@ -307,7 +345,14 @@
             
             //最后会话对象
             ConversationModel *conModel = [[ConversationModel alloc] init];
-            conModel.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
+            if (delegate.userID == message.contactId) {
+                //发送的消息
+                conModel.conversationContactID = [NSString stringWithFormat:@"%d",message.userId];
+            }
+            else if (delegate.userID == message.userId) {
+                //接收的消息
+                conModel.conversationContactID = [NSString stringWithFormat:@"%d",message.contactId];
+            }
             conModel.conversationLastCommunicateTime = message.sendTime;
             if (message.contentType == Message_ContentTypeText) {
                 conModel.conversationLastChat = message.content;
@@ -317,12 +362,60 @@
             }
             [lastForDB addObject:conModel];
         }
+//从自己发送信息的列表中找到发给此人的消息
+/*
+        for (int i = 0; i < [sendList count]; i++) {
+            Message *send = [sendList objectAtIndex:i];
+//            NSLog(@"发送：send = %d,user = %d,%@",send.contactId,send.userId,send.content);
+            //聊天记录对象
+            MessageModel *model = [[MessageModel alloc] init];
+            model.messageRecieverID = [NSString stringWithFormat:@"%d",send.userId];
+            model.messageSendTime = send.sendTime;
+            model.messageContent = send.content;
+            model.messageStatus = MessageStatusDidSent;
+            //是否显示时间*********************************
+            if (!timeString) {
+                timeString = send.sendTime;
+                model.messageShowTime = [NSNumber numberWithBool:YES];
+            }
+            else {
+                BOOL needShowTime = [FXTimeFormat needShowTime:timeString withTime:send.sendTime];
+                if (needShowTime) {
+                    timeString = send.sendTime;
+                    model.messageShowTime = [NSNumber numberWithBool:YES];
+                }
+                else {
+                    model.messageShowTime = [NSNumber numberWithBool:YES];
+                }
+            }
+
+            model.messageType = (ContentType)send.contentType;
+            model.imageContent = send.binaryContent;
+            [recordsForDB addObject:model];
+            
+            //最后会话对象
+            ConversationModel *conModel = [[ConversationModel alloc] init];
+            conModel.conversationContactID = [NSString stringWithFormat:@"%d",send.userId];
+            conModel.conversationLastCommunicateTime = send.sendTime;
+            if (send.contentType == Message_ContentTypeText) {
+                conModel.conversationLastChat = send.content;
+            }
+            else {
+                conModel.conversationLastChat = @"[图片]";
+            }
+            [lastForDB addObject:conModel];
+        }
+ */
+//----------------------------------------------------------
+//排序
+        NSArray *sortRecord = [self sortRecordArrayWithArray:recordsForDB];
+        NSArray *sortConversion = [self sortConversionArrayWithArray:lastForDB];
         //插入聊天记录表
-        [LHLDBTools saveChattingRecord:recordsForDB withFinished:^(BOOL finish) {
+        [LHLDBTools saveChattingRecord:sortRecord withFinished:^(BOOL finish) {
             NSLog(@"联系人id为%@的聊天信息保存%d",contactID,finish);
         }];
         //插入最后会话表
-        [LHLDBTools saveConversation:lastForDB withFinished:^(BOOL finish) {
+        [LHLDBTools saveConversation:sortConversion withFinished:^(BOOL finish) {
             NSLog(@"最后会话%@保存%d",contactID,finish);
         }];
         
@@ -330,6 +423,29 @@
 //    NSLog(@"下载读取！");
     [_chatC updateChatList:[self getChatListFromDB]];
 }
+
+//聊天记录排序插入到数据库
+- (NSArray *)sortRecordArrayWithArray:(NSArray *)recordList {
+    NSLog(@"数量：%d",[recordList count]);
+    return [recordList sortedArrayUsingComparator:^NSComparisonResult(MessageModel *model1, MessageModel *model2) {
+        NSDate *date1 = [FXTimeFormat dateWithString:model1.messageSendTime];
+        NSDate *date2 = [FXTimeFormat dateWithString:model2.messageSendTime];
+        NSComparisonResult result = [date1 compare:date2];
+        return result;
+    }];
+}
+
+//最后记录排序插入到数据库
+- (NSArray *)sortConversionArrayWithArray:(NSArray *)lastList {
+    return [lastList sortedArrayUsingComparator:^NSComparisonResult(ConversationModel *model1, ConversationModel *model2) {
+        NSDate *date1 = [FXTimeFormat dateWithString:model1.conversationLastCommunicateTime];
+        NSDate *date2 = [FXTimeFormat dateWithString:model2.conversationLastCommunicateTime];
+        NSComparisonResult result = [date1 compare:date2];
+        return result;
+    }];
+}
+
+
 
 //将URL中得反斜杠换成斜杠
 - (NSString *)urlStringFormatWithString:(NSString *)url {

@@ -43,7 +43,7 @@
     self.photoView.layer.masksToBounds = YES;
     [self.contentView addSubview:self.photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 160, 20)];
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 15, 160, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:16];
 //    _nameLabel.adjustsFontSizeToFitWidth = YES;
@@ -52,13 +52,14 @@
     _nameLabel.textColor = [UIColor blackColor];
     [self.contentView addSubview:_nameLabel];
     
-    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 10, 60, 20)];
+    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 15, 80, 20)];
     _timeLabel.backgroundColor = [UIColor clearColor];
-    _timeLabel.font = [UIFont systemFontOfSize:10];
+    _timeLabel.font = [UIFont systemFontOfSize:14];
+    _timeLabel.textAlignment = NSTextAlignmentRight;
     _timeLabel.textColor = [UIColor lightGrayColor];
     [self.contentView addSubview:_timeLabel];
     
-    _detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 40, 240, 20)];
+    _detailLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 35, 240, 20)];
     _detailLabel.backgroundColor = [UIColor clearColor];
     _detailLabel.font = [UIFont systemFontOfSize:14];
     _detailLabel.textColor = [UIColor grayColor];

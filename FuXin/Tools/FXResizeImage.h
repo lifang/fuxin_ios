@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define kResizeSide 70
+#define kResizeSide 180
 
 @interface FXResizeImage : NSObject
 

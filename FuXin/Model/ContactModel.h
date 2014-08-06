@@ -75,4 +75,12 @@ typedef enum{
 ///最后订阅时间
 @property (nonatomic, strong) NSString *subscribeTime;
 
+@property (nonatomic, strong) NSString *location;
+
+@property (nonatomic, strong) NSString *centerLink;
+
+@property (nonatomic, strong) NSArray *licences;
+
+@property (nonatomic, strong) NSString *backgroundURL;
+
 @end

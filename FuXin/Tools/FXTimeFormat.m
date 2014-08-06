@@ -15,14 +15,15 @@
     [format setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *sendDate = [format dateFromString:timeString];
     NSDate *now = [NSDate date];
-    
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    NSUInteger flag = NSMinuteCalendarUnit | NSHourCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit| NSMonthCalendarUnit | NSYearCalendarUnit;
+    NSUInteger flag = NSMinuteCalendarUnit | NSHourCalendarUnit | NSDayCalendarUnit | NSWeekdayCalendarUnit| NSMonthCalendarUnit | NSYearCalendarUnit | NSWeekCalendarUnit;
     NSDateComponents *sendC = [calendar components:flag fromDate:sendDate];
-    NSDateComponents *diffC = [calendar components:flag fromDate:sendDate toDate:now options:0];
+    NSDateComponents *nowC = [calendar components:flag fromDate:now];
+//    NSDateComponents *diffC = [calendar components:flag fromDate:sendDate toDate:now options:0];
     NSString *result = nil;
+    NSLog(@"week = %d,%d",nowC.week,sendC.week);
     
-    if (abs(diffC.day) == 0) {
+    if (abs(nowC.day - sendC.day) == 0) {
         //同日
         if (sendC.hour < 6) {
             result = @"凌晨";
@@ -46,13 +47,18 @@
         }
         result = [NSString stringWithFormat:@"%@%@:%@",result,hourTime,minTime];
     }
-    else if (abs(diffC.day) == 1) {
+    else if (abs(nowC.day - sendC.day) == 1) {
         //最近一天
         result = [NSString stringWithFormat:@"昨天"];
     }
-    else if (abs(diffC.day) < 7) {
+    else if (abs(nowC.day - sendC.day) < 7) {
         //最近七天
-        result = [[self class] getWeekdayWithNumber:sendC.weekday];
+        if (abs(nowC.week - sendC.week) == 0) {
+            result = [[self class] getWeekdayWithNumber:sendC.weekday];
+        }
+        else {
+            result = [NSString stringWithFormat:@"%d-%d-%d",sendC.year,sendC.month,sendC.day];
+        }
     }
     else {
         result = [NSString stringWithFormat:@"%d-%d-%d",sendC.year,sendC.month,sendC.day];

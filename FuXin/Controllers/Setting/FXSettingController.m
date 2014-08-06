@@ -8,7 +8,7 @@
 
 #import "FXSettingController.h"
 #import "FXSettingUserCell.h"
-#import "FXUserSettingController.h"
+#import "FXUserInfoController.h"
 #import "FXModifyPasswordController.h"
 #import "FXRequestDataFormat.h"
 #import "FXBlockedContactsController.h"
@@ -31,6 +31,7 @@
 @interface FXSettingController ()<UIAlertViewDelegate>
 
 @property (nonatomic, assign) BOOL isRequest;
+@property (nonatomic, strong) UIView *footerView;
 
 @end
 
@@ -61,7 +62,6 @@
     [self initUI];
     [self getUserInfo];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserInfo:) name:UpdateUserInfoNotification object:nil];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -93,12 +93,33 @@
     }
     [self.view addSubview:_settingTableView];
     [self hiddenExtraCellLineWithTableView:_settingTableView];
+    [self initFooterView];
+    _settingTableView.tableFooterView = _footerView;
 }
 
 - (void)hiddenExtraCellLineWithTableView:(UITableView *)table {
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     [table setTableFooterView:view];
+}
+
+- (void)initFooterView {
+    _footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 120)];
+    _footerView.backgroundColor = [UIColor clearColor];
+    _footerView.userInteractionEnabled = YES;
+    UIButton *loginOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    loginOutBtn.layer.cornerRadius = 4;
+    loginOutBtn.frame = CGRectMake(30, 50, 260, 43);
+    loginOutBtn.backgroundColor = kColor(210, 210, 210, 1);
+    [loginOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [loginOutBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+    [loginOutBtn setTitle:@"退出登录" forState:UIControlStateNormal];
+    [loginOutBtn addTarget:self action:@selector(loginOut) forControlEvents:UIControlEventTouchUpInside];
+    [_footerView addSubview:loginOutBtn];
+    
+//    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 1)];
+//    line.backgroundColor = kColor(200, 200, 200, 1);
+//    [_footerView addSubview:line];
 }
 
 #pragma mark - 请求
@@ -110,11 +131,22 @@
             //请求成功
             ProfileResponse *resp = [ProfileResponse parseFromData:response];
             if (resp.isSucceed) {
+                NSLog(@"!!%@",resp.profile.fuzhi);
+                NSLog(@"!!%@",resp.profile.location);
+                NSLog(@"!!%@",resp.profile.description);
+                for (int i = 0 ; i < [resp.profile.licensesList count] ; i++) {
+                    License *lice = [resp.profile.licensesList objectAtIndex:i];
+                    NSLog(@"!!%@,!!%@,!!%d",lice.name,lice.iconUrl,lice.order);
+                }
                 //获取成功
                 [self updateUserInfoWithProfile:resp.profile];
             }
             else {
                 //获取失败
+                if (!self.errorHandler) {
+                    self.errorHandler = [[FXReuqestError alloc] init];
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
                 NSLog(@"获取个人%d",resp.isSucceed);
             }
         }
@@ -122,6 +154,36 @@
             //请求失败
         }
     }];
+}
+
+- (void)loginOut {
+    //推送注销
+    [self resignPushInfo];
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat authenticationOutWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            UnAuthenticationResponse *resp = [UnAuthenticationResponse parseFromData:response];
+            NSLog(@"退出%d",resp.isSucceed);
+            if (resp.isSucceed) {
+                //返回成功
+            }
+            else {
+                //返回失败
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
+    delegate.token = nil;
+    delegate.userID = -1;
+    delegate.user = nil;
+    delegate.enablePush = NO;
+    //数据库操作保存id
+    [SharedClass sharedObject].userID = nil;
+    [[delegate shareRootViewContorller] showLoginViewController];
+    [[delegate shareRootViewContorller] removeMainController];
 }
 
 - (void)updateUserInfoWithProfile:(Profile *)profile {
@@ -138,7 +200,85 @@
     user.lisence = profile.lisence;
     user.isAuth = [NSNumber numberWithBool:profile.isAuthentication];
     user.fuzhi = profile.fuzhi;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    user.location = profile.location;
+    user.description = profile.description;
+    user.licences = profile.licensesList;
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        if (!profile.backgroundUrl || [profile.backgroundUrl isEqualToString:@""]) {
+//            //背景链接为空
+//        }
+//        else {
+//            if (![delegate.user.backgroundURL isEqualToString:profile.backgroundUrl]) {
+//                //更新背景
+//                user.backgroundURL = profile.backgroundUrl;
+//                NSData *backData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.backgroundURL]];
+//                [FXFileHelper documentSaveImageData:backData withName:user.backgroundURL withPathType:PathForHeadImage];
+//            }
+//            else {
+//                //url相同但是图片未下载成功
+//                UIImage *image = [UIImage imageWithData:[FXFileHelper headImageWithName:user.backgroundURL]];
+//                if (!image) {
+//                    [FXFileHelper removeAncientHeadImageIfExistWithName:user.backgroundURL];
+//                    NSData *backData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.backgroundURL]];
+//                    [FXFileHelper documentSaveImageData:backData withName:user.backgroundURL withPathType:PathForHeadImage];
+//                }
+//            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [FXArchiverHelper saveUserInfo:user];
+//                delegate.user = user;
+//            });
+//        }
+//    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
+//            //下载的用户头像url为空
+//            user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
+//        }
+//        else {
+//            if (![delegate.user.tileURL isEqualToString:profile.tileUrl]) {
+//                //更新头像
+//                user.tileURL = profile.tileUrl;
+//                user.tile = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.tileURL]];
+//            }
+//            else {
+//                //未更新头像
+//                user.tileURL = profile.tileUrl;
+//                user.tile = delegate.user.tile;
+//            }
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^ {
+//            [FXArchiverHelper saveUserInfo:user];
+//            delegate.user = user;
+//            NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
+//            [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+//        });
+//    });
+    dispatch_group_t group = dispatch_group_create();
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (!profile.backgroundUrl || [profile.backgroundUrl isEqualToString:@""]) {
+            //背景链接为空
+        }
+        else {
+            user.backgroundURL = profile.backgroundUrl;
+            if (![delegate.user.backgroundURL isEqualToString:profile.backgroundUrl]) {
+                //更新背景
+                NSData *backData = [self loadBackgroundWithURLString:user.backgroundURL];
+//                NSData *backData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.backgroundURL]];
+                [FXFileHelper documentSaveImageData:backData withName:user.backgroundURL withPathType:PathForHeadImage];
+            }
+            else {
+                //url相同但是图片未下载成功
+                UIImage *image = [UIImage imageWithData:[FXFileHelper headImageWithName:user.backgroundURL]];
+                if (!image) {
+                    [FXFileHelper removeAncientHeadImageIfExistWithName:user.backgroundURL];
+                    NSData *backData = [self loadBackgroundWithURLString:user.backgroundURL];
+//                    NSData *backData = [NSData dataWithContentsOfURL:[NSURL URLWithString:user.backgroundURL]];
+                    [FXFileHelper documentSaveImageData:backData withName:user.backgroundURL withPathType:PathForHeadImage];
+                }
+            }
+        }
+    });
+    dispatch_group_async(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (!profile.tileUrl || [profile.tileUrl isEqualToString:@""]) {
             //下载的用户头像url为空
             user.tile = UIImageJPEGRepresentation([UIImage imageNamed:@"placeholder.png"], 1.0);
@@ -155,13 +295,25 @@
                 user.tile = delegate.user.tile;
             }
         }
-        dispatch_async(dispatch_get_main_queue(), ^ {
-            [FXArchiverHelper saveUserInfo:user];
-            delegate.user = user;
+    });
+    dispatch_group_notify(group, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+
+        [FXArchiverHelper saveUserInfo:user];
+        delegate.user = user;
+        dispatch_async(dispatch_get_main_queue(), ^{
             NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
             [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
         });
     });
+}
+
+//临时
+- (NSData *)loadBackgroundWithURLString:(NSString *)url {
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+    [request setValidatesSecureCertificate:NO];
+    [request setDefaultResponseEncoding:NSUTF8StringEncoding];
+    [request startSynchronous];
+    return request.responseData;
 }
 
 - (void)showUserInfoWithCell:(FXSettingUserCell *)cell {
@@ -174,16 +326,17 @@
         else {
             cell.nameLabel.text = delegate.user.name;
         }
+//        cell.remarkLabel.text = delegate.user.nickName;
         //性别
-        if ([delegate.user.genderType intValue] == 0) {
-            cell.sexView.image = [UIImage imageNamed:@"male.png"];
-        }
-        else if ([delegate.user.genderType intValue] == 1) {
-            cell.sexView.image = [UIImage imageNamed:@"female.png"];
-        }
-        else if ([delegate.user.genderType intValue] == 2) {
-            //保密
-        }
+//        if ([delegate.user.genderType intValue] == 0) {
+//            cell.sexView.image = [UIImage imageNamed:@"male.png"];
+//        }
+//        else if ([delegate.user.genderType intValue] == 1) {
+//            cell.sexView.image = [UIImage imageNamed:@"female.png"];
+//        }
+//        else if ([delegate.user.genderType intValue] == 2) {
+//            //保密
+//        }
         //头像
         if (delegate.user.tile && [delegate.user.tile length] > 0) {
             cell.photoView.image = [UIImage imageWithData:delegate.user.tile];
@@ -192,21 +345,22 @@
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
         }
         //小图标显示
-        BOOL showFirst = NO,showSecond = NO,showThird = NO;
-        if ([delegate.user.isAuth boolValue]) {
-            showFirst = YES;
-        }
-        if (delegate.user.email && ![delegate.user.email isEqualToString:@""]) {
-            showSecond = YES;
-        }
-        if (delegate.user.mobilePhoneNum && ![delegate.user.mobilePhoneNum isEqualToString:@""]) {
-            showThird = YES;
-        }
-        [cell showRealName:showFirst showMessage:showSecond showPhone:showThird];
+//        BOOL showFirst = NO,showSecond = NO,showThird = NO;
+//        if ([delegate.user.isAuth boolValue]) {
+//            showFirst = YES;
+//        }
+//        if (delegate.user.email && ![delegate.user.email isEqualToString:@""]) {
+//            showSecond = YES;
+//        }
+//        if (delegate.user.mobilePhoneNum && ![delegate.user.mobilePhoneNum isEqualToString:@""]) {
+//            showThird = YES;
+//        }
+//        [cell showRealName:showFirst showMessage:showSecond showPhone:showThird];
     }
 }
 
 #pragma mark - 更新界面通知
+
 - (void)updateUserInfo:(NSNotification *)notification {
     NSIndexPath *path = [NSIndexPath indexPathForRow:0 inSection:0];
     [_settingTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
@@ -219,7 +373,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 7;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -277,26 +431,26 @@
         }
         return cell;
     }
-    else if (indexPath.row == 6) {
-        static NSString *forthIdentifer = @"forth";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:forthIdentifer];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:forthIdentifer];
-            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 1)];
-            line.backgroundColor = kColor(204, 204, 204, 3);
-            [cell.contentView addSubview:line];
-            cell.textLabel.font = [UIFont systemFontOfSize:15];
-        }
-        cell.imageView.image = [UIImage imageNamed:@"setting7.png"];
-        cell.textLabel.text = @"退出登录";
-        return cell;
-    }
+//    else if (indexPath.row == 6) {
+//        static NSString *forthIdentifer = @"forth";
+//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:forthIdentifer];
+//        if (cell == nil) {
+//            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:forthIdentifer];
+//            UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 1)];
+//            line.backgroundColor = kColor(204, 204, 204, 3);
+//            [cell.contentView addSubview:line];
+//            cell.textLabel.font = [UIFont systemFontOfSize:15];
+//        }
+//        cell.imageView.image = [UIImage imageNamed:@"setting7.png"];
+//        cell.textLabel.text = @"退出登录";
+//        return cell;
+//    }
     return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
-        return 75;
+        return 80;
     }
     return 45;
 }
@@ -305,9 +459,9 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     switch (indexPath.row) {
         case 0: {
-            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-            FXUserSettingController *user = [[FXUserSettingController alloc] init];
-            user.userInfo = delegate.user;
+//            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+            FXUserInfoController *user = [[FXUserInfoController alloc] init];
+//            user.userInfo = delegate.user;
             user.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:user animated:YES];
         }
@@ -351,36 +505,6 @@
 //            [self.navigationController pushViewController:notificationManage animated:YES];
 //        }
 //            break;
-        case 6: {
-            //推送注销
-            [self resignPushInfo];
-            FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
-            [FXRequestDataFormat authenticationOutWithToken:delegate.token UserID:delegate.userID Finished:^(BOOL success, NSData *response) {
-                if (success) {
-                    //请求成功
-                    UnAuthenticationResponse *resp = [UnAuthenticationResponse parseFromData:response];
-                    NSLog(@"退出%d",resp.isSucceed);
-                    if (resp.isSucceed) {
-                        //返回成功
-                    }
-                    else {
-                        //返回失败
-                    }
-                }
-                else {
-                    //请求失败
-                }
-            }];
-            delegate.token = nil;
-            delegate.userID = -1;
-            delegate.user = nil;
-            delegate.enablePush = NO;
-            //数据库操作保存id
-            [SharedClass sharedObject].userID = nil;
-            [[delegate shareRootViewContorller] showLoginViewController];
-            [[delegate shareRootViewContorller] removeMainController];
-        }
-            break;
         default:
             break;
     }

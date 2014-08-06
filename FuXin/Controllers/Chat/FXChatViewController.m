@@ -116,6 +116,9 @@ static NSString *MessageCellIdentifier = @"MCI";
     //删除未读标志
     [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+    
+    //提示服务端已接收到消息
+    [self getMessageFromService];
 }
 
 - (void)didReceiveMemoryWarning
@@ -264,6 +267,7 @@ static NSString *MessageCellIdentifier = @"MCI";
 //                        atIndex:1];
 //    }
     CGRect rect = CGRectMake(280, 0, 20, 0);
+    [KxMenu setTintColor:[UIColor whiteColor]];
     [KxMenu showMenuInView:self.view fromRect:rect menuItems:listArray];
 }
 
@@ -302,6 +306,28 @@ static NSString *MessageCellIdentifier = @"MCI";
     }];
 }
 
+//确认收到消息
+- (void)getMessageFromService {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat messageConfirmedWithToken:delegate.token UserID:delegate.userID ContactID:[_ID intValue] TimeStamp:delegate.messageTimeStamp Finished:^(BOOL success, NSData *response) {
+        NSLog(@"!!!!!!!!");
+        if (success) {
+            //请求成功
+            MessageConfirmedResponse *resp = [MessageConfirmedResponse parseFromData:response];
+            if (resp.isSucceed) {
+                NSLog(@"消息成功!");
+            }
+            else {
+                NSLog(@"失败？");
+            }
+        }
+        else {
+            //请求失败
+            NSLog(@"请求失败!");
+        }
+    }];
+}
+
 #pragma mark - 通知
 //正在聊天时获取数据加在数组最后
 - (void)addMessagesWhileChatting:(NSNotification *)notification {
@@ -310,6 +336,7 @@ static NSString *MessageCellIdentifier = @"MCI";
         NSLog(@"key = %@,%d",key,[[dict objectForKey:key] count]);
     }
     BOOL hasMessage = NO;
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     for (NSString *key in dict) {
         if ([key isEqualToString:_ID]) {
             //找到属于这个人得聊天记录
@@ -319,14 +346,27 @@ static NSString *MessageCellIdentifier = @"MCI";
                 Message *message = [messages objectAtIndex:i];
                 //聊天记录对象
                 MessageModel *model = [[MessageModel alloc] init];
-                model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+                if (delegate.userID == message.contactId) {
+                    //发送的消息
+                    model.messageRecieverID = [NSString stringWithFormat:@"%d",message.userId];
+                    model.messageStatus = MessageStatusDidSent;
+                }
+                else if (delegate.userID == message.userId) {
+                    //接收的消息
+                    model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
+                    model.messageStatus = MessageStatusUnRead;
+                }
+//                model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
                 model.messageSendTime = message.sendTime;
                 model.messageContent = message.content;
-                model.messageStatus = MessageStatusUnRead;
+//                model.messageStatus = MessageStatusUnRead;
                 model.messageShowTime = [NSNumber numberWithBool:YES];
                 model.messageType = (ContentType)message.contentType;
                 model.imageContent = message.binaryContent;
-                [recordsForDB addObject:model];
+                if (delegate.userID == message.userId) {
+                    //若是接收的消息，展示在界面上（因为发送的消息在点击发送时已经在界面上了，所以不展示，仅对正在聊天时收到消息这种情况）
+                    [recordsForDB addObject:model];
+                }
                 hasMessage = YES;
             }
             [_dataItems addObjectsFromArray:recordsForDB];
@@ -344,6 +384,9 @@ static NSString *MessageCellIdentifier = @"MCI";
         //删除未读标志
         [LHLDBTools clearUnreadStatusWithContactID:_ID withFinished:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+        
+        //提示服务端已接收到消息
+        [self getMessageFromService];
     }
 }
 
@@ -479,7 +522,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     FXMessageBoxCell *cell = [tableView dequeueReusableCellWithIdentifier:MessageCellIdentifier forIndexPath:indexPath];
     MessageModel *message = [_dataItems objectAtIndex:indexPath.row];
     cell.delegate = self;
-    if (message.messageStatus <=2) {
+    if (message.messageStatus <= 2) {
         //发送
         cell.cellStyle = MessageCellStyleSender;
         cell.userPhotoView.image = _userImage;
@@ -506,7 +549,8 @@ static NSString *MessageCellIdentifier = @"MCI";
     else {
         //图片消息
         cell.contents = nil;
-        if (message.messageStatus <= 2) {
+//2014年8月1日改，第一个判断不会进入了
+        if (message.messageStatus <= 0) {
             //发送的图片保存在数据库中
             [cell setImageData:message.imageContent];
         }
@@ -572,7 +616,8 @@ static NSString *MessageCellIdentifier = @"MCI";
         return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
     }
     else {
-        if (model.messageStatus <= 2) {
+//2014年8月1日改，第一个判断不会进入了
+        if (model.messageStatus <= 0) {
             UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
             return view.frame.size.height + kTimeLabelHeight + 20;
         }
@@ -695,15 +740,19 @@ static NSString *MessageCellIdentifier = @"MCI";
                 //写入数据库并保存数组
                 [cell.activityView stopAnimating];
                 [_statusDict setObject:[NSNumber numberWithInt:StatusSuccess] forKey:[NSNumber numberWithInt:indexPath.row]];
-                Message *sendMessage = [self setMessage:message withSendTime:resp.sendTime];
-                [self writeIntoDBWithMessage:sendMessage];
+#pragma mark - 2014年7月30日修改 此处不保存至数据库
+//                Message *sendMessage = [self setMessage:message withSendTime:resp.sendTime];
+//                [self writeIntoDBWithMessage:sendMessage];
                 if (reSend) {
                     //若是重发，当前发送失败条数-1
                     _reSendCount--;
                 }
             }
             else {
-                NSLog(@"errorCode = %d",resp.errorCode);
+                if (!self.errorHandler) {
+                    self.errorHandler = [[FXReuqestError alloc] init];
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
                 [cell showWarningStatus];
                 [_statusDict setObject:[NSNumber numberWithInt:StatusFail] forKey:[NSNumber numberWithInt:indexPath.row]];
                 if (!reSend) {
@@ -944,7 +993,7 @@ static NSString *MessageCellIdentifier = @"MCI";
         [self.navigationController popViewControllerAnimated:YES];
     }
     else {
-        FXContactDetailController *contactC = [[FXContactDetailController alloc] init];
+        FXContactInfoController *contactC = [[FXContactInfoController alloc] init];
         contactC.contact = _contact;
         contactC.ID = _contact.contactID;
         contactC.hidesBottomBarWhenPushed = YES;

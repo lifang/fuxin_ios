@@ -10,6 +10,20 @@
 
 @implementation FXUserModel
 
+
+- (void)setLicences:(NSArray *)licences {
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    for (int i = 0; i < [licences count]; i++) {
+        License *licence = [licences objectAtIndex:i];
+        FXUserLicence *lice = [[FXUserLicence alloc] init];
+        lice.name = licence.name;
+        lice.iconURL = licence.iconUrl;
+        lice.order = [NSNumber numberWithInt:licence.order];
+        [array addObject:lice];
+    }
+    _licences = array;
+}
+
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:_userID forKey:@"userID"];
     [aCoder encodeObject:_name forKey:@"name"];
@@ -24,6 +38,10 @@
     [aCoder encodeObject:_lisence forKey:@"lisence"];
     [aCoder encodeObject:_isAuth forKey:@"isAuth"];
     [aCoder encodeObject:_fuzhi forKey:@"fuzhi"];
+    [aCoder encodeObject:_location forKey:@"location"];
+    [aCoder encodeObject:_description forKey:@"description"];
+    [aCoder encodeObject:_backgroundURL forKey:@"backgroundURL"];
+    [aCoder encodeObject:_licences forKey:@"licence"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -41,6 +59,10 @@
         _lisence = [aDecoder decodeObjectForKey:@"lisence"];
         _isAuth = [aDecoder decodeObjectForKey:@"isAuth"];
         _fuzhi = [aDecoder decodeObjectForKey:@"fuzhi"];
+        _location = [aDecoder decodeObjectForKey:@"location"];
+        _description = [aDecoder decodeObjectForKey:@"description"];
+        _backgroundURL = [aDecoder decodeObjectForKey:@"backgroundURL"];
+        _licences = [aDecoder decodeObjectForKey:@"licence"];
     }
     return self;
 }
@@ -60,6 +82,10 @@
     user.lisence = [_lisence copyWithZone:zone];
     user.isAuth = [_isAuth copyWithZone:zone];
     user.fuzhi = [_fuzhi copyWithZone:zone];
+    user.location = [_location copyWithZone:zone];
+    user.description = [_description copyWithZone:zone];
+    user.backgroundURL = [_backgroundURL copyWithZone:zone];
+    user.licences = [_licences copyWithZone:zone];
     return user;
 }
 

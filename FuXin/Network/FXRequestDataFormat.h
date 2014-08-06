@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FXHttpRequest.h"
+#import "FXReuqestError.h"
 
 @interface FXRequestDataFormat : NSObject
 
@@ -198,5 +199,18 @@
                      UserID:(int32_t)userID
                      Client:(ClientInfo *)clientInfo
                    Finished:(Result)result;
+
+/*
+ 确认接收消息
+ token: 成功登入返回的令牌
+ userID:成功登入返回的userID
+ contactID:联系人ID
+ timeStamp:消息时间戳
+ */
++ (void)messageConfirmedWithToken:(NSString *)token
+                           UserID:(int32_t)userID
+                        ContactID:(int32_t)contactID
+                        TimeStamp:(NSString *)timeStamp
+                         Finished:(Result)result;
 
 @end

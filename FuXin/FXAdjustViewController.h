@@ -10,8 +10,11 @@
 
 #import <UIKit/UIKit.h>
 #import "BaiduMobStat.h"
+#import "FXReuqestError.h"
 
 @interface FXAdjustViewController : UIViewController
+
+@property (nonatomic, strong) FXReuqestError *errorHandler;
 
 - (void)setLeftNavBarItemWithImageName:(NSString *)name;
 - (void)setRightNavBarItemWithImageName:(NSString *)name;

@@ -119,7 +119,7 @@
             //生日
             //手机
             //邮箱
-            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,avatarURL TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT, orderTime TEXT, subscribeTime TEXT)"] : NO;
+            everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE TABLE Contacts (contactID INTEGER PRIMARY KEY NOT NULL,nickname TEXT,avatar BLOB ,avatarURL TEXT ,sex NUMBERIC ,identity NUMBERIC ,relationship NUMBERIC , remark TEXT ,pinyin TEXT ,isBlocked NUMBERIC ,lastContactTime TEXT ,isProvider NUMBERIC ,lisence TEXT ,publishClassType TEXT ,signature TEXT ,birthday TEXT ,telephone TEXT ,email TEXT, orderTime TEXT, subscribeTime TEXT,location TEXT, backgroundurl TEXT)"] : NO;
             [db beginTransaction];
             everythingIsOK = everythingIsOK ? [db executeUpdate:@"CREATE INDEX contacts_contactID_index ON Contacts(contactID)"] : NO; //contactID索引
             if (!everythingIsOK) {
@@ -133,6 +133,12 @@
             [db executeUpdate:alterSQL_ordetTime];
             NSString *alterSQL_subscribeTime = @"ALTER TABLE Contacts ADD subscribeTime TEXT";
             [db executeUpdate:alterSQL_subscribeTime];
+            NSString *alterSQL_location = @"ALTER TABLE Contacts ADD location TEXT";
+            [db executeUpdate:alterSQL_location];
+//            NSString *alterSQL_licences = @"ALTER TABLE Contacts ADD licences BLOB";
+//            [db executeUpdate:alterSQL_licences];
+            NSString *alterSQL_backgroundurl = @"ALTER TABLE Contacts ADD backgroundurl TEXT";
+            [db executeUpdate:alterSQL_backgroundurl];
         }
         
         [rs close];
@@ -203,7 +209,9 @@
     obj.contactEmail = [resultSet stringForColumn:@"email"];
     obj.orderTime = [resultSet stringForColumn:@"orderTime"];
     obj.subscribeTime = [resultSet stringForColumn:@"subscribeTime"];
-    
+    obj.location = [resultSet stringForColumn:@"location"];
+//    obj.licences = [resultSet objectForColumnName:@"licences"];
+    obj.backgroundURL = [resultSet stringForColumn:@"backgroundurl"];
     return obj;
 }
 
@@ -247,7 +255,7 @@
             resultSet = [db executeQuery:@"SELECT contactID FROM Contacts WHERE contactID = ?",[NSNumber numberWithInt:contactObj.contactID.intValue]];
             if ([resultSet next]) {
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,avatarURL = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? ,orderTime = ? ,subscribeTime = ? WHERE contactID = ?"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"UPDATE Contacts SET nickname = ? ,avatar = ? ,avatarURL = ? ,sex = ? ,identity = ? ,relationship = ? ,remark = ? ,pinyin = ? ,isBlocked = ? ,lastContactTime = ? ,isProvider = ? ,lisence = ? ,publishClassType = ? ,signature = ? ,birthday = ? ,telephone = ? ,email = ? ,orderTime = ? ,subscribeTime = ?,location = ?, backgroundurl = ? WHERE contactID = ?"
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
                                                              ,contactObj.contactAvatarURL
@@ -267,11 +275,13 @@
                                                              ,contactObj.contactEmail
                                                              ,contactObj.orderTime
                                                              ,contactObj.subscribeTime
+                                                             ,contactObj.location
+                                                             ,contactObj.backgroundURL
                                                              ,contactObj.contactID
                                                              ] : NO;
             }else{
                 [resultSet close];
-                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email,orderTime ,subscribeTime) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?)"
+                transationSucceeded = transationSucceeded ? [db executeUpdate:@"INSERT INTO Contacts (contactID ,nickname ,avatar ,avatarURL ,sex ,identity ,relationship ,remark ,pinyin ,isBlocked ,lastContactTime ,isProvider ,lisence ,publishClassType ,signature ,birthday ,telephone ,email,orderTime ,subscribeTime,location,backgroundurl) VALUES (? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?,?,?)"
                                                              ,contactObj.contactID
                                                              ,contactObj.contactNickname
                                                              ,contactObj.contactAvatar
@@ -291,7 +301,9 @@
                                                              ,contactObj.contactTelephone
                                                              ,contactObj.contactEmail
                                                              ,contactObj.orderTime
-                                                             ,contactObj.subscribeTime] : NO;
+                                                             ,contactObj.subscribeTime
+                                                             ,contactObj.location
+                                                             ,contactObj.backgroundURL] : NO;
                 
             }
         }

@@ -131,5 +131,12 @@ NSMutableDictionary* dictionaryForClient() {
             nil];
 }
 
+NSMutableDictionary* dictionaryForMessageConfirm() {
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            MessageConfirm,kRequestURL,
+            @"POST",kRequestType,
+            @"confirm",kRequestPostData,
+            nil];
+}
 
 @end

@@ -41,7 +41,7 @@
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
     [request setPostBody:postData];
     [request setTimeOutSeconds:kGetMessageDuration - 1];
-//    [request setValidatesSecureCertificate:NO];
+    [request setValidatesSecureCertificate:NO];
     [request setDefaultResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
     __weak ASIHTTPRequest *wRequest = request;

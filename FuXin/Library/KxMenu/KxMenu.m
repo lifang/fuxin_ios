@@ -44,7 +44,7 @@ const CGFloat kArrowSize = 12.f;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-@interface KxMenuView : UIView
+@interface KxMenuView : UIImageView
 
 - (void)dismissMenu:(BOOL) animated;
 
@@ -168,13 +168,16 @@ typedef enum {
     self = [super initWithFrame:CGRectZero];    
     if(self) {
 
-        self.backgroundColor = [UIColor clearColor];
+//        self.backgroundColor = [UIColor clearColor];
+        self.image = [[UIImage imageNamed:@"background.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 30, 20, 40)];
+        self.userInteractionEnabled = YES;
+
         self.opaque = YES;
         self.alpha = 0;
         
-        self.layer.shadowOpacity = 0.5;
-        self.layer.shadowOffset = CGSizeMake(2, 2);
-        self.layer.shadowRadius = 2;
+//        self.layer.shadowOpacity = 0.5;
+//        self.layer.shadowOffset = CGSizeMake(2, 2);
+//        self.layer.shadowRadius = 2;
     }
     
     return self;
@@ -620,8 +623,8 @@ typedef enum {
 
 - (void) drawRect:(CGRect)rect
 {
-    [self drawBackground:self.bounds
-               inContext:UIGraphicsGetCurrentContext()];
+//    [self drawBackground:self.bounds
+//               inContext:UIGraphicsGetCurrentContext()];
 }
 
 - (void)drawBackground:(CGRect)frame
@@ -783,6 +786,7 @@ static UIFont *gTitleFont;
     dispatch_once(&onceToken, ^{
         
         gMenu = [[KxMenu alloc] init];
+        
     });
     return gMenu;
 }

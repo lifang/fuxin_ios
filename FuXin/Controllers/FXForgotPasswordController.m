@@ -498,31 +498,29 @@
     NSString *phoneNumber = [self.phoneNumberTextField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
     //发送验证码
     [FXAppDelegate addHUDForView:self.view animate:YES];
-    [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber
-                                                Type:ValidateCodeRequest_ValidateTypeResetPassword
-                                            Finished:^(BOOL success, NSData *response) {
-                                                [FXAppDelegate hideHUDForView:self.view animate:YES];
-                                                if (success) {
-                                                    //请求成功
-                                                    ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
-                                                    if (resp.isSucceed) {
-                                                        //获取验证码成功
-                                                        [self getValidateSuccessWithButton:sender];
-                                                    }else{
-                                                        //获取验证码失败
-                                                        NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
-                                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
-                                                                                                            message:errorInfo
-                                                                                                           delegate:nil
-                                                                                                  cancelButtonTitle:@"确定"
-                                                                                                  otherButtonTitles:nil];
-                                                        [alertView show];
-                                                    }
-                                                }else{
-                                                    //请求失败
-                                                    [FXAppDelegate errorAlert:@"请求失败!"];
-                                                }
-                                            }];
+    [FXRequestDataFormat validateCodeWithPhoneNumber:phoneNumber Type:ValidateCodeRequest_ValidateTypeResetPassword Finished:^(BOOL success, NSData *response) {
+        [FXAppDelegate hideHUDForView:self.view animate:YES];
+        if (success) {
+            //请求成功
+            ValidateCodeResponse *resp = [ValidateCodeResponse parseFromData:response];
+            if (resp.isSucceed) {
+                //获取验证码成功
+                [self getValidateSuccessWithButton:sender];
+            }else{
+                //获取验证码失败
+                NSString *errorInfo = [self showErrorInfoWithType:resp.errorCode];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                                    message:errorInfo
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            }
+        }else{
+            //请求失败
+            [FXAppDelegate errorAlert:@"请求失败!"];
+        }
+    }];
 }
 
 - (NSString *)showErrorInfoWithType:(int)type {

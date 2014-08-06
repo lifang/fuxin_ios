@@ -98,6 +98,10 @@
                 NSLog(@"push = %d",resp.errorCode);
                 message = @"设置消息推送失败！";
                 [switchBtn setOn:!switchBtn.isOn];
+                if (!self.errorHandler) {
+                    self.errorHandler = [[FXReuqestError alloc] init];
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
             }
         }
         else {

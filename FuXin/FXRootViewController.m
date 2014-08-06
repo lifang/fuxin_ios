@@ -73,11 +73,13 @@
 }
 
 - (void)removeMainController {
-    [_mainController cancelSource];
-    [_mainController willMoveToParentViewController:nil];
-    [_mainController.view removeFromSuperview];
-    [_mainController removeFromParentViewController];
-    _mainController = nil;
+    if (_mainController) {
+        [_mainController cancelSource];
+        [_mainController willMoveToParentViewController:nil];
+        [_mainController.view removeFromSuperview];
+        [_mainController removeFromParentViewController];
+        _mainController = nil;
+    }
 }
 
 @end

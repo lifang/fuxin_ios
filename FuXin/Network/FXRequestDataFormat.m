@@ -8,7 +8,6 @@
 
 #import "FXRequestDataFormat.h"
 
-
 @implementation FXRequestDataFormat
 
 + (void)authenticationInWithUsername:(NSString *)username
@@ -193,13 +192,31 @@
                    ContentType:(NSString *)contentType
                       NickName:(NSString *)nickName
                       Finished:(Result)result {
-    ChangeProfileRequest *PBObject = [[[[[[[[ChangeProfileRequest builder]
-                                            setToken:token]
-                                           setUserId:userID]
-                                          setSignature:signature]
-                                         setTiles:tiles]
-                                        setContentType:contentType]
-                                       setNickName:nickName] build];
+    ChangeProfileRequest *PBObject;
+    if (!nickName) {
+        PBObject = [[[[[[[ChangeProfileRequest builder]
+                          setToken:token]
+                         setUserId:userID]
+                        setSignature:signature]
+                       setTiles:tiles]
+                      setContentType:contentType] build];
+    }
+    else if (!tiles) {
+        PBObject = [[[[[[ChangeProfileRequest builder]
+                          setToken:token]
+                         setUserId:userID]
+                        setSignature:signature]
+                     setNickName:nickName] build];
+    }
+    else {
+        PBObject = [[[[[[[[ChangeProfileRequest builder]
+                          setToken:token]
+                         setUserId:userID]
+                        setSignature:signature]
+                       setTiles:tiles]
+                      setContentType:contentType]
+                     setNickName:nickName] build];
+    }
     NSData *PBData = [PBObject data];
     //请求信息
     NSMutableDictionary *requestInfo = dictionaryForModifyProfile();
@@ -301,5 +318,23 @@
         result(success, response);
     }];
 }
+
++ (void)messageConfirmedWithToken:(NSString *)token
+                           UserID:(int32_t)userID
+                        ContactID:(int32_t)contactID
+                        TimeStamp:(NSString *)timeStamp
+                         Finished:(Result)result {
+    MessageConfirmedRequest *PBObject = [[[[[[MessageConfirmedRequest builder] setUserId:userID] setToken:token] setContactId:contactID] setTimeStamp:timeStamp] build];
+    NSData *PBData = [PBObject data];
+    //请求信息
+    NSMutableDictionary *requestInfo = dictionaryForMessageConfirm();
+    //修改postdata
+    [requestInfo setObject:PBData forKey:kRequestPostData];
+    //发送请求
+    [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success, NSData *response) {
+        result(success, response);
+    }];
+}
+
 
 @end
