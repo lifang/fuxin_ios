@@ -43,7 +43,10 @@
     self.photoView.layer.masksToBounds = YES;
     [self.contentView addSubview:self.photoView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 15, 160, 20)];
+    _blockView = [[UIImageView alloc] initWithFrame:CGRectMake(40, 45, 10, 10)];
+    [self.contentView addSubview:_blockView];
+    
+    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 15, 140, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:16];
 //    _nameLabel.adjustsFontSizeToFitWidth = YES;
@@ -52,7 +55,7 @@
     _nameLabel.textColor = [UIColor blackColor];
     [self.contentView addSubview:_nameLabel];
     
-    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 15, 80, 20)];
+    _timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(201, 15, 118, 20)];
     _timeLabel.backgroundColor = [UIColor clearColor];
     _timeLabel.font = [UIFont systemFontOfSize:14];
     _timeLabel.textAlignment = NSTextAlignmentRight;

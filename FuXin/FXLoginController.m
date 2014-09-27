@@ -135,7 +135,7 @@
     UIView *psdLinsView = [[UIView alloc] initWithFrame:CGRectMake(rect.origin.x, rect.origin.y + rect.size.height + 1, rect.size.width, 1)];
     psdLinsView.backgroundColor = kColor(209, 27, 33, 0.3);
     [self.view addSubview:psdLinsView];
-    [FXArchiverHelper print];
+//    [FXArchiverHelper print];
 }
 
 - (void)setLoginButtonUI {
@@ -169,6 +169,14 @@
     [forgetButton setTitle:@"忘记密码？" forState:UIControlStateNormal];
     [forgetButton addTarget:self action:@selector(forgetPassword:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:forgetButton];
+    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(220, kScreenHeight - 64 - 30, 80, 20)];
+    versionLabel.backgroundColor = [UIColor clearColor];
+    versionLabel.textColor = [UIColor lightGrayColor];
+    versionLabel.font = [UIFont systemFontOfSize:12];
+    versionLabel.text = [NSString stringWithFormat:@"版本号 %@",version];
+    [self.view addSubview:versionLabel];
 }
 
 - (void)setValueForUI {
@@ -310,7 +318,7 @@
         }
     }
     else {
-        _userView.userPhotoView.image = [UIImage imageNamed:@"user.png"];
+        _userView.userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
         FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
         delegate.user = nil;
     }

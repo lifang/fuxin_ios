@@ -19,6 +19,7 @@
 #import "FXFileHelper.h"
 #import "SharedClass.h"
 #import "FXPushViewController.h"
+#import "FXAboutViewController.h"
 
 #define kBackViewTag      100
 #define kLabelTag         101
@@ -109,7 +110,7 @@
     _footerView.userInteractionEnabled = YES;
     UIButton *loginOutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     loginOutBtn.layer.cornerRadius = 4;
-    loginOutBtn.frame = CGRectMake(30, 50, 260, 43);
+    loginOutBtn.frame = CGRectMake(30, 40, 260, 43);
     loginOutBtn.backgroundColor = kColor(210, 210, 210, 1);
     [loginOutBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginOutBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
@@ -373,7 +374,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 6;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -388,7 +389,7 @@
 
         return cell;
     }
-    else if (indexPath.row <= 5) {
+    else if (indexPath.row <= 6) {
         static NSString *secondIdentifier = @"second";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:secondIdentifier];
         if (cell == nil) {
@@ -426,6 +427,11 @@
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
                 break;
+            case 6: {
+                cell.imageView.image = [UIImage imageNamed:@"setting6.png"];
+                cell.textLabel.text = @"关于我们";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
             default:
                 break;
         }
@@ -498,6 +504,11 @@
         case 5:{
             FXBlockedContactsController *blockedContacts = [[FXBlockedContactsController alloc] init];
             [self.navigationController pushViewController:blockedContacts animated:YES];
+        }
+            break;
+        case 6: {
+            FXAboutViewController *aboutC = [[FXAboutViewController alloc] init];
+            [self.navigationController pushViewController:aboutC animated:YES];
         }
             break;
 //        case 6:{

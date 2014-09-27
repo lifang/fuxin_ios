@@ -10,6 +10,8 @@
 #define kRequestType      @"type"
 #define kRequestPostData  @"postdata"
 
+#define kPageSize         10
+
 //https://118.242.18.189
 //https://i.fuwu.com
 
@@ -130,6 +132,11 @@ static NSString *ClientPush = @"https://i.fuwu.com/IMApi/api/Client";
  */
 static NSString *MessageConfirm = @"https://i.fuwu.com/IMApi/api/MessageConfirmed";
 
+/*
+ info:历史消息
+ */
+static NSString *MessageHistory = @"https://i.fuwu.com/IMApi/api/MessageHistory";
+
 @interface FXNetworkInterface : NSObject
 
 //字典中的kRequestPostData仅用于占位，之后会替换成需要post的内容
@@ -149,5 +156,6 @@ NSMutableDictionary* dictionaryForRegist();              //注册
 NSMutableDictionary* dictionaryForValidate();            //验证码
 NSMutableDictionary* dictionaryForClient();              //推送绑定
 NSMutableDictionary* dictionaryForMessageConfirm();      //确认接收消息
+NSMutableDictionary* dictionaryForMessageHistory();      //历史消息
 
 @end

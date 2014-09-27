@@ -43,6 +43,9 @@
 //    _photoView.image = [UIImage imageNamed:@"placeholder.png"];
     [self.contentView addSubview:self.photoView];
     
+    _blockView = [[UIImageView alloc] initWithFrame:CGRectMake(40, 40, 10, 10)];
+    [self.contentView addSubview:_blockView];
+    
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 20, 200, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.textColor = [UIColor blackColor];

@@ -11,6 +11,7 @@
 typedef enum {
     ContentTypeText = 0, //文字
     ContentTypeImage, //图片
+    ContentTypeNotice, //通知
 }ContentType;
 
 typedef enum{

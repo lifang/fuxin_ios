@@ -15,6 +15,8 @@
 @property (nonatomic, strong) UIImageView *relationView1;
 @property (nonatomic, strong) UIImageView *relationView2;
 
+@property (nonatomic, strong) UIImageView *blockView;
+
 - (void)showOrder:(BOOL)showFirst showSubscribe:(BOOL)showSecond;
 
 @end

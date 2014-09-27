@@ -139,4 +139,12 @@ NSMutableDictionary* dictionaryForMessageConfirm() {
             nil];
 }
 
+NSMutableDictionary* dictionaryForMessageHistory() {
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            MessageHistory,kRequestURL,
+            @"POST",kRequestType,
+            @"info",kRequestPostData,
+            nil];
+}
+
 @end

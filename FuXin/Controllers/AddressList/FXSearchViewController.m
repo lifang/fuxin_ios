@@ -189,10 +189,21 @@ static NSString *searchIdentifer = @"SI";
             cell.photoView.image = [UIImage imageWithData:imageData];
         }
         else {
-            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-            [self downloadImageWithContact:rowData forCell:cell];
+            if (rowData.contactID && [rowData.contactID intValue] == kSystemContactID) {
+                //系统消息
+                cell.photoView.image = [UIImage imageNamed:@"system.png"];
+            }
+            else {
+                cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+                [self downloadImageWithContact:rowData forCell:cell];
+            }
         }
-        
+        if (rowData.contactIsBlocked) {
+            cell.blockView.image = [UIImage imageNamed:@"pingbi.png"];
+        }
+        else {
+            cell.blockView.image = nil;
+        }
         return cell;
     }
     return nil;

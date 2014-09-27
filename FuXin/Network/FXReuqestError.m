@@ -25,6 +25,7 @@
                                           otherButtonTitles:nil];
             }
             [_alert show];
+            [[delegate shareRootViewContorller] releaseResource];
         }
     }
 }

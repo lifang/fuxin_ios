@@ -52,6 +52,17 @@
 
 #pragma mark - 重写
 - (void)rightBarTouched:(id)sender {
+    NSCharacterSet *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    NSString *remark = [_nameFeild.text stringByTrimmingCharactersInSet:set];
+    if ([remark isEqualToString:@""]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示信息"
+                                                        message:@"备注不能为空或全为空格！"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     if (_type == ModifyContact) {
         [self modifyContactRemark:_nameFeild.text];
     }

@@ -34,7 +34,7 @@
         _photoImageView.image = [UIImage imageNamed:@"placeholder.png"];
         [_contentBgView addSubview:_photoImageView];
         
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 80, 20)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 10, 200, 20)];
         _nameLabel.backgroundColor = [UIColor clearColor];
         _nameLabel.font = [UIFont systemFontOfSize:14];
         _nameLabel.adjustsFontSizeToFitWidth = YES;
@@ -42,34 +42,34 @@
         _nameLabel.minimumScaleFactor = 0.5f;
         [_contentBgView addSubview:_nameLabel];
         
-        _genderImageView = [[UIImageView alloc] initWithFrame:CGRectMake(142, 13, 16, 16)];
-        _genderImageView.image = [UIImage imageNamed:@"male.png"];
-        [_contentBgView addSubview:_genderImageView];
-        
+//        _genderImageView = [[UIImageView alloc] initWithFrame:CGRectMake(142, 13, 16, 16)];
+//        _genderImageView.image = [UIImage imageNamed:@"male.png"];
+//        [_contentBgView addSubview:_genderImageView];
+//        
         _remarkLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 30, 130, 20)];
         _remarkLabel.backgroundColor = [UIColor clearColor];
         _remarkLabel.font = [UIFont systemFontOfSize:12];
         _remarkLabel.textColor = kColor(150, 150, 150, 1);
         _remarkLabel.text = @"备注：好学生";
         [_contentBgView addSubview:_remarkLabel];
-        
-        _buttonBgView = [[UIView alloc] initWithFrame:CGRectMake(190, 10, 95, 26)];
-        _buttonBgView.backgroundColor = [UIColor clearColor];
-        [_contentBgView addSubview:_buttonBgView];
-        
-        UIButton *tradeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        tradeButton.frame = (CGRect){0 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
-//        [tradeButton setImage:[UIImage imageNamed:@"trade.png"] forState:UIControlStateNormal];
-        [tradeButton addTarget:self action:@selector(tradeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _tradeButton = tradeButton;
-        [_buttonBgView addSubview:tradeButton];
-        
-        UIButton *subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        subscribeButton.frame = (CGRect){35 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
-//        [subscribeButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
-        [subscribeButton addTarget:self action:@selector(subscribeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _subscriptionButton = subscribeButton;
-        [_buttonBgView addSubview:subscribeButton];
+//
+//        _buttonBgView = [[UIView alloc] initWithFrame:CGRectMake(190, 10, 95, 26)];
+//        _buttonBgView.backgroundColor = [UIColor clearColor];
+//        [_contentBgView addSubview:_buttonBgView];
+//        
+//        UIButton *tradeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        tradeButton.frame = (CGRect){0 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
+////        [tradeButton setImage:[UIImage imageNamed:@"trade.png"] forState:UIControlStateNormal];
+//        [tradeButton addTarget:self action:@selector(tradeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        _tradeButton = tradeButton;
+//        [_buttonBgView addSubview:tradeButton];
+//        
+//        UIButton *subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        subscribeButton.frame = (CGRect){35 , 0, 30 ,_buttonBgView.frame.size.height * 2 / 3};
+////        [subscribeButton setImage:[UIImage imageNamed:@"subscription.png"] forState:UIControlStateNormal];
+//        [subscribeButton addTarget:self action:@selector(subscribeButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        _subscriptionButton = subscribeButton;
+//        [_buttonBgView addSubview:subscribeButton];
         
         //line
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 66, 290, 1)];

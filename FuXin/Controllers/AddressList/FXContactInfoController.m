@@ -25,6 +25,8 @@
 
 @property (nonatomic, assign) BOOL isRequest;
 
+@property (nonatomic, strong) UILabel *titleView;  //认证图标名
+
 @end
 
 @implementation FXContactInfoController
@@ -44,7 +46,9 @@
     // Do any additional setup after loading the view.
     self.title = @"个人详情";
     [self setLeftNavBarItemWithImageName:@"back.png"];
-    [self setRightNavBarItemWithImageName:@"info.png"];
+    if (_ID && [_ID intValue] != kSystemContactID) {
+        [self setRightNavBarItemWithImageName:@"info.png"];
+    }
     [self initUI];
 }
 
@@ -90,14 +94,16 @@
     }
     
     [self.view addSubview:_detailTable];
-    
     [self initFooterView];
     _headerView = [[FXInfoHeaderView alloc] initWithFrame:CGRectMake(0, 0, 320, 150)];
     _detailTable.tableHeaderView = _headerView;
     _detailTable.tableFooterView = _footerView;
 //    [_headerView setContact:_contact];
     
-    [self getContactFuzhi];
+    if ([_ID intValue] != 0) {
+        //不是系统消息
+        [self getContactFuzhi];
+    }
 }
 
 - (void)initFooterView {
@@ -110,7 +116,12 @@
     sendBtn.backgroundColor = kColor(209, 27, 33, 1);
     [sendBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [sendBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
-    [sendBtn setTitle:@"发送消息" forState:UIControlStateNormal];
+    if (_ID && [_ID intValue] == kSystemContactID) {
+        [sendBtn setTitle:@"查看消息" forState:UIControlStateNormal];
+    }
+    else {
+        [sendBtn setTitle:@"发送消息" forState:UIControlStateNormal];
+    }
     [sendBtn addTarget:self action:@selector(send) forControlEvents:UIControlEventTouchUpInside];
     [_footerView addSubview:sendBtn];
     
@@ -177,6 +188,7 @@
         model.centerLink = newContact.centerLink;
         model.licences = newContact.licensesList;
         model.backgroundURL = newContact.backgroundUrl;
+        model.isAuth = newContact.isAuthentication;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             if (!model.backgroundURL || [model.backgroundURL isEqualToString:@""]) {
@@ -339,9 +351,21 @@
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(originX, 10, 24, 24)];
         imageView.tag = kAuthFirstTag + i;
+        imageView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTitle:)];
+        [imageView addGestureRecognizer:tap];
         [cell.contentView addSubview:imageView];
         [self downloadImageForImageView:imageView withURL:licence.iconUrl];
         originX -= 30;
+    }
+    if (_contact.isAuth) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(originX, 10, 24, 24)];
+        imageView.tag = kAuthFirstTag + [item count];
+        imageView.userInteractionEnabled = YES;
+        imageView.image = [UIImage imageNamed:@"contactauth.png"];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTitle:)];
+        [imageView addGestureRecognizer:tap];
+        [cell.contentView addSubview:imageView];
     }
 }
 
@@ -381,6 +405,58 @@
     }
 }
 
+- (void)showTitle:(UITapGestureRecognizer *)tap {
+    int tag = [[tap view] tag] - kAuthFirstTag;
+    int count = [_contact.licences count];
+    if (tag + 1 <= count) {
+        License *lice = [_contact.licences objectAtIndex:count - 1 - tag];
+        NSLog(@"%@",lice.name);
+        UIView *cell = [[tap view] superview];
+        while (![cell isMemberOfClass:[UITableViewCell class]] && [cell superview]) {
+            cell = [cell superview];
+        }
+        [self showAuthNameWithName:lice.name point:[tap view].frame.origin];
+        [cell addSubview:_titleView];
+    }
+    else {
+        UIView *cell = [[tap view] superview];
+        while (![cell isMemberOfClass:[UITableViewCell class]] && [cell superview]) {
+            cell = [cell superview];
+        }
+        [self showAuthNameWithName:@"实名认证" point:[tap view].frame.origin];
+        [cell addSubview:_titleView];
+    }
+}
+
+- (void)showAuthNameWithName:(NSString *)name point:(CGPoint)origin {
+    if (!_titleView) {
+        _titleView = [[UILabel alloc] init];
+    }
+    _titleView.hidden = NO;
+    _titleView.backgroundColor = kColor(230, 230, 230, 1);
+    _titleView.font = [UIFont systemFontOfSize:12];
+    _titleView.layer.masksToBounds = YES;
+    _titleView.layer.cornerRadius = 4;
+    CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:12] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 18)];
+    CGFloat width = size.width > 150 ? 150 : size.width;
+    _titleView.frame = CGRectMake(origin.x - width - 5, 1, width + 10, 18);
+    _titleView.text = name;
+    _titleView.textAlignment = NSTextAlignmentCenter;
+    
+    CGRect rect = self.view.frame;
+    rect.origin.y = 0.f;
+    UIView *backView = [[UIView alloc] initWithFrame:rect];
+    backView.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(removeAuthNameView:)];
+    [backView addGestureRecognizer:tap];
+    [self.view addSubview:backView];
+}
+
+- (void)removeAuthNameView:(UITapGestureRecognizer *)tap {
+    [[tap view] removeFromSuperview];
+    _titleView.hidden = YES;
+}
+
 #pragma mark - TableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -390,6 +466,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (_contact.contactIsProvider) {
         return 5;
+    }
+    else if (_ID && [_ID intValue] == kSystemContactID) {
+        //系统消息
+        return 3;
     }
     return 2;
 }
@@ -420,7 +500,7 @@
     if (_contact.contactIsProvider) {
         switch (indexPath.row) {
             case 0: {
-                title.text = @"认证行业";
+                title.text = @"认证";
                 content.text = nil;
                 content.hidden = YES;
                 [self showAuthForCell:cell withDataArray:_contact.licences];
@@ -456,7 +536,7 @@
                 size.height = size.height < 44 ? 44 : size.height;
                 title.frame = CGRectMake(15, 5, 80, size.height);
                 title.text = @"福师简介";
-                content.textAlignment = NSTextAlignmentLeft;
+                content.textAlignment = NSTextAlignmentRight;
                 content.numberOfLines = 0;
                 //            int row = (int)size.width / 215 + 1;
                 //            if (row >= 2 && row <= 4) {
@@ -493,6 +573,10 @@
                 content.text = _contact.location;
             }
                 break;
+            case 2: {
+                title.text = @"福师简介";
+                content.text = @"随时、随地、随需";
+            }
             default:
                 break;
         }

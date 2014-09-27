@@ -37,33 +37,49 @@
         else {
             result = @"晚上";
         }
-        NSString *hourTime = [NSString stringWithFormat:@"%d",sendC.hour];
-        if ([hourTime length] < 2) {
-            hourTime = [NSString stringWithFormat:@"0%d",sendC.hour];
-        }
-        NSString *minTime = [NSString stringWithFormat:@"%d",sendC.minute];
-        if ([minTime length] < 2) {
-            minTime = [NSString stringWithFormat:@"0%d",sendC.minute];
-        }
-        result = [NSString stringWithFormat:@"%@%@:%@",result,hourTime,minTime];
+//        NSString *hourTime = [NSString stringWithFormat:@"%d",sendC.hour];
+//        if ([hourTime length] < 2) {
+//            hourTime = [NSString stringWithFormat:@"0%d",sendC.hour];
+//        }
+//        NSString *minTime = [NSString stringWithFormat:@"%d",sendC.minute];
+//        if ([minTime length] < 2) {
+//            minTime = [NSString stringWithFormat:@"0%d",sendC.minute];
+//        }
+        NSString *time = [[self class] getHourAndMinWithHour:sendC.hour Minute:sendC.minute];
+        result = [NSString stringWithFormat:@"%@ %@",result,time];
     }
     else if (abs(nowC.day - sendC.day) == 1) {
         //最近一天
-        result = [NSString stringWithFormat:@"昨天"];
+        NSString *time = [[self class] getHourAndMinWithHour:sendC.hour Minute:sendC.minute];
+        result = [NSString stringWithFormat:@"昨天 %@",time];
     }
     else if (abs(nowC.day - sendC.day) < 7) {
+        NSString *time = [[self class] getHourAndMinWithHour:sendC.hour Minute:sendC.minute];
         //最近七天
         if (abs(nowC.week - sendC.week) == 0) {
-            result = [[self class] getWeekdayWithNumber:sendC.weekday];
+            result = [NSString stringWithFormat:@"%@ %@",[[self class] getWeekdayWithNumber:sendC.weekday],time];
         }
         else {
-            result = [NSString stringWithFormat:@"%d-%d-%d",sendC.year,sendC.month,sendC.day];
+            result = [NSString stringWithFormat:@"%d-%d-%d %@",sendC.year,sendC.month,sendC.day,time];
         }
     }
     else {
-        result = [NSString stringWithFormat:@"%d-%d-%d",sendC.year,sendC.month,sendC.day];
+        NSString *time = [[self class] getHourAndMinWithHour:sendC.hour Minute:sendC.minute];
+        result = [NSString stringWithFormat:@"%d-%d-%d %@",sendC.year,sendC.month,sendC.day,time];
     }
     return result;
+}
+
++ (NSString *)getHourAndMinWithHour:(int)hour Minute:(int)minute {
+    NSString *hourTime = [NSString stringWithFormat:@"%d",hour];
+    if ([hourTime length] < 2) {
+        hourTime = [NSString stringWithFormat:@"0%d",hour];
+    }
+    NSString *minTime = [NSString stringWithFormat:@"%d",minute];
+    if ([minTime length] < 2) {
+        minTime = [NSString stringWithFormat:@"0%d",minute];
+    }
+    return [NSString stringWithFormat:@"%@:%@",hourTime,minTime];
 }
 
 + (NSString *)getWeekdayWithNumber:(int)index {

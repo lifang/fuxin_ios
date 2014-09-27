@@ -73,6 +73,7 @@
 }
 
 - (void)removeMainController {
+    NSLog(@"%@",_mainController);
     if (_mainController) {
         [_mainController cancelSource];
         [_mainController willMoveToParentViewController:nil];
@@ -80,6 +81,10 @@
         [_mainController removeFromParentViewController];
         _mainController = nil;
     }
+}
+
+- (void)releaseResource {
+    [_mainController cancelSource];
 }
 
 @end

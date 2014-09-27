@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong) UIButton *modifyBtn;
 
+@property (nonatomic, strong) UIImageView *blockView;
+
 //联系人
 - (void)setContact:(ContactModel *)contact;
 

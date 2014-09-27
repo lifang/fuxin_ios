@@ -1099,6 +1099,7 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
 @property (retain) NSString* centerLink;
 @property (retain) NSMutableArray* mutableLicensesList;
 @property (retain) NSString* backgroundUrl;
+@property BOOL isAuthentication;
 @end
 
 @implementation Contact
@@ -1240,6 +1241,18 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
   hasBackgroundUrl_ = !!value;
 }
 @synthesize backgroundUrl;
+- (BOOL) hasIsAuthentication {
+  return !!hasIsAuthentication_;
+}
+- (void) setHasIsAuthentication:(BOOL) value {
+  hasIsAuthentication_ = !!value;
+}
+- (BOOL) isAuthentication {
+  return !!isAuthentication_;
+}
+- (void) setIsAuthentication:(BOOL) value {
+  isAuthentication_ = !!value;
+}
 - (void) dealloc {
   self.name = nil;
   self.customName = nil;
@@ -1277,6 +1290,7 @@ BOOL UnAuthenticationResponse_ErrorCodeTypeIsValidValue(UnAuthenticationResponse
     self.location = @"";
     self.centerLink = @"";
     self.backgroundUrl = @"";
+    self.isAuthentication = NO;
   }
   return self;
 }
@@ -1360,6 +1374,9 @@ static Contact* defaultContactInstance = nil;
   if (self.hasBackgroundUrl) {
     [output writeString:19 value:self.backgroundUrl];
   }
+  if (self.hasIsAuthentication) {
+    [output writeBool:20 value:self.isAuthentication];
+  }
   [self.unknownFields writeToCodedOutputStream:output];
 }
 - (int32_t) serializedSize {
@@ -1425,6 +1442,9 @@ static Contact* defaultContactInstance = nil;
   }
   if (self.hasBackgroundUrl) {
     size += computeStringSize(19, self.backgroundUrl);
+  }
+  if (self.hasIsAuthentication) {
+    size += computeBoolSize(20, self.isAuthentication);
   }
   size += self.unknownFields.serializedSize;
   memoizedSerializedSize = size;
@@ -1571,6 +1591,9 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
   if (other.hasBackgroundUrl) {
     [self setBackgroundUrl:other.backgroundUrl];
   }
+  if (other.hasIsAuthentication) {
+    [self setIsAuthentication:other.isAuthentication];
+  }
   [self mergeUnknownFields:other.unknownFields];
   return self;
 }
@@ -1673,6 +1696,10 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
       }
       case 154: {
         [self setBackgroundUrl:[input readString]];
+        break;
+      }
+      case 160: {
+        [self setIsAuthentication:[input readBool]];
         break;
       }
     }
@@ -1993,6 +2020,22 @@ BOOL Contact_GenderTypeIsValidValue(Contact_GenderType value) {
 - (Contact_Builder*) clearBackgroundUrl {
   result.hasBackgroundUrl = NO;
   result.backgroundUrl = @"";
+  return self;
+}
+- (BOOL) hasIsAuthentication {
+  return result.hasIsAuthentication;
+}
+- (BOOL) isAuthentication {
+  return result.isAuthentication;
+}
+- (Contact_Builder*) setIsAuthentication:(BOOL) value {
+  result.hasIsAuthentication = YES;
+  result.isAuthentication = value;
+  return self;
+}
+- (Contact_Builder*) clearIsAuthentication {
+  result.hasIsAuthentication = NO;
+  result.isAuthentication = NO;
   return self;
 }
 @end
@@ -13005,6 +13048,664 @@ static License* defaultLicenseInstance = nil;
 - (License_Builder*) clearBackgroundUrl {
   result.hasBackgroundUrl = NO;
   result.backgroundUrl = @"";
+  return self;
+}
+@end
+
+@interface MessageHistoryRequest ()
+@property (retain) NSString* token;
+@property int32_t userId;
+@property int32_t contactId;
+@property int32_t pageIndex;
+@property int32_t pageSize;
+@end
+
+@implementation MessageHistoryRequest
+
+- (BOOL) hasToken {
+  return !!hasToken_;
+}
+- (void) setHasToken:(BOOL) value {
+  hasToken_ = !!value;
+}
+@synthesize token;
+- (BOOL) hasUserId {
+  return !!hasUserId_;
+}
+- (void) setHasUserId:(BOOL) value {
+  hasUserId_ = !!value;
+}
+@synthesize userId;
+- (BOOL) hasContactId {
+  return !!hasContactId_;
+}
+- (void) setHasContactId:(BOOL) value {
+  hasContactId_ = !!value;
+}
+@synthesize contactId;
+- (BOOL) hasPageIndex {
+  return !!hasPageIndex_;
+}
+- (void) setHasPageIndex:(BOOL) value {
+  hasPageIndex_ = !!value;
+}
+@synthesize pageIndex;
+- (BOOL) hasPageSize {
+  return !!hasPageSize_;
+}
+- (void) setHasPageSize:(BOOL) value {
+  hasPageSize_ = !!value;
+}
+@synthesize pageSize;
+- (void) dealloc {
+  self.token = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.token = @"";
+    self.userId = 0;
+    self.contactId = 0;
+    self.pageIndex = 0;
+    self.pageSize = 0;
+  }
+  return self;
+}
+static MessageHistoryRequest* defaultMessageHistoryRequestInstance = nil;
++ (void) initialize {
+  if (self == [MessageHistoryRequest class]) {
+    defaultMessageHistoryRequestInstance = [[MessageHistoryRequest alloc] init];
+  }
+}
++ (MessageHistoryRequest*) defaultInstance {
+  return defaultMessageHistoryRequestInstance;
+}
+- (MessageHistoryRequest*) defaultInstance {
+  return defaultMessageHistoryRequestInstance;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasToken) {
+    [output writeString:1 value:self.token];
+  }
+  if (self.hasUserId) {
+    [output writeInt32:2 value:self.userId];
+  }
+  if (self.hasContactId) {
+    [output writeInt32:3 value:self.contactId];
+  }
+  if (self.hasPageIndex) {
+    [output writeInt32:4 value:self.pageIndex];
+  }
+  if (self.hasPageSize) {
+    [output writeInt32:5 value:self.pageSize];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasToken) {
+    size += computeStringSize(1, self.token);
+  }
+  if (self.hasUserId) {
+    size += computeInt32Size(2, self.userId);
+  }
+  if (self.hasContactId) {
+    size += computeInt32Size(3, self.contactId);
+  }
+  if (self.hasPageIndex) {
+    size += computeInt32Size(4, self.pageIndex);
+  }
+  if (self.hasPageSize) {
+    size += computeInt32Size(5, self.pageSize);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (MessageHistoryRequest*) parseFromData:(NSData*) data {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromData:data] build];
+}
++ (MessageHistoryRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryRequest*) parseFromInputStream:(NSInputStream*) input {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromInputStream:input] build];
+}
++ (MessageHistoryRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromCodedInputStream:input] build];
+}
++ (MessageHistoryRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryRequest*)[[[MessageHistoryRequest builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryRequest_Builder*) builder {
+  return [[[MessageHistoryRequest_Builder alloc] init] autorelease];
+}
++ (MessageHistoryRequest_Builder*) builderWithPrototype:(MessageHistoryRequest*) prototype {
+  return [[MessageHistoryRequest builder] mergeFrom:prototype];
+}
+- (MessageHistoryRequest_Builder*) builder {
+  return [MessageHistoryRequest builder];
+}
+@end
+
+@interface MessageHistoryRequest_Builder()
+@property (retain) MessageHistoryRequest* result;
+@end
+
+@implementation MessageHistoryRequest_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[MessageHistoryRequest alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (MessageHistoryRequest_Builder*) clear {
+  self.result = [[[MessageHistoryRequest alloc] init] autorelease];
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clone {
+  return [MessageHistoryRequest builderWithPrototype:result];
+}
+- (MessageHistoryRequest*) defaultInstance {
+  return [MessageHistoryRequest defaultInstance];
+}
+- (MessageHistoryRequest*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (MessageHistoryRequest*) buildPartial {
+  MessageHistoryRequest* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (MessageHistoryRequest_Builder*) mergeFrom:(MessageHistoryRequest*) other {
+  if (other == [MessageHistoryRequest defaultInstance]) {
+    return self;
+  }
+  if (other.hasToken) {
+    [self setToken:other.token];
+  }
+  if (other.hasUserId) {
+    [self setUserId:other.userId];
+  }
+  if (other.hasContactId) {
+    [self setContactId:other.contactId];
+  }
+  if (other.hasPageIndex) {
+    [self setPageIndex:other.pageIndex];
+  }
+  if (other.hasPageSize) {
+    [self setPageSize:other.pageSize];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (MessageHistoryRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (MessageHistoryRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 10: {
+        [self setToken:[input readString]];
+        break;
+      }
+      case 16: {
+        [self setUserId:[input readInt32]];
+        break;
+      }
+      case 24: {
+        [self setContactId:[input readInt32]];
+        break;
+      }
+      case 32: {
+        [self setPageIndex:[input readInt32]];
+        break;
+      }
+      case 40: {
+        [self setPageSize:[input readInt32]];
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasToken {
+  return result.hasToken;
+}
+- (NSString*) token {
+  return result.token;
+}
+- (MessageHistoryRequest_Builder*) setToken:(NSString*) value {
+  result.hasToken = YES;
+  result.token = value;
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clearToken {
+  result.hasToken = NO;
+  result.token = @"";
+  return self;
+}
+- (BOOL) hasUserId {
+  return result.hasUserId;
+}
+- (int32_t) userId {
+  return result.userId;
+}
+- (MessageHistoryRequest_Builder*) setUserId:(int32_t) value {
+  result.hasUserId = YES;
+  result.userId = value;
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clearUserId {
+  result.hasUserId = NO;
+  result.userId = 0;
+  return self;
+}
+- (BOOL) hasContactId {
+  return result.hasContactId;
+}
+- (int32_t) contactId {
+  return result.contactId;
+}
+- (MessageHistoryRequest_Builder*) setContactId:(int32_t) value {
+  result.hasContactId = YES;
+  result.contactId = value;
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clearContactId {
+  result.hasContactId = NO;
+  result.contactId = 0;
+  return self;
+}
+- (BOOL) hasPageIndex {
+  return result.hasPageIndex;
+}
+- (int32_t) pageIndex {
+  return result.pageIndex;
+}
+- (MessageHistoryRequest_Builder*) setPageIndex:(int32_t) value {
+  result.hasPageIndex = YES;
+  result.pageIndex = value;
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clearPageIndex {
+  result.hasPageIndex = NO;
+  result.pageIndex = 0;
+  return self;
+}
+- (BOOL) hasPageSize {
+  return result.hasPageSize;
+}
+- (int32_t) pageSize {
+  return result.pageSize;
+}
+- (MessageHistoryRequest_Builder*) setPageSize:(int32_t) value {
+  result.hasPageSize = YES;
+  result.pageSize = value;
+  return self;
+}
+- (MessageHistoryRequest_Builder*) clearPageSize {
+  result.hasPageSize = NO;
+  result.pageSize = 0;
+  return self;
+}
+@end
+
+@interface MessageHistoryResponse ()
+@property BOOL isSucceed;
+@property (retain) NSMutableArray* mutableMessageListsList;
+@property int32_t pageCount;
+@property MessageHistoryResponse_ErrorCodeType errorCode;
+@end
+
+@implementation MessageHistoryResponse
+
+- (BOOL) hasIsSucceed {
+  return !!hasIsSucceed_;
+}
+- (void) setHasIsSucceed:(BOOL) value {
+  hasIsSucceed_ = !!value;
+}
+- (BOOL) isSucceed {
+  return !!isSucceed_;
+}
+- (void) setIsSucceed:(BOOL) value {
+  isSucceed_ = !!value;
+}
+@synthesize mutableMessageListsList;
+- (BOOL) hasPageCount {
+  return !!hasPageCount_;
+}
+- (void) setHasPageCount:(BOOL) value {
+  hasPageCount_ = !!value;
+}
+@synthesize pageCount;
+- (BOOL) hasErrorCode {
+  return !!hasErrorCode_;
+}
+- (void) setHasErrorCode:(BOOL) value {
+  hasErrorCode_ = !!value;
+}
+@synthesize errorCode;
+- (void) dealloc {
+  self.mutableMessageListsList = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.isSucceed = NO;
+    self.pageCount = 0;
+    self.errorCode = MessageHistoryResponse_ErrorCodeTypeInvalidToken;
+  }
+  return self;
+}
+static MessageHistoryResponse* defaultMessageHistoryResponseInstance = nil;
++ (void) initialize {
+  if (self == [MessageHistoryResponse class]) {
+    defaultMessageHistoryResponseInstance = [[MessageHistoryResponse alloc] init];
+  }
+}
++ (MessageHistoryResponse*) defaultInstance {
+  return defaultMessageHistoryResponseInstance;
+}
+- (MessageHistoryResponse*) defaultInstance {
+  return defaultMessageHistoryResponseInstance;
+}
+- (NSArray*) messageListsList {
+  return mutableMessageListsList;
+}
+- (MessageList*) messageListsAtIndex:(int32_t) index {
+  id value = [mutableMessageListsList objectAtIndex:index];
+  return value;
+}
+- (BOOL) isInitialized {
+  return YES;
+}
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output {
+  if (self.hasIsSucceed) {
+    [output writeBool:1 value:self.isSucceed];
+  }
+  for (MessageList* element in self.messageListsList) {
+    [output writeMessage:2 value:element];
+  }
+  if (self.hasPageCount) {
+    [output writeInt32:3 value:self.pageCount];
+  }
+  if (self.hasErrorCode) {
+    [output writeEnum:4 value:self.errorCode];
+  }
+  [self.unknownFields writeToCodedOutputStream:output];
+}
+- (int32_t) serializedSize {
+  int32_t size = memoizedSerializedSize;
+  if (size != -1) {
+    return size;
+  }
+
+  size = 0;
+  if (self.hasIsSucceed) {
+    size += computeBoolSize(1, self.isSucceed);
+  }
+  for (MessageList* element in self.messageListsList) {
+    size += computeMessageSize(2, element);
+  }
+  if (self.hasPageCount) {
+    size += computeInt32Size(3, self.pageCount);
+  }
+  if (self.hasErrorCode) {
+    size += computeEnumSize(4, self.errorCode);
+  }
+  size += self.unknownFields.serializedSize;
+  memoizedSerializedSize = size;
+  return size;
+}
++ (MessageHistoryResponse*) parseFromData:(NSData*) data {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromData:data] build];
+}
++ (MessageHistoryResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromData:data extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryResponse*) parseFromInputStream:(NSInputStream*) input {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromInputStream:input] build];
+}
++ (MessageHistoryResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromCodedInputStream:input] build];
+}
++ (MessageHistoryResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  return (MessageHistoryResponse*)[[[MessageHistoryResponse builder] mergeFromCodedInputStream:input extensionRegistry:extensionRegistry] build];
+}
++ (MessageHistoryResponse_Builder*) builder {
+  return [[[MessageHistoryResponse_Builder alloc] init] autorelease];
+}
++ (MessageHistoryResponse_Builder*) builderWithPrototype:(MessageHistoryResponse*) prototype {
+  return [[MessageHistoryResponse builder] mergeFrom:prototype];
+}
+- (MessageHistoryResponse_Builder*) builder {
+  return [MessageHistoryResponse builder];
+}
+@end
+
+BOOL MessageHistoryResponse_ErrorCodeTypeIsValidValue(MessageHistoryResponse_ErrorCodeType value) {
+  switch (value) {
+    case MessageHistoryResponse_ErrorCodeTypeInvalidToken:
+      return YES;
+    default:
+      return NO;
+  }
+}
+@interface MessageHistoryResponse_Builder()
+@property (retain) MessageHistoryResponse* result;
+@end
+
+@implementation MessageHistoryResponse_Builder
+@synthesize result;
+- (void) dealloc {
+  self.result = nil;
+  [super dealloc];
+}
+- (id) init {
+  if ((self = [super init])) {
+    self.result = [[[MessageHistoryResponse alloc] init] autorelease];
+  }
+  return self;
+}
+- (PBGeneratedMessage*) internalGetResult {
+  return result;
+}
+- (MessageHistoryResponse_Builder*) clear {
+  self.result = [[[MessageHistoryResponse alloc] init] autorelease];
+  return self;
+}
+- (MessageHistoryResponse_Builder*) clone {
+  return [MessageHistoryResponse builderWithPrototype:result];
+}
+- (MessageHistoryResponse*) defaultInstance {
+  return [MessageHistoryResponse defaultInstance];
+}
+- (MessageHistoryResponse*) build {
+  [self checkInitialized];
+  return [self buildPartial];
+}
+- (MessageHistoryResponse*) buildPartial {
+  MessageHistoryResponse* returnMe = [[result retain] autorelease];
+  self.result = nil;
+  return returnMe;
+}
+- (MessageHistoryResponse_Builder*) mergeFrom:(MessageHistoryResponse*) other {
+  if (other == [MessageHistoryResponse defaultInstance]) {
+    return self;
+  }
+  if (other.hasIsSucceed) {
+    [self setIsSucceed:other.isSucceed];
+  }
+  if (other.mutableMessageListsList.count > 0) {
+    if (result.mutableMessageListsList == nil) {
+      result.mutableMessageListsList = [NSMutableArray array];
+    }
+    [result.mutableMessageListsList addObjectsFromArray:other.mutableMessageListsList];
+  }
+  if (other.hasPageCount) {
+    [self setPageCount:other.pageCount];
+  }
+  if (other.hasErrorCode) {
+    [self setErrorCode:other.errorCode];
+  }
+  [self mergeUnknownFields:other.unknownFields];
+  return self;
+}
+- (MessageHistoryResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input {
+  return [self mergeFromCodedInputStream:input extensionRegistry:[PBExtensionRegistry emptyRegistry]];
+}
+- (MessageHistoryResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry {
+  PBUnknownFieldSet_Builder* unknownFields = [PBUnknownFieldSet builderWithUnknownFields:self.unknownFields];
+  while (YES) {
+    int32_t tag = [input readTag];
+    switch (tag) {
+      case 0:
+        [self setUnknownFields:[unknownFields build]];
+        return self;
+      default: {
+        if (![self parseUnknownField:input unknownFields:unknownFields extensionRegistry:extensionRegistry tag:tag]) {
+          [self setUnknownFields:[unknownFields build]];
+          return self;
+        }
+        break;
+      }
+      case 8: {
+        [self setIsSucceed:[input readBool]];
+        break;
+      }
+      case 18: {
+        MessageList_Builder* subBuilder = [MessageList builder];
+        [input readMessage:subBuilder extensionRegistry:extensionRegistry];
+        [self addMessageLists:[subBuilder buildPartial]];
+        break;
+      }
+      case 24: {
+        [self setPageCount:[input readInt32]];
+        break;
+      }
+      case 32: {
+        int32_t value = [input readEnum];
+        if (MessageHistoryResponse_ErrorCodeTypeIsValidValue(value)) {
+          [self setErrorCode:value];
+        } else {
+          [unknownFields mergeVarintField:4 value:value];
+        }
+        break;
+      }
+    }
+  }
+}
+- (BOOL) hasIsSucceed {
+  return result.hasIsSucceed;
+}
+- (BOOL) isSucceed {
+  return result.isSucceed;
+}
+- (MessageHistoryResponse_Builder*) setIsSucceed:(BOOL) value {
+  result.hasIsSucceed = YES;
+  result.isSucceed = value;
+  return self;
+}
+- (MessageHistoryResponse_Builder*) clearIsSucceed {
+  result.hasIsSucceed = NO;
+  result.isSucceed = NO;
+  return self;
+}
+- (NSArray*) messageListsList {
+  if (result.mutableMessageListsList == nil) { return [NSArray array]; }
+  return result.mutableMessageListsList;
+}
+- (MessageList*) messageListsAtIndex:(int32_t) index {
+  return [result messageListsAtIndex:index];
+}
+- (MessageHistoryResponse_Builder*) replaceMessageListsAtIndex:(int32_t) index with:(MessageList*) value {
+  [result.mutableMessageListsList replaceObjectAtIndex:index withObject:value];
+  return self;
+}
+- (MessageHistoryResponse_Builder*) addAllMessageLists:(NSArray*) values {
+  if (result.mutableMessageListsList == nil) {
+    result.mutableMessageListsList = [NSMutableArray array];
+  }
+  [result.mutableMessageListsList addObjectsFromArray:values];
+  return self;
+}
+- (MessageHistoryResponse_Builder*) clearMessageListsList {
+  result.mutableMessageListsList = nil;
+  return self;
+}
+- (MessageHistoryResponse_Builder*) addMessageLists:(MessageList*) value {
+  if (result.mutableMessageListsList == nil) {
+    result.mutableMessageListsList = [NSMutableArray array];
+  }
+  [result.mutableMessageListsList addObject:value];
+  return self;
+}
+- (BOOL) hasPageCount {
+  return result.hasPageCount;
+}
+- (int32_t) pageCount {
+  return result.pageCount;
+}
+- (MessageHistoryResponse_Builder*) setPageCount:(int32_t) value {
+  result.hasPageCount = YES;
+  result.pageCount = value;
+  return self;
+}
+- (MessageHistoryResponse_Builder*) clearPageCount {
+  result.hasPageCount = NO;
+  result.pageCount = 0;
+  return self;
+}
+- (BOOL) hasErrorCode {
+  return result.hasErrorCode;
+}
+- (MessageHistoryResponse_ErrorCodeType) errorCode {
+  return result.errorCode;
+}
+- (MessageHistoryResponse_Builder*) setErrorCode:(MessageHistoryResponse_ErrorCodeType) value {
+  result.hasErrorCode = YES;
+  result.errorCode = value;
+  return self;
+}
+- (MessageHistoryResponse_Builder*) clearErrorCode {
+  result.hasErrorCode = NO;
+  result.errorCode = MessageHistoryResponse_ErrorCodeTypeInvalidToken;
   return self;
 }
 @end

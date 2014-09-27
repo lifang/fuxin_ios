@@ -32,6 +32,9 @@
     _photoView.layer.cornerRadius = 10;
     [self addSubview:_photoView];
     
+    _blockView = [[UIImageView alloc] initWithFrame:CGRectMake(77, 117, 10, 10)];
+    [self addSubview:_blockView];
+    
     _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(100, 110, 200, 20)];
     _nameLabel.backgroundColor = [UIColor clearColor];
     _nameLabel.font = [UIFont boldSystemFontOfSize:15];
@@ -55,19 +58,35 @@
             _backView.image = backImage;
         }
     }
+    else if (contact.contactID && [contact.contactID intValue] == kSystemContactID) {
+        //系统消息
+        _backView.image = [UIImage imageNamed:@"background3.png"];
+    }
     
     if ([FXFileHelper isHeadImageExist:contact.contactAvatarURL]) {
         NSData *imageData = [FXFileHelper headImageWithName:contact.contactAvatarURL];
         _photoView.image = [UIImage imageWithData:imageData];
     }
     else {
-        _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        if (contact.contactID && [contact.contactID intValue] == kSystemContactID) {
+            //系统消息
+            _photoView.image = [UIImage imageNamed:@"system.png"];
+        }
+        else {
+            _photoView.image = [UIImage imageNamed:@"placeholder.png"];
+        }
     }
     if (contact.contactRemark && ![contact.contactRemark isEqualToString:@""]) {
         _nameLabel.text = contact.contactRemark;
     }
     else {
         _nameLabel.text = contact.contactNickname;
+    }
+    if (contact.contactIsBlocked) {
+        _blockView.image = [UIImage imageNamed:@"pingbi.png"];
+    }
+    else {
+        _blockView.image = nil;
     }
 }
 

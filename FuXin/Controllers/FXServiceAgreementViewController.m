@@ -82,7 +82,8 @@ static NSString *kServiceURL = @"https://118.242.18.189/resource/static/public/d
 #pragma mark ASIHTTPRequest Delegate
 - (void) requestFinished:(ASIHTTPRequest *)request{
     if (!request.error) {
-        NSString *str = [NSString stringWithCString:[request.responseString UTF8String] encoding:NSUTF8StringEncoding];
+        NSString *str = [request responseString];
+        
         NSString *jsString = [NSString stringWithFormat:@"<html> \n"
                               "<head> \n"
                               "<style type=\"text/css\"> \n"

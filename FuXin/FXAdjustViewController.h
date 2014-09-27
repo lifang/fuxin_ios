@@ -14,7 +14,7 @@
 
 @interface FXAdjustViewController : UIViewController
 
-@property (nonatomic, strong) FXReuqestError *errorHandler;
+@property (nonatomic, retain) FXReuqestError *errorHandler;
 
 - (void)setLeftNavBarItemWithImageName:(NSString *)name;
 - (void)setRightNavBarItemWithImageName:(NSString *)name;

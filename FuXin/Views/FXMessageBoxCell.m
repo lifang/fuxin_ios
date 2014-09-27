@@ -99,7 +99,7 @@
         timeOffset = kTimeLabelHeight;
         _timeLabel.hidden = NO;
         _timeBackView.hidden = NO;
-        _timeLabel.frame = CGRectMake(110, 2, 100, kTimeLabelHeight - 22);
+        _timeLabel.frame = CGRectMake(100, 2, 120, kTimeLabelHeight - 22);
         _timeLabel.textColor = [UIColor whiteColor];
         _timeBackView.frame = _timeLabel.frame;
         _timeBackView.layer.cornerRadius = 9;
@@ -165,7 +165,7 @@
     if (_messageView) {
         [_messageView removeFromSuperview];
     }
-    _messageView = [FXTextFormat getContentViewWithMessage:_contents];
+    _messageView = [FXTextFormat getContentViewWithMessage:_contents width:kMessageBoxWidthMax];
     [self setSubviewsFrame];
 }
 
@@ -209,8 +209,15 @@
         }
     }
     else {
-        if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithData:)]) {
-            [_delegate loadLargeImageWithData:_imageData];
+        if (_isSendFromThisDevice) {
+            if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithData:)]) {
+                [_delegate loadLargeImageWithData:_imageData];
+            }
+        }
+        else {
+            if (_delegate && [_delegate respondsToSelector:@selector(loadLargeImageWithURL:)]) {
+                [_delegate loadLargeImageWithURL:_imageURL];
+            }
         }
     }
 }

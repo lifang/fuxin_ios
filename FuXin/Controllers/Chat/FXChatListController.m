@@ -10,6 +10,7 @@
 #import "FXChatCell.h"
 #import "FXTimeFormat.h"
 #import "LHLDBTools.h"
+#import "BaiduMobStat.h"
 
 static NSString *chatCellIdentifier = @"CCI";
 
@@ -111,6 +112,66 @@ static NSString *chatCellIdentifier = @"CCI";
     }
 }
 
+
+- (void)getContactWithID:(NSString *)ID {
+    FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
+    [FXRequestDataFormat getContactDetailWithToken:delegate.token UserID:delegate.userID ContactID:[ID intValue] Finished:^(BOOL success, NSData *response) {
+        if (success) {
+            //请求成功
+            ContactDetailResponse *resp = [ContactDetailResponse parseFromData:response];
+            NSLog(@"联系人详情：%d",resp.isSucceed);
+            if (resp.isSucceed) {
+                //获取成功
+                [self setContactWithContact:resp.contact];
+            }
+            else {
+                //获取失败
+                if (!self.errorHandler) {
+                    FXReuqestError *error = [[FXReuqestError alloc] init];
+                    self.errorHandler = error;
+                }
+                [self.errorHandler requestDidFailWithErrorCode:resp.errorCode];
+            }
+        }
+        else {
+            //请求失败
+        }
+    }];
+}
+
+//保存至数据库
+- (void)setContactWithContact:(Contact *)newContact {
+    if (newContact) {
+        ContactModel *model = [[ContactModel alloc] init];
+        model.contactID = [NSString stringWithFormat:@"%d",newContact.contactId];
+        model.contactNickname = newContact.name;
+        model.contactRemark = newContact.customName;
+        model.contactIsBlocked = newContact.isBlocked;
+        model.contactPinyin = newContact.pinyin;
+        model.contactLastContactTime = newContact.lastContactTime;
+        model.contactSex = (ContactSex)newContact.gender;
+        model.contactRelationship = newContact.source;
+        model.contactIsProvider = newContact.isProvider;
+        model.contactLisence = newContact.lisence;
+        model.contactSignature = newContact.individualResume;
+        model.fuzhi = newContact.fuzhi;
+        model.orderTime = newContact.orderTime;
+        model.subscribeTime = newContact.subscribeTime;
+        model.contactAvatarURL = newContact.tileUrl;
+        model.location = newContact.location;
+        model.centerLink = newContact.centerLink;
+        model.licences = newContact.licensesList;
+        model.backgroundURL = newContact.backgroundUrl;
+        
+        //更新联系人到数据库
+        [LHLDBTools saveContact:[NSArray arrayWithObject:model] withFinished:^(BOOL finish) {
+            NSLog(@"update success!");
+        }];
+        [[NSNotificationCenter defaultCenter] postNotificationName:AddressNeedRefreshListNotification object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ChatNeedRefreshListNotification object:nil];
+    }
+}
+
 #pragma mark - 下载头像
 
 - (void)downloadImageWithContact:(ContactModel *)contact forCell:(FXListCell *)cell {
@@ -159,6 +220,11 @@ static NSString *chatCellIdentifier = @"CCI";
         FXChatCell *cell = [tableView dequeueReusableCellWithIdentifier:chatCellIdentifier forIndexPath:indexPath];
         NSDictionary *rowData = [_chatList objectAtIndex:indexPath.row];
         ContactModel *contact = [rowData objectForKey:@"Contact"];
+        NSString *ID = [rowData objectForKey:@"ID"];
+        if (!contact) {
+            //本地无此联系人 加载
+            [self getContactWithID:ID];
+        }
         if (contact.contactRemark && ![contact.contactRemark isEqualToString:@""]) {
             cell.nameLabel.text = contact.contactRemark;
         }
@@ -177,6 +243,12 @@ static NSString *chatCellIdentifier = @"CCI";
         else {
             cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
             [self downloadImageWithContact:contact forCell:cell];
+        }
+        if (contact.contactIsBlocked) {
+            cell.blockView.image = [UIImage imageNamed:@"pingbi.png"];
+        }
+        else {
+            cell.blockView.image = nil;
         }
 //        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         

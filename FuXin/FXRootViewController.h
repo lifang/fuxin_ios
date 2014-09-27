@@ -17,5 +17,6 @@
 - (void)showMainViewController;
 
 - (void)removeMainController;
+- (void)releaseResource;
 
 @end

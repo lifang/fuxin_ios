@@ -79,9 +79,7 @@ static UINavigationController *s_loginNavController = nil;
     self.window.rootViewController = _rootController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    
     return YES;
-    
 }
 
 #pragma mark - 推送
@@ -217,3 +215,4 @@ static UINavigationController *s_loginNavController = nil;
 }
 
 @end
+

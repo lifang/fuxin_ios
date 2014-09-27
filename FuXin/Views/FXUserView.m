@@ -51,7 +51,7 @@
     _userPhotoView.layer.borderWidth = 2;
     _userPhotoView.layer.borderColor = [[UIColor whiteColor] CGColor];
     _userPhotoView.layer.masksToBounds = YES;
-    _userPhotoView.image = [UIImage imageNamed:@"user.png"];
+    _userPhotoView.image = [UIImage imageNamed:@"placeholder.png"];
     [self addSubview:_userPhotoView];
 }
 

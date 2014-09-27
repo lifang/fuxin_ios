@@ -83,4 +83,6 @@ typedef enum{
 
 @property (nonatomic, strong) NSString *backgroundURL;
 
+@property (nonatomic, assign) BOOL isAuth;
+
 @end

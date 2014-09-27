@@ -195,7 +195,7 @@
     obj.contactAvatar = [NSData dataWithData:[resultSet dataForColumn:@"avatar"]];
     obj.contactAvatarURL = [resultSet stringForColumn:@"avatarURL"];
     obj.contactRemark = [resultSet stringForColumn:@"remark"];
-    obj.contactSex = [resultSet boolForColumn:@"sex"] ? ContactSexFemale : ContactSexMale;
+    obj.contactSex = [resultSet intForColumn:@"sex"];
     obj.contactRelationship = (ContactRelationship)[resultSet intForColumn:@"relationship"];
     obj.contactPinyin = [resultSet stringForColumn:@"pinyin"];
     obj.contactIsBlocked = [resultSet boolForColumn:@"isBlocked"];

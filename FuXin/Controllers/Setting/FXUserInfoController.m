@@ -330,7 +330,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([_userInfo.isProvider boolValue]) {
+    if (![_userInfo.isProvider boolValue]) {
         return 5;
     }
     return 8;
@@ -405,6 +405,7 @@
             break;
         case 4: {
             title.text = @"所在地";
+            content.text = _userInfo.location;
         }
             break;
         case 5: {
@@ -426,7 +427,7 @@
             title.frame = CGRectMake(15, 5, 80, size.height);
             
             title.text = @"福师简介";
-            content.textAlignment = NSTextAlignmentLeft;
+            content.textAlignment = NSTextAlignmentRight;
             content.numberOfLines = 0;
             content.frame = CGRectMake(85, 5, 215, size.height);
             content.text = _userInfo.description;

@@ -20,12 +20,13 @@
 #import "FXDetailImageView.h"
 #import "FXFileHelper.h"
 #import "FXInfoView.h"
+#import "FXAllMessageController.h"
 
 #define kSmallImage   @"&width=216&height=144"
 
 static NSString *MessageCellIdentifier = @"MCI";
 
-@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate,EmojiDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,TouchContactDelegate>
+@interface FXChatViewController ()<GetInputTextDelegate,PictureButtonDelegate,EmojiDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,TouchContactDelegate,UIWebViewDelegate>
 
 @property (nonatomic, strong) FXChatInputView *inputView;
 
@@ -48,6 +49,9 @@ static NSString *MessageCellIdentifier = @"MCI";
 @property (nonatomic, strong) NSMutableDictionary *statusDict;
 
 @property (nonatomic, assign) NSInteger reSendCount;
+
+//系统消息字典，用于判断是否加载过高度
+@property (nonatomic, strong) NSMutableDictionary *systemDict;
 
 @end
 
@@ -95,6 +99,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     [self initUI];
     [self showChatMessage];
     _statusDict = [[NSMutableDictionary alloc] init];
+    _systemDict = [[NSMutableDictionary alloc] init];
     
     FXAppDelegate *delegate = [FXAppDelegate shareFXAppDelegate];
     delegate.isChatting = YES;
@@ -259,6 +264,10 @@ static NSString *MessageCellIdentifier = @"MCI";
                                                 image:nil
                                                target:self
                                                action:@selector(cleanUp:)],
+                                 [KxMenuItem menuItem:@"查看所有消息"
+                                                image:nil
+                                               target:self
+                                               action:@selector(scanAllMessage:)],
                                  nil];
 //    if (!_contact.contactIsBlocked) {
 //        [listArray insertObject:[KxMenuItem menuItem:@"屏蔽此人"
@@ -289,6 +298,12 @@ static NSString *MessageCellIdentifier = @"MCI";
             [_chatTableView reloadData];
         }
     }];
+}
+
+- (IBAction)scanAllMessage:(id)sender {
+    FXAllMessageController *controller = [[FXAllMessageController alloc] init];
+    controller.contact = _contact;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - 数据-
@@ -342,7 +357,7 @@ static NSString *MessageCellIdentifier = @"MCI";
             //找到属于这个人得聊天记录
             NSArray *messages = [dict objectForKey:key];
             NSMutableArray *recordsForDB = [NSMutableArray array];
-            for (int i = [messages count] - 1; i >= 0; i--) {
+            for (int i = 0; i < [messages count]; i++) {
                 Message *message = [messages objectAtIndex:i];
                 //聊天记录对象
                 MessageModel *model = [[MessageModel alloc] init];
@@ -440,7 +455,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     model.messageRecieverID = [NSString stringWithFormat:@"%d",message.contactId];
     model.messageSendTime = message.sendTime;
     model.messageContent = message.content;
-    model.messageStatus = MessageStatusDidSent;
+    model.messageStatus = MessageStatusUnSent;
     //是否显示时间*********************************
     if (!timeString) {
         timeString = message.sendTime;
@@ -542,11 +557,12 @@ static NSString *MessageCellIdentifier = @"MCI";
     if (cell.showTime) {
         cell.timeLabel.text = [FXTimeFormat setTimeFormatWithString:message.messageSendTime];
     }
+    
     if (message.messageType == ContentTypeText) {
         //文字消息
         [cell setContents:message.messageContent];
     }
-    else {
+    else if (message.messageType == ContentTypeImage){
         //图片消息
         cell.contents = nil;
 //2014年8月1日改，第一个判断不会进入了
@@ -555,31 +571,65 @@ static NSString *MessageCellIdentifier = @"MCI";
             [cell setImageData:message.imageContent];
         }
         else {
-            //接收的图片保存在文件中
-            cell.imageURL = message.messageContent;
-            NSString *cacheString = [NSString stringWithFormat:@"%@%@",message.messageContent,kSmallImage];
-            NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:cacheString];
-            if (imageData) {
-                //已保存此图
-                if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
-                    [cell setNullView];
-                }
-                else {
-                    UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
-                    if (!view) {
+            if (message.messageStatus == MessageStatusUnSent) {
+                //本机发送的消息
+                cell.isSendFromThisDevice = YES;
+                [cell setImageData:message.imageContent];
+            }
+            else {
+                //接收的图片保存在文件中
+                cell.imageURL = message.messageContent;
+                NSString *cacheString = [NSString stringWithFormat:@"%@%@",message.messageContent,kSmallImage];
+                NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:cacheString];
+                if (imageData) {
+                    //已保存此图
+                    if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
                         [cell setNullView];
                     }
                     else {
-                        [cell setImageData:imageData];
+                        UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
+                        if (!view) {
+                            [cell setNullView];
+                        }
+                        else {
+                            [cell setImageData:imageData];
+                        }
                     }
                 }
-            }
-            else {
-                //未保存此图
-                [self downloadImage:message.messageContent forCell:cell];
-                [cell setNullView];
+                else {
+                    //未保存此图
+                    [self downloadImage:message.messageContent forCell:cell];
+                    [cell setNullView];
+                }
             }
         }
+    }
+    else {
+        //通知消息
+        if (!cell.messageView) {
+            cell.messageView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kMessageBoxWidthMax, 1)];
+            UIWebView *webview = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, kMessageBoxWidthMax, 1)];
+            webview.delegate = self;
+            webview.tag = 100;
+            webview.scrollView.scrollEnabled = NO;
+            webview.opaque = NO;
+            webview.backgroundColor = [UIColor clearColor];
+            [cell.messageView addSubview:webview];
+        }
+        UIWebView *webView = (UIWebView *)[cell.messageView viewWithTag:100];
+        [webView loadHTMLString:message.messageContent baseURL:nil];
+        if (![_systemDict objectForKey:[NSNumber numberWithInt:indexPath.row]]) {
+            webView.delegate = self;
+            [cell setSubviewsFrame];
+        }
+        else {
+            CGFloat height = [[_systemDict objectForKey:[NSNumber numberWithInt:indexPath.row]] floatValue];
+            webView.delegate = nil;
+            webView.frame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, height);
+            cell.messageView.frame = CGRectMake(0, 0, kMessageBoxWidthMax, height);
+            [cell setSubviewsFrame];
+        }
+
     }
     NSNumber *status = [_statusDict objectForKey:[NSNumber numberWithInt:indexPath.row]];
     NSLog(@"%@,%d",_statusDict,indexPath.row);
@@ -611,39 +661,54 @@ static NSString *MessageCellIdentifier = @"MCI";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     MessageModel *model = [_dataItems objectAtIndex:indexPath.row];
     if (model.messageType == ContentTypeText) {
-        UIView *view = [FXTextFormat getContentViewWithMessage:model.messageContent];
+        UIView *view = [FXTextFormat getContentViewWithMessage:model.messageContent width:kMessageBoxWidthMax];
         CGFloat height = view.frame.size.height;
         return height + kTimeLabelHeight < 44 ? 64 : height + kTimeLabelHeight + 20;
     }
-    else {
+    else if (model.messageType == ContentTypeImage) {
 //2014年8月1日改，第一个判断不会进入了
         if (model.messageStatus <= 0) {
             UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
             return view.frame.size.height + kTimeLabelHeight + 20;
         }
         else {
-            //接收的图片保存在文件中
-            NSString *cacheString = [NSString stringWithFormat:@"%@%@",model.messageContent,kSmallImage];
-            NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:cacheString];
-            NSLog(@"length = %d",[imageData length]);
-            if (imageData) {
-                //已保存此图
-                if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
-                    return 100 + kTimeLabelHeight + 20;
-                }
-                else {
-                    UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
-                    if (!view) {
-                        return 80 + kTimeLabelHeight;
-                    }
-                    return view.frame.size.height + kTimeLabelHeight + 20;
-                }
+            if (model.messageStatus == MessageStatusUnSent) {
+                //本机发送的消息
+                UIView *view = [FXTextFormat getContentViewWithImageData:model.imageContent];
+                return view.frame.size.height + kTimeLabelHeight + 20;
             }
             else {
-                //未保存此图
-                return 100 + kTimeLabelHeight + 20;
+                //接收的图片保存在文件中
+                NSString *cacheString = [NSString stringWithFormat:@"%@%@",model.messageContent,kSmallImage];
+                NSData *imageData = [FXFileHelper chatImageAlreadyLoadWithName:cacheString];
+                NSLog(@"length = %d",[imageData length]);
+                if (imageData) {
+                    //已保存此图
+                    if ([imageData length] < 3 && [[[NSString alloc] initWithData:imageData encoding:NSUTF8StringEncoding] isEqualToString:@"NO"]) {
+                        return 100 + kTimeLabelHeight + 20;
+                    }
+                    else {
+                        UIView *view = [FXTextFormat getContentViewWithImageData:imageData];
+                        if (!view) {
+                            return 80 + kTimeLabelHeight;
+                        }
+                        return view.frame.size.height + kTimeLabelHeight + 20;
+                    }
+                }
+                else {
+                    //未保存此图
+                    return 100 + kTimeLabelHeight + 20;
+                }
             }
         }
+    }
+    else {
+        //通知消息
+        NSNumber *height = [_systemDict objectForKey:[NSNumber numberWithInt:indexPath.row]];
+        if (height) {
+            return [height floatValue] + kTimeLabelHeight + 20;
+        }
+        return 44 + kTimeLabelHeight + 20;
     }
 }
 
@@ -680,6 +745,15 @@ static NSString *MessageCellIdentifier = @"MCI";
 - (void)sendMessageWithMessage:(Message *)message {
 //    [_infoView show];
 //    [_infoView setText:@"正在发送消息"];
+    if (_contact.contactID && [_contact.contactID intValue] == kSystemContactID) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示消息"
+                                                        message:@"此联系人尚未开通接收消息功能，如需帮助请拨打福务热线：400-000-5555。"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
     //消息先保存在界面上
     Message *tempMessage = [self setMessage:message withSendTime:[FXTimeFormat nowDateString]];
     //展示在界面中
@@ -995,7 +1069,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     else {
         FXContactInfoController *contactC = [[FXContactInfoController alloc] init];
         contactC.contact = _contact;
-        contactC.ID = _contact.contactID;
+        contactC.ID = _ID;
         contactC.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:contactC animated:YES];
     }
@@ -1008,6 +1082,7 @@ static NSString *MessageCellIdentifier = @"MCI";
     NSString *url = [NSString stringWithFormat:@"%@&userId=%d&token=%@",urlString,delegate.userID,delegate.token];
     
     if ([FXFileHelper chatImageAlreadyLoadWithName:urlString]) {
+        bigView.progressView.hidden = YES;
         [bigView setBigImageWithData:[FXFileHelper chatImageAlreadyLoadWithName:urlString]];
     }
     else {
@@ -1029,6 +1104,7 @@ static NSString *MessageCellIdentifier = @"MCI";
             [bigView.progressView setProgress:(double)[allData length] / dataLength animated:YES];
         }];
         [request setCompletionBlock:^{
+            bigView.progressView.hidden = YES;
             [bigView setBigImageWithData:allData];
             [FXFileHelper documentSaveImageData:allData withName:urlString withPathType:PathForChatImage];
         }];
@@ -1065,6 +1141,23 @@ static NSString *MessageCellIdentifier = @"MCI";
                                  setBinaryContent:cell.imageData] build];
     }
     [self requestForSendingMessage:reSendMessage sendingCell:cell isReSend:YES];
+}
+
+#pragma mark - UIWebView
+//计算notice类型消息高度
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    webView.delegate = nil;
+    webView.frame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, webView.scrollView.contentSize.height);
+//    UITableViewCell *cell = (UITableViewCell *)[webView superview].superview.superview.superview;
+    UIView *cell = webView;
+    while (cell && ![cell isMemberOfClass:[FXMessageBoxCell class]]) {
+        cell = cell.superview;
+    }
+    NSIndexPath *path = [_chatTableView indexPathForCell:(UITableViewCell *)cell];
+    [_systemDict setObject:[NSNumber numberWithFloat:webView.scrollView.contentSize.height] forKey:[NSNumber numberWithInt:path.row]];
+//    [_chatTableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:path] withRowAnimation:UITableViewRowAnimationNone];
+    [_chatTableView reloadData];
 }
 
 @end

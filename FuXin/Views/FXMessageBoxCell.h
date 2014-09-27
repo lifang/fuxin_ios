@@ -72,6 +72,10 @@ typedef enum {
 //重发按钮
 @property (nonatomic, strong) UIButton *reSendBtn;
 
+@property (nonatomic, assign) BOOL isSendFromThisDevice;
+
+- (void)setSubviewsFrame;
+
 - (void)setImageData:(NSData *)data;
 
 - (void)setNullView;

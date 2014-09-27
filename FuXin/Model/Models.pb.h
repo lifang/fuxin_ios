@@ -45,6 +45,10 @@
 @class MessageConfirmedRequest_Builder;
 @class MessageConfirmedResponse;
 @class MessageConfirmedResponse_Builder;
+@class MessageHistoryRequest;
+@class MessageHistoryRequest_Builder;
+@class MessageHistoryResponse;
+@class MessageHistoryResponse_Builder;
 @class MessageList;
 @class MessageList_Builder;
 @class MessagePush;
@@ -276,6 +280,12 @@ typedef enum {
 } MessageConfirmedResponse_ErrorCodeType;
 
 BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse_ErrorCodeType value);
+
+typedef enum {
+  MessageHistoryResponse_ErrorCodeTypeInvalidToken = 2001,
+} MessageHistoryResponse_ErrorCodeType;
+
+BOOL MessageHistoryResponse_ErrorCodeTypeIsValidValue(MessageHistoryResponse_ErrorCodeType value);
 
 
 @interface ModelsRoot : NSObject {
@@ -552,6 +562,7 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
 @private
   BOOL hasIsBlocked_:1;
   BOOL hasIsProvider_:1;
+  BOOL hasIsAuthentication_:1;
   BOOL hasContactId_:1;
   BOOL hasSource_:1;
   BOOL hasName_:1;
@@ -570,6 +581,7 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
   BOOL hasGender_:1;
   BOOL isBlocked_:1;
   BOOL isProvider_:1;
+  BOOL isAuthentication_:1;
   int32_t contactId;
   int32_t source;
   NSString* name;
@@ -606,6 +618,7 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
 - (BOOL) hasLocation;
 - (BOOL) hasCenterLink;
 - (BOOL) hasBackgroundUrl;
+- (BOOL) hasIsAuthentication;
 @property (readonly) int32_t contactId;
 @property (readonly, retain) NSString* name;
 @property (readonly, retain) NSString* customName;
@@ -624,6 +637,7 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
 @property (readonly, retain) NSString* location;
 @property (readonly, retain) NSString* centerLink;
 @property (readonly, retain) NSString* backgroundUrl;
+- (BOOL) isAuthentication;
 - (NSArray*) licensesList;
 - (License*) licensesAtIndex:(int32_t) index;
 
@@ -757,6 +771,11 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
 - (NSString*) backgroundUrl;
 - (Contact_Builder*) setBackgroundUrl:(NSString*) value;
 - (Contact_Builder*) clearBackgroundUrl;
+
+- (BOOL) hasIsAuthentication;
+- (BOOL) isAuthentication;
+- (Contact_Builder*) setIsAuthentication:(BOOL) value;
+- (Contact_Builder*) clearIsAuthentication;
 @end
 
 @interface ContactRequest : PBGeneratedMessage {
@@ -3434,5 +3453,165 @@ BOOL MessageConfirmedResponse_ErrorCodeTypeIsValidValue(MessageConfirmedResponse
 - (NSString*) backgroundUrl;
 - (License_Builder*) setBackgroundUrl:(NSString*) value;
 - (License_Builder*) clearBackgroundUrl;
+@end
+
+@interface MessageHistoryRequest : PBGeneratedMessage {
+@private
+  BOOL hasUserId_:1;
+  BOOL hasContactId_:1;
+  BOOL hasPageIndex_:1;
+  BOOL hasPageSize_:1;
+  BOOL hasToken_:1;
+  int32_t userId;
+  int32_t contactId;
+  int32_t pageIndex;
+  int32_t pageSize;
+  NSString* token;
+}
+- (BOOL) hasToken;
+- (BOOL) hasUserId;
+- (BOOL) hasContactId;
+- (BOOL) hasPageIndex;
+- (BOOL) hasPageSize;
+@property (readonly, retain) NSString* token;
+@property (readonly) int32_t userId;
+@property (readonly) int32_t contactId;
+@property (readonly) int32_t pageIndex;
+@property (readonly) int32_t pageSize;
+
++ (MessageHistoryRequest*) defaultInstance;
+- (MessageHistoryRequest*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (MessageHistoryRequest_Builder*) builder;
++ (MessageHistoryRequest_Builder*) builder;
++ (MessageHistoryRequest_Builder*) builderWithPrototype:(MessageHistoryRequest*) prototype;
+
++ (MessageHistoryRequest*) parseFromData:(NSData*) data;
++ (MessageHistoryRequest*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageHistoryRequest*) parseFromInputStream:(NSInputStream*) input;
++ (MessageHistoryRequest*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageHistoryRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (MessageHistoryRequest*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface MessageHistoryRequest_Builder : PBGeneratedMessage_Builder {
+@private
+  MessageHistoryRequest* result;
+}
+
+- (MessageHistoryRequest*) defaultInstance;
+
+- (MessageHistoryRequest_Builder*) clear;
+- (MessageHistoryRequest_Builder*) clone;
+
+- (MessageHistoryRequest*) build;
+- (MessageHistoryRequest*) buildPartial;
+
+- (MessageHistoryRequest_Builder*) mergeFrom:(MessageHistoryRequest*) other;
+- (MessageHistoryRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (MessageHistoryRequest_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasToken;
+- (NSString*) token;
+- (MessageHistoryRequest_Builder*) setToken:(NSString*) value;
+- (MessageHistoryRequest_Builder*) clearToken;
+
+- (BOOL) hasUserId;
+- (int32_t) userId;
+- (MessageHistoryRequest_Builder*) setUserId:(int32_t) value;
+- (MessageHistoryRequest_Builder*) clearUserId;
+
+- (BOOL) hasContactId;
+- (int32_t) contactId;
+- (MessageHistoryRequest_Builder*) setContactId:(int32_t) value;
+- (MessageHistoryRequest_Builder*) clearContactId;
+
+- (BOOL) hasPageIndex;
+- (int32_t) pageIndex;
+- (MessageHistoryRequest_Builder*) setPageIndex:(int32_t) value;
+- (MessageHistoryRequest_Builder*) clearPageIndex;
+
+- (BOOL) hasPageSize;
+- (int32_t) pageSize;
+- (MessageHistoryRequest_Builder*) setPageSize:(int32_t) value;
+- (MessageHistoryRequest_Builder*) clearPageSize;
+@end
+
+@interface MessageHistoryResponse : PBGeneratedMessage {
+@private
+  BOOL hasIsSucceed_:1;
+  BOOL hasPageCount_:1;
+  BOOL hasErrorCode_:1;
+  BOOL isSucceed_:1;
+  int32_t pageCount;
+  MessageHistoryResponse_ErrorCodeType errorCode;
+  NSMutableArray* mutableMessageListsList;
+}
+- (BOOL) hasIsSucceed;
+- (BOOL) hasPageCount;
+- (BOOL) hasErrorCode;
+- (BOOL) isSucceed;
+@property (readonly) int32_t pageCount;
+@property (readonly) MessageHistoryResponse_ErrorCodeType errorCode;
+- (NSArray*) messageListsList;
+- (MessageList*) messageListsAtIndex:(int32_t) index;
+
++ (MessageHistoryResponse*) defaultInstance;
+- (MessageHistoryResponse*) defaultInstance;
+
+- (BOOL) isInitialized;
+- (void) writeToCodedOutputStream:(PBCodedOutputStream*) output;
+- (MessageHistoryResponse_Builder*) builder;
++ (MessageHistoryResponse_Builder*) builder;
++ (MessageHistoryResponse_Builder*) builderWithPrototype:(MessageHistoryResponse*) prototype;
+
++ (MessageHistoryResponse*) parseFromData:(NSData*) data;
++ (MessageHistoryResponse*) parseFromData:(NSData*) data extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageHistoryResponse*) parseFromInputStream:(NSInputStream*) input;
++ (MessageHistoryResponse*) parseFromInputStream:(NSInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
++ (MessageHistoryResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input;
++ (MessageHistoryResponse*) parseFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+@end
+
+@interface MessageHistoryResponse_Builder : PBGeneratedMessage_Builder {
+@private
+  MessageHistoryResponse* result;
+}
+
+- (MessageHistoryResponse*) defaultInstance;
+
+- (MessageHistoryResponse_Builder*) clear;
+- (MessageHistoryResponse_Builder*) clone;
+
+- (MessageHistoryResponse*) build;
+- (MessageHistoryResponse*) buildPartial;
+
+- (MessageHistoryResponse_Builder*) mergeFrom:(MessageHistoryResponse*) other;
+- (MessageHistoryResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input;
+- (MessageHistoryResponse_Builder*) mergeFromCodedInputStream:(PBCodedInputStream*) input extensionRegistry:(PBExtensionRegistry*) extensionRegistry;
+
+- (BOOL) hasIsSucceed;
+- (BOOL) isSucceed;
+- (MessageHistoryResponse_Builder*) setIsSucceed:(BOOL) value;
+- (MessageHistoryResponse_Builder*) clearIsSucceed;
+
+- (NSArray*) messageListsList;
+- (MessageList*) messageListsAtIndex:(int32_t) index;
+- (MessageHistoryResponse_Builder*) replaceMessageListsAtIndex:(int32_t) index with:(MessageList*) value;
+- (MessageHistoryResponse_Builder*) addMessageLists:(MessageList*) value;
+- (MessageHistoryResponse_Builder*) addAllMessageLists:(NSArray*) values;
+- (MessageHistoryResponse_Builder*) clearMessageListsList;
+
+- (BOOL) hasPageCount;
+- (int32_t) pageCount;
+- (MessageHistoryResponse_Builder*) setPageCount:(int32_t) value;
+- (MessageHistoryResponse_Builder*) clearPageCount;
+
+- (BOOL) hasErrorCode;
+- (MessageHistoryResponse_ErrorCodeType) errorCode;
+- (MessageHistoryResponse_Builder*) setErrorCode:(MessageHistoryResponse_ErrorCodeType) value;
+- (MessageHistoryResponse_Builder*) clearErrorCode;
 @end
 

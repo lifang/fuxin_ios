@@ -213,4 +213,11 @@
                         TimeStamp:(NSString *)timeStamp
                          Finished:(Result)result;
 
++ (void)messageHistoryWithToken:(NSString *)token
+                         UserID:(int32_t)userID
+                      ContactID:(int32_t)contactID
+                      PageIndex:(int32_t)pageIndex
+                       PageSize:(int32_t)pageSize
+                       Finished:(Result)result;
+
 @end

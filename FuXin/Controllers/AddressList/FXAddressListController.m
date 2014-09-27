@@ -273,6 +273,12 @@ static NSString *AddressCellIdentifier = @"ACI";
     return [contactList sortedArrayUsingComparator:^NSComparisonResult(ContactModel *model1, ContactModel *model2) {
         NSDate *date1 = [FXTimeFormat dateWithString:model1.contactLastContactTime];
         NSDate *date2 = [FXTimeFormat dateWithString:model2.contactLastContactTime];
+        if (!date1 && date2) {
+            return NSOrderedDescending;
+        }
+        if (date1 && !date2) {
+            return NSOrderedAscending;
+        }
         NSComparisonResult result = [date2 compare:date1];
         return result;
     }];
@@ -282,6 +288,12 @@ static NSString *AddressCellIdentifier = @"ACI";
     return [contactList sortedArrayUsingComparator:^NSComparisonResult(ContactModel *model1, ContactModel *model2) {
         NSDate *date1 = [FXTimeFormat dateWithString:model1.orderTime];
         NSDate *date2 = [FXTimeFormat dateWithString:model2.orderTime];
+        if (!date1 && date2) {
+            return NSOrderedDescending;
+        }
+        if (date1 && !date2) {
+            return NSOrderedAscending;
+        }
         NSComparisonResult result = [date2 compare:date1];
         return result;
     }];
@@ -291,6 +303,12 @@ static NSString *AddressCellIdentifier = @"ACI";
     return [contactList sortedArrayUsingComparator:^NSComparisonResult(ContactModel *model1, ContactModel *model2) {
         NSDate *date1 = [FXTimeFormat dateWithString:model1.subscribeTime];
         NSDate *date2 = [FXTimeFormat dateWithString:model2.subscribeTime];
+        if (!date1 && date2) {
+            return NSOrderedDescending;
+        }
+        if (date1 && !date2) {
+            return NSOrderedAscending;
+        }
         NSComparisonResult result = [date2 compare:date1];
         return result;
     }];
@@ -300,13 +318,27 @@ static NSString *AddressCellIdentifier = @"ACI";
 - (void)getRecentContacts {
     NSArray *sortArray = [self sortRecentArrayWithArray:_contactLists];
     NSInteger count = [sortArray count];
+    if (count == 0) {
+        return;
+    }
     if (count > 20) {
         //取最近联系20人
         count = 20;
     }
+    ContactModel *systemContact = nil;
+    for (int i = [sortArray count] - 1; i >= 0; i--) {
+        ContactModel *sContact = [sortArray objectAtIndex:i];
+        if ([sContact.contactID intValue] == kSystemContactID) {
+            systemContact = sContact;
+            break;
+        }
+    }
+    [_recentLists addObject:systemContact];
     for (int i = 0; i < count; i++) {
         ContactModel *contact = [sortArray objectAtIndex:i];
-        [_recentLists addObject:contact];
+        if ([contact.contactID intValue] != kSystemContactID) {
+            [_recentLists addObject:contact];
+        }
     }
 }
 
@@ -393,8 +425,20 @@ static NSString *AddressCellIdentifier = @"ACI";
             cell.photoView.image = [UIImage imageWithData:imageData];
         }
         else {
-            cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
-            [self downloadImageWithContact:contact forCell:cell];
+            if (contact.contactID && [contact.contactID intValue] == kSystemContactID) {
+                //系统消息
+                cell.photoView.image = [UIImage imageNamed:@"system.png"];
+            }
+            else {
+                cell.photoView.image = [UIImage imageNamed:@"placeholder.png"];
+                [self downloadImageWithContact:contact forCell:cell];
+            }
+        }
+        if (contact.contactIsBlocked) {
+            cell.blockView.image = [UIImage imageNamed:@"pingbi.png"];
+        }
+        else {
+            cell.blockView.image = nil;
         }
         return cell;
     }

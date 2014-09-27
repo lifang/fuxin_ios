@@ -357,8 +357,11 @@
             if (message.contentType == Message_ContentTypeText) {
                 conModel.conversationLastChat = message.content;
             }
-            else {
+            else if (message.contentType == Message_ContentTypeImage) {
                 conModel.conversationLastChat = @"[图片]";
+            }
+            else if (message.contentType == Message_ContentTypeNotice) {
+                conModel.conversationLastChat = @"系统消息";
             }
             [lastForDB addObject:conModel];
         }
@@ -408,8 +411,10 @@
  */
 //----------------------------------------------------------
 //排序
-        NSArray *sortRecord = [self sortRecordArrayWithArray:recordsForDB];
-        NSArray *sortConversion = [self sortConversionArrayWithArray:lastForDB];
+//        NSArray *sortRecord = [self sortRecordArrayWithArray:recordsForDB];
+//        NSArray *sortConversion = [self sortConversionArrayWithArray:lastForDB];
+        NSArray *sortRecord = [[recordsForDB reverseObjectEnumerator] allObjects];
+        NSArray *sortConversion = [[lastForDB reverseObjectEnumerator] allObjects];
         //插入聊天记录表
         [LHLDBTools saveChattingRecord:sortRecord withFinished:^(BOOL finish) {
             NSLog(@"联系人id为%@的聊天信息保存%d",contactID,finish);
@@ -492,6 +497,9 @@
         }
         [arrayForDB addObject:model];
     }
+    //系统消息联系人
+    [arrayForDB addObject:[self setSystemMessageContact]];
+    
     //插入联系人表
     [LHLDBTools saveContact:arrayForDB withFinished:^(BOOL finish) {
         NSLog(@"插入联系人表%d",finish);
@@ -501,5 +509,23 @@
     
     [_chatC updateChatList:[self getChatListFromDB]];
 }
+
+/*
+ 2014年8月7日新加
+ 系统消息联系人：此联系人移动端写死
+ */
+
+- (ContactModel *)setSystemMessageContact {
+    ContactModel *system = [[ContactModel alloc] init];
+    system.contactID = [NSString stringWithFormat:@"%d",kSystemContactID];
+    system.contactNickname = @"系统消息";
+    system.contactRemark = @"系统消息";
+    system.contactIsBlocked = NO;
+    system.contactSex = ContactSexSecret;
+    system.location = @"来自上海";
+    system.contactIsProvider = NO;
+    return system;
+}
+
 
 @end

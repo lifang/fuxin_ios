@@ -41,7 +41,7 @@ static NSDictionary *_emojiList;
     }
 }
 
-+ (UIView *)getContentViewWithMessage:(NSString *)message {
++ (UIView *)getContentViewWithMessage:(NSString *)message width:(CGFloat)maxWidth {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     [[self class] getImageRange:message Array:array];
     UIView *showView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -56,11 +56,11 @@ static NSDictionary *_emojiList;
             NSString *string = [dataArray objectAtIndex:i];
             if ([string hasPrefix:kBeginFlag] && [string hasSuffix:kEndFlag]) {
                 //图片
-                if (dx >= kMessageBoxWidthMax - kFaceSide) {
+                if (dx >= maxWidth - kFaceSide) {
                     //换行
                     dy += kFaceSide;
                     dx = 0;
-                    x = kMessageBoxWidthMax;
+                    x = maxWidth;
                     y = dy;
                 }
                 NSString *imageName = [string substringWithRange:NSMakeRange(2, string.length - 3)];
@@ -69,7 +69,7 @@ static NSDictionary *_emojiList;
                 imgV.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",keyName]];
                 [showView addSubview:imgV];
                 dx += kFaceSide;
-                if (x < kMessageBoxWidthMax) {
+                if (x < maxWidth) {
                     x = dx;
                 }
             }
@@ -82,10 +82,10 @@ static NSDictionary *_emojiList;
                         subString = [string substringWithRange:NSMakeRange(j, 2)];
                         j++;
                     }
-                    if (dx >= kMessageBoxWidthMax - 10) {
+                    if (dx >= maxWidth - 10) {
                         dy += kFaceSide;
                         dx = 0;
-                        x = kMessageBoxWidthMax;
+                        x = maxWidth;
                         y = dy;
                     }
                     CGSize size = [subString sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 20)];
@@ -95,7 +95,7 @@ static NSDictionary *_emojiList;
                     label.backgroundColor = [UIColor clearColor];
                     [showView addSubview:label];
                     dx += size.width;
-                    if (x < kMessageBoxWidthMax) {
+                    if (x < maxWidth) {
                         x = dx;
                     }
                 }

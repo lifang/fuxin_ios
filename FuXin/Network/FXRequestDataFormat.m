@@ -336,5 +336,22 @@
     }];
 }
 
++ (void)messageHistoryWithToken:(NSString *)token
+                         UserID:(int32_t)userID
+                      ContactID:(int32_t)contactID
+                      PageIndex:(int32_t)pageIndex
+                       PageSize:(int32_t)pageSize
+                       Finished:(Result)result {
+    MessageHistoryRequest *PBObject = [[[[[[[MessageHistoryRequest builder] setToken:token] setUserId:userID] setContactId:contactID] setPageIndex:pageIndex] setPageSize:pageSize] build];
+    NSData *PBData = [PBObject data];
+    //请求信息
+    NSMutableDictionary *requestInfo = dictionaryForMessageHistory();
+    //修改postdata
+    [requestInfo setObject:PBData forKey:kRequestPostData];
+    //发送请求
+    [FXHttpRequest setHttpRequestWithInfo:requestInfo responseResult:^(BOOL success, NSData *response) {
+        result(success, response);
+    }];
+}
 
 @end

@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong) UIImageView *backView;
 
+@property (nonatomic, strong) UIImageView *blockView;
+
 - (void)setNumber:(NSString *)number;
 
 @end

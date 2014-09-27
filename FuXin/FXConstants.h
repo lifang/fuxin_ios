@@ -21,5 +21,8 @@
 //获取消息间隔
 #define kGetMessageDuration   25
 
+//系统消息联系人ID
+#define kSystemContactID      0
+
 //百度统计key
 #define kBaiDuAppKey    @"b1e74f703c"
